@@ -1,0 +1,104 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2em;
+  background-color: #0e0d0d;
+  border-radius: 25px;
+  transition: .4s ease-in-out;
+}
+
+.authContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* altura completa de la pantalla */
+  padding: 1em;
+  
+}
+
+.form:hover {
+  transform: scale(1.05);
+  border: 1px solid black;
+}
+
+.heading {
+  text-align: center;
+  margin: 1em;
+  color: white;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  border-radius: 25px;
+  padding: .6em;
+  background-color: #1e1e1e;
+  box-shadow: inset 2px 5px 10px rgb(69, 69, 69);
+}
+
+.inputField {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  color: #d3d3d3;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+}
+
+.button1,
+.button2,
+.button3 {
+  padding: .5em 1em;
+  border-radius: 5px;
+  border: none;
+  background: #3f3f3f;
+  color: white;
+  cursor: pointer;
+}
+
+.button1:disabled,
+.button2:disabled,
+.button3:disabled {
+  background: #888;
+  color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.button1:hover,
+.button2:hover {
+  background: black;
+}
+
+.button3:hover {
+  background: red;
+}
+
+/* AuthCard.module.css */
+
+.otpInput {
+  width: 3rem;         /* ancho fijo para cada cuadrito */
+  height: 3rem;        /* altura fija */
+  text-align: center;  /* centrar el valor */
+  font-size: 1.5rem;   /* tamaño del texto */
+  border-radius: 8px;
+  border: 1px solid #232323;
+  background-color: #1a1a1a;
+  outline: none;
+  transition: 0.3s;
+}
+
+.otpInput:focus {
+  border-color: #333;
+  background-color: #3e3e3e;
+}
+

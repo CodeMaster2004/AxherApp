@@ -1,0 +1,227 @@
+.sidebar {
+  position: fixed;
+  top: 68px;
+  left: 0;
+  width: min(280px, 90vw);
+  height: 100vh;
+  background: linear-gradient(180deg, #1a1a1abb 0%, #0d0d0d 100%);
+  color: #ffffff;
+  padding: 70px 15px 25px 15px;
+  border-right: 1px solid #333;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+  overflow-x: visible; /* Permite que los submenús absolutos se vean fuera */
+  transform: translateX(-100%);
+}
+
+.sidebar.active {
+  transform: translateX(0);
+}
+
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e50914, transparent);
+}
+
+.sidebar h2 {
+  font-size: 1.4rem;
+  margin-bottom: 25px;
+  color: #f5c518;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #333;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  
+  margin-bottom: 8px;
+  position: relative;
+}
+
+/* Estilos para enlaces (con href) */
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.sidebar ul li a:hover {
+  background-color: rgba(229, 9, 20, 0.1);
+  color: #fff;
+  transform: translateX(5px);
+}
+
+/* Estilos para ítems sin enlace (como Administración) */
+.sidebar ul li span {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.sidebar ul li span:hover {
+  background-color: rgba(229, 9, 20, 0.1);
+  color: #fff;
+  transform: translateX(5px);
+}
+
+/* ========== SUBMENÚS ========== */
+/* Estilo base para todos los submenús */
+.subMenu {
+  list-style: none;
+  padding-left: 18px;
+  margin-top: 6px;
+  max-height: 0;
+  overflow: hidden; /* Evita que un submenú cerrado capture hover antes de tiempo */
+  opacity: 0;
+  pointer-events: none; /* Desactiva interacción cuando está cerrado */
+  transform-origin: top center;
+  transform: translateY(-6px) scaleY(0.98);
+  transition: max-height 320ms cubic-bezier(0.2, 0.9, 0.2, 1),
+              opacity 260ms ease,
+              transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Necesario para posicionar los submenús anidados */
+}
+
+.subMenu.open,
+.sidebar > ul > li:hover > .subMenu {
+  max-height: 400px;
+  overflow: visible; /* Permite que submenús anidados floten fuera */
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scaleY(1);
+}
+
+/* Abrir submenú al hacer hover sobre el padre directo */
+
+
+
+/* ========== SUBMENÚ DE SEGUNDO NIVEL (hacia la derecha) ========== */
+.subMenu .subMenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: #121212;
+  min-width: 180px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 6px 0;
+  margin: 0;
+  transform-origin: left center;
+  transform: translateX(-6px) scaleX(0.98);
+  /* Hereda max-height y opacity, pero los reseteamos para este caso */
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: max-height 280ms cubic-bezier(0.2, 0.9, 0.2, 1),
+              opacity 240ms ease,
+              transform 240ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  z-index: 2000;
+}
+
+/* Mostrar submenú anidado solo al hacer hover sobre el li correspondiente */
+.subMenu li:hover > .subMenu{
+  max-height: 400px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0) scaleX(1);
+}
+
+/* Enlaces dentro del submenú anidado */
+.subMenu .subMenu li a {
+  font-size: 14px;
+  padding: 8px 16px;
+  color: #ddd;
+  white-space: nowrap;
+}
+
+.subMenu .subMenu li a:hover {
+  background-color: #333;
+  color: #fff;
+  transform: none; /* Evita el translateX global */
+}
+
+/* ========== INDICADORES (FLECHAS) ========== */
+/* Flecha hacia abajo para el ítem Administración (primer nivel con submenú) */
+.sidebar > ul > li:has(> .subMenu) > span::after,
+.sidebar > ul > li:has(> .subMenu) > a::after {
+  content: " ▼";
+  font-size: 0.7em;
+  margin-left: 5px;
+  opacity: 0.7;
+}
+
+/* Flecha hacia la derecha para ítems que tienen submenú dentro del primer nivel */
+.subMenu > li:has(> .subMenu) > span::after,
+.subMenu > li:has(> .subMenu) > a::after {
+  content: " ▶";
+  font-size: 0.7em;
+  margin-left: 5px;
+  opacity: 0.7;
+}
+
+/* ========== PUENTE PARA EVITAR CIERRE ACCIDENTAL ========== */
+.subMenu li:has(> .subMenu)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 40px;
+  height: 100%;
+  background: transparent;
+  pointer-events: auto;
+  z-index: 1102;
+  display: none;
+}
+
+/* ========== ESTILOS ADICIONALES PARA ELEMENTOS DENTRO DE SUBMENÚS (primer nivel) ========== */
+.subMenu li {
+  margin-bottom: 5px;
+}
+
+.subMenu li a {
+  font-size: 14px;
+  padding: 8px 15px;
+  color: #999;
+}
+
+.subMenu li a:hover {
+  background-color: rgba(21, 101, 192, 0.1);
+  color: #1565c0;
+  transform: translateX(3px);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 250px;
+  }
+}
+

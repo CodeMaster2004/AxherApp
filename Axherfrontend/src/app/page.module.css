@@ -1,0 +1,314 @@
+.page {
+  --cinema-bg: #080a0f;
+  --surface: #11151d;
+  --surface-strong: #0d1016;
+  --text-main: #e9edf7;
+  --text-muted: #8f9ab0;
+  --accent: #f93020;
+  --accent-soft: rgba(249, 48, 32, 0.26);
+
+  background:
+    radial-gradient(circle at 16% 24%, rgba(249, 48, 32, 0.12), transparent 36%),
+    radial-gradient(circle at 90% 0%, rgba(255, 255, 255, 0.08), transparent 45%),
+    linear-gradient(180deg, #06080c 0%, var(--cinema-bg) 100%);
+  min-height: 100vh;
+  color: var(--text-main);
+}
+
+.contentWrap {
+  width: min(1650px, 96vw);
+  margin: 0 auto;
+  padding: 2.6rem 0 4rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  letter-spacing: 0.01em;
+  font-weight: 800;
+}
+
+.kicker {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+}
+
+.filterPills {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.pill {
+  border: 1px solid #2a3344;
+  background: #111722;
+  color: #d2d9e8;
+  border-radius: 999px;
+  padding: 0.48rem 0.9rem;
+  font-size: 0.77rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activePill,
+.pill:hover {
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.posterRail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.posterCard,
+.showCard {
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #121725 0%, #0e121b 100%);
+  border: 1px solid #202838;
+  transition: transform 0.24s ease, border-color 0.24s ease;
+}
+
+.posterCard:hover,
+.showCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(249, 48, 32, 0.62);
+}
+
+.posterCard img,
+.showCard img,
+.trendingBanner img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.posterCard img {
+  aspect-ratio: 2 / 3;
+}
+
+.posterMeta {
+  padding: 0.8rem 0.82rem 0.9rem;
+}
+
+.posterMeta h3 {
+  margin: 0;
+  font-size: 0.93rem;
+  font-weight: 700;
+}
+
+.posterMeta p {
+  margin: 0.38rem 0 0.22rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.posterMeta span {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.subHeader {
+  margin: 2.5rem 0 1rem;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.showCard img {
+  aspect-ratio: 3 / 4;
+  filter: contrast(1.05) saturate(0.94);
+}
+
+.showMeta {
+  padding: 0.56rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+  border-top: 1px solid #222c40;
+}
+
+.showMeta h4 {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.showMeta span {
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+
+.trendingSection {
+  margin-top: 2.6rem;
+}
+
+.trendingTitle {
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+}
+
+.trendingBanner {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(249, 48, 32, 0.5);
+}
+
+.trendingBanner img {
+  aspect-ratio: 16 / 7;
+  filter: saturate(0.8) brightness(0.6);
+}
+
+.trendingOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(7, 9, 14, 0.88), rgba(7, 9, 14, 0.28));
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.trendingOverlay h3 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.3vw, 2.2rem);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.trendingOverlay p {
+  margin: 0;
+  max-width: 520px;
+  color: #d2dae9;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.trendingOverlay button {
+  margin-top: 0.36rem;
+  width: fit-content;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0.52rem 0.95rem;
+  cursor: pointer;
+}
+
+.trendingRail {
+  margin-top: 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.episodeCard {
+  border: 1px solid #252d3d;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0f131b;
+}
+
+.episodeCard img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.episodeCard span {
+  display: block;
+  padding: 0.45rem 0.5rem 0.55rem;
+  font-size: 0.73rem;
+  color: #cfd7e8;
+}
+
+.footerLinks {
+  margin-top: 2.3rem;
+  padding: 1.2rem 0.8rem;
+  border-top: 1px solid #2a3040;
+  border-bottom: 1px solid #2a3040;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.footerLinks h5 {
+  margin: 0 0 0.55rem;
+  color: #e9edf7;
+  font-size: 0.82rem;
+}
+
+.footerLinks p {
+  margin: 0.2rem 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+@media (max-width: 980px) {
+  .cardGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .trendingRail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footerLinks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .contentWrap {
+    padding-top: 1.85rem;
+  }
+
+  .posterRail {
+    grid-template-columns: 1fr;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sectionHeader,
+  .subHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trendingRail,
+  .footerLinks {
+    grid-template-columns: 1fr;
+  }
+}

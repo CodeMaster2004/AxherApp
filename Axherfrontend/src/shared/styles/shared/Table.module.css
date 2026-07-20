@@ -1,0 +1,122 @@
+/* Estilos compartidos para tablas y listas */
+
+.searchBox {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.searchInput::placeholder {
+  color: var(--text-secondary);
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  transition: opacity 0.15s ease;
+}
+
+.tableWrap.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.headCell,
+.cell {
+  padding: 6px 6px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.headCell {
+  background: var(--bg-surface-strong);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.rowHover:hover {
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+/* Utilidades opcionales */
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.idColumn {
+  width: 70px;
+}
+
+@media (max-width: 768px) {
+  .headCell,
+  .cell {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  
+}
+.statusSelect {
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: var(--bg-surface-strong);
+    color: var(--text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 110px;
+}
+
+.statusSelect option {
+    background: var(--bg-surface-strong);
+    color: var(--text-primary);
+}
+
+.categoriesCell {
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

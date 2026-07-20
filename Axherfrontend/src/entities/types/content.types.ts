@@ -1,0 +1,87 @@
+import { CreateMovie, UpdateMovie } from "@/entities/types/movie.types";
+import { CreateSeries, UpdateSeries } from "@/entities/types/series.types";
+
+export enum ContentType {
+    MOVIE = "MOVIE",
+    SERIE = "SERIE"
+}
+
+export interface ContentDetail{
+    contentId: number;
+    title: string;
+    description: string;
+    type: ContentType;
+    posterUrl: string;
+    backdropUrl: string;
+    trailerUrl: string;
+    price: number;
+    categories: string[];
+    status: ContentStatusResponse;
+    discountAmount?: number;
+    registeredAt: string; // formato "YYYY-MM-DD"
+
+    //solo si es movie
+    durationSeconds?: number;
+    movieUrl?: string;
+
+}
+
+export interface CreateContent{
+    title: string;
+    description: string;
+    type: ContentType;
+    posterFile: File;
+    bacdropFile: File;
+    trailerFile: File;
+    price: number;
+    categoryIds: number[];
+    statusId?: number;
+    discountId?: number;
+    releaseDate: string; // formato "YYYY-MM-DD"
+
+    //Datos especificos degun el tipo
+    movie?: CreateMovie;
+    series?: CreateSeries;
+}
+
+export interface UpdateContent{
+    title?: string;
+    description?: string;
+    type?: ContentType;
+    posterFile?: File;
+    backdropFile?: File;
+    trailerFile?: File;
+    price?: number;
+    categoryIds?: number[];
+    statusId?: number;
+    discountId?: number;
+    releaseDate?: string; // formato "YYYY-MM-DD"
+    //Datos especificos degun el tipo
+    movie?: UpdateMovie;
+    series?: UpdateSeries;
+}
+
+export interface StatusUpdate{
+    statusId: number;
+}
+
+export interface ContentFeatured {
+    contentId: number;
+    title: string;
+    description: string;
+    backdropUrl: string;
+    type: ContentType;
+}
+
+export interface ContentFilters {
+    title?: string;
+    categoryId?: number;
+    statusId?: number;
+    discountAmount?: number;
+    type?: ContentType;
+}
+
+export interface ContentStatusResponse {
+    contentStatusId: number;
+    status: string;
+}

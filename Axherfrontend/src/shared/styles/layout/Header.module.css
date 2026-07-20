@@ -1,0 +1,377 @@
+.mobileSearchButton {
+  margin-left: auto;
+  margin-right: 2%;
+}
+
+@media (min-width: 769px) {
+  .mobileSearchButton {
+    display: none !important;
+  }
+}
+
+/* ================== HEADER ================== */
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  background-color: #141414;
+  padding: 10px 40px;
+  border-bottom: 1px solid #a2454500;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 60px;
+  z-index: 1200;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  flex-wrap: nowrap;
+  background: rgba(20,20,20,0.4);
+  backdrop-filter: blur(10px);
+}
+
+.logo h1 {
+  color: #e50914;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+/* ================== DESKTOP MENU ================== */
+.desktopMenuWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  margin-right: 12px;
+}
+
+.desktopMenuTrack {
+  width: 100%;
+  overflow-x: visible;
+  overflow-y: visible;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.desktopMenuTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.menuArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.menuArrow:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.left {
+  left: 4px;
+}
+
+.right {
+  right: 4px;
+}
+
+.desktopMenu {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  margin: 0 ;
+}
+
+.desktopMenu ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 15px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.desktopMenu ul li {
+  position: relative;
+  cursor: pointer;
+}
+
+.desktopMenu ul li a,
+.desktopMenu ul li span {
+  text-decoration: none;
+  color: #ccc;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  display: block;
+  cursor: pointer;
+}
+
+.desktopMenu ul li a:hover,
+.desktopMenu ul li span:hover {
+  background-color: rgba(229, 9, 20, 0.1);
+  color: #fff;
+}
+
+/* ================== SUBMENÚ 1er NIVEL ================== */
+.desktopSubMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #121212;
+  min-width: 180px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  border-radius: 8px;
+  padding: 6px 0;
+  margin: 0;
+  transform-origin: top center;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px) scaleY(0.98);
+  transition: max-height 280ms cubic-bezier(.2,.9,.2,1),
+              opacity 240ms ease,
+              transform 240ms cubic-bezier(.2,.9,.2,1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+}
+
+/* Mostrar submenú 1er nivel al hover */
+.desktopMenu > ul > li:hover > .desktopSubMenu {
+  max-height: 400px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scaleY(1);
+}
+
+/* ================== SUBMENÚ 2do NIVEL (HACIA LA DERECHA) ================== */
+.desktopSubMenu li {
+  position: relative;
+}
+
+.desktopSubMenu li a,
+.desktopSubMenu li span {
+  padding: 10px 16px;
+  color: #ddd;
+  white-space: nowrap;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.desktopSubMenu li a:hover,
+.desktopSubMenu li span:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* --- Estado base del sub-submenú (oculto, posicionado a la derecha) --- */
+.desktopSubMenu .desktopSubMenu {
+  top: 0;
+  left: 100%;
+  transform-origin: left center;
+  transform: translateX(-6px) scaleX(0.98);
+  z-index: 1003; /* Por encima del puente */
+}
+
+/* Mostrar sub-submenú al hacer hover sobre el li que lo contiene */
+.desktopSubMenu li:hover > .desktopSubMenu
+{
+  max-height: 400px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0) scaleX(1);
+}
+
+/* Reset de UL interno */
+.desktopSubMenu ul {
+  all: unset;
+  display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ================== PUENTE PARA EVITAR CIERRE ACCIDENTAL ================== */
+.desktopSubMenu li:has(> .desktopSubMenu) {
+  position: relative;
+}
+
+/* Extiende la zona "segura" hacia la derecha para evitar que el cursor pierda el hover
+   cuando navegas entre elementos de un submenú (especialmente al bajar entre ítems). */
+.desktopSubMenu li:has(> .desktopSubMenu)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 10px;          /* Ajusta si es necesario */
+  height: 100%;
+  background: transparent;
+  pointer-events: auto;
+  z-index: 1002;
+  display: none;
+}
+
+/* ================== INDICADORES ================== */
+/* Flecha hacia abajo para ítems con submenú 1er nivel */
+.desktopMenu > ul > li:has(> .desktopSubMenu) > span::after,
+.desktopMenu > ul > li:has(> .desktopSubMenu) > a::after {
+  content: " ▼";
+  font-size: 0.7em;
+  margin-left: 5px;
+  opacity: 0.7;
+}
+
+/* Flecha hacia la derecha para ítems con sub-submenú */
+.desktopSubMenu li:has(> .desktopSubMenu) > span::after,
+.desktopSubMenu li:has(> .desktopSubMenu) > a::after {
+  content: " ▶";
+  font-size: 0.7em;
+  margin-left: 5px;
+  opacity: 0.7;
+}
+
+/* ================== HEADER RIGHT / BUSCADOR / USUARIO ================== */
+.headerRight {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: flex-end;
+  flex: unset;
+  margin-left: auto;
+  margin-right: 0;
+  flex-shrink: 0; /* evita que el buscador comprimido empuje el menú */
+  z-index: 1300;
+}
+
+
+.userMenu {
+  position: relative;
+  display: inline-block;
+}
+
+.userIcon {
+  background-color: transparent;
+  border: 1px solid white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #1c1c1c;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.dropdownContent a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdownContent a:hover {
+  background-color: #333;
+}
+
+.userMenu:hover .dropdownContent {
+  display: block;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 1024px) {
+  .desktopMenuWrap {
+    padding: 0 36px;
+  }
+
+  .menuArrow {
+    display: flex;
+  }
+
+  .desktopMenuTrack {
+    overflow-x: auto;
+  }
+
+  .desktopMenu {
+    justify-content: center;
+  }
+
+  .desktopMenu ul { gap: 10px; }
+  .desktopMenu ul {
+    justify-content: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    min-width: max-content;
+  }
+
+  .desktopMenu ul li a,
+  .desktopMenu ul li span { padding: 8px 12px; font-size: 14px; }
+  .searchContainer { max-width: 150px; }
+}
+@media (max-width: 768px) {
+  .headerTop { padding: 10px 20px; }
+  .desktopMenuWrap { display: none; }
+  .headerRight { display: none; }
+  .searchContainer { max-width: 120px; }
+}
+@media (max-width: 480px) {
+  .headerTop { padding: 10px; flex-wrap: wrap; height: auto; }
+  .logo h1 { font-size: 1.5rem; }
+}
+.desktopSearch {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .headerTop { padding: 10px 20px; }
+  .desktopMenuWrap { display: none; }
+
+  .headerRight {
+    display: flex;        /* mostrar user en móvil */
+    margin-left: auto;    /* pegar a la derecha */
+    gap: 10px;
+  }
+
+  .desktopSearch {
+    display: none !important;  /* ocultar lupa desktop */
+  }
+
+  .mobileSearchButton {
+    margin-left: 8px;     /* antes auto */
+    margin-right: 0;
+  }
+
+  .searchContainer { max-width: 120px; }
+}

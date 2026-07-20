@@ -1,0 +1,68 @@
+/* Contenedor relativo para posicionar el menú */
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Botón disparador: tres puntos */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.trigger:hover {
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+/* Panel flotante del menú */
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  min-width: 160px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 6px;
+  z-index: 10;
+}
+
+/* Botón por opción */
+.item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.item:hover {
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+/* Variante de peligro (eliminar) */
+.danger {
+  color: #c62828;
+}
+
+/* Separador opcional si se necesitara dividir grupos */
+.separator {
+  height: 1px;
+  margin: 6px 4px;
+  background: var(--border-subtle);
+  border: none;
+}

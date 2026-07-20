@@ -1,0 +1,167 @@
+/* ============================================
+   ESTILOS COMPARTIDOS PARA FORMULARIOS
+   Usa tokens de globals.css para heredar tema.
+   ============================================ */
+
+/* Contenedor principal del formulario */
+.form {
+  background: linear-gradient(125deg, var(--bg-surface-strong) 0%, var(--bg-surface) 70%);
+  padding: 25px;
+  border-radius: var(--radius-md);
+  margin-bottom: 30px;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form h2 {
+  margin-top: 0;
+  color: var(--text-primary);
+  font-weight: 1000;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Grupo de campo (label + input) */
+.formGroup {
+  margin-bottom: 15px;
+  display: block;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.formGroup label.required::after {
+  content: ' *';
+  color: #ff6b6b;
+}
+
+/* Inputs y textareas */
+.input,
+.textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 9px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  box-sizing: border-box;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: all 0.3s ease;
+  min-height: 44px;
+  display: block;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background-color: var(--bg-surface-strong);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.input:disabled,
+.textarea:disabled {
+  background-color: var(--bg-page);
+  cursor: not-allowed;
+  opacity: 0.5;
+  border-color: var(--border-subtle);
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Estado de error */
+.inputError,
+.textareaError {
+  border-color: var(--error);
+  background-color: rgba(255, 107, 107, 0.08);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+}
+
+.inputError:focus,
+.textareaError:focus {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+}
+
+.errorMessage {
+  color: var(--error);
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+  font-weight: 500;
+  min-height: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+/* Acciones del formulario (botones) */
+.formActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap; /* Permite ajuste si es necesario pero mantiene horizontal */
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .form {
+    padding: 15px;
+  }
+
+  /* Mantener botones en fila, solo reducir tamaño de fuente si es necesario */
+  .formActions {
+    gap: 8px;
+  }
+
+  .formActions button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+/* Texto para cambiar entre login y registro */
+.switchFormText {
+  text-align: center;
+  margin-top: 1.5em;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.switchFormText a {
+  color: var(--accent);
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.switchFormText a:hover {
+  color: var(--accent-hover, #0056b3);
+}
+

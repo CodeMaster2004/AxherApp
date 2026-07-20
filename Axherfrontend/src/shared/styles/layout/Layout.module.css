@@ -1,0 +1,22 @@
+.container {
+  min-height: 100vh;
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.mainContent {
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  padding-top: 120px;
+}
+
+@media (max-width: 768px) {
+  .mainContent { padding-top: 80px; }
+}
+@media (max-width: 480px) {
+  .mainContent { padding-top: 60px; }
+}

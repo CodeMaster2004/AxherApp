@@ -1,0 +1,20 @@
+.container{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    padding: 16px;
+}
+
+.info{
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px){
+    .container{
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}

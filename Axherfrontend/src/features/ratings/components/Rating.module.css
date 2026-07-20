@@ -1,0 +1,70 @@
+.rating{
+
+    display:flex;
+    gap:.35rem;
+
+    --stroke:#666;
+    --fill:#a70000;
+
+}
+
+.star{
+
+    cursor:pointer;
+
+}
+
+.star input{
+
+    display:none;
+
+}
+
+.star svg{
+
+    width:2rem;
+    height:2rem;
+
+    fill:transparent;
+    stroke:var(--stroke);
+
+    stroke-width:1.5;
+
+    transition:
+        fill .25s,
+        stroke .25s,
+        transform .2s;
+
+}
+
+.star:hover svg{
+
+    stroke:var(--fill);
+    transform:scale(1.12);
+
+}
+
+.active svg{
+
+    fill:var(--fill);
+    stroke:var(--fill);
+
+    animation:yippee .45s;
+
+}
+
+@keyframes yippee{
+
+    0%{
+        transform:scale(.7);
+    }
+
+    60%{
+        transform:scale(1.2);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}

@@ -1,0 +1,245 @@
+.userProfileCard {
+  background: rgba(15, 15, 16, 0.85);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+  color: #fff;
+  max-width: 900px;
+  margin: 70px auto 0 auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  transition: all 0.25s ease;
+}
+
+.userProfileCard:hover {
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+}
+
+/* 🔥 Banner más cinematográfico */
+.banner {
+  width: 100%;
+  height: 240px;
+  background: #181c24;
+  position: relative;
+  overflow: hidden;
+}
+
+.bannerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.6) saturate(1.2);
+}
+
+/* 🔥 Avatar estilo redes sociales */
+.profilePicture {
+  position: absolute;
+  top: 230px;
+  left: 32px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 5px solid #181c24;
+  width: 120px;
+  height: 120px;
+  overflow: visible;
+  background: #232a36;
+  z-index: 2;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+  
+}
+
+.profilePicture:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.cameraButton {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 3;
+} 
+
+.cameraButton:hover {
+  background: rgba(34, 0, 255, 0.9);
+  color: #000;
+  transform: scale(1.05);
+}
+
+.profileImg {
+  object-fit: cover; 
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* 🔥 Mejor padding (evita que el avatar tape contenido) */
+.profileContent {
+  padding: 100px 32px 32px 32px;
+  position: relative;
+}
+
+/* 🔥 Header mejor alineado */
+.userHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 6px;
+}
+
+.userHeader h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.username {
+  color: #7ec4fa;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+/* 🔥 Botón más moderno (glass effect) */
+.editBtn {
+  background: rgba(126, 196, 250, 0.15);
+  border: 1px solid #7ec4fa;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(6px);
+}
+
+.editBtn:hover {
+  background: #7ec4fa;
+  color: #000;
+  transform: translateY(-2px);
+}
+
+/* 🔥 Bio más limpia */
+.bio {
+  margin: 16px 0 12px 0;
+  font-size: 1.1rem;
+  color: #cfcfcf;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* 🔥 Info tipo badges */
+.profileDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.profileDetails span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(36, 42, 56, 0.6);
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.profileDetails span:hover {
+  background: rgba(126, 196, 250, 0.15);
+}
+
+.profileDetails a {
+  color: #7ec4fa;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.profileDetails a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* 🔥 Menú */
+.menu {
+  margin-top: 28px;
+  display: flex;
+  gap: 12px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(36, 42, 56, 0.6);
+  transition: all 0.25s ease;
+  font-weight: 500;
+}
+
+.menuItem:hover {
+  background: #232a36;
+  color: #7ec4fa;
+  transform: translateY(-2px);
+}
+
+/* 🔥 Logout */
+.logout {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.logout:hover {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+  .userProfileCard {
+    max-width: 98vw;
+  }
+
+  .profileContent {
+    padding: 90px 16px 20px 16px;
+  }
+
+  .profilePicture {
+    left: 16px;
+    width: 90px;
+    height: 90px;
+    top: 150px;
+  }
+
+  .banner {
+    height: 160px;
+  }
+
+  .userHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

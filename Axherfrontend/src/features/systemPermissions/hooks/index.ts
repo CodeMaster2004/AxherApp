@@ -1,0 +1,2 @@
+export { useSystemPermissionsActions } from "@/features/systemPermissions/hooks/useSystemPermissionsActions";
+export { useSystemPermissions } from "@/features/systemPermissions/hooks/useSystemPermissions";
