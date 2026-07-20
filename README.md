@@ -258,7 +258,7 @@ Este proyecto está bajo la licencia **MIT**. Consulta el archivo `LICENSE` para
 <div align="center">
   <p>Hecho con ❤️ por <strong>Franclin Alexander Herrera Paucar</strong></p>
   <p>
-    <a href="https://github.com/tuusuario">GitHub</a> •
+    <a href="https://github.com/CodeMaster2004">GitHub</a> •
   </p>
   <br>
   <p>
