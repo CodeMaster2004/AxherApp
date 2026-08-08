@@ -29,7 +29,7 @@ public class RefreshTokenService {
     private final long REFRESH_TTL = 7 * 24 * 60 * 60;
     private static final int MAX_TOKENS_PER_USER = 5;
 
-    public String createRefreshToken(Users user, String familyId) {
+    public String createRefreshToken(Users user, UUID familyId) {
         System.out.println("🆕 createRefreshToken ejecutado para user: " + user.getUserId());
 
         String rawToken = UUID.randomUUID().toString();

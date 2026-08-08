@@ -5,3 +5,9 @@ export interface CreateMovie{
 export interface UpdateMovie{
     movieFile?: File;
 }
+
+export interface MovieFiltersType {
+    categoryId?: string;
+    year?: number;
+    sort?: string;
+}

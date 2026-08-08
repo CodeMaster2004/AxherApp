@@ -1,3 +1,5 @@
+import { ContentStatusResponse } from "@/entities/types/content.types";
+
 export interface EpisodeDetail{
     episodeId: number;
     episodeNumber: number;
@@ -7,6 +9,7 @@ export interface EpisodeDetail{
     thumbnailUrl: string;
     episodeUrl: string;
     releaseDate?: string;
+    status: ContentStatusResponse;
 
     seasonNumber: number;
     seriesTitle: string;
@@ -20,6 +23,7 @@ export interface CreateEpisode{
     thumbnailFile: File;
     episodeFile: File;
     releaseDate?: string;
+    seasonId?: number;
 }
 
 export interface UpdateEpisode{
@@ -30,4 +34,5 @@ export interface UpdateEpisode{
     thumbnailFile?: File;
     episodeFile?: File;
     releaseDate?: string;
+    statusId?: number;
 }

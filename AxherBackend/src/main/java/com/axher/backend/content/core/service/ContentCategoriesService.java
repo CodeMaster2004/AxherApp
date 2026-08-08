@@ -8,7 +8,7 @@ import com.axher.backend.content.core.entities.ContentCategories;
 import com.axher.backend.content.core.repositories.ContentCategoriesRepository;
 import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
-import com.axher.backend.shared.util.TextNormalizer;
+import com.axher.backend.shared.util.SlugGeneratorService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ContentCategoriesService {
 
     private final ContentCategoriesRepository repository;
+    private final SlugGeneratorService slugGenerator;
 
 
     public Page<ContentCategories> findAll(Pageable pageable, String search){
@@ -35,16 +36,26 @@ public class ContentCategoriesService {
             .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada: " + id));
     }
 
+    public ContentCategories findBySlug(String slug) {
+
+        return repository.findBySlug(slug)
+            .orElseThrow(() -> new ResourceNotFoundException("Slug no encontrada: " + slug));
+    }
+
 
     public ContentCategories create(ContentCategories contentCategory){
 
-        String normalize = TextNormalizer.normalize(contentCategory.getName());
+        String name = contentCategory.getName().trim();
 
-        contentCategory.setName(normalize);
-
-        if(repository.existsByName(normalize)){
-            throw new IllegalArgumentException("La categoría ya existe: " + normalize);
+        if(repository.existsByNameIgnoreCase(name)){
+            throw new DuplicateResourceException("La categoría ya existe: " + name);
         }
+
+        String slug = slugGenerator.generate(name, repository::existsBySlug);
+
+        contentCategory.setName(name);
+        contentCategory.setSlug(slug);
+        
         return repository.save(contentCategory);
     }
  
@@ -53,17 +64,23 @@ public class ContentCategoriesService {
 
         if(contentCategories.getName() != null){
 
-            if(contentCategories.getName().isBlank()){
+            String name = contentCategories.getName().trim();
+
+            if(name.isBlank()){
                 throw new IllegalArgumentException("El nombre de la categoria no puede estar vacio");
             }
 
-            String normalized = TextNormalizer.normalize(contentCategories.getName());
 
-            if(!normalized.equals(existing.getName()) && repository.existsByName(normalized)){
-                throw new DuplicateResourceException("La categoria ya existe: " + normalized);
+            if(!name.equalsIgnoreCase(existing.getName()) && repository.existsByNameIgnoreCase(name)){
+                throw new DuplicateResourceException("La categoria ya existe: " + name);
             }
-            existing.setName(normalized);
+            existing.setName(name);
+
+            existing.setSlug(
+                slugGenerator.generate(name, slug -> repository.existsBySlugAndContentCategoryIdNot(slug, id))
+            );
         }
+        
 
         if(contentCategories.getDescription() != null){
             existing.setDescription(contentCategories.getDescription());;

@@ -77,6 +77,7 @@ export default function ContentCategoriesList({ contentCategories, onDelete, onE
               <tr className={tableStyles.rowHover}>
                 <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
                 <th className={tableStyles.headCell}>Categoría</th>
+                <th className={tableStyles.headCell}>Slug</th>
                 <th className={tableStyles.headCell}>Descripción</th>
                 <th className={tableStyles.headCell}>Acciones</th>
               </tr>
@@ -86,6 +87,7 @@ export default function ContentCategoriesList({ contentCategories, onDelete, onE
                 <tr key={contentCategories.contentCategoryId} className={tableStyles.rowHover}>
                   <td className={`${tableStyles.cell} ${tableStyles.idColumn}`}>{contentCategories.contentCategoryId}</td>
                   <td className={tableStyles.cell}>{contentCategories.name}</td>
+                  <td className={tableStyles.cell}>{contentCategories.slug}</td>
                   <td className={tableStyles.cell}>{contentCategories.description}</td>
                   <td className={`${tableStyles.cell} ${tableStyles.actions}`}>
                     {/* Menú de tres puntos con opciones de fila */}

@@ -103,7 +103,7 @@ export default function ContentsForm({
 }: Props) {
     const statusOptions: SelectOption[] = availableStatuses.map((status) => ({
         value: status.contentStatusId,
-        label: status.status,
+        label: status.name,
     }));
 
     const discountOptions: SelectOption[] = availableDiscounts.map((discount) => ({
@@ -209,7 +209,7 @@ export default function ContentsForm({
 
             <Input
                 label="Fecha de estreno"
-                type="date"
+                type="datetime-local"
                 value={releaseDate || ""}
                 onChange={setReleaseDate}
                 disabled={saving}

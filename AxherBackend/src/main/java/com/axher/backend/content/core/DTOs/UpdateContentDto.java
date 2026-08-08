@@ -1,6 +1,6 @@
 package com.axher.backend.content.core.DTOs;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +28,7 @@ public class UpdateContentDto {
     private List<Integer> categoryIds; // objetos completos
     private Integer statusId;
     private Integer discountId;
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
 
     private UpdateMovieDto movie;
     private UpdateSeriesRequestDto series;

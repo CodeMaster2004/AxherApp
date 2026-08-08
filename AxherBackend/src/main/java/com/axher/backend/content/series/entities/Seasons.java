@@ -1,8 +1,10 @@
 package com.axher.backend.content.series.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.axher.backend.content.core.entities.ContentStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,7 +46,11 @@ public class Seasons {
     private String description;
 
     @Column(name = "release_date")
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_status_id")
+    private ContentStatus contentStatus;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Episodes> episodes = new ArrayList<>();

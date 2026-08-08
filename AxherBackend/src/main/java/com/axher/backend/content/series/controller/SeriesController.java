@@ -22,10 +22,20 @@ public class SeriesController {
     private final SeriesService service;
     private final SeriesMapper seriesMapper;
     
-    @GetMapping("/{contentId}")
+    /*@GetMapping("/{contentId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<SeriesDetailResponseDto> findSeriesDetail(@PathVariable Integer contentId){
-        Series series = service.findByContentId(contentId);
+        Series series = service.findPublicById(contentId);
+        SeriesDetailResponseDto dto = seriesMapper.toDto(series);
+        return ResponseEntity.ok(dto);
+    }*/
+
+    @GetMapping("/{contentId}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<SeriesDetailResponseDto> findPublicById(
+        @PathVariable Integer contentId
+    ){
+        Series series = service.findPublicByIdd(contentId);
         SeriesDetailResponseDto dto = seriesMapper.toDto(series);
         return ResponseEntity.ok(dto);
     }

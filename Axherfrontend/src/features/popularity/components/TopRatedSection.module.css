@@ -1,0 +1,21 @@
+.section {
+
+    margin-top:2.5rem;
+
+}
+
+
+.section h2 {
+
+    margin-bottom:1rem;
+
+    font-size:
+    clamp(1.35rem,2vw,2rem);
+
+    font-weight:800;
+
+
+}
+
+
+

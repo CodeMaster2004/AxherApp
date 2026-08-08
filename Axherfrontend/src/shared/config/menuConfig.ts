@@ -25,6 +25,7 @@ export const menuConfig: MenuItem[] = [
                     {id: "content-status", label: "Estado Películas", href: "/contentStatus", permission: "CONTENT:VIEW"},
                     {id: "movies-admin", label: "Películas", href: "/movies", permission: "CONTENT:VIEW"},
                     {id: "series-admin", label: "Series", href: "/series", permission: "CONTENT:VIEW"},
+                    {id: "shelves", label: "Carruseles", href: "/shelves"},
                 ],
 
                 
@@ -35,6 +36,7 @@ export const menuConfig: MenuItem[] = [
                 label:"Gestión Comercial",
                 children: [
                     {id: "discounts", label: "Descuentos", href: "/discounts", permission: "DISCOUNT:VIEW"},
+                    {id: "hero-banners", label: "Hero Banners", href: "/hero-banners"},
                 ],
             },
              {

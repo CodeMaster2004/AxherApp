@@ -40,6 +40,7 @@ export default function EditMoviePage() {
     const [posterUrl, setPosterUrl] = useState("");
     const [backdropUrl, setBackdropUrl] = useState("");
     const [trailerUrl, setTrailerUrl] = useState("");
+    const [releaseDate, setReleaseDate] = useState("");
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -94,6 +95,9 @@ export default function EditMoviePage() {
                 setPosterUrl(content.posterUrl);
                 setBackdropUrl(content.backdropUrl);
                 setTrailerUrl(content.trailerUrl);
+                if (content.releaseDate) {
+                    setReleaseDate(content.releaseDate);
+                }
             } catch (err) {
                 console.error("Error cargando película:", err);
                 router.push("/movies");
@@ -147,7 +151,9 @@ export default function EditMoviePage() {
         if (posterFile) formData.append("posterFile", posterFile);
         if (backdropFile) formData.append("backdropFile", backdropFile);
         if (trailerFile) formData.append("trailerFile", trailerFile);
-
+        if (releaseDate) {
+            formData.append("releaseDate", releaseDate);
+        }
         resetProgress();
         await editContent(id, formData, handleProgress);
     };
@@ -196,9 +202,10 @@ export default function EditMoviePage() {
                 onSubmit={handleSubmit}
                 isEditing={true}
                 saving={saving}
-                onCancel={() => router.push("/movies")} releaseDate={""} setReleaseDate={function (value: string): void {
-                    throw new Error("Function not implemented.");
-                } }            />
+                onCancel={() => router.push("/contents")}
+                releaseDate={releaseDate}
+                setReleaseDate={setReleaseDate}  
+            />
 
             {error && (
                 <p style={{ color: "red", marginTop: 10 }} role="alert">

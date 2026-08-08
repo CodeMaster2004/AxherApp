@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.axher.backend.content.core.DTOs.TopRatedContentDto;
+import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.ratings.entities.Ratings;
 import com.axher.backend.content.ratings.entities.TargetTypeEnum;
 
@@ -50,27 +51,36 @@ public interface RatingsRepository extends JpaRepository<Ratings, Integer>{
 
     @Query("""
         SELECT new com.axher.backend.content.core.DTOs.TopRatedContentDto(
-                c.contentId,
-                c.title,
-                c.description,
-                c.backdropUrl,
-                c.trailerUrl,
-                c.type,
-                AVG(r.ratingValue),
-                COUNT(r)
+
+        c.contentId,
+        c.title,
+        c.posterUrl,
+        c.type,
+        AVG(r.ratingValue),
+        COUNT(r)
+
         )
-        FROM Ratings r, Content c
+
+        FROM Ratings r
+
+        JOIN Content c
+        ON r.targetId = c.contentId
+
         WHERE r.targetType = 'CONTENT'
-        AND r.targetId = c.contentId
+        AND (:type IS NULL OR c.type = :type)
+
         GROUP BY
-                c.contentId,
-                c.title,
-                c.description,
-                c.backdropUrl,
-                c.trailerUrl,
-                c.type
+        c.contentId,
+        c.title,
+        c.posterUrl,
+        c.type
+
+        HAVING COUNT(r) >= 1
+
         """)
-        List<TopRatedContentDto> findTopRated();
+        List<TopRatedContentDto> findTopRated(
+                @Param("type") ContentTypeEnum type
+        );
 
       
 

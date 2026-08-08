@@ -1,5 +1,5 @@
 import axiosClient from "@/core/api/axiosClient";
-import { PlaybackHistoryRequest, PlaybackHistoryResponse } from "@/entities/types";
+import { ContinueWatching, PlaybackHistoryRequest, PlaybackHistoryResponse } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 
 export const playbackHistoryApi = {
@@ -27,5 +27,11 @@ export const playbackHistoryApi = {
                 },
                 ...config
             }
+        ),
+
+    continueWatching: (config?: AxiosRequestConfig) =>
+        axiosClient.get<ContinueWatching[]>(
+            "/playback-history/continue-watching",
+            config
         ),
 };

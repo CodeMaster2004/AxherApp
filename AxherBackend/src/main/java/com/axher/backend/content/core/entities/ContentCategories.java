@@ -28,6 +28,9 @@ public class ContentCategories {
     @Column(nullable = false,  length = 100)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String slug;
+
     @NotBlank
     @Size(max = 200)
     @Column(nullable = false, length = 200)

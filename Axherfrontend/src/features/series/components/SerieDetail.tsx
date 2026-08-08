@@ -1,4 +1,4 @@
-import { EpisodeDetail, RatingTargetType, SeriesDetail } from "@/entities/types";
+import { ContentStatus, EpisodeDetail, RatingTargetType, SeriesDetail } from "@/entities/types";
 import VideoPlayerModal from "@/features/media/components/VideoPlayerModal";
 import Rating from "@/features/ratings/components/Rating";
 import { useContentRating } from "@/features/ratings/hooks/useContentRating";
@@ -8,6 +8,7 @@ import styles from "./SerieDetail.module.css";
 
 interface SeriesDetailProps {
     series: SeriesDetail;
+    statuses: ContentStatus[];
     onSelectEpisode:(episode: EpisodeDetail)=>void;
 }
 
@@ -69,7 +70,7 @@ export default function SerieDetail({ series }: SeriesDetailProps) {
                             )}
                             {releaseYear && <span>{releaseYear}</span>}
                             {series.status && (
-                                <span className={styles.ageBadge}>{series.status}</span>
+                                <span className={styles.ageBadge}>{series.status.status}</span>
                             )}
                         </div>
                         <Rating
@@ -103,8 +104,7 @@ export default function SerieDetail({ series }: SeriesDetailProps) {
                 isOpen={!!playerSource}
                 onClose={() => setPlayerSource(null)}
                 src={playerSource ?? ""}
-                title={series.title}
-            />
+                title={series.title} contentId={0}            />
 
         </>
         

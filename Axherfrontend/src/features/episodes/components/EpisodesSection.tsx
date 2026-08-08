@@ -2,15 +2,23 @@
 import { EpisodeDetail } from "@/entities/types";
 import Image from "next/image";
 import styles from "./EpisodesSection.module.css";
+import { usePublicEpisodes } from "@/features/episodes/hooks/usePublicEpisodes";
 
 interface Props {
-    episodes: EpisodeDetail[];
+    seasonId: number;
     onSelectEpisode: (episode: EpisodeDetail) => void;
 }
 
 export default function EpisodesSection({
-    episodes, onSelectEpisode
+    seasonId, onSelectEpisode
 }: Props) {
+
+    const {
+        episodes,
+        loading
+    } = usePublicEpisodes({
+        seasonId
+    });
 
     return (
         <section className={styles.container}>

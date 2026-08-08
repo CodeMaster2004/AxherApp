@@ -11,7 +11,7 @@ export const revalidate = 60;
 
 async function getMovie(contentId: string): Promise<ContentDetail | undefined> {
   try {
-    const res = await fetch(`${API_URL}/public/contents/${contentId}`, {
+    const res = await fetch(`${API_URL}/contents/${contentId}`, {
       next: {
         tags: ["peliculas", `pelicula-${contentId}`],
       },

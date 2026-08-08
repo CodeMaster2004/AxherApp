@@ -120,9 +120,9 @@ public class AuthService {
 
         String token = jwtService.generateAccessToken(user);
         /// ✅ Generar familyId solo si no existe
-        String familyId = user.getCurrentFamilyId();
+        UUID familyId = user.getCurrentFamilyId();
         if (familyId == null) {
-            familyId = UUID.randomUUID().toString();
+            familyId = UUID.randomUUID();
             user.setCurrentFamilyId(familyId);
             usersRepository.save(user);
         }
@@ -177,9 +177,9 @@ public class AuthService {
 
         String token = jwtService.generateAccessToken(user);
         // ✅ Usar familyId existente
-        String familyId = user.getCurrentFamilyId();
+        UUID familyId = user.getCurrentFamilyId();
         if (familyId == null) {
-            familyId = UUID.randomUUID().toString();
+            familyId = UUID.randomUUID();
             user.setCurrentFamilyId(familyId);
             usersRepository.save(user);
         }

@@ -1,5 +1,5 @@
 import { playbackHistoryApi } from "@/core/api/endpoints/PlaybackHistoryApi";
-import { PlaybackHistoryRequest, PlaybackHistoryResponse } from "@/entities/types";
+import { ContinueWatching, PlaybackHistoryRequest, PlaybackHistoryResponse } from "@/entities/types";
 
 export const playbackHistoryService = {
 
@@ -39,4 +39,16 @@ export const playbackHistoryService = {
         );
         return res.data;
     },
+
+    continueWatching: async(
+        signal?: AbortSignal
+    ): Promise<ContinueWatching[]> => {
+
+        const res = await playbackHistoryApi.continueWatching(
+            { signal }
+        );
+
+        return res.data;
+    }
+    
 };

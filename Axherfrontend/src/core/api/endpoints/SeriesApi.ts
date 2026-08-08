@@ -1,7 +1,6 @@
+import axiosClient from "@/core/api/axiosClient";
 import { SeriesDetail } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
-import axiosClient from "../axiosClient";
-
 
 export const seriesApi = {
 

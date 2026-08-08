@@ -1,6 +1,8 @@
 package com.axher.backend.content.series.DTOs.EpisodesDTOs;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.axher.backend.content.core.DTOs.ContentStatusResponseDto;
 
 import lombok.Data;
 
@@ -13,8 +15,9 @@ public class EpisodeResponseDto {
     private Integer durationSeconds;
     private String thumbnailUrl;
     private String episodeUrl;
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
 
     private Integer seasonNumber;
     private String seriesTitle;
+    private ContentStatusResponseDto status;
 }

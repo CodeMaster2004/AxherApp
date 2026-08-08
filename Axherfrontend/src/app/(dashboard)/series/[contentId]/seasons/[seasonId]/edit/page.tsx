@@ -1,6 +1,7 @@
 "use client";
 
 import { SeasonDetail } from "@/entities/types";
+import { useContentStatus } from "@/features/contentStatus/hooks";
 import SeasonsForm from "@/features/seasons/components/SeasonsForm";
 import { useSeasonsActions } from "@/features/seasons/hooks";
 import { seasonsService } from "@/features/seasons/services/SeasonsService";
@@ -9,6 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function EditSeasonPage() {
+    const { contentStatus: statuses = [] } = useContentStatus();
     const router = useRouter();
     const params = useParams();
     const contentId = params?.contentId ? Number(params.contentId) : null;
@@ -18,6 +20,7 @@ export default function EditSeasonPage() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [releaseDate, setReleaseDate] = useState("");
+    const [selectedStatusId, setSelectedStatusId] = useState<number | undefined>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -38,6 +41,11 @@ export default function EditSeasonPage() {
                 setTitle(season.title);
                 setDescription(season.description || "");
                 setReleaseDate(season.releaseDate || "");
+                if(statuses.length > 0) {
+                    setSelectedStatusId(
+                        statuses.find((s) => s.status === season.status.status)?.contentStatusId
+                    );
+                }
             } catch (err) {
                 console.error("Error cargando temporada:", err);
                 router.push(`/series/${contentId}`);
@@ -47,7 +55,7 @@ export default function EditSeasonPage() {
         };
 
         loadSeason();
-    }, [contentId, seasonId, router]);
+    }, [contentId, seasonId, statuses, router]);
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -64,6 +72,9 @@ export default function EditSeasonPage() {
         formData.append("title", title.trim());
         formData.append("description", description.trim());
         if (releaseDate) formData.append("releaseDate", releaseDate);
+        if(selectedStatusId){
+            formData.append("statusId", selectedStatusId.toString());
+        }
 
         try {
             await editSeason(seasonId!, formData);
@@ -92,10 +103,13 @@ export default function EditSeasonPage() {
                 title={title}
                 description={description}
                 releaseDate={releaseDate}
+                selectedStatusId={selectedStatusId}
+                availableStatuses={statuses}
                 setSeasonNumber={setSeasonNumber}
                 setTitle={setTitle}
                 setDescription={setDescription}
                 setReleaseDate={setReleaseDate}
+                setSelectedStatusId={setSelectedStatusId}
                 onSubmit={handleSubmit}
                 saving={saving}
                 isEditing={true}

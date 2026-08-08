@@ -1,5 +1,5 @@
 import { contentCategoriesApi } from "@/core/api/endpoints/ContentCategoriesApi";
-import { ContentCategories, Page, PaginationParams } from "@/entities/types";
+import { Category, ContentCategories, Page, PaginationParams } from "@/entities/types";
 
 export const contentCategoriesService = {
 
@@ -13,6 +13,12 @@ export const contentCategoriesService = {
         const res = await contentCategoriesApi.getById(id, { signal });
         return res.data;
     },
+
+    getBySlug: async(slug: string, signal?: AbortSignal): Promise<Category> => {
+        const res = await contentCategoriesApi.geBySlug(slug, { signal });
+        return res.data;
+    },
+
 
     create: async(data: Omit<ContentCategories, "contentCategoryId">, signal?: AbortSignal): Promise<ContentCategories> =>{
         const res = await contentCategoriesApi.create(data, { signal });

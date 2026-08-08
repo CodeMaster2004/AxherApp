@@ -41,7 +41,7 @@ export default function CreateContentPage() {
     const{ progress, handleProgress, resetProgress } = useUploadProgress();
 
     const { addContent, saving } = useContentsActions({
-        onSuccess: () => router.push("/contents"),
+        onSuccess: () => router.push("/series"),
     });
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {

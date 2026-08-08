@@ -1,5 +1,5 @@
 import axiosClient from '@/core/api/axiosClient';
-import { ContentFeatured, Page, PaginationParams, PopularContent } from '@/entities/types';
+import { ContentFeatured, ContentType, Page, PaginationParams, PopularContent, TopRatedContent, TrendingContent } from '@/entities/types';
 import { AxiosRequestConfig } from 'axios';
 export const popularityApi = {
 
@@ -8,28 +8,30 @@ export const popularityApi = {
             "/popularity/featured"
         ),
         
-    trending: (params: PaginationParams, config?: AxiosRequestConfig) => axiosClient.get<Page<PopularContent>>(
+    trending: ( params: PaginationParams,type?: ContentType, config?: AxiosRequestConfig) => axiosClient.get<Page<TrendingContent>>(
         "/popularity/trending",
         {
-            params,
+            params: {
+                ...params,
+                type
+            },
             ...config
         }
     ),
 
-    movies: (params: PaginationParams, config?: AxiosRequestConfig) => axiosClient.get<Page<PopularContent>>(
-        "/popularity/movie",
-        {
-            params,
-            ...config
-        }
-    ),
 
-    series: (params: PaginationParams, config?: AxiosRequestConfig) => axiosClient.get<Page<PopularContent>>(
-        "/popularity/series",
-        {
-            params,
-            ...config
-        }
-    ),
+
+    topRated: (type?: ContentType, config?: AxiosRequestConfig) =>
+        axiosClient.get<TopRatedContent[]>(
+            "/popularity/top-rated",
+            {
+                params: {
+                    type
+                },
+                ...config
+            }
+        )
+
+    
 };
        

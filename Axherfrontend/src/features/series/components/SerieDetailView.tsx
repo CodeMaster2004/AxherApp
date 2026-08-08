@@ -38,11 +38,11 @@ export default function SerieDetailView({ series }: Props) {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
                         <p><strong>Precio:</strong> ${series.price.toFixed(2)}</p>
-                        <p><strong>Estado:</strong> {series.status}</p>
+                        <p><strong>Estado:</strong> {series.status.status}</p>
                         <p><strong>Categorías:</strong> {series.categories.join(", ")}</p>
                         <p><strong>Descuento:</strong> {series.discountAmount ? `${series.discountAmount}%` : "Sin descuento"}</p>
                         <p><strong>Registrado:</strong> {formatDate(series.registeredAt)}</p>
-                        <p><strong>Temporadas:</strong> {series.seasons.length}</p>
+                        <p><strong>Temporadas:</strong> {series.seasonCount}</p>
                     </div>
 
                     {series.trailerUrl && (

@@ -1,7 +1,9 @@
 "use client";
 
+import { ContentStatus } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import Input from "@/shared/components/ui/Input";
+import Select, { SelectOption } from "@/shared/components/ui/Select";
 import TextArea from "@/shared/components/ui/TextArea";
 import formStyles from "@/shared/styles/shared/Form.module.css";
 
@@ -10,11 +12,14 @@ interface Props {
     title: string;
     description?: string;
     releaseDate?: string;
+    selectedStatusId?: number;
+    availableStatuses: ContentStatus[];
 
     setSeasonNumber: (value: number) => void;
     setTitle: (value: string) => void;
     setDescription: (value: string) => void;
     setReleaseDate: (value: string) => void;
+    setSelectedStatusId: (value?: number) => void;
 
     onSubmit: React.FormEventHandler<HTMLFormElement>;
     isEditing?: boolean;
@@ -27,16 +32,24 @@ export default function SeasonsForm({
     title,
     description,
     releaseDate,
+    selectedStatusId,
+    availableStatuses,
     setSeasonNumber,
     setTitle,
     setDescription,
     setReleaseDate,
+    setSelectedStatusId,
     onSubmit,
     isEditing,
     saving = false,
     onCancel,
 }: Props) {
+    const statusOptions: SelectOption[] = availableStatuses.map((status) => ({
+        value: status.contentStatusId,
+        label: status.name,
+    }));
     return (
+        
         <form onSubmit={onSubmit} className={formStyles.form}>
             <h2>{isEditing ? "Editar Temporada" : "Crear Temporada"}</h2>
 
@@ -69,9 +82,18 @@ export default function SeasonsForm({
 
             <Input
                 label="Fecha de Estreno"
-                type="date"
+                type="datetime-local"
                 value={releaseDate || ""}
                 onChange={setReleaseDate}
+                disabled={saving}
+            />
+
+            <Select
+                label="Estado"
+                options={statusOptions}
+                value={selectedStatusId}
+                onChange={(val) => setSelectedStatusId(val as number | undefined)}
+                placeholder="Selecciona un estado"
                 disabled={saving}
             />
 

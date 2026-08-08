@@ -71,6 +71,7 @@ public class SeriesContentTypeService implements ContentTypeService{
                         episode.setDurationSeconds(duration);
                         episode.setEpisodeUrl(url);
                         episode.setReleaseDate(episodeDto.getReleaseDate());
+                        
                         episodesRepository.save(episode);
                     }
                 }

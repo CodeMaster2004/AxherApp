@@ -54,11 +54,15 @@ export default function EditContentCategoryPage() {
     const nameTrim = name.trim();
     const descriptionTrim = description.trim();
     
-    if (!nameTrim || !descriptionTrim) {
+    if (!nameTrim || !descriptionTrim ) {
       alert("Por favor completa todos los campos");
       return;
     }
 
+    console.log({
+    name: nameTrim,
+    description: descriptionTrim
+});
     await editContentCategory(id, { name: nameTrim, description: descriptionTrim});
   };
 

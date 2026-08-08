@@ -14,10 +14,11 @@ import styles from "./EpisodeDetail.module.css";
 
 interface Props {
     episode: Episode;
+    contentId: number;
 }
 
 
-export default function EpisodeDetail({ episode }: Props) {
+export default function EpisodeDetail({ episode, contentId }: Props) {
 
     const episodeUrl = mediaService.getEpisodesStreamUrl(episode.episodeId);
     const {rating, rate} = useContentRating(
@@ -144,7 +145,9 @@ export default function EpisodeDetail({ episode }: Props) {
                 isOpen={!!playerSource}
                 onClose={() => setPlayerSource(null)}
                 src={playerSource ?? ""}
-                title={episode.title}
+                title={episode.title} 
+                contentId={contentId}
+                episodeId={episode.episodeId}
             />
         </>
     )

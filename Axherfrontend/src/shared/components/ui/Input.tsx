@@ -11,7 +11,7 @@ export interface InputProps {
   /** Función que se ejecuta al cambiar el valor */
   onChange: (value: string) => void;
   /** Tipo de input */
-  type?: 'text' | 'email' | 'password' | 'number' | 'url' | 'tel' | 'date' ;
+  type?: 'text' | 'email' | 'password' | 'number' | 'url' | 'tel' | 'date' | "datetime-local" ;
   /** Texto de placeholder */
   placeholder?: string;
   /** Si el campo está deshabilitado */

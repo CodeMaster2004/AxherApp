@@ -1,7 +1,7 @@
-CREATE DATABASE axher-db;
+CREATE DATABASE axherDB;
 GO
 
-USE axher-db;
+USE axherDB;
 GO
 
 -- Tabla de roles del sistema
@@ -144,6 +144,7 @@ GO
 CREATE TABLE content_categories (
     content_category_id INT PRIMARY KEY IDENTITY(1,1),
     name NVARCHAR(100) NOT NULL,
+    slug NVARCHAR(100) NOT NULL UNIQUE,
     description NVARCHAR(200) NOT NULL
 );
 GO
@@ -151,7 +152,8 @@ GO
 -- Tabla de estados de contenido
 CREATE TABLE content_status (
     content_status_id INT PRIMARY KEY IDENTITY(1,1),
-    status NVARCHAR(20) NOT NULL UNIQUE,
+    code NVARCHAR(20) NOT NULL UNIQUE,
+    name NVARCHAR(100) NOT NULL UNIQUE,
     description NVARCHAR(200) NULL
 );
 GO
@@ -180,7 +182,7 @@ CREATE TABLE content(
     price DECIMAL(10,2) NOT NULL,
     content_status_id INT,
     discount_id INT,
-    release_date DATE,
+    release_date DATETIME,
     registered_at DATE DEFAULT GETDATE(),
     FOREIGN KEY (content_status_id) REFERENCES content_status(content_status_id),
     FOREIGN KEY (discount_id) REFERENCES discounts(discount_id)
@@ -207,9 +209,12 @@ CREATE TABLE seasons(
     season_number INT NOT NULL,
     title NVARCHAR(150),
     description NVARCHAR(500),
-    release_date DATE,
+    content_status_id INT,
+    release_date DATETIME,
     FOREIGN KEY (series_content_id) REFERENCES series(content_id) ON DELETE CASCADE,
-    UNIQUE (series_content_id, season_number)
+    UNIQUE (series_content_id, season_number),
+    FOREIGN KEY (content_status_id) REFERENCES content_status(content_status_id),
+    
 );
 GO
 
@@ -222,9 +227,11 @@ CREATE TABLE episodes(
     duration_seconds INT,
     thumbnail_url NVARCHAR(MAX),
     episode_url NVARCHAR(MAX) NOT NULL,
-    release_date DATE,
+    content_status_id INT,
+    release_date DATETIME,
     FOREIGN KEY (season_id) REFERENCES seasons(season_id) ON DELETE CASCADE,
-    UNIQUE (season_id, episode_number)
+    UNIQUE (season_id, episode_number),
+    FOREIGN KEY (content_status_id) REFERENCES content_status(content_status_id)
 );
 GO
 
@@ -237,7 +244,44 @@ CREATE TABLE content_categories_map(
 );
 GO
 
+CREATE TABLE hero_banners(
+    hero_banner_id INT PRIMARY KEY IDENTITY(1,1),
+    content_id INT NOT NULL,
+    title_override NVARCHAR(100) NULL,
+    description_override NVARCHAR(MAX) NULL,
+    backdrop_url NVARCHAR(MAX) NULL,
+    priority INT DEFAULT 1,
+    start_date DATETIME  NULL,
+    end_date DATETIME  NULL,
+    active BIT DEFAULT 1,
+    created_at DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE
+);
+GO
 
+CREATE TABLE content_shelves(
+    content_shelf_id INT PRIMARY KEY IDENTITY(1,1),
+    name NVARCHAR(100) NOT NULL,
+    slug NVARCHAR(100) NOT NULL UNIQUE,
+    display_order INT DEFAULT 0,
+    active BIT DEFAULT 1,
+    created_at DATETIME DEFAULT GETDATE()
+);
+GO
+
+CREATE TABLE shelf_contents(
+        
+    shelf_content_id INT PRIMARY KEY IDENTITY(1,1),
+    content_shelf_id INT NOT NULL,
+    content_id INT NOT NULL,
+    position INT DEFAULT 0,
+    created_at DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (content_shelf_id) REFERENCES content_shelves(content_shelf_id) ON DELETE CASCADE,
+    FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE,
+    UNIQUE (content_shelf_id, content_id)
+    
+);
+GO
 -- Tabla de calificaciones y comentarios
 CREATE TABLE ratings (
     rating_id INT PRIMARY KEY IDENTITY(1,1),

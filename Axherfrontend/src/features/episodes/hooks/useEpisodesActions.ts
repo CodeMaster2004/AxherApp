@@ -1,4 +1,4 @@
-import { EpisodeDetail } from "@/entities/types";
+import { EpisodeDetail, StatusUpdate } from "@/entities/types";
 import { episodesService } from "@/features/episodes/services/EpisodesService";
 import { AxiosProgressEvent } from "axios";
 import { useCallback, useState } from "react";
@@ -12,6 +12,7 @@ export const useEpisodesActions = (seasonId: number, options?: Options) => {
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState<number | null>(null);
     const [error, setError] = useState<unknown | null>(null);
+    const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
 
     const addEpisode = useCallback(
         async (formData: FormData, onUploadProgress?: (progressEvent: AxiosProgressEvent) => void) => {
@@ -53,6 +54,26 @@ export const useEpisodesActions = (seasonId: number, options?: Options) => {
         [seasonId, options]
     );
 
+    const updateEpisodeStatus = useCallback(
+        async (episodeId: number, statusUpdate: StatusUpdate) => {
+            setUpdatingStatus(episodeId);
+            setError(null);
+
+            try {
+                const updated = await episodesService.updateStatus(seasonId, episodeId, statusUpdate);
+                options?.onSuccess?.(updated);
+                return updated;
+            } catch(err){
+                setError(err);
+                options?.onError?.(err);
+                throw err;
+            }finally{
+                setUpdatingStatus(null);
+            }
+        },
+        [seasonId, options]
+    );
+
     const removeEpisode = useCallback(
         async (episodeId: number) => {
             setDeleting(episodeId);
@@ -76,8 +97,10 @@ export const useEpisodesActions = (seasonId: number, options?: Options) => {
         saving,
         deleting,
         error,
+        updatingStatus,
         addEpisode,
         editEpisode,
+        updateEpisodeStatus,
         removeEpisode
     }
     

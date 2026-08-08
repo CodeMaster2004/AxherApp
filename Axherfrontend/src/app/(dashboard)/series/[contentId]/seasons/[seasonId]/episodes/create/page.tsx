@@ -5,8 +5,10 @@ import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css"
 import EpisodesForm from "@/features/episodes/components/EpisodesForm";
 import { useEpisodesActions } from "@/features/episodes/hooks/useEpisodesActions";
+import { useContentStatus } from "@/features/contentStatus/hooks";
 
 export default function CreateEpisodePage() {
+  const { contentStatus: statuses = [] } = useContentStatus();
   const router = useRouter();
   const params = useParams();
 
@@ -17,6 +19,7 @@ export default function CreateEpisodePage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState<string | undefined>(undefined);
   const [releaseDate, setReleaseDate] = useState("");
+  const [selectedStatusId, setSelectedStatusId] = useState<number | undefined>();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [episodeFile, setEpisodeFile] = useState<File | null>(null);
   const [error, setError] = useState("");
@@ -38,6 +41,9 @@ export default function CreateEpisodePage() {
     formData.append("title", title.trim());
     formData.append("description", description || "");
     if (releaseDate) formData.append("releaseDate", releaseDate);
+    if (selectedStatusId) {
+        formData.append("statusId", selectedStatusId.toString());
+    };
     formData.append("thumbnailFile", thumbnailFile);
     formData.append("episodeFile", episodeFile);
 
@@ -63,12 +69,15 @@ export default function CreateEpisodePage() {
         title={title}
         description={description}
         releaseDate={releaseDate}
+        availableStatuses={statuses}
+        selectedStatusId={selectedStatusId}
         thumbnailFile={thumbnailFile}
         episodeFile={episodeFile}
         setEpisodeNumber={setEpisodeNumber}
         setTitle={setTitle}
         setDescription={setDescription}
         setReleaseDate={setReleaseDate}
+        setSelectedStatusId={setSelectedStatusId}
         setThumbnailFile={setThumbnailFile}
         setEpisodeFile={setEpisodeFile}
         onSubmit={handleSubmit}

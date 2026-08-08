@@ -238,7 +238,7 @@ export default function ContentsList({
                                                 isOpen: true,
                                                 contentId: content.contentId,
                                                 statusId,
-                                                statusName: selectedStatus?.status ?? "",
+                                                statusName: selectedStatus?.name ?? "",
                                                 contentTitle: content.title
                                             });
                                         }}
@@ -249,7 +249,7 @@ export default function ContentsList({
                                                         key={status.contentStatusId}
                                                         value={status.contentStatusId}
                                                     >
-                                                        {status.status}
+                                                        {status.name}
                                                     </option>
                                                 ))
                                             }

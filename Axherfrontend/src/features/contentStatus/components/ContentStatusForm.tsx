@@ -5,8 +5,10 @@ import Input from '@/shared/components/ui/Input';
 import Button from '@/shared/components/ui/Button';
 
 interface Props {
-    contentStatus: string;
-    setContentStatus: (value: string) => void;
+    code: string;
+    setCode: (value: string) => void;
+    name: string;
+    setName: (value: string) => void;
     description: string;
     setDescription: (value: string) => void;
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -17,8 +19,10 @@ interface Props {
 }
 
 export default function ContentStatusForm({
-    contentStatus,
-    setContentStatus,
+    code,
+    setCode,
+    name,
+    setName,
     description,
     setDescription,
     onSubmit,
@@ -37,14 +41,25 @@ export default function ContentStatusForm({
                 </p>
             )}
             <Input 
-                label="Estado de la Película"
-                value={contentStatus}
-                onChange={setContentStatus}
+                label="Código del Estado"
+                value={code}
+                onChange={setCode}
                 placeholder="Ej: Disponible, No disponible, Próximamente"
                 maxLength={20}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
+            />
+
+            <Input
+                label="Nombre del Estado"
+                value={name}
+                onChange={setName}
+                placeholder="Ej: Disponible, No disponible, Próximamente"
+                maxLength={50}
+                required
+                disabled={saving}
+                autoFocus={isEditing}
             />
 
             <Input

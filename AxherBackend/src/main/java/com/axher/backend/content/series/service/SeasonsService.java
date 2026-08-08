@@ -1,23 +1,32 @@
 package com.axher.backend.content.series.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.quartz.SchedulerException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.axher.backend.content.core.entities.Content;
+import com.axher.backend.content.core.entities.ContentStatus;
+import com.axher.backend.content.core.entities.ContentStatusCode;
+import com.axher.backend.content.core.service.ContentStatusService;
 import com.axher.backend.content.series.DTOs.seasonDTOs.CreateSeasonRequestDto;
 import com.axher.backend.content.series.DTOs.seasonDTOs.UpdateSeasonRequestDto;
 import com.axher.backend.content.series.entities.Seasons;
 import com.axher.backend.content.series.entities.Series;
 import com.axher.backend.content.series.repositories.SeasonsRepository;
+import com.axher.backend.infrastructure.quartz.SeasonPublicationScheduler;
 import com.axher.backend.infrastructure.storage.FileStorageService;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,6 +35,8 @@ public class SeasonsService {
     private final SeasonsRepository seasonsRepository;
     private final SeriesService seriesService;
     private final FileStorageService fileStorageService;
+    private final SeasonPublicationScheduler seasonPublicationScheduler;
+    private final ContentStatusService statusService;
 
     @Transactional(readOnly = true)
     public Page<Seasons> findBySeriesId(Integer seriesId, Pageable pageable){
@@ -36,6 +47,33 @@ public class SeasonsService {
     public Seasons findById(Integer seasonId){
         return seasonsRepository.findById(seasonId)
             .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrada: " + seasonId));
+    }
+
+    /*@Transactional(readOnly = true)
+    public Seasons findPublicBySeriesIdAndSeasonId(Integer seriesId, Integer seasonId) {
+
+        Seasons season = findBySeriesIdAndSeasonId(seriesId, seasonId);
+
+        if(!"PUBLISHED".equalsIgnoreCase(
+            season.getSeries()
+                .getContent()
+                .getContentStatus()
+                .getStatus()   
+        )){
+            throw new ResourceNotFoundException("Serie no disponible");
+        }
+
+        if(!"PUBLISHED".equalsIgnoreCase(
+            season.getContentStatus().getStatus()
+        )){
+            throw new ResourceNotFoundException("Temporada no disponible");
+        }
+        return season;
+    }*/
+
+    public Page<Seasons> findPublicBySeriesId(Integer seriesId, Pageable pageable){
+
+        return seasonsRepository.findPublicBySeriesId(seriesId, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -57,9 +95,41 @@ public class SeasonsService {
         return seasonsRepository.findBySeries_ContentIdAndTitleContainingIgnoreCase(seriesId, keyword);
     }
 
+    public Page<Seasons> findUpcoming(Pageable pageable) {
+
+        return seasonsRepository.findByContentStatus_CodeOrderByReleaseDateAsc(ContentStatusCode.UPCOMING.name(), pageable);
+    }
+
+    public void publish(Integer id) {
+
+        Seasons season = findById(id);
+
+        if(ContentStatusCode.PUBLISHED.name().equals(season.getContentStatus().getCode())){
+            log.info("La temporada {} ya estaba publicado. Se omite la publicación.", id);
+            return;
+        }
+
+        Content content = season.getSeries().getContent();
+
+        if(!ContentStatusCode.PUBLISHED.name().equals(content.getContentStatus().getCode())){
+            throw new IllegalStateException("No se puede publicar la temporada porque la serie no está publicada");
+        }
+
+
+
+        ContentStatus published = statusService.getStatus(ContentStatusCode.PUBLISHED);
+
+        season.setContentStatus(published);
+        seasonsRepository.save(season);
+
+        log.info("Temporada {} publicada correctamente", id);
+    }
+
     public Seasons create(Integer seriesId, CreateSeasonRequestDto dto){
 
         Series series = seriesService.findById(seriesId);
+
+        ContentStatus defaultStatus = statusService.getStatus(ContentStatusCode.DRAFT);
 
         boolean exists = seasonsRepository
             .existsBySeries_ContentIdAndSeasonNumber(seriesId, dto.getSeasonNumber());
@@ -73,6 +143,7 @@ public class SeasonsService {
         season.setTitle(dto.getTitle());
         season.setDescription(dto.getDescription());
         season.setReleaseDate(dto.getReleaseDate());
+        season.setContentStatus(defaultStatus);
         season.setSeries(series);
 
         return seasonsRepository.save(season);
@@ -103,7 +174,41 @@ public class SeasonsService {
         if(dto.getReleaseDate() != null){
             season.setReleaseDate(dto.getReleaseDate());
         }
-        return seasonsRepository.save(season);
+
+        if(dto.getStatusId() != null){
+            ContentStatus status = statusService.findById(dto.getStatusId());
+            season.setContentStatus(status);
+        }
+
+        Seasons saved = seasonsRepository.save(season);
+
+        try {
+            syncPublication(saved);
+        }catch (Exception e) {
+            throw new IllegalStateException("Error al sincronizar la publicación de la temporada", e);
+        }
+        
+        return saved;
+    }
+
+    @Transactional
+    public Seasons updateStatus(Integer seriesId, Integer seasonId, Integer statusId){
+
+        Seasons season = findBySeriesIdAndSeasonId(seriesId, seasonId);
+
+        ContentStatus status = statusService.findById(statusId);
+
+        season.setContentStatus(status);
+
+        Seasons saved = seasonsRepository.save(season);
+
+        try {
+            syncPublication(saved);
+        }catch (Exception e) {
+            throw new IllegalStateException("Error al programar la publicación de la temporada", e);
+        }
+
+        return saved;
     }
 
     public void delete(Integer seriesId, Integer seasonId){
@@ -115,7 +220,35 @@ public class SeasonsService {
                 }
             });
         }
+        try{
+            seasonPublicationScheduler.cancel(season.getSeasonId());
+        }catch (Exception e) {
+            throw new IllegalStateException("Error al cancelar la publicacion de la temporada", e);
+        }
         seasonsRepository.delete(season);
+    }
+
+
+    private void syncPublication(Seasons season) throws SchedulerException {
+        
+        if(ContentStatusCode.UPCOMING.name().equals(season.getContentStatus().getCode())){
+
+            if(season.getReleaseDate() == null) {
+                throw new IllegalArgumentException("La temporada UPCOMING necesita fecha de estreno");
+            }
+
+            if(season.getReleaseDate().isBefore(LocalDateTime.now())){
+                throw new IllegalArgumentException("La fecha de estreno debe ser futura");
+            }
+
+            seasonPublicationScheduler.schedule(
+                season.getSeasonId(),
+                season.getReleaseDate()
+            );
+        }else {
+            
+            seasonPublicationScheduler.cancel(season.getSeasonId());
+        }
     }
 }
 

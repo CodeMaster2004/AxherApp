@@ -2,6 +2,7 @@ package com.axher.backend.content.core.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -80,7 +81,7 @@ public class Content {
     @JoinColumn(name = "discount_id")
     private Discounts discount;  
 
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
 
     @Column(name = "registered_at", insertable = false, updatable = false)
     private LocalDate registeredAt;

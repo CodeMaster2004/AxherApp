@@ -105,9 +105,9 @@ public class OAuthService {
         String token = jwtService.generateAccessToken(user);
 
         //GEnera familyId si no existe
-        String familyId = user.getCurrentFamilyId();
+        UUID familyId = user.getCurrentFamilyId();
         if(familyId == null){
-            familyId = UUID.randomUUID().toString();
+            familyId = UUID.randomUUID();
             user.setCurrentFamilyId(familyId);
             usersRepository.save(user);
         }

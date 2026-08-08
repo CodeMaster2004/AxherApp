@@ -1,4 +1,4 @@
-import { seriesApi } from "@/core/api/endpoints/SeriesApi";
+import { seriesApi } from "@/core/api/endpoints/AdminSeriesApi";
 import { SeriesDetail } from "@/entities/types";
 
 

@@ -1,0 +1,16 @@
+.wrapper {
+    width:100%;
+    overflow:hidden;
+}
+
+
+.track {
+    display:flex;
+    gap:1rem;
+    transition:transform .6s ease;
+}
+
+
+.slide {
+    flex:0 0 calc((100% - 2rem) / 3);
+}

@@ -1,0 +1,195 @@
+
+
+
+.bubble {
+    --bubbleTiming: .2s;
+
+    display: block;
+
+    width: 1.8em;
+    height: 1.8em;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+    position: relative;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background-image:
+        radial-gradient(8% 8% at 22% 28%, white 45%, transparent 50%),
+        radial-gradient(8% 8% at 23% 27%, white 45%, transparent 50%),
+        radial-gradient(8% 8% at 24% 26%, white 45%, transparent 50%),
+        radial-gradient(8% 8% at 25% 25%, white 45%, transparent 50%),
+        radial-gradient(8% 8% at 26% 24%, white 45%, transparent 50%),
+        radial-gradient(8% 8% at 27% 23%, white 45%, transparent 50%),
+        radial-gradient(8% 8% at 28% 22%, white 45%, transparent 50%);
+
+    background-color: transparent;
+
+    box-shadow:
+        0 -0.06em 0.1em hsl(0,90%,100%) inset,
+        0 -0.15em 0.4em hsl(0,90%,45%) inset,
+        0 0.05em 0.05em hsl(0,90%,45%) inset,
+        0.05em 0 0.1em white inset,
+        -0.05em 0 0.1em white inset,
+        0 0.1em 0.4em hsl(0,90%,60%) inset;
+
+    transition-duration:.2s;
+
+    transition-property:
+        box-shadow,
+        transform,
+        width,
+        height;
+
+    transform-style: preserve-3d;
+}
+
+
+.bubble::before,
+.bubble::after {
+
+    content:"";
+
+    display:block;
+
+    position:absolute;
+
+    transition-duration:.2s;
+
+}
+
+
+.bubble::before {
+
+    border-radius:.45em;
+
+    box-shadow:
+        0 0 0 .5em white inset;
+
+    filter:
+        drop-shadow(.6em .6em 4px rgba(0,0,0,.2));
+
+
+    width:0.9em;
+    height:0.9em;
+
+    top:50%;
+    left:50%;
+
+    transform:
+        translate3d(-50%,-50%,-1px);
+
+}
+
+
+.bubble::after {
+
+    background:
+        radial-gradient(
+            100% 100% at center,
+            transparent 35%,
+            rgba(0,0,0,.2) 48%,
+            transparent 50%
+        );
+
+    filter:blur(4px);
+
+
+    width:100%;
+    height:100%;
+
+    top:.35em;
+    left:.35em;
+
+}
+
+
+
+/* hover */
+
+.bubble:hover {
+
+    transform:scale(1.08);
+
+}
+
+
+.bubble:active {
+
+    width:2.1em;
+    height:1.5em;
+
+}
+
+
+/* ACTIVO */
+
+.active {
+
+    box-shadow:
+        0 -0.06em 0.1em hsl(120,90%,100%) inset,
+        0 -0.15em 0.4em hsl(120,90%,45%) inset,
+        0 0.05em 0.05em hsl(120,90%,45%) inset,
+        0.05em 0 0.1em white inset,
+        -0.05em 0 0.1em white inset,
+        0 0.1em 0.4em hsl(120,90%,60%) inset;
+
+}
+
+
+.active::before {
+
+    border-radius:.25em;
+
+    width:.5em;
+
+}
+
+
+
+/* deshabilitado mientras actualiza */
+
+.disabled {
+
+    cursor:not-allowed;
+
+    opacity:.6;
+
+}
+
+
+/* animación flotante */
+
+@keyframes float74 {
+
+    from,to {
+
+        transform:translate(0,3%);
+
+    }
+
+
+    25% {
+
+        transform:translate(-3%,0);
+
+    }
+
+
+    50% {
+
+        transform:translate(0,-3%);
+
+    }
+
+
+    75% {
+
+        transform:translate(3%,0);
+
+    }
+
+}

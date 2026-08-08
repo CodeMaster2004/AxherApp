@@ -1,6 +1,6 @@
 "use client";
 
-import { EpisodeDetail } from "@/entities/types";
+import { ContentStatus, EpisodeDetail } from "@/entities/types";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
@@ -11,8 +11,10 @@ import MoreMenu from "../../../shared/components/ui/MoreMenu";
 
 interface Props{
     episodes: EpisodeDetail[];
+    statuses: ContentStatus[];
     onDelete: (episodeId: number) => void;
     onEdit: (episode: EpisodeDetail) => void;
+    onUpdateStatus: (id: number, statusId: number) => void;
     deletingId?: number | null;
     loading?: boolean;
 
@@ -26,8 +28,10 @@ interface Props{
 
 export default function EpisodesList({
     episodes,
+    statuses,
     onDelete,
     onEdit,
+    onUpdateStatus,
     deletingId,
     loading,
     currentPage,
@@ -37,6 +41,8 @@ export default function EpisodesList({
     searchTerm,
     onSearchChange,
 } : Props) {
+     const [pendingStatus, setPendingStatus] = useState<Record<number,number>>({});
+
     const [confirmDialog, setConfirmDialog] = useState<{
         isOpen: boolean;
         id: number;
@@ -45,6 +51,20 @@ export default function EpisodesList({
         isOpen: false,
         id: 0,
         title: "",
+    });
+
+    const [statusDialog, setStatusDialog] = useState<{
+        isOpen: boolean;
+        contentId: number;
+        statusId: number;
+        statusName: string;
+        contentTitle: string;
+    }>({
+        isOpen: false,
+        contentId: 0,
+        statusId: 0,
+        statusName: "",
+        contentTitle: "",
     });
 
     const formatDate = (dateStr?: string): string => {
@@ -66,6 +86,40 @@ export default function EpisodesList({
         setConfirmDialog({ isOpen: false, id: 0, title: ""});
     };
 
+    const handleConfirmStatus = () => {
+
+        onUpdateStatus(
+            statusDialog.contentId,
+            statusDialog.statusId
+        );
+
+        setPendingStatus(prev => {
+            const copy = {...prev};
+            delete copy[statusDialog.contentId];
+            return copy;
+        });
+
+        handleCancelStatus();
+    };
+
+
+    const handleCancelStatus = () => {
+
+        setPendingStatus(prev => {
+            const copy = {...prev};
+            delete copy[statusDialog.contentId];
+            return copy;
+        });
+
+        setStatusDialog({
+            isOpen:false,
+            contentId:0,
+            statusId:0,
+            statusName:"",
+            contentTitle:""
+        });
+    };
+
     return (
         <div className={layoutStyles.section}>
             <ConfirmDialog
@@ -77,6 +131,19 @@ export default function EpisodesList({
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
+            />
+
+            <ConfirmDialog
+                isOpen={statusDialog.isOpen}
+                title="Cambiar estado"
+                message={
+                    `¿Seguro que deseas cambiar "${statusDialog.contentTitle}" a "${statusDialog.statusName}"?`
+                }
+                confirmText="Cambiar"
+                cancelText="Cancelar"
+                onConfirm={handleConfirmStatus}
+                onCancel={handleCancelStatus}
+                variant="info"
             />
 
             <h2>Listado de Episodios</h2>
@@ -102,6 +169,7 @@ export default function EpisodesList({
                                 <th className={tableStyles.headCell}>Titulo</th>
                                 <th className={tableStyles.headCell}>Duración</th>
                                 <th className={tableStyles.headCell}>Fecha estreno</th>
+                                <th className={tableStyles.headCell}>Estado</th>
                                 <th className={tableStyles.headCell}>Video</th>
                                 <th className={tableStyles.headCell}>Acciones</th>
                             </tr>
@@ -114,6 +182,47 @@ export default function EpisodesList({
                                     <td>{episode.title}</td>
                                     <td>{episode.durationSeconds ? formatDuration(episode.durationSeconds) : "-"}</td>
                                     <td>{formatDate(episode.releaseDate)}</td>
+
+                                    <td>
+                                        <select
+                                            className={tableStyles.statusSelect}
+                                            value={
+                                                pendingStatus[episode.episodeId] ?? episode.status.contentStatusId
+                                            }
+                                            onChange={(e)=>{
+                                            const statusId = Number(e.target.value);
+
+                                            const selectedStatus = statuses.find(
+                                                status => status.contentStatusId === statusId
+                                            );
+
+                                            setPendingStatus(prev => ({
+                                                ...prev,
+                                                [episode.episodeId]: statusId
+                                            }));
+
+                                            setStatusDialog({
+                                                isOpen: true,
+                                                contentId: episode.episodeId,
+                                                statusId,
+                                                statusName: selectedStatus?.name ?? "",
+                                                contentTitle: episode.title
+                                            });
+                                        }}
+                                        >
+                                            {
+                                                statuses.map((status)=>(
+                                                    <option
+                                                        key={status.contentStatusId}
+                                                        value={status.contentStatusId}
+                                                    >
+                                                        {status.name}
+                                                    </option>
+                                                ))
+                                            }
+                                        </select>
+                                    </td>
+
                                     <td>
                                         {episode.episodeUrl ? (
                                             <a href={episode.episodeUrl} target="_blank" rel="noopener noreferrer">

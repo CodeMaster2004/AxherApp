@@ -13,3 +13,5 @@ export * from "./season.types";
 export * from "./series.types";
 export * from "./status.types";
 export * from "./user.types";
+export * from "./shelf.types";
+export * from "./heroBanner.types";

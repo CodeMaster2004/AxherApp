@@ -44,12 +44,14 @@ public class SecurityConfig {
                 .requestMatchers("/profile_banners/**").permitAll()
                 .requestMatchers("/posters/**").permitAll()
                 .requestMatchers("/backdrop/**").permitAll()
-                 //.requestMatchers("/episodes/**").permitAll()
+                .requestMatchers("/episodes/**").permitAll()
                 .requestMatchers("/trailers/**").permitAll()
+                .requestMatchers("/hero-banners/**").permitAll()
 
 
                 // Catalogo publico
-                .requestMatchers("/api/public/contents/**").permitAll()
+                .requestMatchers("/api/contents/**").permitAll()
+                .requestMatchers("/api/series/**").permitAll()
 
                  //Contenido privado streaming
                  .requestMatchers("/api/media/**").authenticated()

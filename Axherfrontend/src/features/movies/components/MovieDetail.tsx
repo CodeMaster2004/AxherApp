@@ -85,7 +85,7 @@ export default function MovieDetail({ movie }: MovieDetailProps) {
               )}
               {releaseYear && <span>{releaseYear}</span>}
               {movie.status && (
-                <span className={styles.ageBadge}>{movie.status.status}</span>
+                <span className={styles.ageBadge}>{movie.status.name}</span>
               )}
               {duration && <strong>{duration}</strong>}
             </div>

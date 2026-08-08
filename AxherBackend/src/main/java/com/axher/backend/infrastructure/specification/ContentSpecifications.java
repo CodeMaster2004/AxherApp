@@ -1,7 +1,8 @@
 package com.axher.backend.infrastructure.specification;
 
 import java.math.BigDecimal;
-import java.util.Locale.Category;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.data.jpa.domain.Specification;
 
@@ -43,19 +44,50 @@ public class ContentSpecifications {
             cb.equal(root.get("type"), type);
     }
 
-    public static Specification<Content> search(String search){
+    public static Specification<Content> hasReleaseYear(Integer year){
+
     return (root, query, cb) -> {
 
-        String like = "%" + search.toLowerCase() + "%";
+        LocalDateTime start = LocalDate
+                .of(year, 1, 1)
+                .atStartOfDay();
 
-        Join<Content, Category> categoryJoin = root.join("category");
+        LocalDateTime end = LocalDate
+                .of(year + 1, 1, 1)
+                .atStartOfDay();
 
-        return cb.or(
-            cb.like(cb.lower(root.get("title")), like),
-            cb.like(cb.lower(root.get("description")), like),
-            cb.like(cb.lower(categoryJoin.get("name")), like)
+        return cb.and(
+            cb.greaterThanOrEqualTo(
+                root.<LocalDateTime>get("releaseDate"),
+                start
+            ),
+            cb.lessThan(
+                root.<LocalDateTime>get("releaseDate"),
+                end
+            )
         );
     };
 }
+
+
+    public static Specification<Content> globalSearch(String search){
+
+        return (root, query, cb) -> {
+
+            String like = "%" + search.toLowerCase() + "%";
+
+            Join<Content, ContentCategories> categoryJoin = root.join("categories");
+
+            return cb.or(
+                cb.like(cb.lower(root.get("title")), like),
+                cb.like(cb.lower(root.get("description")), like),
+
+                cb.like(cb.lower(categoryJoin.get("name")), like)
+
+            );
+
+        };
+    }
+
 }
 

@@ -17,7 +17,7 @@ export function useEpisodes({ seasonId, initialData, initialSort = "episodeNumbe
         search?: string,
         signal?: AbortSignal
     ) => {
-        return episodesService.getBySeasonId(seasonId,{
+        return episodesService.getAdminBySeasonId(seasonId,{
             ...params,
             sort: sort || params.sort
         },signal );

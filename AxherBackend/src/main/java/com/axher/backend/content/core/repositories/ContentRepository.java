@@ -1,13 +1,17 @@
 package com.axher.backend.content.core.repositories;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import com.axher.backend.content.core.entities.Content;
+import com.axher.backend.content.core.entities.ContentTypeEnum;
 
 public interface ContentRepository extends JpaRepository<Content, Integer>, JpaSpecificationExecutor<Content> {
 
@@ -26,16 +30,42 @@ public interface ContentRepository extends JpaRepository<Content, Integer>, JpaS
 
     Page<Content> findByDiscount_Amount(BigDecimal amount, Pageable pageable);
 
-    Page<Content> findByContentStatus_Status(
-            String status,
+    Page<Content> findByContentStatus_Code(
+            String code,
             Pageable pageable
     );
 
 
-    Page<Content> findByTitleContainingIgnoreCaseAndContentStatus_Status(
+    Page<Content> findByTitleContainingIgnoreCaseAndContentStatus_Code(
             String title,
-            String status,
+            String code,
             Pageable pageable
     );
+
+    // Para la publicación automática
+    List<Content> findByContentStatus_CodeAndReleaseDateLessThanEqual(
+            String code,
+            LocalDateTime releaseDate
+    );
+
+    Page<Content> findByContentStatus_CodeOrderByReleaseDateAsc(
+        String code,
+        Pageable pageable
+    );
+
+    // Nuevas películas publicadas
+        Page<Content> findByTypeAndContentStatus_CodeOrderByReleaseDateDesc(
+                ContentTypeEnum type,
+                String code,
+                Pageable pageable
+        );
+
+        @Query("""
+        SELECT DISTINCT YEAR(c.releaseDate)
+        FROM Content c
+        WHERE (:type IS NULL OR c.type = :type)
+        ORDER BY YEAR(c.releaseDate) DESC
+        """)
+        List<Integer> findAvailableYears(ContentTypeEnum type);
 } 
 

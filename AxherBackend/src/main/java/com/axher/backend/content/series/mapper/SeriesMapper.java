@@ -5,14 +5,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.axher.backend.content.series.DTOs.EpisodesDTOs.EpisodeResponseDto;
 import com.axher.backend.content.series.DTOs.SeriesDTOs.SeriesDetailResponseDto;
-import com.axher.backend.content.series.DTOs.seasonDTOs.SeasonResponseDto;
-import com.axher.backend.content.series.entities.Episodes;
-import com.axher.backend.content.series.entities.Seasons;
 import com.axher.backend.content.series.entities.Series;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class SeriesMapper {
 
     @Value("${app.base-url}")
@@ -43,7 +42,7 @@ public class SeriesMapper {
         //Status
         dto.setStatus(
             series.getContent().getContentStatus() != null
-                ? series.getContent().getContentStatus().getStatus()
+                ? series.getContent().getContentStatus().getCode()
                 : null
         );
 
@@ -53,68 +52,13 @@ public class SeriesMapper {
                 ? series.getContent().getDiscount().getAmount()
                 : null
         );
-
-        dto.setRegisteredAt(series.getContent().getRegisteredAt());
-
-        if(series.getSeasons() != null) {
-            dto.setSeasons(
-                series.getSeasons()
-                    .stream()
-                    .map(this::mapSeason)
-                    .collect(Collectors.toList())
-            );
-        }
+        dto.setSeasonCount(
+            series.getSeasons() != null
+                ? series.getSeasons().size()
+                : 0
+        );
 
         return dto;
-    }
-
-    //=======================================
-    // Métodos auxiliares para mapear temporadas y episodios
-    //=======================================
-
-    private SeasonResponseDto mapSeason(Seasons season){
-        SeasonResponseDto seasonDto = new SeasonResponseDto();
-        seasonDto.setSeasonId(season.getSeasonId());
-        seasonDto.setSeasonNumber(season.getSeasonNumber());
-        seasonDto.setTitle(season.getTitle());
-        seasonDto.setDescription(season.getDescription());
-        seasonDto.setReleaseDate(season.getReleaseDate());
-
-        if(season.getEpisodes() != null){
-            seasonDto.setEpisodes(
-                season.getEpisodes()
-                    .stream()
-                    .map(this::mapEpisode)
-                    .collect(Collectors.toList())
-            );
-        }
-
-        return seasonDto;
-    }
-
-    private EpisodeResponseDto mapEpisode(Episodes episode){
-        EpisodeResponseDto episodeDto = new EpisodeResponseDto();
-        episodeDto.setEpisodeId(episode.getEpisodeId());
-        episodeDto.setEpisodeNumber(episode.getEpisodeNumber());
-        episodeDto.setTitle(episode.getTitle());
-        episodeDto.setDescription(episode.getDescription());
-        episodeDto.setDurationSeconds(episode.getDurationSeconds());
-        episodeDto.setThumbnailUrl(buildUrl(episode.getThumbnailUrl()));
-        episodeDto.setEpisodeUrl(buildUrl(episode.getEpisodeUrl()));
-        episodeDto.setReleaseDate(episode.getReleaseDate());
-
-          episodeDto.setSeasonNumber(
-            episode.getSeason().getSeasonNumber()
-        );
-
-
-        episodeDto.setSeriesTitle(
-            episode.getSeason()
-                .getSeries()
-                .getContent()
-                .getTitle()
-        );
-        return episodeDto;
     }
 
     private String buildUrl(String path){

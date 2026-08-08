@@ -5,8 +5,10 @@ import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css"
 import SeasonsForm from "@/features/seasons/components/SeasonsForm";
 import { useSeasonsActions } from "@/features/seasons/hooks";
+import { useContentStatus } from "@/features/contentStatus/hooks";
 
 export default function CreateSeasonPage() {
+    const { contentStatus: statuse = []} = useContentStatus();
     const router = useRouter();
     const params = useParams();
     const contentId = params?.contentId ? Number(params.contentId) : null;
@@ -15,6 +17,7 @@ export default function CreateSeasonPage() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [releaseDate, setReleaseDate] = useState("");
+    const [selectedStatusId, setSelectedStatusId] = useState<number | undefined>();
     const [error, setError] = useState("");
 
     const { saving, addSeason } = useSeasonsActions(contentId || 0, {
@@ -36,7 +39,7 @@ export default function CreateSeasonPage() {
         formData.append("title", title.trim());
         formData.append("description", description.trim());
         if (releaseDate) formData.append("releaseDate", releaseDate);
-
+        if (selectedStatusId) formData.append("statusId", selectedStatusId.toString());
         try {
             await addSeason(formData);
         } catch (err) {
@@ -60,10 +63,13 @@ export default function CreateSeasonPage() {
                 title={title}
                 description={description}
                 releaseDate={releaseDate}
+                availableStatuses={statuse}
                 setSeasonNumber={setSeasonNumber}
                 setTitle={setTitle}
                 setDescription={setDescription}
                 setReleaseDate={setReleaseDate}
+                selectedStatusId={selectedStatusId}
+                setSelectedStatusId={setSelectedStatusId}
                 onSubmit={handleSubmit}
                 saving={saving}
                 onCancel={handleCancel}

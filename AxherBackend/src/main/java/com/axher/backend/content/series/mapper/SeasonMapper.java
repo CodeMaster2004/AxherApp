@@ -1,20 +1,20 @@
 package com.axher.backend.content.series.mapper;
 
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.axher.backend.content.series.DTOs.EpisodesDTOs.EpisodeResponseDto;
+import com.axher.backend.content.core.mapper.ContentStatusMapper;
 import com.axher.backend.content.series.DTOs.seasonDTOs.SeasonResponseDto;
-import com.axher.backend.content.series.entities.Episodes;
 import com.axher.backend.content.series.entities.Seasons;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class SeasonMapper {
-    
-    @Value("${app.base-url}")
-    private String baseUrl;
+
+    private final ContentStatusMapper contentStatusMapper;
+
 
     public SeasonResponseDto toDto(Seasons season){
         if(season == null){
@@ -28,55 +28,18 @@ public class SeasonMapper {
         dto.setTitle(season.getTitle());
         dto.setDescription(season.getDescription());
         dto.setReleaseDate(season.getReleaseDate());
+        dto.setStatus(
+            contentStatusMapper.toDto(season.getContentStatus())
+        );
 
-        if(season.getEpisodes() != null){
-            dto.setEpisodes(
-                season.getEpisodes()
-                    .stream()
-                    .map(this::mapEpisode)
-                    .collect(Collectors.toList())
-            );
-        }
+        dto.setEpisodeCount(
+            season.getEpisodes() != null
+            ? season.getEpisodes().size()
+            : 0
+        );
 
         return dto;
     }
 
-    private EpisodeResponseDto mapEpisode(Episodes episode){
-
-        if(episode == null){
-            return null;
-        }
-
-        EpisodeResponseDto episodeDto = new EpisodeResponseDto();
-        episodeDto.setEpisodeId(episode.getEpisodeId());
-        episodeDto.setEpisodeNumber(episode.getEpisodeNumber());
-        episodeDto.setTitle(episode.getTitle());
-        episodeDto.setDescription(episode.getDescription());
-        episodeDto.setDurationSeconds(episode.getDurationSeconds());
-        episodeDto.setThumbnailUrl(buildUrl(episode.getThumbnailUrl()));
-        episodeDto.setEpisodeUrl(buildUrl(episode.getEpisodeUrl()));
-        episodeDto.setReleaseDate(episode.getReleaseDate());
-        
-        episodeDto.setSeasonNumber(
-            episode.getSeason().getSeasonNumber()
-        );
-
-
-        episodeDto.setSeriesTitle(
-            episode.getSeason()
-                .getSeries()
-                .getContent()
-                .getTitle()
-        );
-        return episodeDto;
-
-    }
-
-    private String buildUrl(String path){
-        if(path == null){
-            return null;
-        }
-        return baseUrl + path;
-    }
 }
 

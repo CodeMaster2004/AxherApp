@@ -68,6 +68,7 @@ public class AdminContentController {
     public Page<ContentDetailDto> search(
         @RequestParam(required = false) String title,
         @RequestParam(required = false) Integer categoryId,
+        @RequestParam(required = false) Integer year,
         @RequestParam(required = false) Integer statusId,
         @RequestParam(required = false) BigDecimal discountAmount,
         @RequestParam(required = false) ContentTypeEnum type,
@@ -76,7 +77,7 @@ public class AdminContentController {
         @RequestParam(defaultValue = "contentId,desc") String sort
     ){
         Sort sortObj = SortUtils.parseSort(sort, ALLOWED_SORT_FIELDS, "contentId");
-        Page<Content> contentPage = service.searchContents(title, categoryId, statusId, discountAmount, type, PageRequest.of(page, size, sortObj)
+        Page<Content> contentPage = service.filterContents(title, categoryId, year, statusId, discountAmount, type, PageRequest.of(page, size, sortObj)
       );
       return contentPage.map(mapper::toDto);
     }
@@ -102,7 +103,7 @@ public class AdminContentController {
     @GetMapping("/{contentId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<ContentDetailDto> findById(@PathVariable Integer contentId){
-        Content content = service.findPublicById(contentId);
+        Content content = service.findById(contentId);
         return ResponseEntity.ok(mapper.toDto(content));
     }
 

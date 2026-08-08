@@ -1,5 +1,6 @@
 package com.axher.backend.content.core.controller;
 
+import com.axher.backend.content.core.mapper.CategoryMapper;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.content.core.DTOs.CategoryDto;
 import com.axher.backend.content.core.entities.ContentCategories;
 import com.axher.backend.content.core.service.ContentCategoriesService;
 import com.axher.backend.shared.util.SortUtils;
@@ -31,11 +33,14 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/categories")
 public class ContentCategoriesController {
     
+    private final CategoryMapper categoryMapper;
+
     private final ContentCategoriesService service;
 
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
         "contentCategoryId", "name", "description"
     );
+
 
     @GetMapping
     @PreAuthorize("hasAuthority('CATEGORY:VIEW')")
@@ -57,6 +62,12 @@ public class ContentCategoriesController {
     public ResponseEntity<ContentCategories> findById(@PathVariable Integer id) {
       
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @GetMapping("/slug/{slug}")
+    public CategoryDto getBySlug(@PathVariable String slug) {
+        ContentCategories category = service.findBySlug(slug);
+        return categoryMapper.toDto(category);
     }
 
     @PostMapping

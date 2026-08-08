@@ -1,5 +1,5 @@
 import { popularityApi } from "@/core/api/endpoints/PopularityApi";
-import { ContentFeatured, Page, PaginationParams, PopularContent } from '../../../entities/types';
+import { ContentFeatured, ContentType, Page, PaginationParams, TopRatedContent, TrendingContent } from '../../../entities/types';
 
 export const popularityService = {
 
@@ -8,26 +8,21 @@ export const popularityService = {
         return res.data;
     },
     
-    trending: async(params: PaginationParams, signal?: AbortSignal): Promise<Page<PopularContent>> => {
+    trending: async( params: PaginationParams,  type?: ContentType,signal?: AbortSignal): Promise<Page<TrendingContent>> => {
 
         const res = await popularityApi.trending(
             params,
+            type,
             { signal }
         );
         return res.data;
     },
 
-    movies: async(params: PaginationParams, signal?: AbortSignal): Promise<Page<PopularContent>> => {
-        const res = await popularityApi.movies(
-            params,
-            { signal }
-        );
-        return res.data;
-    },
 
-    series: async(params: PaginationParams, signal?: AbortSignal): Promise<Page<PopularContent>> => {
-        const res = await popularityApi.series(
-            params,
+
+    topRated: async(type?: ContentType, signal?: AbortSignal): Promise<TopRatedContent[]> => {
+        const res = await popularityApi.topRated(
+            type,
             { signal }
         );
         return res.data;

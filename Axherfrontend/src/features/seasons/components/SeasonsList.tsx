@@ -1,6 +1,6 @@
 "use client";
 
-import { SeasonDetail } from "@/entities/types";
+import { ContentStatus, SeasonDetail } from "@/entities/types";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
@@ -10,8 +10,10 @@ import MoreMenu from "../../../shared/components/ui/MoreMenu";
 
 interface Props{
     seasons: SeasonDetail[];
+    statuses: ContentStatus[];
     onDelete: (seasonId: number) => void;
     onEdit: (season: SeasonDetail) => void;
+    onUpdateStatus: (seasonId: number, statusId: number) => void;
     onViewEpisodes: (seasonId: number) => void;
     onCreateEpisode: (seasonId: number) => void;
     deletingId?: number | null;
@@ -27,8 +29,10 @@ interface Props{
 
 export default function SeasonsList({
     seasons,
+    statuses,
     onDelete,
     onEdit,
+    onUpdateStatus,
     onViewEpisodes,
     onCreateEpisode,
     deletingId,
@@ -40,6 +44,7 @@ export default function SeasonsList({
     searchTerm,
     onSearchChange,
 }: Props){
+    const [pendingStatus, setPendingStatus] = useState<Record<number,number>>({});
     const [confirmDialog, setConfimDialog] = useState<{
         isOpen: boolean;
         id: number;
@@ -48,6 +53,20 @@ export default function SeasonsList({
         isOpen: false,
         id: 0,
         title: "",
+    });
+
+    const [statusDialog, setStatusDialog] = useState<{
+        isOpen: boolean;
+        contentId: number;
+        statusId: number;
+        statusName: string;
+        contentTitle: string;
+    }>({
+        isOpen: false,
+        contentId: 0,
+        statusId: 0,
+        statusName: "",
+        contentTitle: "",
     });
 
     const formatDate = (dateStr: string): string => {
@@ -69,6 +88,40 @@ export default function SeasonsList({
         setConfimDialog({ isOpen: false, id: 0, title: ""});
     };
 
+    const handleConfirmStatus = () => {
+
+        onUpdateStatus(
+            statusDialog.contentId,
+            statusDialog.statusId
+        );
+
+        setPendingStatus(prev => {
+            const copy = {...prev};
+            delete copy[statusDialog.contentId];
+            return copy;
+        });
+
+        handleCancelStatus();
+    };
+
+
+    const handleCancelStatus = () => {
+
+        setPendingStatus(prev => {
+            const copy = {...prev};
+            delete copy[statusDialog.contentId];
+            return copy;
+        });
+
+        setStatusDialog({
+            isOpen:false,
+            contentId:0,
+            statusId:0,
+            statusName:"",
+            contentTitle:""
+        });
+    };
+
     return (
         <div className={layoutStyles.section}>
             <ConfirmDialog
@@ -81,6 +134,19 @@ export default function SeasonsList({
                 onCancel={handleCancelDelete}
                 variant="danger"
 
+            />
+
+            <ConfirmDialog
+                isOpen={statusDialog.isOpen}
+                title="Cambiar estado"
+                message={
+                    `¿Seguro que deseas cambiar "${statusDialog.contentTitle}" a "${statusDialog.statusName}"?`
+                }
+                confirmText="Cambiar"
+                cancelText="Cancelar"
+                onConfirm={handleConfirmStatus}
+                onCancel={handleCancelStatus}
+                variant="info"
             />
 
             <h2>Listado de Temporadas  </h2>
@@ -108,6 +174,7 @@ export default function SeasonsList({
                                 <th className={tableStyles.headCell}>Titulo</th>
                                 <th className={tableStyles.headCell}>Descripción</th>
                                 <th className={tableStyles.headCell}>Fecha estreno</th>
+                                <th className={tableStyles.headCell}>Estado</th>
                                 <th className={tableStyles.headCell}>Episodios</th>
                                 <th className={tableStyles.headCell}>Acciones</th>
 
@@ -121,7 +188,46 @@ export default function SeasonsList({
                                     <td>{season.title}</td>
                                     <td>{season.description || "-"}</td>
                                     <td>{formatDate(season.releaseDate)}</td>
-                                    <td>{season.episodes.length}</td>
+                                    <td>
+                                        <select
+                                            className={tableStyles.statusSelect}
+                                            value={
+                                                pendingStatus[season.seasonId] ?? season.status.contentStatusId
+                                            }
+                                            onChange={(e)=>{
+                                            const statusId = Number(e.target.value);
+
+                                            const selectedStatus = statuses.find(
+                                                status => status.contentStatusId === statusId
+                                            );
+
+                                            setPendingStatus(prev => ({
+                                                ...prev,
+                                                [season.seasonId]: statusId
+                                            }));
+
+                                            setStatusDialog({
+                                                isOpen: true,
+                                                contentId: season.seasonId,
+                                                statusId,
+                                                statusName: selectedStatus?.name ?? "",
+                                                contentTitle: season.title
+                                            });
+                                        }}
+                                        >
+                                            {
+                                                statuses.map((status)=>(
+                                                    <option
+                                                        key={status.contentStatusId}
+                                                        value={status.contentStatusId}
+                                                    >
+                                                        {status.name}
+                                                    </option>
+                                                ))
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>{season.episodeCount}</td>
                                     <td>
                                         <MoreMenu
                                             items={[

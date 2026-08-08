@@ -8,7 +8,7 @@ export const revalidate = 60;
 
 async function getSerie(contentId: string): Promise<SeriesDetail | undefined> {
     try {
-    const url = `${API_URL}/public/series/${contentId}`;
+    const url = `${API_URL}/series/${contentId}`;
 
     console.log("URL:", url);
 

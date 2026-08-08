@@ -19,10 +19,11 @@ public class TopRatedMapper {
 
         response.setContentId(dto.getContentId());
         response.setTitle(dto.getTitle());
-        response.setBackdropUrl(buildUrl(dto.getBackdropUrl()));
+        response.setPosterUrl(buildUrl(dto.getPosterUrl()));
+        response.setType(dto.getType());
+
         response.setAverageRating(dto.getAverageRating());
         response.setTotalRatings(dto.getTotalRatings());
-
         response.setScore(dto.getScore());
 
         return response;

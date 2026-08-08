@@ -21,7 +21,7 @@ export default function SeriesDetailContainer({
     series
 }: Props) {
 
-
+    console.log("SERIES DETAIL:", series);
     const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
 
 
@@ -34,22 +34,23 @@ export default function SeriesDetailContainer({
 
                     <EpisodeDetail
                         episode={selectedEpisode}
+                        contentId={series.contentId}
                     />
 
                 )
                 :
                 (
                     <SerieDetail
-                        series={series}
-                        onSelectEpisode={setSelectedEpisode}
-                    />
+                            series={series}
+                            onSelectEpisode={setSelectedEpisode} statuses={[]}                   
+                     />
                 )
             }
 
 
 
             <SeasonsSection
-                seasons={series.seasons}
+                seriesId={series.contentId}
                 onSelectEpisode={setSelectedEpisode}
             />
 

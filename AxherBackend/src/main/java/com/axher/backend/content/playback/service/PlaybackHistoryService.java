@@ -1,13 +1,19 @@
 package com.axher.backend.content.playback.service;
 
+import com.axher.backend.content.playback.mapper.ContinueWatchingMapper;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.axher.backend.content.core.entities.Content;
 import com.axher.backend.content.core.repositories.ContentRepository;
+import com.axher.backend.content.playback.DTOs.ContinueWatchingDto;
 import com.axher.backend.content.playback.DTOs.PlaybackHistoryRequestDto;
 import com.axher.backend.content.playback.entities.PlaybackHistory;
 import com.axher.backend.content.playback.repositories.PlaybackHistoryRepository;
@@ -22,9 +28,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlaybackHistoryService {
     
+    private final ContinueWatchingMapper continueWatchingMapper;
     private final PlaybackHistoryRepository playbackHistoryRepository;
     private final ContentRepository contentRepository;
     private final EpisodesRepository episodeRepository;
+
 
     public PlaybackHistory saveOrUpdate(PlaybackHistoryRequestDto dto){
 
@@ -97,4 +105,52 @@ public class PlaybackHistoryService {
                 .getAuthentication()
                 .getPrincipal();
     }
+
+    public List<ContinueWatchingDto> getContinueWatching(){
+
+        Users user = getCurrentUser();
+
+        Pageable pageable = PageRequest.of(0, 50);
+
+
+        return playbackHistoryRepository
+                .findContinueWatching(user.getUserId(), pageable)
+
+                .stream()
+
+                .map(continueWatchingMapper::toContinueWatching)
+
+
+                // quitar terminados
+                .filter(dto ->
+                    dto.getProgress() != null &&
+                    dto.getProgress() < 95
+                )
+
+
+                // dejar solo uno por contenido
+                .collect(Collectors.toMap(
+
+                    ContinueWatchingDto::getContentId,
+
+                    dto -> dto,
+
+                    // conserva el primero
+                    // porque viene ordenado por watchedAt DESC
+                    (first, second) -> first,
+
+                    LinkedHashMap::new
+
+                ))
+
+                .values()
+
+                .stream()
+
+                .limit(10)
+
+                .toList();
+    }
+
+    
 }

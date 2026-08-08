@@ -1,12 +1,14 @@
 package com.axher.backend.content.series.repositories;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.axher.backend.content.series.entities.Seasons;
 
@@ -24,5 +26,27 @@ public interface SeasonsRepository extends JpaRepository<Seasons, Integer> {
     Optional<Seasons> findBySeasonIdAndSeries_ContentId(Integer seasonId, Integer seriesId);
 
     boolean existsBySeries_ContentIdAndSeasonNumberAndSeasonIdNot(Integer seriesId, Integer seasonNumber, Integer seasonId);
+
+    List<Seasons> findByContentStatus_CodeAndReleaseDateLessThanEqual(
+        String code,
+        LocalDateTime releaseDate
+    );
+
+    Page<Seasons> findByContentStatus_CodeOrderByReleaseDateAsc(
+        String code,
+        Pageable pageable
+    );
+
+    @Query("""
+    SELECT s
+    FROM Seasons s
+    WHERE s.series.content.contentId = :seriesId
+    AND s.series.content.contentStatus.code='PUBLISHED'
+    AND s.contentStatus.code='PUBLISHED'
+    """)
+    Page<Seasons> findPublicBySeriesId(
+            Integer seriesId,
+            Pageable pageable
+    );
 }
 

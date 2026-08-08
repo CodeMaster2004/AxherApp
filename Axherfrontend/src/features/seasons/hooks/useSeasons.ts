@@ -20,7 +20,7 @@ export function useSeasons({ seriesId, initialData, initialSort = "seasonNumber,
         search?: string,
         signal?: AbortSignal
     ) => {
-        return seasonsService.getBySeriesId(seriesId, { ...params, sort }, signal );
+        return seasonsService.getAdminBySeriesId(seriesId, { ...params, sort }, signal );
 
     },
     [seriesId, sort]);

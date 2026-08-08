@@ -1,4 +1,4 @@
-import { SeasonDetail } from "@/entities/types";
+import { SeasonDetail, StatusUpdate } from "@/entities/types";
 import { seasonsService } from "@/features/seasons/services/SeasonsService";
 import { AxiosProgressEvent } from "axios";
 import { useCallback, useState } from "react";
@@ -13,6 +13,7 @@ export const useSeasonsActions = (seriesId: number, options?: Options) => {
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState<number | null>(null);
     const [error, setError] = useState<unknown | null>(null);
+    const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
 
     const addSeason = useCallback(
         async (formData: FormData, onUploadProgress?: (progressEvent: AxiosProgressEvent) => void) => {
@@ -54,6 +55,27 @@ export const useSeasonsActions = (seriesId: number, options?: Options) => {
         [seriesId, options]
     );
 
+    const updateSeasonStatus = useCallback(
+        async (seasonId: number, statusUpdate: StatusUpdate) => {
+
+            setUpdatingStatus(seasonId);
+            setError(null);
+
+            try{
+                const updated = await seasonsService.updateStatus(seriesId, seasonId, statusUpdate);
+                options?.onSuccess?.(updated);
+                return updated;
+            }catch(err){
+                setError(err);
+                options?.onError?.(err);
+                throw err;
+            }finally{
+                setUpdatingStatus(null);
+            }
+        },
+        [seriesId, options]
+    );
+
     const removeSeason = useCallback(
         async (seasonId: number) => {
             setDeleting(seasonId);
@@ -77,8 +99,10 @@ export const useSeasonsActions = (seriesId: number, options?: Options) => {
         saving,
         deleting,
         error,
+        updatingStatus,
         addSeason,
         editSeason,
+        updateSeasonStatus,
         removeSeason,
     };
 };

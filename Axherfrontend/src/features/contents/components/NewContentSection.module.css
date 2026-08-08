@@ -1,0 +1,38 @@
+.section{
+
+    width:100%;
+
+    padding:2rem 0;
+
+}
+
+
+.header{
+
+    margin-bottom:1.5rem;
+
+}
+
+
+.title{
+
+    margin:0;
+
+    font-size:1.6rem;
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+
+.subtitle{
+
+    margin-top:.4rem;
+
+    color:#a1a1aa;
+
+    font-size:.95rem;
+
+}

@@ -26,7 +26,12 @@ public class ContentStatus {
     @NotBlank
     @Size(max = 20)
     @Column(unique = true, length = 20, nullable = false)
-    private String status;
+    private String code;
+
+    @NotBlank
+    @Size(max = 100)
+    @Column(length = 100)
+    private String name;
 
     @Size(max = 200)
     @Column(length = 200, nullable = true)

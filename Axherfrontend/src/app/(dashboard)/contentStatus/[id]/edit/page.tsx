@@ -13,7 +13,8 @@ export default function EditContentStatusPage() {
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
     
-    const [status, setStatus] = useState("");
+    const [code, setCode] = useState("");
+    const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(true);
 
@@ -30,7 +31,8 @@ export default function EditContentStatusPage() {
         const loadStatus = async () => {
             try {
                 const contentStatus: ContentStatus = await contentStatusService.getById(id);
-                setStatus(contentStatus.status);
+                setCode(contentStatus.code);
+                setName(contentStatus.name);
                 setDescription(contentStatus.description);
             } catch (error) {
                 console.error("Error cargando estado:", error);
@@ -49,15 +51,21 @@ export default function EditContentStatusPage() {
         
         if (!id) return;
 
-        const statusTrim = status.trim();
+        const codeTrim = code.trim();
+        const nameTrim = name.trim();
         const descriptionTrim = description.trim();
         
-        if (!statusTrim) {
-            alert("Por favor completa el campo de estado");
+        if (!codeTrim) {
+            alert("Por favor completa el campo de código");
             return;
         }
 
-        await editContentStatus(id, { status: statusTrim, description: descriptionTrim});
+        if (!nameTrim) {
+            alert("Por favor completa el campo de nombre");
+            return;
+        }
+
+        await editContentStatus(id, { code: codeTrim, name: nameTrim, description: descriptionTrim});
 
     };
 
@@ -75,8 +83,10 @@ export default function EditContentStatusPage() {
             <h1>Editar Estado</h1>
             
             <ContentStatusForm
-                contentStatus={status}
-                setContentStatus={setStatus}
+                code={code}
+                setCode={setCode}
+                name={name}
+                setName={setName}
                 description={description}
                 setDescription={setDescription}
                 onSubmit={handleSubmit}

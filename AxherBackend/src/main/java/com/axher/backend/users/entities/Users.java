@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -67,7 +68,7 @@ public class Users {
     @EqualsAndHashCode.Exclude
     private UserProfiles profile;
 
-    private String currentFamilyId;
+    private UUID currentFamilyId;
 
 
 }

@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.axher.backend.content.core.DTOs.ContentFeaturedDto;
-import com.axher.backend.content.core.DTOs.PopularContentDto;
+import com.axher.backend.content.core.DTOs.TrendingContentDto;
+import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.playback.entities.PlaybackHistory;
 
 import io.lettuce.core.dynamic.annotation.Param;
@@ -30,69 +31,84 @@ public interface PlaybackHistoryRepository extends JpaRepository<PlaybackHistory
     List<PlaybackHistory> findTop20ByUser_UserIdOrderByWatchedAtDesc(Integer userId);
 
     @Query("""
-    SELECT new com.axher.backend.content.core.DTOs.PopularContentDto(
+    SELECT new com.axher.backend.content.core.DTOs.TrendingContentDto(
+
         c.contentId,
         c.title,
         c.posterUrl,
-        SUM(ph.watchedSeconds)
+        c.type,
+
+        COUNT(ph.playbackHistoryId),
+
+        COUNT(DISTINCT ph.user.userId),
+
+        SUM(ph.watchedSeconds),
+
+        (
+            COUNT(DISTINCT ph.user.userId) * 10.0
+            +
+            COUNT(ph.playbackHistoryId) * 3.0
+            +
+            SUM(ph.watchedSeconds) / 60.0
+        )
+
     )
+
     FROM PlaybackHistory ph
+
     JOIN ph.content c
+
     WHERE ph.watchedAt >= :date
+    AND (:type IS NULL OR c.type = :type)
+
     GROUP BY
         c.contentId,
         c.title,
-        c.posterUrl
-    ORDER BY SUM(ph.watchedSeconds) DESC
+        c.posterUrl,
+        c.type
+
+    ORDER BY
+
+    (
+        COUNT(DISTINCT ph.user.userId) * 10.0
+        +
+        COUNT(ph.playbackHistoryId) * 3.0
+        +
+        SUM(ph.watchedSeconds) / 60.0
+
+    ) DESC
+
     """)
-    Page<PopularContentDto> findTrending(
+    Page<TrendingContentDto> findTrending(
         @Param("date") LocalDateTime date,
+        @Param("type") ContentTypeEnum type,
         Pageable pageable
     );
 
     @Query("""
-    SELECT new com.axher.backend.content.core.DTOs.PopularContentDto(
-        c.contentId,
-        c.title,
-        c.posterUrl,
-        SUM(ph.watchedSeconds)
-    )
+    SELECT ph
     FROM PlaybackHistory ph
-    JOIN ph.content c
-    WHERE ph.watchedAt >= :date
-    AND c.type = 'MOVIE'
-    GROUP BY
-        c.contentId,
-        c.title,
-        c.posterUrl
-    ORDER BY SUM(ph.watchedSeconds) DESC
+
+    JOIN FETCH ph.content c
+
+    LEFT JOIN FETCH c.movie m
+
+    LEFT JOIN FETCH ph.episode e
+
+    LEFT JOIN FETCH e.season s
+
+    WHERE ph.user.userId = :userId
+
+    AND ph.watchedSeconds > 0
+
+    ORDER BY ph.watchedAt DESC
+
     """)
-    Page<PopularContentDto> findMostWatchedMovies(
-        @Param("date") LocalDateTime date,
+    List<PlaybackHistory> findContinueWatching(
+        @Param("userId") Integer userId,
         Pageable pageable
     );
 
-    @Query("""
-    SELECT new com.axher.backend.content.core.DTOs.PopularContentDto(
-        c.contentId,
-        c.title,
-        c.posterUrl,
-        SUM(ph.watchedSeconds)
-    )
-    FROM PlaybackHistory ph
-    JOIN ph.content c
-    WHERE ph.watchedAt >= :date
-    AND c.type = 'SERIE'
-    GROUP BY
-        c.contentId,
-        c.title,
-        c.posterUrl
-    ORDER BY SUM(ph.watchedSeconds) DESC
-    """)
-    Page<PopularContentDto> findMostWatchedSeries(
-        @Param("date") LocalDateTime date,
-        Pageable pageable
-    );
 
     @Query("""
     SELECT new com.axher.backend.content.core.DTOs.ContentFeaturedDto(
@@ -117,7 +133,7 @@ public interface PlaybackHistoryRepository extends JpaRepository<PlaybackHistory
         COUNT(DISTINCT ph.user.userId) * 10 
         + SUM(ph.watchedSeconds) DESC
     """)
-    List<ContentFeaturedDto> findFeaturedTrending(
+    List<ContentFeaturedDto> findFeatured(
         @Param("date") LocalDateTime date,
         Pageable pageable
     );

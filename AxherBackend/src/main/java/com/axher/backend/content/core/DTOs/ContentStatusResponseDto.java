@@ -6,5 +6,6 @@ import lombok.Data;
 public class ContentStatusResponseDto {
     
     private Integer contentStatusId;
-    private String status;
+    private String code;
+    private String name;
 }

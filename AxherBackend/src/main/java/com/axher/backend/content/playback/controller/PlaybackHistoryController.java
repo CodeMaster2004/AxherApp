@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.content.playback.DTOs.ContinueWatchingDto;
 import com.axher.backend.content.playback.DTOs.PlaybackHistoryRequestDto;
 import com.axher.backend.content.playback.DTOs.PlaybackHistoryResponseDto;
 import com.axher.backend.content.playback.entities.PlaybackHistory;
@@ -34,6 +35,9 @@ public class PlaybackHistoryController {
     public ResponseEntity<PlaybackHistoryResponseDto> saveOrUpdate(
         @RequestBody PlaybackHistoryRequestDto dto
     ){
+        System.out.println("🇦CONTENT ID: " + dto.getContentId());
+    System.out.println("🇦EPISODE ID: " + dto.getEpisodeId());
+    System.out.println("🇦SECONDS: " + dto.getWatchedSeconds());
         PlaybackHistory history = service.saveOrUpdate(dto);
 
         return ResponseEntity
@@ -65,6 +69,11 @@ public class PlaybackHistoryController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(mapper.toDto(history));
+    }
+
+    @GetMapping("/continue-watching")
+    public List<ContinueWatchingDto> getContinueWatching(){
+        return service.getContinueWatching();
     }
     
     

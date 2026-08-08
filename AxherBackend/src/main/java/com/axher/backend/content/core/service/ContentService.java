@@ -4,9 +4,9 @@ import static com.axher.backend.infrastructure.specification.ContentSpecificatio
 import static com.axher.backend.infrastructure.specification.ContentSpecifications.hasDiscountAmount;
 import static com.axher.backend.infrastructure.specification.ContentSpecifications.hasStatus;
 import static com.axher.backend.infrastructure.specification.ContentSpecifications.hasType;
-import static com.axher.backend.infrastructure.specification.ContentSpecifications.search;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -22,38 +22,46 @@ import com.axher.backend.content.core.DTOs.UpdateContentDto;
 import com.axher.backend.content.core.entities.Content;
 import com.axher.backend.content.core.entities.ContentCategories;
 import com.axher.backend.content.core.entities.ContentStatus;
+import com.axher.backend.content.core.entities.ContentStatusCode;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.core.entities.Discounts;
 import com.axher.backend.content.core.repositories.ContentCategoriesRepository;
 import com.axher.backend.content.core.repositories.ContentRepository;
-import com.axher.backend.content.core.repositories.ContentStatusRepository;
 import com.axher.backend.content.core.repositories.DiscountsRepository;
 import com.axher.backend.content.core.strategy.ContentTypeService;
+import com.axher.backend.infrastructure.quartz.ContentPublicationScheduler;
+import com.axher.backend.infrastructure.specification.ContentSpecifications;
 import com.axher.backend.infrastructure.storage.FileStorageService;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class ContentService {
     private final ContentRepository contentRepository;
     private final ContentCategoriesRepository categoriesRepository;
-    private final ContentStatusRepository statusRepository;
     private final DiscountsRepository discountsRepository;
     private final FileStorageService fileStorageService;
     private final Map<ContentTypeEnum, ContentTypeService> contentTypeServices;
+    private final ContentPublicationScheduler contentPublicationScheduler;
+    private final ContentStatusService statusService;
 
     public ContentService(ContentRepository contentRepository,
                           ContentCategoriesRepository categoriesRepository,
-                          ContentStatusRepository statusRepository,
                           DiscountsRepository discountsRepository,
                           FileStorageService fileStorageService,
-                          Set<ContentTypeService> services) {
+                          Set<ContentTypeService> services,
+                          ContentPublicationScheduler contentPublicationScheduler,
+                          ContentStatusService statusService
+                        ) {
         this.contentRepository = contentRepository;
         this.categoriesRepository = categoriesRepository;
-        this.statusRepository = statusRepository;
         this.discountsRepository = discountsRepository;
         this.fileStorageService = fileStorageService;
+        this.contentPublicationScheduler = contentPublicationScheduler;
+        this.statusService = statusService;
         // Mapear los servicios por tipo de contenido
         this.contentTypeServices = services.stream()
             .collect(Collectors.toMap(ContentTypeService::getType, s -> s));
@@ -74,39 +82,64 @@ public class ContentService {
             .orElseThrow(() -> new ResourceNotFoundException("Contenido no encontrado: " + id));
     }
 
-    public Page<Content> searchContents(
-        String search,
-        Integer categoryId,
-        Integer statusId,
-        BigDecimal discountAmount,
-        ContentTypeEnum type,
-        Pageable pageable
+    public Page<Content> filterContents(
+            String query,
+            Integer categoryId,
+            Integer year,
+            Integer statusId,
+            BigDecimal discountAmount,
+            ContentTypeEnum type,
+            Pageable pageable
     ){
+
         Specification<Content> spec = Specification.allOf();
 
-        if(search != null && !search.isBlank()){
-            spec = spec.and(search(search));
-        }
 
-        if(categoryId != null){
+        
+        if(query != null && !query.isBlank()){
             spec = spec.and(
-                hasCategory(categoriesRepository.getReferenceById(categoryId))
+                ContentSpecifications.globalSearch(query)
             );
         }
 
-        if(statusId != null){
-            spec = spec.and(hasStatus(statusId));
+
+        if(categoryId != null){
+            spec = spec.and(
+                hasCategory(
+                    categoriesRepository.getReferenceById(categoryId)
+                )
+            );
         }
+
+        if(year != null){
+            spec = spec.and(
+                ContentSpecifications.hasReleaseYear(year)
+            );
+        }
+
+
+        if(statusId != null){
+            spec = spec.and(
+                hasStatus(statusId)
+            );
+        }
+
 
         if(discountAmount != null){
-            spec = spec.and(hasDiscountAmount(discountAmount));
+            spec = spec.and(
+                hasDiscountAmount(discountAmount)
+            );
         }
+
 
         if(type != null){
-            spec = spec.and(hasType(type));
+            spec = spec.and(
+                hasType(type)
+            );
         }
 
-        return contentRepository.findAll(spec, pageable);
+
+        return contentRepository.findAll(spec,pageable);
     }
 
 
@@ -121,91 +154,26 @@ public class ContentService {
     public Page<Content> findByDiscountAmount(BigDecimal amount, Pageable pageable){
         return contentRepository.findByDiscount_Amount(amount, pageable);
     }
-    public Page<Content> findPublicContent(
-            Pageable pageable,
-            String search
-    ){
-
-        String activeStatus = "Activo";
-
-
-        if(search != null && !search.isBlank()){
-
-            return contentRepository
-                    .findByTitleContainingIgnoreCaseAndContentStatus_Status(
-                            search,
-                            activeStatus,
-                            pageable
-                    );
-        }
-
-
-        return contentRepository
-                .findByContentStatus_Status(
-                        activeStatus,
-                        pageable
-                );
-    }
-
     
-    public Content findPublicById(Integer id){
+
+    @Transactional
+    public void publish(Integer id) {
 
         Content content = findById(id);
 
-
-        if(!content.getContentStatus()
-                .getStatus()
-                .equalsIgnoreCase("Activo")){
-
-            throw new ResourceNotFoundException(
-                "Contenido no disponible"
-            );
+        if(ContentStatusCode.PUBLISHED.name().equals(content.getContentStatus().getCode())) {
+            log.info("El contenido {} ya estaba publicado. Se omite la publicación.", id);
+            return;
         }
 
+        ContentStatus published = statusService.getStatus(ContentStatusCode.PUBLISHED);
 
-        return content;
-    }
+        content.setContentStatus(published);
+        contentRepository.save(content);
 
-    public Page<Content> searchPublicContents(
-            String title,
-            Integer categoryId,
-            ContentTypeEnum type,
-            Pageable pageable
-    ){
-
-        Specification<Content> spec = Specification.allOf();
-
-
-        // Solo contenido activo
-        spec = spec.and(
-            (root, query, cb) ->
-                cb.equal(
-                    root.get("contentStatus").get("status"),
-                    "Activo"
-                )
+        log.info(
+            "Contenido publicado correctamente"
         );
-
-
-        if(title != null && !title.isBlank()){
-            spec = spec.and(search(title));
-        }
-
-
-        if(categoryId != null){
-            spec = spec.and(
-                hasCategory(
-                    categoriesRepository.getReferenceById(categoryId)
-                )
-            );
-        }
-
-
-        if(type != null){
-            spec = spec.and(hasType(type));
-        }
-
-
-        return contentRepository.findAll(spec, pageable);
     }
 
     // ==============================
@@ -291,8 +259,7 @@ public class ContentService {
 
         // Estado
         if (dto.getStatusId() != null) {
-            ContentStatus status = statusRepository.findById(dto.getStatusId())
-                .orElseThrow(() -> new ResourceNotFoundException("Estado no encontrado: " + dto.getStatusId()));
+            ContentStatus status = statusService.findById(dto.getStatusId());
             content.setContentStatus(status);
         }
 
@@ -308,19 +275,40 @@ public class ContentService {
             }
         }
 
-        return contentRepository.save(content);
+        Content saved = contentRepository.save(content);
+
+        try {
+            syncPublication(saved);
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                    "Error al sincronizar la publicación automática", e);
+        }
+
+        return saved;
 
     }
 
     @Transactional
-    public Content updateStatus(Integer contentId, Integer statusId){
+    public Content updateStatus(Integer contentId, Integer statusId) {
+
         Content content = findById(contentId);
 
-        ContentStatus status = statusRepository.findById(statusId)
-            .orElseThrow(() -> new ResourceNotFoundException("Estado no econtrado: " + statusId));
+        ContentStatus status = statusService.findById(statusId);
 
         content.setContentStatus(status);
-        return contentRepository.save(content);
+
+        Content saved = contentRepository.save(content);
+
+        try {
+
+            syncPublication(saved);
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                    "Error al programar la publicación automática", e);
+
+        }
+
+        return saved;
     }
 
     //================================
@@ -342,11 +330,18 @@ public class ContentService {
         }
         
 
+        try{
+            contentPublicationScheduler.cancel(content.getContentId());
+        }catch (Exception e) {
+            throw new IllegalStateException("Error al cancelar la publicacion del contenido", e);
+        }
         contentRepository.delete(content);
 
         fileStorageService.deleteFile(poster);
         fileStorageService.deleteFile(backdrop);
         fileStorageService.deleteFile(trailer);
+
+        
     }
 
     // ==============================
@@ -358,7 +353,7 @@ public class ContentService {
 
         
         //Obtener estado "Inactivo" por defecto
-        ContentStatus defaultStatus = getValidatedStatus("Inactivo");
+        ContentStatus defaultStatus = statusService.getStatus(ContentStatusCode.DRAFT);
         //Validar descuento si se proporciona
         Discounts discount = dto.getDiscountId() != null ? getValidatedDiscount(dto.getDiscountId()) : null;
 
@@ -389,15 +384,40 @@ public class ContentService {
             .collect(Collectors.toSet());
     }
 
-    private ContentStatus getValidatedStatus(String statusName){
-        return statusRepository.findByStatus(statusName)
-            .orElseThrow(() -> new ResourceNotFoundException("Estado '" + statusName + "' no encontrado"));
-    }
 
     private Discounts getValidatedDiscount(Integer discountId){
         return discountsRepository.findById(discountId)
             .orElseThrow(() -> new ResourceNotFoundException("Descuento no encontrado: " + discountId));
     }
+
+    private void syncPublication(Content content) throws Exception {
+
+        if(ContentStatusCode.UPCOMING.name().equals(content.getContentStatus().getCode())){
+
+            if(content.getReleaseDate() == null){
+                throw new IllegalArgumentException(
+                    "El contenido UPCOMING necesita fecha de estreno"
+                );
+            }
+
+            if(content.getReleaseDate().isBefore(LocalDateTime.now())){
+                throw new IllegalArgumentException(
+                    "La fecha de estreno debe ser futura"
+                );
+            }
+
+            contentPublicationScheduler.schedule(
+                content.getContentId(),
+                content.getReleaseDate()
+            );
+        }else {
+            contentPublicationScheduler.cancel(
+                content.getContentId()
+            );
+        }
+    }
+
+   
 
 
 }

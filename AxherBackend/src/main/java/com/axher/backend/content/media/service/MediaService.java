@@ -11,7 +11,7 @@ import org.springframework.http.HttpRange;
 import org.springframework.stereotype.Service;
 
 import com.axher.backend.content.core.entities.Content;
-import com.axher.backend.content.core.service.ContentService;
+import com.axher.backend.content.core.service.ContentCatalogService;
 import com.axher.backend.content.series.entities.Episodes;
 import com.axher.backend.content.series.service.EpisodesService;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MediaService {
 
-    private final ContentService contentService;
+    private final ContentCatalogService catalogService;
     private final EpisodesService episodeService;
 
     @Value("${app.upload-dir}")
@@ -30,7 +30,7 @@ public class MediaService {
 
     public ResourceRegion getMovie(Integer contentId, String rangeHeader) throws IOException {
 
-        Content content = contentService.findById(contentId);
+        Content content = catalogService.findPublicById(contentId);
 
         if(content.getMovie() == null ) {
             throw new ResourceNotFoundException("El contenido no tiene pelicula");

@@ -41,6 +41,7 @@ export default function EditContentPage() {
     const [posterUrl, setPosterUrl] = useState("");
     const [backdropUrl, setBackdropUrl] = useState("");
     const [trailerUrl, setTrailerUrl] = useState("");
+    const [releaseDate, setReleaseDate] = useState("");
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -78,7 +79,7 @@ export default function EditContentPage() {
                 //Estado
                 if(statuses.length > 0) {
                     setSelectedStatusId(
-                        statuses.find((s) => s.status === content.status.status)?.contentStatusId
+                        statuses.find((s) => s.code === content.status.code)?.contentStatusId
                     );
                 }
 
@@ -92,6 +93,9 @@ export default function EditContentPage() {
                 setPosterUrl(content.posterUrl);
                 setBackdropUrl(content.backdropUrl);
                 setTrailerUrl(content.trailerUrl);
+                if(content.releaseDate) {
+                    setReleaseDate(content.releaseDate);
+                }
             }catch (err) {
                 console.error("Error cargando contenido:", err);
                 router.push("/contents");
@@ -149,7 +153,9 @@ export default function EditContentPage() {
         if(posterFile) formData.append("posterFile", posterFile);
         if(backdropFile) formData.append("backdropFile", backdropFile);
         if(trailerFile) formData.append("trailerFile", trailerFile);
-
+        if (releaseDate) {
+            formData.append("releaseDate", releaseDate);
+        }
         resetProgress();
         await editContent(id, formData, handleProgress);
     };
@@ -199,9 +205,10 @@ export default function EditContentPage() {
                 onSubmit={handleSubmit}
                 isEditing={true}
                 saving={saving}
-                onCancel={() => router.push("/contents")} releaseDate={""} setReleaseDate={function (value: string): void {
-                    throw new Error("Function not implemented.");
-                } }            />
+                onCancel={() => router.push("/contents")}
+                releaseDate={releaseDate}
+                setReleaseDate={setReleaseDate}          
+            />
             {error && (
                 <p style={{ color: "red", marginTop: 10}} role="alert">
                     {error}

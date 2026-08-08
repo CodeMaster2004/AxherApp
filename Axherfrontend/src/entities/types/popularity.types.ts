@@ -7,6 +7,28 @@ export interface PopularContent {
     watchedSeconds: number;
 }
 
+export interface TrendingContent {
+
+    contentId:number;
+    title:string;
+    posterUrl:string;
+    type: ContentType;
+    totalViews:number;
+    uniqueUsers:number;
+    watchedSeconds:number;
+    score:number;
+}
+
+export interface TopRatedContent {
+    contentId:number;
+    title:string,
+    posterUrl:string;
+    type: ContentType;
+    averageRating:number;
+    totalRatings:number;
+    score:number;
+}
+
 export interface HeroContent {
     contentId: number;
     title: string;

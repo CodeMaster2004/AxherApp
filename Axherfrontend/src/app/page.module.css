@@ -16,10 +16,11 @@
 }
 
 .contentWrap {
-  width: min(1650px, 96vw);
-  margin: 0 auto;
-  padding: 2.6rem 0 4rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 3rem 2rem;
 }
+
 
 .sectionHeader {
   display: flex;

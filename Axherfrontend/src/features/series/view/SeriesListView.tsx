@@ -4,6 +4,7 @@ import { ContentDetail, ContentType } from "@/entities/types";
 import ContentsList from "@/features/contents/components/ContentsList";
 import { useContents } from "@/features/contents/hooks/useContents";
 import { useContentsActions } from "@/features/contents/hooks/useContentsActions";
+import { useContentStatus } from "@/features/contentStatus/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import { useRouter } from "next/navigation";
@@ -28,12 +29,14 @@ export default function SeriesListView() {
         },
     });
 
-    const { deleting, removeContent } = useContentsActions({
+    const { deleting, removeContent, updateContentStatus } = useContentsActions({
         onSuccess: refetch,
     });
 
+    const { contentStatus } = useContentStatus();
+
     const handleCreate = () => {
-        router.push("/contents/create?type=SERIES");
+        router.push("/contents/create?type=SERIE");
     };
 
     const handleViewSeries = (content: ContentDetail) => {
@@ -60,6 +63,10 @@ export default function SeriesListView() {
             </div>
             <ContentsList
                 contents={contents}
+                statuses={contentStatus}
+                onUpdateStatus={(id, statusId) => {
+                    updateContentStatus(id, {statusId});
+                }}
                 onDelete={removeContent}
                 onEdit={handleEdit}
                 onView={handleViewSeries}

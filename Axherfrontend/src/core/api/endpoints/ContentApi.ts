@@ -1,50 +1,82 @@
-import { ContentDetail, ContentQueryParams, Page, PaginationParams, StatusUpdate } from "@/entities/types";
+import axiosClient from "@/core/api/axiosClient";
+import { ContentDetail, ContentFiltersDto, ContentNewParams, ContentQueryParams, ContentType, Page, PaginationParams, SearchParams, UpcomingContent } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
-import axiosClient from "../axiosClient";
 
+export const publicContentApi = {
 
-export const contentApi = {
-
-    getAll: (params: PaginationParams, search?: string, config?: AxiosRequestConfig) =>
-        axiosClient.get<Page<ContentDetail>>("/admin/contents", {
-            params: {...params, search},
-            ...config
-        }),
-
-    search: (
+    getAll:(
         params: ContentQueryParams,
+    ) => 
+        axiosClient.get<Page<ContentDetail>>(
+            "/contents",
+            {
+                params
+            }
+        ),
+        
+    globalSearch: (
+        params: SearchParams,
         config?: AxiosRequestConfig
-    ) => axiosClient.get<Page<ContentDetail>>("/admin/contents/search", {
+    ) => axiosClient.get<Page<ContentDetail>>("/contents/search", {
         params,
         ...config
     }),
 
-    getWithDiscount: (params: PaginationParams, config?: AxiosRequestConfig) =>
-        axiosClient.get<Page<ContentDetail>>("/admin/contents/with-discount", {
-            params,
-            ...config
-        }),
+    getById: (id: number) =>
+        axiosClient.get<ContentDetail>(
+            `/contents/${id}`
+        ),
+    
+    getUpcoming: (
+        params: PaginationParams,
+        config?: AxiosRequestConfig
+    ) =>
+        axiosClient.get<Page<UpcomingContent>>(
+            "/contents/upcoming",
+            {
+                ...params,
+                ...config
+            }
+        ),
 
-    getById: (id: number, config?: AxiosRequestConfig) =>
-        axiosClient.get<ContentDetail>(`/admin/contents/${id}`, config),
+    getNewContent: (
+        params: ContentNewParams,
+        config?: AxiosRequestConfig
+    ) => 
+        axiosClient.get<Page<ContentDetail>>(
+            "/contents/new",
+            {
+                params,
+                ...config
+            }
+        ),
 
+    getContent: (
+        params: ContentQueryParams,
+        config?: AxiosRequestConfig
+    ) => 
+        axiosClient.get<Page<ContentDetail>>(
+            "contents",
+            {
+                params,
+                ...config
+            }
+        ),
 
-    create: (formData: FormData, config?: AxiosRequestConfig) =>
-        axiosClient.post<ContentDetail>("/admin/contents", formData, {
-            headers: {"Content-type": "multipart/form-data"},
-            ...config
-        }),
+    getFilters: (
+        type?: ContentType,
+        config?: AxiosRequestConfig
 
-    update: (id: number, formData: FormData, config?: AxiosRequestConfig) =>
-        axiosClient.patch<ContentDetail>(`/admin/contents/${id}`, formData, {
-            headers: {"Content-type": "multipart/form-data"},
-            ...config
-        }),
+    ) => 
+        axiosClient.get<ContentFiltersDto>(
+            "/contents/filters",
+            {
+                params: {
+                    type
+                },
+                ...config
+            }
+        )
 
-    updateStatus: (id: number, statusUpdate: StatusUpdate, config?: AxiosRequestConfig) =>
-        axiosClient.patch<ContentDetail>(`/admin/contents/${id}/status`, statusUpdate, config),
-
-    delete: (id: number, config?: AxiosRequestConfig) =>
-        axiosClient.delete(`/admin/contents/${id}`, config),
     
 }

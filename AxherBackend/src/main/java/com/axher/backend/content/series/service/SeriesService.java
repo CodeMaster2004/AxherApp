@@ -26,6 +26,30 @@ public class SeriesService {
             .orElseThrow(() -> new ResourceNotFoundException("Serie no encontrada: " + id));
     }
 
+    /*public Series findPublicById(Integer id) {
+
+        Series serie = findByContentId(id);
+        Content content = serie.getContent();
+
+        if(!content.getContentStatus()
+                .getStatus()
+                .equalsIgnoreCase("PUBLISHED")){
+
+            throw new ResourceNotFoundException(
+                "Serie no disponible"
+            );
+                
+        }
+        return serie;
+    }*/
+
+    @Transactional(readOnly = true)
+    public Series findPublicByIdd(Integer contentId) {
+
+        return seriesRepository.findPublicByContentId(contentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Serie no encontrada"));
+    }
+
     public Series findByContentId(Integer contentId){
         Content content = contentService.findById(contentId);
 

@@ -2,6 +2,7 @@ package com.axher.backend.content.core.DTOs;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.axher.backend.content.core.entities.ContentTypeEnum;
@@ -25,10 +26,11 @@ public class ContentDetailDto {
     private ContentStatusResponseDto status;
     private BigDecimal discountAmount;
     private LocalDate registeredAt;
+    private LocalDateTime releaseDate;
 
     //Solo si es Movvies
     private Integer durationSeconds;
-    private String movieUrl;
+    //private String movieUrl;
 
 
 }

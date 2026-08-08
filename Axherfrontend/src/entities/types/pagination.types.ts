@@ -1,4 +1,5 @@
-import { ContentFilters } from "@/entities/types/content.types";
+import { ContentFilters, ContentType } from "@/entities/types/content.types";
+import { MovieFiltersType } from "@/entities/types/movie.types";
 
 export interface Page<T>{
     content: T[]; // Array de elementos de la pagina actual
@@ -32,3 +33,11 @@ export interface PaginationParams {
 }
 
 export type ContentQueryParams = PaginationParams & ContentFilters;
+export type MovieQueryParams = PaginationParams & MovieFiltersType;
+export interface ContentNewParams extends PaginationParams {
+    type?: ContentType;
+}
+
+export interface SearchParams extends PaginationParams {
+    q?: string;
+}

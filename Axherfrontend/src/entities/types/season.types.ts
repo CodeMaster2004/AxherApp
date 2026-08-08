@@ -1,3 +1,4 @@
+import { ContentStatusResponse } from "@/entities/types";
 import { CreateEpisode, EpisodeDetail, UpdateEpisode } from "@/entities/types/episode.types";
 
 export interface SeasonDetail{
@@ -6,6 +7,8 @@ export interface SeasonDetail{
     title: string;
     description?: string;
     releaseDate: string;
+    status: ContentStatusResponse;
+    episodeCount: number;
 
     //Datos aninados para episodios
     episodes: EpisodeDetail[];
@@ -16,6 +19,7 @@ export interface CreateSeason{
     title: string;
     description?: string;
     releaseDate?: string;
+    statusId?: number;
 
     //Al crear temporada sola(sin serie), se ignoran los episodios
     episodes?: CreateEpisode[];
@@ -27,6 +31,7 @@ export interface UpdateSeason{
     title?: string;
     description?: string;
     releaseDate?: string;
+    statusId?: number;
 
     episodes?: UpdateEpisode[];
 }

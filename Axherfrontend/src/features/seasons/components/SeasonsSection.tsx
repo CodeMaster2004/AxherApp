@@ -1,19 +1,26 @@
 "use client";
 
-import { EpisodeDetail, SeasonDetail } from "@/entities/types";
+import { EpisodeDetail } from "@/entities/types";
 import EpisodesSection from "@/features/episodes/components/EpisodesSection";
 import { useEffect, useState } from "react";
 import styles from "./SeasonsSection.module.css";
+import { usePublicSeasons } from "@/features/seasons/hooks/usePublicSeasons";
 
 interface Props {
-    seasons: SeasonDetail[];
+    seriesId: number;
     onSelectEpisode: (episode: EpisodeDetail) => void;
 }
 
-export default function SeasonsSection({ seasons, onSelectEpisode }: Props) {
+export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
 
     const [selectedSeason, setSelectedSeason] = useState<number | null>(null);
     const [open, setOpen] = useState(false);
+    const {
+        seasons,
+        loading
+    } = usePublicSeasons({
+        seriesId
+    });
 
     useEffect(() => {
         if (seasons.length > 0) {
@@ -62,52 +69,52 @@ export default function SeasonsSection({ seasons, onSelectEpisode }: Props) {
 
 
                 {/* MOBILE */}
-<div className={styles.selectContainer}>
+                <div className={styles.selectContainer}>
 
-    <button
-        className={styles.selectButton}
-        onClick={() => setOpen(!open)}
-    >
-        Temporada {
-            seasons.find(
-                season => season.seasonId === selectedSeason
-            )?.seasonNumber
-        }
+                    <button
+                        className={styles.selectButton}
+                        onClick={() => setOpen(!open)}
+                    >
+                        Temporada {
+                            seasons.find(
+                                season => season.seasonId === selectedSeason
+                            )?.seasonNumber
+                        }
 
-        <span className={styles.arrow}>
-            {open ? "⌃" : "⌄"}
-        </span>
-    </button>
+                        <span className={styles.arrow}>
+                            {open ? "⌃" : "⌄"}
+                        </span>
+                    </button>
 
 
-    {open && (
+                    {open && (
 
-        <div className={styles.dropdownMenu}>
+                        <div className={styles.dropdownMenu}>
 
-            {seasons.map((season) => (
+                            {seasons.map((season) => (
 
-                <button
-                    key={season.seasonId}
-                    className={
-                        selectedSeason === season.seasonId
-                        ? styles.selectedOption
-                        : ""
-                    }
-                    onClick={() => {
-                        setSelectedSeason(season.seasonId);
-                        setOpen(false);
-                    }}
-                >
-                    Temporada {season.seasonNumber}
-                </button>
+                                <button
+                                    key={season.seasonId}
+                                    className={
+                                        selectedSeason === season.seasonId
+                                        ? styles.selectedOption
+                                        : ""
+                                    }
+                                    onClick={() => {
+                                        setSelectedSeason(season.seasonId);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    Temporada {season.seasonNumber}
+                                </button>
 
-            ))}
+                            ))}
 
-        </div>
+                        </div>
 
-    )}
+                    )}
 
-</div>
+                </div>
 
 
             </section>
@@ -115,7 +122,7 @@ export default function SeasonsSection({ seasons, onSelectEpisode }: Props) {
 
             {currentSeason && (
                 <EpisodesSection
-                    episodes={currentSeason.episodes}
+                    seasonId={currentSeason.seasonId}
                     onSelectEpisode={onSelectEpisode}
                 />
             )}

@@ -9,14 +9,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.axher.backend.content.core.entities.ContentStatus;
 
 public interface ContentStatusRepository extends JpaRepository<ContentStatus, Integer> {
-    boolean existsByStatus(String status);
+    boolean existsByCode(String status);
 
-    Optional<ContentStatus> findByStatus(String status);
+    boolean existsByNameIgnoreCase(String name);
 
-    Page<ContentStatus> findByStatusContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-        String status,
-        String description,
-        Pageable pageable
+    Optional<ContentStatus> findByCode(String code);
+
+    Page<ContentStatus> findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+            String code,
+            String name,
+            String description,
+            Pageable pageable
     );
 
 

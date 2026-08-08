@@ -8,7 +8,8 @@ import { useState } from "react";
 
 export default function CreateContentStatusPage() {
     const router = useRouter();
-    const [status, setStatus] = useState("");
+    const [code, setCode] = useState("");
+    const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [error, setError] = useState("");
 
@@ -19,15 +20,21 @@ export default function CreateContentStatusPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        const statusTrim = status.trim();
+        const codeTrim = code.trim();
+        const nameTrim = name.trim();
         const descriptionTrim = description.trim();
         
-        if (!statusTrim) {
-            setError("Por favor completa el campo de estado");
+        if (!codeTrim) {
+            setError("Por favor completa el campo de código");
             return;
         }
 
-        await addContentStatus({ status: statusTrim, description: descriptionTrim});
+        if (!nameTrim) {
+            setError("Por favor completa el campo de nombre");
+            return;
+        }
+
+        await addContentStatus({ code: codeTrim, name: nameTrim, description: descriptionTrim});
 
     };
 
@@ -36,7 +43,7 @@ export default function CreateContentStatusPage() {
     };
 
     const handleStatusChange = (value: string) => {
-        setStatus(value);
+        setCode(value);
         if (error) setError("");
     };
 
@@ -46,8 +53,10 @@ export default function CreateContentStatusPage() {
             <h1>Crear Nuevo Estado</h1>
             
             <ContentStatusForm
-                contentStatus={status}
-                setContentStatus={handleStatusChange}
+                code={code}
+                setCode={handleStatusChange}
+                name={name}
+                setName={setName}
                 description={description}
                 setDescription={setDescription}
                 onSubmit={handleSubmit}

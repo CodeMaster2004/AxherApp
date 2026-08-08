@@ -1,10 +1,20 @@
+import { adminSeasonsApi } from "@/core/api/endpoints/AdminSeasonsApi";
 import { seasonsApi } from "@/core/api/endpoints/SeasonsApi";
-import { Page, PaginationParams, SeasonDetail } from "@/entities/types";
+import { Page, PaginationParams, SeasonDetail, StatusUpdate } from "@/entities/types";
 import { AxiosProgressEvent } from "axios";
 
 
 
 export const seasonsService = {
+
+    getAdminBySeriesId: async(
+        seriesId: number,
+        params: PaginationParams,
+        signal?: AbortSignal
+    ): Promise<Page<SeasonDetail>> => {
+        const res = await adminSeasonsApi.getBySeriesId(seriesId, params, { signal });
+        return res.data;
+    },
 
     getBySeriesId: async(
         seriesId: number,
@@ -14,13 +24,14 @@ export const seasonsService = {
         const res = await seasonsApi.getBySeriesId(seriesId, params, { signal });
         return res.data;
     },
+    
 
     getById: async(
         seriesId: number,
         seasonId: number,
         signal?: AbortSignal
     ): Promise<SeasonDetail> => {
-        const res = await seasonsApi.getById(seriesId, seasonId, { signal });
+        const res = await adminSeasonsApi.getById(seriesId, seasonId, { signal });
         return res.data;
     },
     
@@ -30,7 +41,7 @@ export const seasonsService = {
         onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
         signal?: AbortSignal
     ): Promise<SeasonDetail> => {
-        const res = await seasonsApi.create(seriesId, formData, { signal, onUploadProgress });
+        const res = await adminSeasonsApi.create(seriesId, formData, { signal, onUploadProgress });
         return res.data;
     },
 
@@ -41,16 +52,27 @@ export const seasonsService = {
         onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
         signal?: AbortSignal
     ): Promise<SeasonDetail> => {
-        const res = await seasonsApi.update(seriesId, seasonId, formData, { signal, onUploadProgress });
+        const res = await adminSeasonsApi.update(seriesId, seasonId, formData, { signal, onUploadProgress });
         return res.data;
     },
+
+    updateStatus: async(
+        seriesId: number,
+        seasonId: number,
+        statusUpdate: StatusUpdate,
+        signal?: AbortSignal
+    ): Promise<SeasonDetail> => {
+        const res = await adminSeasonsApi.updateStatus(seriesId, seasonId, statusUpdate, { signal });
+        return res.data;
+    },
+    
 
     delete: async(
         seriesId: number,
         seasonId: number,
         signal?: AbortSignal
     ): Promise<void> => {
-        await seasonsApi.delete(seriesId, seasonId, { signal });
+        await adminSeasonsApi.delete(seriesId, seasonId, { signal });
     }
     
 }

@@ -1,0 +1,252 @@
+.overlay{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.85);
+    backdrop-filter:blur(10px);
+
+    z-index:1000;
+}
+
+
+.container{
+    width:min(700px,90%);
+    margin:100px auto 0;
+    position:relative;
+    animation:searchOpen .25s ease;
+}
+
+@keyframes searchOpen{
+
+    from{
+    opacity:0;
+    transform:translateY(-30px);
+    }
+
+    to{
+    opacity:1;
+    transform:translateY(0);
+    }
+
+}
+.container input{
+
+    width:100%;
+
+    height:65px;
+
+    background:#181818;
+
+    border:1px solid #333;
+
+    border-radius:12px;
+
+    padding:0 25px;
+
+    color:white;
+
+    font-size:24px;
+
+    outline:none;
+
+}
+
+
+.container input:focus{
+
+    border-color:#e50914;
+
+}
+
+
+
+.close{
+
+    position:absolute;
+
+    right:0;
+    top:-55px;
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    background:#222;
+
+    border:none;
+
+    color:white;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:.2s;
+
+}
+
+.close svg{
+
+    display:block;
+
+}
+
+.close:hover{
+
+    background:#e50914;
+
+    transform:rotate(90deg);
+
+}
+
+
+
+.results{
+
+    margin-top:25px;
+    max-height:500px;
+    background:#101010;
+
+    border-radius:16px;
+
+    overflow:hidden;
+    overflow-y:auto;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.5);
+
+}
+
+
+
+.resultItem{
+
+    display:flex;
+    align-items:center;
+
+    gap:18px;
+
+    padding:12px 16px;
+    animation: resultIn .25s ease;
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+@keyframes resultIn{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.resultItem:hover{
+
+    background:#252525;
+    padding-left:22px;
+
+}
+
+
+
+.poster{
+
+    width:55px;
+    height:80px;
+
+    border-radius:8px;
+
+    object-fit:cover;
+
+}
+
+.info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+
+
+.info h3{
+
+    color:white;
+
+    font-size:20px;
+
+    font-weight:600;
+
+    margin:0;
+
+}
+
+
+.meta{
+
+display:flex;
+gap:10px;
+align-items:center;
+
+}
+
+
+.meta span{
+
+background:#e50914;
+color:white;
+
+padding:5px 12px;
+
+border-radius:20px;
+
+font-size:12px;
+
+}
+
+
+.meta span:last-child{
+
+background:#333;
+
+}
+
+
+.loading{
+
+    color:white;
+
+    margin-top:20px;
+
+    text-align:center;
+
+}
+
+.empty{
+    margin-top:20px;
+    padding:40px 20px;
+
+    text-align:center;
+
+    color:#aaa;
+
+    font-size:16px;
+
+    background:#111;
+
+    border-radius:16px;
+}

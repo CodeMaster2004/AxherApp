@@ -1,5 +1,6 @@
 export interface ContentStatus {
     contentStatusId: number;
-    status: string;
+    code: string;
+    name: string;
     description: string;
 } 

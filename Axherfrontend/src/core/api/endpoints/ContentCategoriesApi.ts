@@ -1,4 +1,4 @@
-import { ContentCategories, Page, PaginationParams } from "@/entities/types";
+import { Category, ContentCategories, Page, PaginationParams } from "@/entities/types";
 import type { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 
@@ -15,6 +15,9 @@ export const contentCategoriesApi = {
 
   getById: (id: number, config?: AxiosRequestConfig) => 
   axiosClient.get<ContentCategories>(`/categories/${id}`, config),
+
+  geBySlug: (slug: string, config?: AxiosRequestConfig) => 
+    axiosClient.get<Category>(`/categories/slug/${slug}`, config),
   
   create: (category: Omit<ContentCategories, "contentCategoryId">, config?: AxiosRequestConfig) =>
     axiosClient.post<ContentCategories>("/categories", category, config),

@@ -1,0 +1,48 @@
+.filterPills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    
+}
+
+.pill {
+    border: 1px solid #000000;
+    background: #000000;
+    color: #d2d9e8;
+
+    border-radius: 9px;
+
+    padding: 0.7rem 2rem;
+
+    font-size: .9rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .2s,
+        color .2s,
+        border-color .2s,
+        transform .2s,
+        box-shadow .2s;
+}
+
+.pill:hover {
+
+    color: white;
+
+    border-color: var(--accent);
+
+    background: #331818;
+
+    box-shadow: 0 0 0 4px var(--accent-soft);
+
+    transform: translateY(-2px);
+
+}
+
+.pill:active{
+
+    transform: scale(.96);
+
+}

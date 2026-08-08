@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.axher.backend.content.series.DTOs.seasonDTOs.SeasonResponseDto;
 
 import lombok.Data;
 
@@ -23,6 +22,6 @@ public class SeriesDetailResponseDto {
     private BigDecimal discountAmount;
     private LocalDate registeredAt;
 
-    
-    private List<SeasonResponseDto> seasons;
+    private Integer seasonCount;
+    //private List<SeasonResponseDto> seasons;
 }

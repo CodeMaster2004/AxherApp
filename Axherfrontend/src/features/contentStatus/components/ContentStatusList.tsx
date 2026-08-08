@@ -78,7 +78,8 @@ export default function ContentStatusList ({contentStatus, onDelete, onEdit, del
                     <thead>
                         <tr className={tableStyles.rowHover}>
                             <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                            <th className={tableStyles.headCell}>Estado Peliculas</th>
+                            <th className={tableStyles.headCell}>Code</th>
+                            <th className={tableStyles.headCell}>Nombre</th>
                             <th className={tableStyles.headCell}>Descripción</th>
                             <th className={tableStyles.headCell}>Acciones</th>
                         </tr>
@@ -88,7 +89,8 @@ export default function ContentStatusList ({contentStatus, onDelete, onEdit, del
                         {contentStatus.map((contentStatus) => (
                             <tr key={contentStatus.contentStatusId} className={tableStyles.rowHover}>
                                 <td className={`${tableStyles.cell} ${tableStyles.idColumn}`}>{contentStatus.contentStatusId}</td>
-                                <td className={tableStyles.cell}>{contentStatus.status}</td>
+                                <td className={tableStyles.cell}>{contentStatus.code}</td>
+                                <td className={tableStyles.cell}>{contentStatus.name}</td>
                                 <td className={tableStyles.cell}>{contentStatus.description}</td>
                                     <td className={`${tableStyles.cell} ${tableStyles.actions}`}>
                                             {/* Menú de tres puntos con acciones de fila */}
@@ -103,7 +105,7 @@ export default function ContentStatusList ({contentStatus, onDelete, onEdit, del
                                                             deletingId === contentStatus.contentStatusId
                                                                 ? "Eliminando..."
                                                                 : "Eliminar",
-                                                        onClick: () => handleDeleteClick(contentStatus.contentStatusId, contentStatus.status),
+                                                        onClick: () => handleDeleteClick(contentStatus.contentStatusId, contentStatus.code),
                                                         variant: "danger",
                                                     },
                                                 ]}

@@ -1,0 +1,140 @@
+.card {
+    flex: 0 0 220px;
+
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+
+    background:
+    linear-gradient(
+        180deg,
+        #181818 0%,
+        #080808 100%
+    );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+    
+}
+
+@media (max-width:768px){
+    .card{
+        flex:0 0 170px;
+    }
+}
+
+.card:hover {
+    transform:translateY(-8px);
+    border-color:#f93020;
+    box-shadow:
+        0 25px 50px rgba(0,0,0,.65),
+        0 0 25px rgba(249,48,32,.25);
+}
+
+
+
+.cardLink {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+
+.posterWrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+}
+
+
+.poster {
+    object-fit:cover;
+    transition:transform .5s ease;
+}
+
+.card:hover .poster {
+    transform:
+        scale(1.15)
+        translateY(-5px);
+}
+
+.posterWrap::after {
+
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+    linear-gradient(
+        180deg,
+        transparent 35%,
+        rgba(0,0,0,.85)
+    );
+    
+}
+
+.cardBody {
+    position:relative;
+    padding:.9rem;
+    z-index:4;
+}
+
+.title {
+
+    margin:0;
+    font-size:1rem;
+    font-weight:700;
+    color:#ffffff;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
+.badge {
+
+    position:absolute;
+    top:14px;
+    left:14px;
+
+    z-index:3;
+
+    padding:.35rem .7rem;
+
+    border-radius:999px;
+
+    background:
+        rgba(0,200,255,.15);
+
+    border:
+        1px solid rgba(0,200,255,.45);
+
+    color:#67e8f9;
+
+    font-size:.7rem;
+    font-weight:800;
+
+    backdrop-filter:blur(10px);
+
+}
+
+.date {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.35rem;
+
+    margin-top:.7rem;
+
+    color:#9ca3af;
+
+    font-size:.75rem;
+
+}
+

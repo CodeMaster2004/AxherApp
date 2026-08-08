@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.axher.backend.content.core.entities.ContentStatus;
+import com.axher.backend.content.core.entities.ContentStatusCode;
 import com.axher.backend.content.core.repositories.ContentStatusRepository;
 import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
@@ -25,7 +26,7 @@ public class ContentStatusService {
         if(search == null || search.isBlank()){
             return repository.findAll(pageable);
         }
-        return repository.findByStatusContainingIgnoreCaseOrDescriptionContainingIgnoreCase(search, search, pageable);
+        return repository.findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(search, search, search, pageable);
     }
 
     public ContentStatus findById(Integer id){
@@ -33,14 +34,29 @@ public class ContentStatusService {
             .orElseThrow(() -> new ResourceNotFoundException("Estado no encotrado: " + id));
     }
 
+    public ContentStatus getStatus(ContentStatusCode code) {
+        return repository.findByCode(code.name())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Estado no encontrado: " + code
+                        )
+                );
+    }
+
     public ContentStatus create (ContentStatus contentStatus){
         
-        String normalize = TextNormalizer.normalize(contentStatus.getStatus());
+        String normalize = TextNormalizer.normalizeCode(contentStatus.getCode());
 
-        contentStatus.setStatus(normalize);
+        contentStatus.setCode(normalize);
         
-        if(repository.existsByStatus(normalize)){
+        if(repository.existsByCode(normalize)){
             throw new DuplicateResourceException("El estado ya existe: " + normalize);
+        }
+
+        if (repository.existsByNameIgnoreCase(contentStatus.getName())) {
+            throw new DuplicateResourceException(
+                "El nombre ya existe: " + contentStatus.getName()
+            );
         }
         return repository.save(contentStatus);
     }
@@ -48,22 +64,40 @@ public class ContentStatusService {
     public ContentStatus update(Integer id, ContentStatus status){
         ContentStatus existing = findById(id);
 
-        if (status.getStatus() != null) {
+        if (status.getCode() != null) {
 
 
-            if (status.getStatus().isBlank()) {
+
+            if (status.getCode().isBlank()) {
                 throw new IllegalArgumentException("Status no puede estar vacío");
             }
 
-            String normalized = TextNormalizer.normalize(status.getStatus());
+            String normalized = TextNormalizer.normalizeCode(status.getCode());
 
 
-            if(!normalized.equals(existing.getStatus())
-                && repository.existsByStatus(normalized)){
+            if(!normalized.equals(existing.getCode())
+                && repository.existsByCode(normalized)){
                 throw new DuplicateResourceException("El estado ya existe: " + normalized);
             }
 
-            existing.setStatus(normalized);
+            existing.setCode(normalized);
+        }
+
+        if (status.getName() != null) {
+
+            if (status.getName().isBlank()) {
+                throw new IllegalArgumentException("El nombre no puede estar vacío");
+            }
+
+            if (!status.getName().equalsIgnoreCase(existing.getName())
+                    && repository.existsByNameIgnoreCase(status.getName())) {
+
+                throw new DuplicateResourceException(
+                    "El nombre ya existe: " + status.getName()
+                );
+            }
+
+            existing.setName(status.getName());
         }
 
         if (status.getDescription() != null) {
@@ -72,6 +106,7 @@ public class ContentStatusService {
 
         return repository.save(existing);
     }
+
 
 
     public void delete(Integer id){

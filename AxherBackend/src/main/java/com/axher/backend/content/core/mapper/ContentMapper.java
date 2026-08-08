@@ -47,11 +47,12 @@ public class ContentMapper {
                 : null
         );
         dto.setRegisteredAt(content.getRegisteredAt());
+        dto.setReleaseDate(content.getReleaseDate());
         
          // Solo si es Movie
         if (ContentTypeEnum.MOVIE.equals(content.getType()) && content.getMovie() != null) {
             dto.setDurationSeconds(content.getMovie().getDurationSeconds());
-            dto.setMovieUrl(buildUrl(content.getMovie().getMovieUrl()));
+            //dto.setMovieUrl(buildUrl(content.getMovie().getMovieUrl()));
         }
         
         return dto;
@@ -70,8 +71,8 @@ public class ContentMapper {
             content.getContentStatus().getContentStatusId()
         );
 
-        dto.setStatus(
-            content.getContentStatus().getStatus()
+        dto.setCode(
+            content.getContentStatus().getCode()
         );
 
         return dto;

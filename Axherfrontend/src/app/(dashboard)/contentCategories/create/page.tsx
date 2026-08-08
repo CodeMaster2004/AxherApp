@@ -26,7 +26,10 @@ export default function CreateContentCategoryPage() {
       return;
     }
 
-    await addContentCategory({ name: nameTrim, description: descriptionTrim});
+    await addContentCategory({
+      name: nameTrim, description: descriptionTrim,
+      
+    });
   };
 
   const handleCancel = () => {

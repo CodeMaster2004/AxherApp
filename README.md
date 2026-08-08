@@ -1,10 +1,16 @@
 <div align="center">
+  <img src="Axherfrontend/public/images/axher-logo.svg" alt="AxherApp Logo" width="220">
+</div>
+
+<br>
+
+<div align="center">
   <img src="https://img.shields.io/badge/status-en%20construcci%C3%B3n-yellow?style=for-the-badge" alt="Estado: En construcción">
   <img src="https://img.shields.io/badge/Java-26-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 26">
   <img src="https://img.shields.io/badge/Spring_Boot-4.0.7-6DB33F?style=for-the-badge&logo=spring&logoColor=white" alt="Spring Boot 4.0.7">
   <img src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js 16">
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19">
-  <img src="https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white" alt="SQL Server">
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis">
 </div>
@@ -33,21 +39,25 @@
 - 🔐 **Autenticación segura** con JWT (access + refresh tokens)
 - 🔑 **Inicio de sesión con Google** (OAuth 2.0)
 - 📧 **Confirmación de correo** mediante OTP
-- 🎥 **Exploración de películas y series** con filtros y búsqueda
+- 🎥 **Exploración de películas y series** con filtros, búsqueda y categorías
+- 🎠 **Estantes de contenido** (shelves) personalizados y ordenables
+- 🆕 **Sección de próximos estrenos** (upcoming)
 - ⭐ **Sistema de calificaciones** y reseñas
-- 📺 **Historial de reproducción**
+- 📺 **Historial de reproducción** y popularidad
 - 👤 **Perfil de usuario** con foto y datos personales
-- 💳 **Sistema de pagos y suscripciones** (próximamente)
+- 💳 **Sistema de pagos y suscripciones** (en desarrollo)
 
 ### 🛠️ Para administradores
 - 📊 **Dashboard administrativo** completo
 - 🎬 **CRUD de contenido** (películas, series, episodios, temporadas)
 - 🏷️ **Gestión de categorías** y estados de contenido
+- 🖼️ **Banners hero** personalizables con ordenamiento
+- 🎠 **Gestión de estantes** (shelves) con contenido seleccionable
 - 💰 **Gestión de descuentos** y promociones
 - 👥 **Administración de usuarios** con roles y permisos
-- 🔒 **Sistema de roles y permisos** granulares
+- 🔐 **Sistema de roles y permisos** granulares
 - 📁 **Carga de archivos multimedia** (imágenes, videos)
-- 📈 **Reportes** (próximamente)
+- 📊 **Reportes** (en desarrollo)
 
 ---
 
@@ -62,6 +72,9 @@ AxherApp/
 │   │   ├── billing/                     # Pagos y suscripciones
 │   │   │   ├── payment/                 # Pagos de contenido
 │   │   │   └── subscription/            # Planes de suscripción
+│   │   ├── catalog/                     # Catálogo
+│   │   │   ├── banner/                  # Banners hero
+│   │   │   └── shelf/                   # Estantes de contenido
 │   │   ├── content/                     # Gestión de contenido
 │   │   │   ├── core/                    # Contenido principal
 │   │   │   ├── media/                   # Archivos multimedia
@@ -74,6 +87,7 @@ AxherApp/
 │   │   │   ├── security/                # Configuración de seguridad
 │   │   │   ├── storage/                 # Almacenamiento de archivos
 │   │   │   ├── email/                   # Servicio de correos
+│   │   │   ├── quartz/                  # Programación de publicaciones
 │   │   │   ├── scheduler/               # Tareas programadas
 │   │   │   └── seeder/                  # Datos de prueba
 │   │   ├── users/                       # Gestión de usuarios
@@ -96,8 +110,11 @@ AxherApp/
 │   │   │   ├── movies/                  # Películas
 │   │   │   ├── series/                  # Series
 │   │   │   ├── contents/                # Contenido general
+│   │   │   ├── shelf/                   # Estantes
+│   │   │   ├── heroBanner/              # Banners hero
+│   │   │   ├── upcoming/                # Próximos estrenos
 │   │   │   ├── users/                   # Usuarios
-│   │   │   ├── profile/                # Perfil de usuario
+│   │   │   ├── profile/                 # Perfil de usuario
 │   │   │   └── ...                      # Más módulos
 │   │   ├── shared/                      # Componentes y utilidades
 │   │   └── widgets/                     # Componentes reutilizables
@@ -117,11 +134,12 @@ AxherApp/
 | 🌱 Spring Boot | 4.0.7 | Framework backend |
 | 🔐 Spring Security | — | Autenticación y autorización |
 | 🗄️ Spring Data JPA | — | Persistencia de datos |
-| 🅿️ SQL Server | — | Base de datos principal |
-| 🔴 Redis | — | Caché y sesiones |
+| 🐘 PostgreSQL | — | Base de datos principal |
+| 🧠 Redis | — | Caché y sesiones |
 | 🪪 JWT (jjwt) | 0.12.6 | Tokens de autenticación |
 | 📧 Spring Mail | — | Envío de correos |
 | 🔗 WebSockets | — | Comunicación en tiempo real |
+| ⏰ Quartz | — | Programación de tareas |
 | ☁️ Google API Client | 2.2.0 | OAuth con Google |
 | 📦 Lombok | — | Reducción de boilerplate |
 
@@ -130,13 +148,14 @@ AxherApp/
 |---|---|---|
 | ⚛️ React | 19.1.0 | UI library |
 | ▲ Next.js | 16.2.1 | Framework full-stack |
-| 📘 TypeScript | 5.x | Tipado estático |
+| 🔷 TypeScript | 5.x | Tipado estático |
 | 🎨 Tailwind CSS | 4.x | Estilos utilitarios |
 | 🔄 Axios | 1.14.0 | Cliente HTTP |
 | 📡 SWR | 2.4.1 | Data fetching y caché |
 | 🎬 Framer Motion | 12.42.2 | Animaciones |
 | 🎭 Lucide React | 1.7.0 | Iconos |
 | 🔗 STOMP.js | 7.3.0 | WebSockets |
+| 🧩 @dnd-kit | 6.3.1 | Drag & drop (ordenamiento) |
 | 🖼️ react-easy-crop | 5.5.7 | Recorte de imágenes |
 | 🔑 @react-oauth/google | 0.13.4 | Google OAuth |
 
@@ -145,15 +164,15 @@ AxherApp/
 ## 🚀 Cómo empezar
 
 ### Prerequisitos
-- **Node.js** 18+ 
+- **Node.js** 18+
 - **Java** 17+ (recomendado 26)
 - **Maven** (incluye wrapper en el proyecto)
-- **SQL Server** corriendo localmente
+- **PostgreSQL** corriendo localmente
 - **Redis** (opcional, para caché)
 
 ### 1️⃣ Clonar el repositorio
 ```bash
-git clone https://github.com/tuusuario/AxherApp.git
+git clone https://github.com/CodeMaster2004/AxherApp.git
 cd AxherApp
 ```
 
@@ -161,7 +180,7 @@ cd AxherApp
 
 Crea tu archivo de configuración local:
 ```bash
-cp AxherBackend/src/main/resources/application.yaml.example AxherBackend/src/main/resources/application.yaml
+cp AxherBackend/src/main/resources/application.yaml AxherBackend/src/main/resources/application.local.yaml
 ```
 > ⚠️ **Importante:** Edita `application.yaml` con tus propias credenciales (BD, correo, JWT secret, Google Client ID).
 
@@ -194,7 +213,7 @@ La aplicación abrirá en `http://localhost:3000`.
 ### Backend (`application.yaml`)
 | Variable | Descripción |
 |---|---|
-| `spring.datasource.url` | URL de conexión a SQL Server |
+| `spring.datasource.url` | URL de conexión a PostgreSQL |
 | `spring.datasource.username` | Usuario de BD |
 | `spring.datasource.password` | Contraseña de BD |
 | `spring.mail.username` | Correo para envío de emails |
@@ -211,41 +230,30 @@ La aplicación abrirá en `http://localhost:3000`.
 
 ---
 
-## 📸 Capturas de pantalla
-
-> 🚧 *Próximamente: capturas de la aplicación en funcionamiento*
-
-| Sección | Vista |
-|---|---|
-| 🏠 Landing / Home | — |
-| 🔐 Login / Registro | — |
-| 🎬 Catálogo de películas | — |
-| 📺 Detalle de contenido | — |
-| 📊 Dashboard admin | — |
-
----
-
 ## 🗺️ Roadmap
 
 - [x] Autenticación JWT + Refresh Tokens
 - [x] Inicio de sesión con Google
-- [x] CRUD de contenido (películas, series)
+- [x] CRUD de contenido (películas, series, episodios, temporadas)
 - [x] Panel administrativo
 - [x] Roles y permisos
 - [x] Carga de archivos multimedia
+- [x] Estantes de contenido (shelves) con drag & drop
+- [x] Banners hero personalizables
+- [x] Sección de próximos estrenos
 - [ ] 🚧 Sistema de pagos y suscripciones
-- [ ] 🚧 Reproductor de video
-- [ ] 🚧 Reportes y estadísticas
-- [ ] 🚧 Modo oscuro
-- [ ] 🚧 Pruebas unitarias y de integración
-- [ ] 🚧 Despliegue en producción
-- [ ] 🚧 App móvil (React Native)
+- [ ] 🎬 Reproductor de video
+- [ ] 📊 Reportes y estadísticas
+- [ ] 🌙 Modo oscuro
+- [ ] 🧪 Pruebas unitarias y de integración
+- [ ] 🚀 Despliegue en producción
+- [ ] 📱 App móvil (React Native)
 
 ---
 
 ## 🤝 Contribuciones
 
-Este es un proyecto personal en desarrollo activo. Si tienes sugerencias o encuentras bugs, siéntete libre de abrir un [issue](https://github.com/tuusuario/AxherApp/issues) o enviar un pull request.
+Este es un proyecto personal en desarrollo activo. Si tienes sugerencias o encuentras bugs, siéntete libre de abrir un [issue](https://github.com/CodeMaster2004/AxherApp/issues) o enviar un pull request.
 
 ---
 
@@ -256,9 +264,14 @@ Este proyecto está bajo la licencia **MIT**. Consulta el archivo `LICENSE` para
 ---
 
 <div align="center">
+  <img src="Axherfrontend/public/images/axher-logo.svg" alt="AxherApp Logo" width="120">
   <p>Hecho con ❤️ por <strong>Franclin Alexander Herrera Paucar</strong></p>
   <p>
+<<<<<<< HEAD
     <a href="https://github.com/CodeMaster2004">GitHub</a> •
+=======
+    <a href="https://github.com/CodeMaster2004">GitHub</a>
+>>>>>>> 3700412 (feat: add content shelves, hero banners, upcoming content and catalog improvements)
   </p>
   <br>
   <p>

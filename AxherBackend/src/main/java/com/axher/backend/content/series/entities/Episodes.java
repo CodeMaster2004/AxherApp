@@ -1,6 +1,8 @@
 package com.axher.backend.content.series.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.axher.backend.content.core.entities.ContentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,6 +51,10 @@ public class Episodes {
     private String episodeUrl;
 
     @Column(name = "release_date")
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_status_id")
+    private ContentStatus contentStatus;
 }
 

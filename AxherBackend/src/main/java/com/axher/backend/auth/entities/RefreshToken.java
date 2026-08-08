@@ -1,6 +1,7 @@
 package com.axher.backend.auth.entities;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import com.axher.backend.users.entities.Users;
 
@@ -32,7 +33,7 @@ public class RefreshToken {
     private String token;
 
     @Column(nullable = false)
-    private String familyId;
+    private UUID familyId;
 
     private Instant expiryDate;
 

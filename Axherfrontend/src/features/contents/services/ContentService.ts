@@ -1,5 +1,6 @@
-import { contentApi } from "@/core/api/endpoints/ContentApi";
-import { ContentDetail, ContentQueryParams, Page, PaginationParams, StatusUpdate } from "@/entities/types";
+import { contentApi } from "@/core/api/endpoints/AdminContentApi";
+import { publicContentApi } from "@/core/api/endpoints/ContentApi";
+import { ContentDetail, ContentNewParams, ContentQueryParams, Page, PaginationParams, SearchParams, StatusUpdate, UpcomingContent } from "@/entities/types";
 import { AxiosProgressEvent } from "axios";
 
 
@@ -67,5 +68,35 @@ export const contentService = {
 
     delete: async(id: number, signal?: AbortSignal): Promise<void> =>{
         await contentApi.delete(id, { signal });
+    },
+
+    searchGlobal: async (
+        params: SearchParams,
+        signal?: AbortSignal
+    ): Promise<Page<ContentDetail>> => {
+        const res = await publicContentApi.globalSearch(params, { signal });
+        return res.data;
+    },
+    
+
+
+    getUpcoming: async (
+        params: PaginationParams,
+        signal?: AbortSignal
+    ): Promise<Page<UpcomingContent>> => {
+        const res = await publicContentApi.getUpcoming(params, { signal });
+        return res.data;
+    },
+
+    getNewContent: async (
+        params: ContentNewParams,
+        signal?: AbortSignal
+    ): Promise<Page<ContentDetail>> => {
+        const res = await publicContentApi.getNewContent(params, { signal });
+        return res.data;
     }
+
+    
+    
 }
+

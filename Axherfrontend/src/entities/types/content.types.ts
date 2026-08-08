@@ -1,3 +1,4 @@
+import { Category } from "@/entities/types";
 import { CreateMovie, UpdateMovie } from "@/entities/types/movie.types";
 import { CreateSeries, UpdateSeries } from "@/entities/types/series.types";
 
@@ -19,6 +20,7 @@ export interface ContentDetail{
     status: ContentStatusResponse;
     discountAmount?: number;
     registeredAt: string; // formato "YYYY-MM-DD"
+    releaseDate: string;
 
     //solo si es movie
     durationSeconds?: number;
@@ -73,15 +75,36 @@ export interface ContentFeatured {
     type: ContentType;
 }
 
+export interface UpcomingContent {
+    contentId: number;
+    title: string;
+    posterUrl: string;
+    backdropUrl: string;
+    description: string;
+    releaseDate: string; // formato "YYYY-MM-DD"
+    categories: string[];
+    type: ContentType;
+}
+
 export interface ContentFilters {
     title?: string;
     categoryId?: number;
+    year?: number;
     statusId?: number;
     discountAmount?: number;
     type?: ContentType;
 }
 
+export interface ContentFiltersDto {
+    categories: Category[];
+    years: number[];
+}
+
+
+
 export interface ContentStatusResponse {
     contentStatusId: number;
-    status: string;
+    code: string;
+    name: string;
 }
+

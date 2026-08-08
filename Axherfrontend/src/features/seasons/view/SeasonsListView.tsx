@@ -1,6 +1,7 @@
 "use client";
 
 import {  SeasonDetail } from "@/entities/types";
+import { useContentStatus } from "@/features/contentStatus/hooks";
 import SeasonsList from "@/features/seasons/components/SeasonsList";
 import { useSeasons, useSeasonsActions } from "@/features/seasons/hooks";
 import Button from "@/shared/components/ui/Button";
@@ -31,9 +32,11 @@ export default function SeasonsListView({ seriesId }: Props) {
         seriesId
     });
 
-    const { deleting, removeSeason } = useSeasonsActions(contentId || 0, {
+    const { deleting, removeSeason, updateSeasonStatus } = useSeasonsActions(contentId || 0, {
         onSuccess: refetch,
     });
+
+    const {contentStatus} = useContentStatus();
 
     const handleCreate = () => {
         router.push(`/series/${contentId}/seasons/create`);
@@ -65,8 +68,12 @@ export default function SeasonsListView({ seriesId }: Props) {
 
             <SeasonsList
                 seasons={seasons}
+                statuses={contentStatus}
                 onDelete={removeSeason}
                 onEdit={handleEdit}
+                onUpdateStatus={(id, statusId) => {
+                    updateSeasonStatus(id, {statusId});
+                }}
                 onViewEpisodes={handleViewEpisodes}
                 onCreateEpisode={handleCreateEpisode}
                 deletingId={deleting}

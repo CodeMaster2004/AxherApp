@@ -1,6 +1,7 @@
 "use client";
 
 import { SeasonDetail } from "@/entities/types";
+import { useContentStatus } from "@/features/contentStatus/hooks";
 import SeasonsList from "@/features/seasons/components/SeasonsList";
 import { useSeasons, useSeasonsActions } from "@/features/seasons/hooks";
 import SerieDetailView from "@/features/series/components/SerieDetailView";
@@ -35,11 +36,13 @@ export default function SeriesDetailView() {
         seriesId: contentId || 0,
     });
 
-    const { deleting, removeSeason } = useSeasonsActions(contentId || 0, {
+    const { deleting, removeSeason, updateSeasonStatus } = useSeasonsActions(contentId || 0, {
         onSuccess: () => {
             refetchSeasons();
         },
     });
+
+    const {contentStatus} = useContentStatus();
 
     useEffect(() => {
         if(!contentId){
@@ -92,6 +95,10 @@ export default function SeriesDetailView() {
 
                 <SeasonsList
                     seasons={seasons}
+                    statuses={contentStatus}
+                    onUpdateStatus={(id, statusId) => {
+                        updateSeasonStatus(id, {statusId});
+                    }}
                     onDelete={removeSeason}
                     onEdit={handleEditSeason}
                     onViewEpisodes={handleViewEpisodes}

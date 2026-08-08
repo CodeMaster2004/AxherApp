@@ -5,12 +5,16 @@ import FilePreviewOrLink from "@/shared/components/ui/FilePreviewOrLink";
 import formStyles from "@/shared/styles/shared/Form.module.css";
 import Input from "@/shared/components/ui/Input";
 import TextArea from "@/shared/components/ui/TextArea";
+import Select, { SelectOption } from "@/shared/components/ui/Select";
+import { ContentStatus } from "@/entities/types";
 
 interface Props {
     episodeNumber: number;
     title: string;
     description?: string;
     releaseDate?: string;
+    selectedStatusId?: number;
+    availableStatuses: ContentStatus[];
 
     thumbnailFile?: File | null;
     episodeFile: File | null;
@@ -21,6 +25,7 @@ interface Props {
     setTitle: (value: string) => void;
     setDescription: (value?: string) => void;
     setReleaseDate: (value: string) => void;
+    setSelectedStatusId: (value?: number) => void;
     setThumbnailFile: (file: File | null) => void;
     setEpisodeFile: (file: File | null) => void;
 
@@ -37,6 +42,8 @@ export default function EpisodesForm({
     releaseDate,
     episodeFile,
     episodeUrl,
+    availableStatuses,
+    selectedStatusId,
     thumbnailFile,
     thumbnailUrl,
     setEpisodeNumber,
@@ -45,11 +52,17 @@ export default function EpisodesForm({
     setReleaseDate,
     setEpisodeFile,
     setThumbnailFile,
+    setSelectedStatusId,
     onSubmit,
     isEditing,
     saving = false,
     onCancel,
 }: Props) {
+
+    const statusOptions: SelectOption[] = availableStatuses.map((status) => ({
+        value: status.contentStatusId,
+        label: status.name,
+    }));
     return (
         <form onSubmit={onSubmit} className={formStyles.form}>
             <h2>{isEditing ? "Editar Episodio" : "Crear Episodio"}</h2>
@@ -83,11 +96,21 @@ export default function EpisodesForm({
 
             <Input
                 label="Fecha de estreno"
-                type="date"
+                type="datetime-local"
                 value={releaseDate || ""}
                 onChange={setReleaseDate}
                 disabled={saving}
             />
+
+            <Select
+                label="Estado del contenido"
+                options={statusOptions}
+                value={selectedStatusId}
+                onChange={(val) => setSelectedStatusId(val as number | undefined)}
+                placeholder="Seleccionar estado..."
+                disabled={saving}
+            />
+
 
             <FileInput
                 label="Archivo de miniatura"

@@ -1,0 +1,38 @@
+.section {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 1rem;
+    will-change: transform;
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.row[data-animate="false"] {
+    transition: none;
+}
+
+.card {
+    flex: 0 0 40%;
+    aspect-ratio: 24 / 9;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
+    transition:
+        transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardActive {
+    z-index: 2;
+}
+
+.image {
+    object-fit: cover;
+}

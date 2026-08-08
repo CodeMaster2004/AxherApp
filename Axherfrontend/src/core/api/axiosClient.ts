@@ -37,8 +37,6 @@ const processQueue = (error: unknown) => {
 axiosClient.interceptors.response.use(
     (response) => response,
     async (error) => {
-        console.log("🚨 Status de respuesta:", error.response?.status);
-        console.log("🚨 Data de respuesta:", error.response?.data);
         if (!error.config) return Promise.reject(error);
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
         // 🔹 Solo refrescar si el backend indica TOKEN_EXPIRED

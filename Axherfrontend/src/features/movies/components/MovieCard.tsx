@@ -1,77 +1,114 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { Star, Users } from "lucide-react";
 
 import { ContentDetail, RatingTargetType } from "@/entities/types";
-
 import { useRatingSummary } from "@/features/ratings/hooks/useRatingSummary";
+
 import styles from "./MovieCard.module.css";
 
+
 interface MovieCardProps {
-  movie: ContentDetail;
+    movie: ContentDetail;
 }
 
-export default function MovieCard({ movie }: MovieCardProps) {
 
-  const {
+export default function MovieCard({
+    movie
+}: MovieCardProps) {
+
+
+const {
     summary,
     loading
-  }= useRatingSummary(RatingTargetType.CONTENT, movie.contentId);
-  return (
-    <article className={styles.card}>
-      <Link
-        href={`/peliculas/${movie.contentId}`}
+} = useRatingSummary(
+    RatingTargetType.CONTENT,
+    movie.contentId
+);
+
+
+
+return (
+
+<article className={styles.card}>
+
+
+    <Link
+        href={
+            movie.type === "MOVIE"
+            ? `/peliculas/${movie.contentId}`
+            : `/serie/${movie.contentId}`
+        }
         className={styles.cardLink}
-      >
-        <div className={styles.posterWrap}>
-          <Image
+    />
+
+
+    <div className={styles.posterWrap}>
+
+        <Image
             src={movie.posterUrl}
             alt={movie.title}
             fill
             className={styles.poster}
-            sizes="(max-width: 768px) 50vw, 20vw"
-          />
+        />
+
+    </div>
+
+
+
+    <span className={styles.ratingBadge}>
+
+        <Star
+            size={14}
+            fill="currentColor"
+        />
+
+        {
+            loading
+            ? "..."
+            : (summary?.averageRating ?? 0).toFixed(1)
+        }
+
+    </span>
+
+
+
+    <div className={styles.cardBody}>
+
+        <h3 className={styles.title}>
+            {movie.title}
+        </h3>
+
+
+        <div className={styles.stats}>
+
+
+            <span className={styles.statItem}>
+
+                <Users size={14}/>
+
+                {
+                    summary?.totalRatings ?? 0
+                }
+
+            </span>
+
+
+            <span>
+                {movie.type}
+            </span>
+
+
         </div>
 
-        <div className={styles.cardBody}>
-          <h2 className={styles.title}>{movie.title}</h2>
-          <div className={styles.rating}>
+
+    </div>
 
 
-            {
-              loading ? (
+</article>
 
-                <span>
-                  Cargando...
-                </span>
+)
 
-              ) : (
-
-                <>
-
-                  ⭐ {summary?.averageRating ?? 0}
-
-                  <small>
-                    ({summary?.totalRatings ?? 0})
-                  </small>
-
-                </>
-
-              )
-            }
-
-
-          </div>
-          <p className={styles.description}>
-            {movie.description}
-          </p>
-
-          <div className={styles.meta}>
-            <span>{movie.type}</span>
-            <span>{movie.status.status}</span>
-          </div>
-        </div>
-      </Link>
-    </article>
-  );
 }
