@@ -1,6 +1,7 @@
 package com.axher.backend.shared.util;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class DateValidator {
 
@@ -15,6 +16,21 @@ public class DateValidator {
         }
 
         if (end.isBefore(start)) {
+            throw new IllegalArgumentException(
+                "La fecha de fin no puede ser anterior a la fecha de inicio"
+            );
+        }
+    }
+
+    public static void validateDateTimeRange(
+            LocalDateTime start,
+            LocalDateTime end
+    ) {
+
+        if (start != null &&
+            end != null &&
+            end.isBefore(start)) {
+
             throw new IllegalArgumentException(
                 "La fecha de fin no puede ser anterior a la fecha de inicio"
             );

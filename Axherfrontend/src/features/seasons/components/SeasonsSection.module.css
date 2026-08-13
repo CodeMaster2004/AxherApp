@@ -3,10 +3,18 @@
     margin: 30px 0;
 }
 
+
+/* =========================================================
+   DESKTOP - TABS
+========================================================= */
+
 .tabs {
     display: flex;
+    align-items: center;
     gap: 2rem;
+
     overflow-x: auto;
+
     scrollbar-width: none;
 }
 
@@ -17,7 +25,7 @@
 .tab {
     position: relative;
 
-    padding: 0.8rem 0;
+    padding: .8rem 0;
 
     border: none;
     background: transparent;
@@ -28,24 +36,23 @@
     font-weight: 600;
 
     cursor: pointer;
-
-    transition: color .25s;
     white-space: nowrap;
+
+    transition: color .25s ease;
 }
 
 .tab:hover {
-    color: white;
+    color: #fff;
 }
 
 .active {
-    color: white;
+    color: #fff;
 }
 
 .active::after {
     content: "";
 
     position: absolute;
-
     left: 0;
     bottom: 0;
 
@@ -56,33 +63,79 @@
     border-radius: 10px;
 }
 
-.selectContainer{
-    display:none;
-    position:relative;
+
+/* =========================================================
+   PRÓXIMAS TEMPORADAS - DESKTOP
+========================================================= */
+
+.upcomingTab {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+
+    padding: .8rem 0;
+
+    color: rgba(255, 255, 255, .38);
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    cursor: default;
+    user-select: none;
 }
 
+.lock {
+    font-size: .75rem;
+    opacity: .7;
+}
+
+.upcomingDate {
+    color: rgba(229, 9, 20, .65);
+
+    font-size: .78rem;
+    font-weight: 600;
+}
+
+.upcomingLock {
+    width: 15px;
+    height: 15px;
+    color: #e50914;
+    flex-shrink: 0;
+
+    opacity: .55;
+}
+/* =========================================================
+   MOBILE SELECT
+========================================================= */
+
+.selectContainer {
+    display: none;
+    position: relative;
+}
 
 .selectButton {
-    width:100%;
-    height:52px;
+    width: 100%;
+    height: 52px;
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    padding:0 18px;
+    padding: 0 18px;
 
-    background:#181818;
+    background: #181818;
 
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:12px;
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 12px;
 
-    color:white;
+    color: #fff;
 
-    font-size:1rem;
-    font-weight:700;
+    font-size: 1rem;
+    font-weight: 700;
 
-    cursor:pointer;
+    cursor: pointer;
 
     transition:
         border-color .25s ease,
@@ -90,100 +143,120 @@
         background .25s ease;
 }
 
-
-/* cuando pasas el mouse */
 .selectButton:hover {
+    border-color: #e50914;
+}
 
-    border-color:#e50914;
-
+.arrow {
+    font-size: 1.2rem;
 }
 
 
-/* cuando está abierto */
-.selectButton.open {
+/* =========================================================
+   DROPDOWN
+========================================================= */
 
-    border-color:#e50914;
+.dropdownMenu {
+    position: absolute;
 
-    box-shadow:
-        0 0 0 3px rgba(229,9,20,.18);
+    top: 60px;
+    left: 0;
 
+    width: 100%;
+
+    background: #181818;
+
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    z-index: 50;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .5);
+}
+
+.dropdownMenu button {
+    width: 100%;
+
+    padding: 14px 18px;
+
+    text-align: left;
+
+    background: transparent;
+
+    border: none;
+
+    color: #bbb;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.dropdownMenu button:hover {
+    background: #252525;
+    color: #fff;
+}
+
+.selectedOption {
+    color: #e50914 !important;
 }
 
 
-.arrow{
-    font-size:1.2rem;
+/* =========================================================
+   PRÓXIMA TEMPORADA - MOBILE
+========================================================= */
+
+.upcomingOption {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 14px 18px;
+
+    background: #111;
+
+    border-top: 1px solid rgba(255, 255, 255, .06);
+
+    color: #777;
+
+    font-size: .95rem;
+    font-weight: 600;
+
+    cursor: default;
+    user-select: none;
+}
+
+.upcomingLock {
+    font-size: .8rem;
+    opacity: .75;
+}
+
+.upcomingLabel {
+    color: #999;
 }
 
 
-.dropdownMenu{
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-    position:absolute;
+@media (max-width: 640px) {
 
-    top:60px;
-    left:0;
-
-    width:100%;
-
-    background:#181818;
-
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:12px;
-
-    overflow:hidden;
-
-    z-index:50;
-
-    box-shadow:0 15px 40px rgba(0,0,0,.5);
-}
-
-
-.dropdownMenu button{
-
-    width:100%;
-
-    padding:14px 18px;
-
-    text-align:left;
-
-    background:transparent;
-
-    border:none;
-
-    color:#bbb;
-
-    font-size:1rem;
-
-    font-weight:600;
-
-    cursor:pointer;
-}
-
-
-.dropdownMenu button:hover{
-
-    background:#252525;
-
-    color:white;
-
-}
-
-
-.selectedOption{
-
-    color:#e50914 !important;
-
-}
-
-
-
-@media(max-width:640px){
-
-    .tabs{
-        display:none;
+    .tabs {
+        display: none;
     }
 
-    .selectContainer{
-        display:block;
+    .selectContainer {
+        display: block;
     }
 
 }

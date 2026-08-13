@@ -41,7 +41,7 @@ public class MediaService {
 
     public ResourceRegion getEpisode(Integer episodeId, String rangeHeader) throws IOException {
 
-        Episodes episode = episodeService.findById(episodeId);
+        Episodes episode = episodeService.findPublicById(episodeId);
 
         return buildRegion(episode.getEpisodeUrl(), parseRange(rangeHeader));
     }

@@ -19,7 +19,7 @@
 
 <div align="center">
   <h1>🎬 AxherApp</h1>
-  <p><strong>Plataforma de streaming de películas y series</strong></p>
+  <p><strong>Plataforma de streaming</strong></p>
   <p>🚧 <strong>Proyecto en construcción activa</strong> — nuevas funcionalidades en desarrollo 🚧</p>
 </div>
 
@@ -27,7 +27,7 @@
 
 ## 📖 Descripción
 
-**AxherApp** es una plataforma de streaming completa que permite a los usuarios explorar, reproducir y gestionar contenido multimedia (películas y series). Cuenta con un **panel administrativo** para la gestión de contenido, usuarios, roles y permisos, así como un sistema de **autenticación seguro** con JWT y soporte para inicio de sesión con Google.
+**AxherApp** es una plataforma de streaming completa que permite a los usuarios explorar, reproducir y gestionar contenido multimedia. Cuenta con un **panel administrativo** para la gestión de contenido, usuarios, roles y permisos, así como un sistema de **autenticación seguro** con JWT y soporte para inicio de sesión con Google.
 
 > 💡 Este proyecto nace como una solución integral para la gestión y consumo de contenido audiovisual, combinando un backend robusto con un frontend moderno y responsive.
 
@@ -41,9 +41,11 @@
 - 📧 **Confirmación de correo** mediante OTP
 - 🎥 **Exploración de películas y series** con filtros, búsqueda y categorías
 - 🎠 **Estantes de contenido** (shelves) personalizados y ordenables
-- 🆕 **Sección de próximos estrenos** (upcoming)
+- 🆕 **Sección de próximos estrenos** (upcoming) con temporadas y episodios
 - ⭐ **Sistema de calificaciones** y reseñas
 - 📺 **Historial de reproducción** y popularidad
+- 📋 **Mi Lista (Watchlist)** — guarda películas y series para verlas después
+- 🔍 **Historial de búsquedas** — registro de términos buscados por el usuario
 - 👤 **Perfil de usuario** con foto y datos personales
 - 💳 **Sistema de pagos y suscripciones** (en desarrollo)
 
@@ -51,12 +53,14 @@
 - 📊 **Dashboard administrativo** completo
 - 🎬 **CRUD de contenido** (películas, series, episodios, temporadas)
 - 🏷️ **Gestión de categorías** y estados de contenido
-- 🖼️ **Banners hero** personalizables con ordenamiento
-- 🎠 **Gestión de estantes** (shelves) con contenido seleccionable
+- 🖼️ **Banners hero** personalizables con **ranking automático** basado en métricas (vistas, usuarios, rating y recencia)
+- 🎠 **Gestión de estantes** (shelves) con contenido seleccionable y **fuentes dinámicas** (trending, top rated, nuevos estrenos, más vistos)
+- 📄 **Secciones de página** configurables (home, películas, series) con ordenamiento y activación
 - 💰 **Gestión de descuentos** y promociones
 - 👥 **Administración de usuarios** con roles y permisos
 - 🔐 **Sistema de roles y permisos** granulares
 - 📁 **Carga de archivos multimedia** (imágenes, videos)
+- ⏰ **Programación de publicaciones** con Quartz (contenido, temporadas y episodios)
 - 📊 **Reportes** (en desarrollo)
 
 ---
@@ -73,8 +77,10 @@ AxherApp/
 │   │   │   ├── payment/                 # Pagos de contenido
 │   │   │   └── subscription/            # Planes de suscripción
 │   │   ├── catalog/                     # Catálogo
-│   │   │   ├── banner/                  # Banners hero
-│   │   │   └── shelf/                   # Estantes de contenido
+│   │   │   ├── banner/                  # Banners hero + ranking automático
+│   │   │   ├── page/                    # Secciones de página configurables
+│   │   │   ├── shelf/                   # Estantes de contenido
+│   │   │   └── watchlist/               # Mi Lista (watchlist del usuario)
 │   │   ├── content/                     # Gestión de contenido
 │   │   │   ├── core/                    # Contenido principal
 │   │   │   ├── media/                   # Archivos multimedia
@@ -90,6 +96,7 @@ AxherApp/
 │   │   │   ├── quartz/                  # Programación de publicaciones
 │   │   │   ├── scheduler/               # Tareas programadas
 │   │   │   └── seeder/                  # Datos de prueba
+│   │   ├── search/                      # Historial de búsquedas
 │   │   ├── users/                       # Gestión de usuarios
 │   │   ├── support/                     # Reportes
 │   │   └── shared/                      # Utilidades compartidas
@@ -101,7 +108,9 @@ AxherApp/
 │   │   │   ├── (auth)/                  # Login, registro, confirmación
 │   │   │   ├── (dashboard)/             # Panel administrativo
 │   │   │   ├── peliculas/               # Catálogo de películas
-│   │   │   └── serie/                   # Catálogo de series
+│   │   │   ├── serie/                   # Catálogo de series
+│   │   │   ├── mi-lista/                # Mi Lista (watchlist)
+│   │   │   └── historial-busquedas/     # Historial de búsquedas
 │   │   ├── core/                        # Configuración central
 │   │   │   └── api/                     # Cliente Axios, interceptores
 │   │   ├── entities/                    # Tipos e interfaces TypeScript
@@ -113,6 +122,9 @@ AxherApp/
 │   │   │   ├── shelf/                   # Estantes
 │   │   │   ├── heroBanner/              # Banners hero
 │   │   │   ├── upcoming/                # Próximos estrenos
+│   │   │   ├── pageSection/             # Secciones de página
+│   │   │   ├── watchlist/               # Mi Lista
+│   │   │   ├── search/                  # Búsqueda e historial
 │   │   │   ├── users/                   # Usuarios
 │   │   │   ├── profile/                 # Perfil de usuario
 │   │   │   └── ...                      # Más módulos
@@ -240,7 +252,12 @@ La aplicación abrirá en `http://localhost:3000`.
 - [x] Carga de archivos multimedia
 - [x] Estantes de contenido (shelves) con drag & drop
 - [x] Banners hero personalizables
-- [x] Sección de próximos estrenos
+- [x] Ranking automático de banners hero (métricas de vistas, usuarios, rating y recencia)
+- [x] Sección de próximos estrenos (contenido, temporadas y episodios)
+- [x] Secciones de página configurables (home, películas, series)
+- [x] Mi Lista (watchlist) para guardar contenido
+- [x] Historial de búsquedas
+- [x] Programación de publicaciones con Quartz
 - [ ] 🚧 Sistema de pagos y suscripciones
 - [ ] 🎬 Reproductor de video
 - [ ] 📊 Reportes y estadísticas
@@ -267,11 +284,7 @@ Este proyecto está bajo la licencia **MIT**. Consulta el archivo `LICENSE` para
   <img src="Axherfrontend/public/images/axher-logo.svg" alt="AxherApp Logo" width="120">
   <p>Hecho con ❤️ por <strong>Franclin Alexander Herrera Paucar</strong></p>
   <p>
-<<<<<<< HEAD
-    <a href="https://github.com/CodeMaster2004">GitHub</a> •
-=======
     <a href="https://github.com/CodeMaster2004">GitHub</a>
->>>>>>> 3700412 (feat: add content shelves, hero banners, upcoming content and catalog improvements)
   </p>
   <br>
   <p>

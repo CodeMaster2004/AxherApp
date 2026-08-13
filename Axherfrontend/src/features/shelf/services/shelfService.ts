@@ -1,6 +1,6 @@
 import { adminShelfApi } from "@/core/api/endpoints/AdminShelfApi";
 import { shelfApi } from "@/core/api/endpoints/shelfApi";
-import { ContentShelf, CreateShelf, Page, PaginationParams, Shelf, UpdateShelf } from "@/entities/types";
+import { ContentShelf, CreateShelf, Page, PaginationParams, Shelf, ShelfOption, UpdateShelf } from "@/entities/types";
 
 export const shelfService = {
 
@@ -26,6 +26,35 @@ export const shelfService = {
     ) :Promise<ContentShelf> => {
         const res = await adminShelfApi.getById(
             id,
+            {
+                signal
+            }
+        );
+
+        return res.data;
+    },
+
+    getByIdPublic: async(
+        shelfId:number,
+        signal?:AbortSignal
+    ): Promise<Shelf> => {
+        const res = await shelfApi.getById(
+            shelfId,
+            {
+                signal
+            }
+        );
+
+        return res.data;
+    },
+
+    getOptions: async (
+        target: string,
+        signal?: AbortSignal
+    ): Promise<ShelfOption[]> => {
+
+        const res = await adminShelfApi.getOptions(
+            target,
             {
                 signal
             }

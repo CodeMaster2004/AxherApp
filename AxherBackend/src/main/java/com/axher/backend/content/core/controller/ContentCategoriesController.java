@@ -65,6 +65,7 @@ public class ContentCategoriesController {
     }
 
     @GetMapping("/slug/{slug}")
+    @PreAuthorize("permitAll()")
     public CategoryDto getBySlug(@PathVariable String slug) {
         ContentCategories category = service.findBySlug(slug);
         return categoryMapper.toDto(category);

@@ -114,13 +114,16 @@ public class ContentCatalogService {
         return contentRepository.findAll(spec, pageable);
     }
 
-    public Page<Content> findUpcoming(Pageable pageable){
+    public Page<Content> findUpcoming(
+            ContentTypeEnum type,
+            Pageable pageable
+    ) {
 
-        return contentRepository
-                .findByContentStatus_CodeOrderByReleaseDateAsc(
-                        ContentStatusCode.UPCOMING.name(),
-                        pageable
-                );
+        return contentRepository.findUpcoming(
+                ContentStatusCode.UPCOMING.name(),
+                type,
+                pageable
+        );
     }
 
     public Content findCatalogById(Integer id) {

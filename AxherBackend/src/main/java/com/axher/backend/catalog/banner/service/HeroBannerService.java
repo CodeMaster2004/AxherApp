@@ -1,9 +1,12 @@
 package com.axher.backend.catalog.banner.service;
 
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.axher.backend.catalog.banner.DTOs.HeroBannerRequestDto;
 import com.axher.backend.catalog.banner.entities.HeroBanner;
@@ -12,11 +15,13 @@ import com.axher.backend.content.core.entities.Content;
 import com.axher.backend.content.core.repositories.ContentRepository;
 import com.axher.backend.infrastructure.storage.FileStorageService;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
+import com.axher.backend.shared.util.DateValidator;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class HeroBannerService {
 
     private final HeroBannerRepository repository;
@@ -45,10 +50,9 @@ public class HeroBannerService {
     }
 
     public HeroBanner create(HeroBannerRequestDto dto) {
-
+        DateValidator.validateDateTimeRange(dto.getStartDate(), dto.getEndDate());
         Content content = contentRepository.findById(dto.getContentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Contenido no encontrado: " + dto.getContentId()));
-            
         String backdropUrl = fileStorageService.saveFile(dto.getBackdropFile(), "hero-banners");
         HeroBanner banner = new HeroBanner();
         banner.setContent(content);
@@ -67,7 +71,20 @@ public class HeroBannerService {
 
         HeroBanner banner = findById(id);
 
+        LocalDateTime startDate =
+            dto.getStartDate() != null
+                ? dto.getStartDate()
+                : banner.getStartDate();
 
+        LocalDateTime endDate =
+            dto.getEndDate() != null
+                ? dto.getEndDate()
+                : banner.getEndDate();
+
+        DateValidator.validateDateTimeRange(
+            startDate,
+            endDate
+        );
         if(dto.getContentId() != null) {
             Content content = contentRepository.findById(dto.getContentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Contenido no encontrado: " + dto.getContentId()));

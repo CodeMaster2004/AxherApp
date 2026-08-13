@@ -11,8 +11,10 @@ import { mediaService } from "@/features/media/services/MediaService";
 import Rating from "@/features/ratings/components/Rating";
 import { useContentRating } from "@/features/ratings/hooks/useContentRating";
 import { formatDuration } from "@/shared/utils/formatDuration";
+import { Lock, Play } from "lucide-react";
 import { useState } from "react";
 import styles from "./MovieDetail.module.css";
+import WatchlistButton from "@/features/watchlist/components/WatchlistButton";
 
 interface MovieDetailProps {
   movie: ContentDetail;
@@ -115,12 +117,28 @@ export default function MovieDetail({ movie }: MovieDetailProps) {
                 </button>
               )}
 
-                <button
-                  className={styles.secondaryButton}
-                  onClick={() => requireAuth(() => setPlayerSource(movieUrl))}
-                >
-                  Ver película
-                </button>
+                {movie.status?.code === "UPCOMING" ? (
+                  <button
+                      type="button"
+                      className={`${styles.secondaryButton} ${styles.disabledButton}`}
+                      disabled
+                  >
+                      <Lock size={17} />
+                      Próximamente
+                  </button>
+              ) : (
+                  <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={() =>
+                          requireAuth(() => setPlayerSource(movieUrl))
+                      }
+                  >
+                      <Play size={17} fill="currentColor" />
+                      Ver película
+                  </button>
+              )}
+              <WatchlistButton contentId={movie.contentId} />
 
             </div>
           </div>

@@ -109,15 +109,11 @@ public class PlaybackHistoryService {
     public List<ContinueWatchingDto> getContinueWatching(){
 
         Users user = getCurrentUser();
-
         Pageable pageable = PageRequest.of(0, 50);
-
 
         return playbackHistoryRepository
                 .findContinueWatching(user.getUserId(), pageable)
-
                 .stream()
-
                 .map(continueWatchingMapper::toContinueWatching)
 
 
@@ -126,8 +122,6 @@ public class PlaybackHistoryService {
                     dto.getProgress() != null &&
                     dto.getProgress() < 95
                 )
-
-
                 // dejar solo uno por contenido
                 .collect(Collectors.toMap(
 
@@ -142,13 +136,9 @@ public class PlaybackHistoryService {
                     LinkedHashMap::new
 
                 ))
-
                 .values()
-
                 .stream()
-
                 .limit(10)
-
                 .toList();
     }
 

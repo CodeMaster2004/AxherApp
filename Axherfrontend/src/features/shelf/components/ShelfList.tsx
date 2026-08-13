@@ -5,7 +5,7 @@ import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
-import { shelfLayoutOptions, shelfTargetOptions } from "@/shared/constants/selectOptions";
+import { shelfLayoutOptions, shelfSourceOptions, shelfTargetOptions } from "@/shared/constants/selectOptions";
 import BubbleToggle from "@/shared/components/ui/BubbleToggle";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import Pagination from "@/shared/components/ui/Pagination";
@@ -149,7 +149,7 @@ export default function ShelfList({
                                     <th className={tableStyles.headCell}>Slug</th>
                                     <th className={tableStyles.headCell}>Target</th>
                                     <th className={tableStyles.headCell}>Layout</th>
-                                    <th className={tableStyles.headCell}>Orden</th>
+                                    <th className={tableStyles.headCell}>Source</th>
                                     <th className={tableStyles.headCell}>Estado</th>
                                     <th className={tableStyles.actionsColumn}>Acciones</th>
 
@@ -188,7 +188,14 @@ export default function ShelfList({
                                                 }
                                             </td>
 
-                                            <td>{shelf.displayOrder}</td>
+                                            <td>
+                                                {
+                                                    shelfSourceOptions.find(
+                                                        option =>
+                                                            option.value === shelf.source
+                                                    )?.label
+                                                }
+                                            </td>
 
                                             <td>
 

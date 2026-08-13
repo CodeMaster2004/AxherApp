@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentShelf } from "@/entities/types";
+import { ContentShelf, ShelfTarget } from "@/entities/types";
 import { useShelfActions } from "@/features/shelf/hooks/useShelfActions";
 import { useShelves } from "@/features/shelf/hooks/useContentShelf";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import ShelfList from "@/features/shelf/components/ShelfList";
 export default function ShelfListView() {
 
     const router = useRouter();
-
+    const [target, setTarget] = useState<ShelfTarget>(ShelfTarget.HOME);
     const {
         shelves,
         loading,
@@ -25,7 +25,7 @@ export default function ShelfListView() {
         setSearchTerm,
         refetch
 
-    } = useShelves();
+    } = useShelves({target});
 
     const {
         deleting,
@@ -80,6 +80,31 @@ export default function ShelfListView() {
                     onClick={handleCreate}
                 >
                     Crear Carrusel
+                </Button>
+            </div>
+            <div className={layoutStyles.pageTabs}>
+                <Button
+                    variant="tab"
+                    active={target === ShelfTarget.HOME}
+                    onClick={() => setTarget(ShelfTarget.HOME)}
+                >
+                    Home
+                </Button>
+
+                <Button
+                    variant="tab"
+                    active={target === ShelfTarget.MOVIES}
+                    onClick={() => setTarget(ShelfTarget.MOVIES)}
+                >
+                    Películas
+                </Button>
+
+                <Button
+                    variant="tab"
+                    active={target === ShelfTarget.SERIES}
+                    onClick={() => setTarget(ShelfTarget.SERIES)}
+                >
+                    Series
                 </Button>
             </div>
 

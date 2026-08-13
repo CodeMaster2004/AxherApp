@@ -7,7 +7,7 @@ import Button from "@/shared/components/ui/Button";
 import ContentSelector from "@/shared/components/ui/ContentSelector";
 
 interface Props {
-    onSubmit: (contentId: number, position: number) => void;
+    onSubmit: (contentId: number, position: number | null) => void;
     saving?: boolean;
     error?: string;
 }
@@ -18,7 +18,7 @@ export default function ShelfContentAddForm({
     error
 }: Props) {
     const [contentId, setContentId] = useState<number>();
-    const [position, setPosition] = useState<number>(0);
+    const [position, setPosition] = useState<number | null>(null);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -29,7 +29,7 @@ export default function ShelfContentAddForm({
 
         // limpiar formulario
         setContentId(undefined);
-        setPosition(0);
+        setPosition(null);
     };
 
     return (
@@ -51,9 +51,9 @@ export default function ShelfContentAddForm({
             <Input
                 label="Posición"
                 type="number"
-                value={position.toString()}
+                value={position?.toString() ?? ""}
                 onChange={(value) => setPosition(Number(value))}
-                min={0}
+                min={1}
                 disabled={saving}
             />
 

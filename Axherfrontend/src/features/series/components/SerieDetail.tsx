@@ -5,6 +5,7 @@ import { useContentRating } from "@/features/ratings/hooks/useContentRating";
 import Image from "next/image";
 import { useState } from "react";
 import styles from "./SerieDetail.module.css";
+import WatchlistButton from "@/features/watchlist/components/WatchlistButton";
 
 interface SeriesDetailProps {
     series: SeriesDetail;
@@ -70,7 +71,7 @@ export default function SerieDetail({ series }: SeriesDetailProps) {
                             )}
                             {releaseYear && <span>{releaseYear}</span>}
                             {series.status && (
-                                <span className={styles.ageBadge}>{series.status.status}</span>
+                                <span className={styles.ageBadge}>{series.status.code}</span>
                             )}
                         </div>
                         <Rating
@@ -96,6 +97,7 @@ export default function SerieDetail({ series }: SeriesDetailProps) {
                                     Ver tráiler
                                 </button>
                             )}
+                            <WatchlistButton contentId={series.contentId} />
                         </div>
                     </div>
                 </div>

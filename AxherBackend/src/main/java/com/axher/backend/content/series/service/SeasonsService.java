@@ -95,9 +95,12 @@ public class SeasonsService {
         return seasonsRepository.findBySeries_ContentIdAndTitleContainingIgnoreCase(seriesId, keyword);
     }
 
-    public Page<Seasons> findUpcoming(Pageable pageable) {
-
-        return seasonsRepository.findByContentStatus_CodeOrderByReleaseDateAsc(ContentStatusCode.UPCOMING.name(), pageable);
+    public List<Seasons> findUpcoming(Integer seriesId) {
+        return seasonsRepository
+            .findBySeries_ContentIdAndContentStatus_CodeOrderByReleaseDateAsc(
+                seriesId,
+                ContentStatusCode.UPCOMING.name()
+            );
     }
 
     public void publish(Integer id) {

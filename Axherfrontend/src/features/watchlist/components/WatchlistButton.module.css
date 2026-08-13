@@ -1,0 +1,151 @@
+.watchlistButton {
+    width: 46px;
+    height: 46px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.09),
+            rgba(255, 255, 255, 0.035)
+        );
+
+    color: rgba(255, 255, 255, 0.88);
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.22s cubic-bezier(.2, .8, .2, 1),
+        background 0.22s ease,
+        border-color 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.watchlistButton:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.04);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.14),
+            rgba(255, 255, 255, 0.06)
+        );
+
+    border-color: rgba(255, 255, 255, 0.3);
+
+    color: #fff;
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.38),
+        0 0 18px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.watchlistButton:active:not(:disabled) {
+    transform: scale(0.94);
+}
+
+/* ==============================
+   EN MI LISTA
+============================== */
+
+.watchlistButtonActive {
+    color: #fff;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.18),
+            rgba(255, 255, 255, 0.08)
+        );
+
+    border-color: rgba(255, 255, 255, 0.38);
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        0 0 18px rgba(255, 255, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.watchlistButtonActive:hover:not(:disabled) {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.23),
+            rgba(255, 255, 255, 0.1)
+        );
+
+    border-color: rgba(255, 255, 255, 0.48);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.38),
+        0 0 22px rgba(255, 255, 255, 0.08);
+}
+
+/* ==============================
+   DISABLED
+============================== */
+
+.watchlistButton:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* ==============================
+   ICONS
+============================== */
+.removeButton {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+    color: rgba(255, 255, 255, 0.42);
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.removeButton:hover:not(:disabled) {
+    color: #ff5c6c;
+    background: rgba(255, 92, 108, 0.1);
+
+    transform: scale(1.05);
+}
+
+.removeButton:active:not(:disabled) {
+    transform: scale(0.92);
+}
+
+.removeButton:disabled {
+    cursor: default;
+    opacity: 0.5;
+}

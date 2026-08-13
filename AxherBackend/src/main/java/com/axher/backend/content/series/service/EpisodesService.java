@@ -109,6 +109,10 @@ public class EpisodesService {
         return episodesRepository.findByContentStatus_CodeOrderByReleaseDateAsc(ContentStatusCode.UPCOMING.name(), pageable);
     }
 
+    public Page<Episodes> findUpcomingBySeasonId(Integer seasonId, Pageable pageable){
+        return episodesRepository.findUpcomingBySeasonId(seasonId, pageable);
+    }
+
     @Transactional
     public void publish(Integer id) {
 
@@ -137,6 +141,34 @@ public class EpisodesService {
         episodesRepository.save(episode);
 
         log.info("Episodio {} publicado correctamente", id);
+    }
+
+    public Episodes findPublicById(Integer id) {
+
+        Episodes episode = episodesRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Episodio no encontrado"));
+
+        if(!ContentStatusCode.PUBLISHED.name().equals(episode.getContentStatus().getCode())){
+
+            throw new ResourceNotFoundException("Episodio no disponible");
+        }
+
+        if(!ContentStatusCode.PUBLISHED.name().equals(episode.getSeason().getContentStatus().getCode())){
+            throw new ResourceNotFoundException("Temporada no disponible");
+        }
+
+        if(!ContentStatusCode.PUBLISHED.name()
+                .equals(
+                    episode.getSeason()
+                        .getSeries()
+                        .getContent()
+                        .getContentStatus()
+                        .getCode()
+            )
+        ){
+            throw new ResourceNotFoundException("Serie no disponible");
+        }
+        return episode;
     }
 
     public Episodes create(Integer seasonId, CreateEpisodeRequestDto dto){

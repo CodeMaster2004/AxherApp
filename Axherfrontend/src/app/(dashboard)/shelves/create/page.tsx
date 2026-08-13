@@ -1,6 +1,6 @@
 "use client";
 
-import { ShelfLayout, ShelfTarget } from "@/entities/types";
+import { ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
 import ShelfForm from "@/features/shelf/components/ShelfForm";
 import { useShelfActions } from "@/features/shelf/hooks/useShelfActions";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,9 @@ export default function CreateShelfPage() {
     const [layout,setLayout] = useState<ShelfLayout>(
         ShelfLayout.POSTER
     );
-    const [displayOrder,setDisplayOrder] = useState(0);
+    const [source,setSource] = useState<ShelfSource>(
+        ShelfSource.MANUAL
+    );
     const [active,setActive] = useState(true);
 
     const {
@@ -46,7 +48,7 @@ export default function CreateShelfPage() {
             name,
             target,
             layout,
-            displayOrder,
+            source,
             active
         });
 
@@ -66,12 +68,12 @@ export default function CreateShelfPage() {
                 name={name}
                 target={target}
                 layout={layout}
-                displayOrder={displayOrder}
+                source={source}
                 active={active}
                 setName={setName}
                 setTarget={setTarget}
                 setLayout={setLayout}
-                setDisplayOrder={setDisplayOrder}
+                setSource={setSource}
                 setActive={setActive}
                 onSubmit={handleSubmit}
                 saving={saving}

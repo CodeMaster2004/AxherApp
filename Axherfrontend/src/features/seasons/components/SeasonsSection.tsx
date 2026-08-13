@@ -5,7 +5,8 @@ import EpisodesSection from "@/features/episodes/components/EpisodesSection";
 import { useEffect, useState } from "react";
 import styles from "./SeasonsSection.module.css";
 import { usePublicSeasons } from "@/features/seasons/hooks/usePublicSeasons";
-
+import { useUpcomingSeasons } from "@/features/seasons/hooks/useUpcomingSeasons";
+import { Lock } from "lucide-react";
 interface Props {
     seriesId: number;
     onSelectEpisode: (episode: EpisodeDetail) => void;
@@ -21,6 +22,11 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
     } = usePublicSeasons({
         seriesId
     });
+
+    const {
+    upcomingSeasons,
+    loading: upcomingLoading
+} = useUpcomingSeasons(seriesId);
 
     useEffect(() => {
         if (seasons.length > 0) {
@@ -38,7 +44,15 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
         season => season.seasonId === selectedSeason
     );
 
+    const formatReleaseDate = (date: string) => {
 
+    return new Intl.DateTimeFormat("es-PE", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    }).format(new Date(date));
+
+};
     return (
         <>
 
@@ -61,7 +75,25 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                         >
                             Temporada {season.seasonNumber}
                         </button>
+                        
 
+                    ))}
+                    {upcomingSeasons.map((season) => (
+                        <div
+                            key={season.seasonId}
+                            className={styles.upcomingTab}
+                            title={`Temporada ${season.seasonNumber} · Próximamente`}
+                        >
+                            <Lock className={styles.upcomingLock}/>
+
+                            <span>
+                                T{season.seasonNumber}
+                            </span>
+
+                            <span className={styles.upcomingDate}>
+                                · {formatReleaseDate(season.releaseDate)}
+                            </span>
+                        </div>
                     ))}
 
                 </div>
@@ -109,6 +141,23 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                                 </button>
 
                             ))}
+                            {upcomingSeasons.map((season) => (
+                                <div
+                                    key={season.seasonId}
+                                    className={styles.upcomingOption}
+                                >
+                                    <Lock className={styles.upcomingLock}/>
+
+                                    <span className={styles.upcomingLabel}>
+                                        T{season.seasonNumber}
+                                    </span>
+
+                                    <span className={styles.upcomingDate}>
+                                        · {formatReleaseDate(season.releaseDate)}
+                                    </span>
+                                </div>
+                            ))}
+                            
 
                         </div>
 

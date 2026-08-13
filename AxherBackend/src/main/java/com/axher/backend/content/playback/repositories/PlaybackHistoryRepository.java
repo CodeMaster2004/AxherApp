@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.axher.backend.catalog.banner.DTOs.HeroPlaybackMetricsDto;
 import com.axher.backend.content.core.DTOs.ContentFeaturedDto;
 import com.axher.backend.content.core.DTOs.TrendingContentDto;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
@@ -108,6 +109,7 @@ public interface PlaybackHistoryRepository extends JpaRepository<PlaybackHistory
         @Param("userId") Integer userId,
         Pageable pageable
     );
+    
 
 
     @Query("""
@@ -136,5 +138,20 @@ public interface PlaybackHistoryRepository extends JpaRepository<PlaybackHistory
     List<ContentFeaturedDto> findFeatured(
         @Param("date") LocalDateTime date,
         Pageable pageable
+    );
+
+    @Query("""
+        SELECT new com.axher.backend.catalog.banner.DTOs.HeroPlaybackMetricsDto(
+            ph.content.contentId,
+            COUNT(ph.playbackHistoryId),
+            COUNT(DISTINCT ph.user.userId)
+        )
+        FROM PlaybackHistory ph
+        WHERE ph.content IS NOT NULL
+        AND ph.watchedAt >= :from
+        GROUP BY ph.content.contentId
+        """)
+    List<HeroPlaybackMetricsDto> findHeroPlaybackMetrics(
+            @Param("from") LocalDateTime from
     );
 }

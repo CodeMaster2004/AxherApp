@@ -1,17 +1,21 @@
 "use client";
 
-import { TopRatedContent } from "@/entities/types";
+import { ContentType, TopRatedContent } from "@/entities/types";
 import { popularityService } from "@/features/popularity/services/popularityService";
 import { useEffect, useState } from "react";
 
-export const useTopRated = () => {
+export const useTopRated = (type: ContentType) => {
     const [topRated, setTopRated] = useState<TopRatedContent[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const controller = new AbortController();
         const load = async () => {
             try {
-                const data = await popularityService.topRated();
+                const data = await popularityService.topRated(
+                    type,
+                    controller.signal
+                );
                 setTopRated(data);
             } catch (error) {
                 console.error("Error loading top rated content:", error);

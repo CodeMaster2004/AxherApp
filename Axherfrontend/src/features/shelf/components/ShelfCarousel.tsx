@@ -3,7 +3,7 @@
 import { Shelf } from "@/entities/types";
 import styles from "./ShelfCarousel.module.css";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
-import MovieCard from "@/features/movies/components/MovieCard";
+import ShelfCard from "@/features/shelf/components/ShelfCard";
 
 interface Props {
     shelf: Shelf;
@@ -20,10 +20,10 @@ export default function ShelfCarousel({ shelf }: Props) {
             <HorizontalCarousel>
 
                 {
-                    shelf.contents.map((content) => (
-                        <MovieCard
+                    shelf.items.map((content) => (
+                        <ShelfCard
                             key={content.contentId}
-                            movie={content}
+                            item={content}
                         />
                     ))
                 }

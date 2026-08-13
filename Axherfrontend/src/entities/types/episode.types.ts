@@ -36,3 +36,16 @@ export interface UpdateEpisode{
     releaseDate?: string;
     statusId?: number;
 }
+
+export interface UpcomingEpisode{
+    episodeId: number;
+    episodeNumber: number;
+    title: string;
+    description: string;
+    durationSeconds: number;
+    thumbnailUrl: string;
+    releaseDate: string;
+    seasonNumber: number;
+    seriesTitle: string;
+
+}

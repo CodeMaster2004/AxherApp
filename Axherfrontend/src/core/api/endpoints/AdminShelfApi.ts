@@ -1,6 +1,6 @@
 import axiosClient from "@/core/api/axiosClient";
 import { Page, PaginationParams } from "@/entities/types";
-import { ContentShelf, CreateShelf, UpdateShelf } from "@/entities/types/shelf.types";
+import { ContentShelf, CreateShelf, ShelfOption, UpdateShelf } from "@/entities/types/shelf.types";
 import { AxiosRequestConfig } from "axios";
 
 export const adminShelfApi = {
@@ -28,6 +28,15 @@ export const adminShelfApi = {
         `/admin/shelves/${id}`,
          config
     ),
+
+    getOptions: (
+        target: string,
+        config?: AxiosRequestConfig
+    ) =>
+        axiosClient.get<ShelfOption[]>(
+            `/admin/shelves/options?target=${target}`,
+            config
+        ),
 
     create: (
         data: CreateShelf,

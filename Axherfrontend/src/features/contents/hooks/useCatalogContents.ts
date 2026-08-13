@@ -7,7 +7,7 @@ import { useCallback } from "react";
 
 type UseCatalogContentsOptions = {
     initialData?: Page<ContentDetail>;
-    filters?: ContentFilters;
+    filters?: ContentQueryParams;
 }
 
 export const useCatalogContents = (options?: UseCatalogContentsOptions) => {
@@ -19,12 +19,23 @@ export const useCatalogContents = (options?: UseCatalogContentsOptions) => {
             _search?: string,
             signal?: AbortSignal
         ) => {
+            console.log("FETCH CATALOG", {
+            params: { ...params },
+            filters: { ...options?.filters },
+            finalParams: {
+                ...params,
+                ...options?.filters
+            },
+            search: _search,
+        });
             return contentCatalogService.getAll(
                 {
                     ...params,
                     ...options?.filters,
                 },
+                
                 signal
+                
             );
         },
         [options?.filters]

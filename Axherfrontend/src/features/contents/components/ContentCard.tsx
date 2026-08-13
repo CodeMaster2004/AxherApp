@@ -5,6 +5,7 @@ import { useRatingSummary } from "@/features/ratings/hooks/useRatingSummary";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./ContentCard.module.css";
+import { Star } from "lucide-react";
 
 interface Props {
     content: ContentDetail;
@@ -22,7 +23,7 @@ export default function ContentCard({ content }: Props) {
 
     const href = 
         content.type === "MOVIE"
-        ? `/movies/${content.contentId}`
+        ? `/peliculas/${content.contentId}`
         : `/serie/${content.contentId}`;
 
     return (
@@ -41,10 +42,27 @@ export default function ContentCard({ content }: Props) {
                     className={styles.poster}
                     sizes="220px"
                 />
+            
+                <div className={styles.ratingBadge}>
+                    {loading ? (
+                        "..."
+                    ) : (
+                        <>
+                            <Star
+                                size={14}
+                                fill="currentColor"
+                                strokeWidth={0}
+                            />
 
-                <span className={styles.type}>
-                    {content.type}
-                </span>
+                            <span>
+                                {summary?.averageRating?.toFixed(1) ?? "0"}
+                            </span>
+
+                           
+                        </>
+                    )}
+                </div>
+               
             </div>
 
             <div className={styles.body}>
@@ -53,20 +71,6 @@ export default function ContentCard({ content }: Props) {
                     {content.title}
                 </h3>
 
-                <div className={styles.rating}>
-                    {
-                        loading ? (
-                            "..."
-                        ) : (
-                            <>
-                                ⭐ {summary?.averageRating?.toFixed(1) ?? "0"}
-                                <small>
-                                    ({summary?.totalRatings ?? 0})
-                                </small>
-                            </>
-                        )
-                    }
-                </div>
                 <div className={styles.meta}>
                     {
                         content.categories?.slice(0,2)

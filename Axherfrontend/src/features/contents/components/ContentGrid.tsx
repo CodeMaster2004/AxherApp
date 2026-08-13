@@ -11,10 +11,22 @@ export default function ContentGrid({
     contents,
     loading
 }: Props) {
-
-    if(loading){
-        return <p>cargando...</p>
-    }
+    console.log("GRID", {
+        loading,
+        count: contents.length,
+        ids: contents.map(x => x.contentId)
+    });
+    if (loading) {
+    return (
+        <div style={{
+            padding: "2rem",
+            color: "red",
+            fontSize: "2rem"
+        }}>
+            CARGANDO...
+        </div>
+    );
+}
 
     if(contents.length === 0) {
         return <p>No se encontraron contenidos</p>

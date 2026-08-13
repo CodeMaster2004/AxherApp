@@ -229,3 +229,48 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.tab {
+    position: relative;
+
+    background: transparent;
+    color: var(--text-muted);
+
+    border: none;
+    border-radius: 0;
+
+    padding: 0.7rem 1rem;
+
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.tab:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.tabActive {
+    color: var(--text-main);
+}
+
+.tabActive::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0;
+
+    height: 2px;
+
+    background: currentColor;
+    border-radius: 2px;
+}

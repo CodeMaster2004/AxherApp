@@ -15,3 +15,5 @@ export * from "./status.types";
 export * from "./user.types";
 export * from "./shelf.types";
 export * from "./heroBanner.types";
+export * from "./searchHistory.types";
+export * from "./Watchlist.types";

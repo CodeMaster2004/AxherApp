@@ -17,7 +17,7 @@ public class ContentShelfMapper {
         dto.setSlug(shelf.getSlug());
         dto.setTarget(shelf.getTarget());
         dto.setLayout(shelf.getLayout());
-        dto.setDisplayOrder(shelf.getDisplayOrder());
+        dto.setSource(shelf.getSource());
         dto.setActive(shelf.getActive());
         dto.setCreatedAt(shelf.getCreatedAt());
 

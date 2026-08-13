@@ -1,5 +1,6 @@
 package com.axher.backend.catalog.shelf.controllers;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.axher.backend.catalog.shelf.DTOs.ContentShelfDto;
 import com.axher.backend.catalog.shelf.DTOs.CreateShelfDto;
+import com.axher.backend.catalog.shelf.DTOs.ShelfOptionDto;
 import com.axher.backend.catalog.shelf.DTOs.UpdateShelfDto;
 import com.axher.backend.catalog.shelf.entities.ContentShelf;
+import com.axher.backend.catalog.shelf.entities.ShelfTarget;
 import com.axher.backend.catalog.shelf.mapper.ContentShelfMapper;
 import com.axher.backend.catalog.shelf.service.ContentShelfService;
 import com.axher.backend.shared.util.SortUtils;
@@ -49,7 +52,8 @@ public class AdminContentShelfController {
     public Page<ContentShelfDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "contentShelfId,desc") String sort
+            @RequestParam(defaultValue = "contentShelfId,desc") String sort,
+            @RequestParam(required = false) ShelfTarget target
     ){
 
         Sort sortObj = SortUtils.parseSort(
@@ -58,7 +62,7 @@ public class AdminContentShelfController {
                 "contentShelfId");
 
         Page<ContentShelf> shelves =
-                service.findAll(PageRequest.of(page,size,sortObj));
+                service.findAll(target, PageRequest.of(page,size,sortObj));
 
         return shelves.map(mapper::toDto);
     }
@@ -72,7 +76,15 @@ public class AdminContentShelfController {
                 mapper.toDto(service.findById(shelfId))
         );
     }
-
+    
+    @GetMapping("/options")
+    @PreAuthorize("hasAuthority('SHELF:VIEW')")
+    public List<ShelfOptionDto> getOptions(
+        @RequestParam ShelfTarget target
+    ) {
+        return service.getOptions(target);
+    }
+    
     @PostMapping
     @PreAuthorize("hasAuthority('SHELF:CREATE')")
     public ResponseEntity<ContentShelfDto> create(

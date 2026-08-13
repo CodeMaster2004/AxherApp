@@ -80,7 +80,7 @@ public class ContentMapper {
 
 
 
-    private String buildUrl(String path){
+    public String buildUrl(String path){
         if(path == null) return null;
         return baseUrl + path;
     }

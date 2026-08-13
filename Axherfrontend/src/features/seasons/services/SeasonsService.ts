@@ -1,6 +1,6 @@
 import { adminSeasonsApi } from "@/core/api/endpoints/AdminSeasonsApi";
 import { seasonsApi } from "@/core/api/endpoints/SeasonsApi";
-import { Page, PaginationParams, SeasonDetail, StatusUpdate } from "@/entities/types";
+import { Page, PaginationParams, SeasonDetail, StatusUpdate, UpcomingSeason } from "@/entities/types";
 import { AxiosProgressEvent } from "axios";
 
 
@@ -22,6 +22,18 @@ export const seasonsService = {
         signal?: AbortSignal
     ): Promise<Page<SeasonDetail>> => {
         const res = await seasonsApi.getBySeriesId(seriesId, params, { signal });
+        return res.data;
+    },
+
+    getUpcomingBySeriesId: async(
+        seriesId: number,
+        signal?: AbortSignal
+    ): Promise<UpcomingSeason[]> => {
+        const res = await seasonsApi.getUpcomingBySeriesId(
+            seriesId,
+            { signal }
+        );
+
         return res.data;
     },
     

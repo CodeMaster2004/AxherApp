@@ -1,5 +1,6 @@
 package com.axher.backend.content.series.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
@@ -62,12 +63,14 @@ public class SeasonsController {
     }
 
     @GetMapping("/upcoming")
-    public Page<UpcomingSeasonDto> upcoming(
-        @RequestParam(defaultValue="0") int page,
-        @RequestParam(defaultValue="10") int size
-    ){
-        Page<Seasons> season = service.findUpcoming(PageRequest.of(page, size));
-        return season.map(upcomingSeasonMapper::toDto);
+    public List<UpcomingSeasonDto> upcoming(
+        @PathVariable Integer seriesId
+    ) {
+        List<Seasons> seasons = service.findUpcoming(seriesId);
+
+        return seasons.stream()
+            .map(upcomingSeasonMapper::toDto)
+            .toList();
     }
     
 }

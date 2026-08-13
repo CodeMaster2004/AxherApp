@@ -2,7 +2,7 @@ package com.axher.backend.catalog.shelf.DTOs;
 
 import java.util.List;
 
-import com.axher.backend.content.core.DTOs.ContentDetailDto;
+import com.axher.backend.catalog.shelf.entities.ShelfSource;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +15,9 @@ public class ShelfDto {
 
     private String slug;
 
-    private List<ContentDetailDto> contents;
+    private ShelfSource source;
+
+    private List<ShelfItemDto> items;
+
     
 }

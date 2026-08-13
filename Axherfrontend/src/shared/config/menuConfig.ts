@@ -26,6 +26,7 @@ export const menuConfig: MenuItem[] = [
                     {id: "movies-admin", label: "Películas", href: "/movies", permission: "CONTENT:VIEW"},
                     {id: "series-admin", label: "Series", href: "/series", permission: "CONTENT:VIEW"},
                     {id: "shelves", label: "Carruseles", href: "/shelves"},
+                    {id: "page-sections", label: "Secciones de Página", href: "/page-sections"},
                 ],
 
                 

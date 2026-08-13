@@ -38,6 +38,20 @@ public interface EpisodesRepository extends JpaRepository<Episodes, Integer> {
     );
 
     @Query("""
+        SELECT e
+        FROM Episodes e
+        WHERE e.season.seasonId = :seasonId
+        AND e.season.contentStatus.code = 'PUBLISHED'
+        AND e.season.series.content.contentStatus.code = 'PUBLISHED'
+        AND e.contentStatus.code = 'UPCOMING'
+        ORDER BY e.releaseDate ASC
+    """)
+    Page<Episodes> findUpcomingBySeasonId(
+        Integer seasonId,
+        Pageable pageable
+    );
+
+    @Query("""
     SELECT e
     FROM Episodes e
     WHERE e.season.seasonId = :seasonId

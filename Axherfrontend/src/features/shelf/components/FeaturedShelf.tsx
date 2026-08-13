@@ -11,6 +11,7 @@ import {
     useState,
 } from "react";
 import styles from "./FeaturedShelf.module.css";
+import Link from "next/link";
 
 interface Props {
     shelf: Shelf;
@@ -19,15 +20,15 @@ interface Props {
 const CLONE_COUNT = 2;
 const AUTO_ADVANCE_MS = 5000;
 
-function buildLoopedContents(contents: Shelf["contents"]) {
-    if (contents.length === 0) {
+function buildLoopedContents(items: Shelf["items"]) {
+    if (items.length === 0) {
         return [];
     }
 
     return [
-        ...contents.slice(-CLONE_COUNT),
-        ...contents,
-        ...contents.slice(0, CLONE_COUNT),
+        ...items.slice(-CLONE_COUNT),
+        ...items,
+        ...items.slice(0, CLONE_COUNT),
     ];
 }
 
@@ -36,8 +37,8 @@ export default function FeaturedShelf({ shelf }: Props) {
     const trackRef = useRef<HTMLDivElement>(null);
 
     const loopedContents = useMemo(
-        () => buildLoopedContents(shelf.contents),
-        [shelf.contents]
+        () => buildLoopedContents(shelf.items),
+        [shelf.items]
     );
 
     const [activeIndex, setActiveIndex] = useState(CLONE_COUNT);
@@ -49,7 +50,7 @@ export default function FeaturedShelf({ shelf }: Props) {
     });
 
     const realStartIndex = CLONE_COUNT;
-    const realEndIndex = realStartIndex + Math.max(shelf.contents.length - 1, 0);
+    const realEndIndex = realStartIndex + Math.max(shelf.items.length - 1, 0);
 
     const measure = useCallback(() => {
         const viewport = viewportRef.current;
@@ -108,10 +109,10 @@ export default function FeaturedShelf({ shelf }: Props) {
 
     useEffect(() => {
         setActiveIndex(CLONE_COUNT);
-    }, [shelf.contents.length]);
+    }, [shelf.items.length]);
 
     useEffect(() => {
-        if (shelf.contents.length <= 1) {
+        if (shelf.items.length <= 1) {
             return;
         }
 
@@ -122,7 +123,7 @@ export default function FeaturedShelf({ shelf }: Props) {
         return () => {
             window.clearInterval(intervalId);
         };
-    }, [shelf.contents.length]);
+    }, [shelf.items.length]);
 
     const jumpToIndex = (nextIndex: number) => {
         setAnimate(false);
@@ -136,7 +137,7 @@ export default function FeaturedShelf({ shelf }: Props) {
     };
 
     const handleTransitionEnd = () => {
-        if (shelf.contents.length === 0) {
+        if (shelf.items.length === 0) {
             return;
         }
 
@@ -150,7 +151,7 @@ export default function FeaturedShelf({ shelf }: Props) {
         }
     };
 
-    if (shelf.contents.length === 0) {
+    if (shelf.items.length === 0) {
         return null;
     }
 
@@ -177,11 +178,21 @@ export default function FeaturedShelf({ shelf }: Props) {
                 {loopedContents.map((content, index) => {
                     const isActive = index === activeIndex;
 
+                    const href =
+                        content.type === "MOVIE"
+                            ? `/peliculas/${content.contentId}`
+                            : `/serie/${content.contentId}`;
+
                     return (
-                        <div
+                        <Link
                             key={`${content.contentId}-${index}`}
+                            href={href}
                             data-slide-index={index}
-                            className={isActive ? `${styles.card} ${styles.cardActive}` : styles.card}
+                            className={
+                                isActive
+                                    ? `${styles.card} ${styles.cardActive}`
+                                    : styles.card
+                            }
                         >
                             <Image
                                 src={content.backdropUrl}
@@ -191,7 +202,7 @@ export default function FeaturedShelf({ shelf }: Props) {
                                 sizes="(max-width: 768px) 85vw, (max-width: 1280px) 45vw, 40vw"
                                 priority={index === CLONE_COUNT}
                             />
-                        </div>
+                        </Link>
                     );
                 })}
             </div>

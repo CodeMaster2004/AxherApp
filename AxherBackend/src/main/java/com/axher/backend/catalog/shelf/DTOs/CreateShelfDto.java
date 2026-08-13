@@ -1,6 +1,7 @@
 package com.axher.backend.catalog.shelf.DTOs;
 
 import com.axher.backend.catalog.shelf.entities.ShelfLayout;
+import com.axher.backend.catalog.shelf.entities.ShelfSource;
 import com.axher.backend.catalog.shelf.entities.ShelfTarget;
 
 import jakarta.validation.constraints.NotBlank;
@@ -17,9 +18,10 @@ public class CreateShelfDto {
 
     @NotNull
     private ShelfTarget target;
+    @NotNull
+    private ShelfSource source;
     private ShelfLayout layout;
 
-    private Integer displayOrder = 0;
 
     private Boolean active = true;
 }

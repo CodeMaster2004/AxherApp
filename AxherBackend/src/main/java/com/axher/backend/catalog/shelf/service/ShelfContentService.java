@@ -15,6 +15,7 @@ import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.core.repositories.ContentRepository;
 import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
+import com.axher.backend.shared.util.PositionUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,30 +49,17 @@ public class ShelfContentService {
             );
         }
 
-        validatePosition(dto.getPosition());
 
         List<ShelfContent> items =
                 shelfContentRepository
                         .findByContentShelfOrderByPositionAsc(shelf);
-        int position = Math.min(
-                dto.getPosition(),
-                items.size() + 1
+        int position = PositionUtils.normalizeInsertPosition(dto.getPosition(), items.size());
+        PositionUtils.openPosition(
+                items,
+                position,
+                ShelfContent::getPosition,
+                ShelfContent::setPosition
         );
-
-        /*
-         NUEVO:
-         Movemos los elementos existentes para abrir espacio
-         antes de insertar el nuevo.
-        */
-        for (ShelfContent item : items) {
-
-            if(item.getPosition() >= position){
-
-                item.setPosition(
-                    item.getPosition() + 1
-                );
-            }
-        }
         ShelfContent shelfContent = new ShelfContent();
         shelfContent.setContentShelf(shelf);
         shelfContent.setContent(content);
@@ -92,18 +80,8 @@ public class ShelfContentService {
 
     public void updatePosition(Integer shelfContentId, UpdateShelfContentDto dto) {
 
-
-        validatePosition(dto.getPosition());
-
         ShelfContent movedItem =
                 findShelfContent(shelfContentId);
-
-        int oldPosition = movedItem.getPosition();
-        int newPosition = dto.getPosition();
-
-        if(oldPosition == newPosition){
-            return;
-        }
 
         List<ShelfContent> items =
                 shelfContentRepository
@@ -111,65 +89,18 @@ public class ShelfContentService {
                         movedItem.getContentShelf()
                     );
 
-        /*
-         Evita posiciones mayores al tamaño del shelf.
-        */
-        newPosition = Math.min(
-                newPosition,
-                items.size()
+        PositionUtils.move(
+            items,
+            shelfContentId,
+            dto.getPosition(),
+            ShelfContent::getShelfContentId,
+            ShelfContent::getPosition,
+            ShelfContent::setPosition
         );
 
-        if(newPosition < oldPosition){
-
-            /*
-
-             los elementos 2 y 3 bajan una posición.
-            */
-            for(ShelfContent item : items){
-                if(item.getShelfContentId()
-                        .equals(shelfContentId)){
-                    continue;
-                }
-                if(item.getPosition() >= newPosition
-                    && item.getPosition() < oldPosition){
-                    item.setPosition(
-                        item.getPosition() + 1
-                    );
-                }
-            }
-
-        }else{
-
-            /*
-             los elementos 2 y 3 suben una posición.
-            */
-            for(ShelfContent item : items){
-
-                if(item.getShelfContentId()
-                        .equals(shelfContentId)){
-                    continue;
-                }
-
-                if(item.getPosition() <= newPosition
-                    && item.getPosition() > oldPosition){
-                    item.setPosition(
-                        item.getPosition() - 1
-                    );
-                }
-
-            }
-        }
-
-        movedItem.setPosition(newPosition);
-
-        /*
-         NUEVO:
-         Persistimos primero los cambios del resto.
-         Importante si tienes UNIQUE(shelf_id, position)
-         */
         shelfContentRepository.saveAll(items);
         shelfContentRepository.flush();
-        shelfContentRepository.save(movedItem);
+        //shelfContentRepository.save(movedItem);
 
     }
 
@@ -185,31 +116,19 @@ public class ShelfContentService {
                             shelf,
                             deletedPosition
                     );
-        /*
-         Después de eliminar,
-         cerramos el hueco de posiciones.
-        */
-        for(ShelfContent item : items){
-
-            item.setPosition(
-                    item.getPosition() - 1
-            );
-        }
+        PositionUtils.closePosition(
+            items,
+            deletedPosition,
+            ShelfContent::getPosition,
+            ShelfContent::setPosition
+        );
 
         shelfContentRepository.saveAll(items);
         shelfContentRepository.delete(shelfContent);
     }
 
 
-    private void validatePosition(Integer position){
-        if(position == null || position <= 0){
-
-            throw new IllegalArgumentException(
-                    "La posición debe ser mayor a 0"
-            );
-        }
-    }
-
+    
 
     private Content findContent(Integer id){
         return contentRepository.findById(id)

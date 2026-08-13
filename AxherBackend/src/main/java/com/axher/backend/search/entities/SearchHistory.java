@@ -1,42 +1,42 @@
-package com.axher.backend.content.core.entities;
+package com.axher.backend.search.entities;
 
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.axher.backend.users.entities.Users;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "favorites")
-public class Favorites {
+@Table(name = "search_history")
+@Getter
+@Setter
+public class SearchHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer favoriteId;
+    private Long searchId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Users userId;
-
+    private Users user;
 
     @Column(nullable = false)
-    private Integer contentId; // ID del contenido según el tipo (Película, Serie, Temporada o Episodio)
+    private String term;
 
-    @Column(columnDefinition = "DATETIME")
-    private LocalDateTime addedAt;
-
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime searchedAt;
+    
 }
-

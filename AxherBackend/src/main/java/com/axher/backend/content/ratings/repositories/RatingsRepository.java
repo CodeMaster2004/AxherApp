@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.axher.backend.catalog.banner.DTOs.HeroRatingMetricsDto;
 import com.axher.backend.content.core.DTOs.TopRatedContentDto;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.ratings.entities.Ratings;
@@ -81,6 +82,18 @@ public interface RatingsRepository extends JpaRepository<Ratings, Integer>{
         List<TopRatedContentDto> findTopRated(
                 @Param("type") ContentTypeEnum type
         );
+
+        @Query("""
+        SELECT new com.axher.backend.catalog.banner.DTOs.HeroRatingMetricsDto(
+                r.targetId,
+                AVG(r.ratingValue),
+                COUNT(r.ratingId)
+        )
+        FROM Ratings r
+        WHERE r.targetType = 'CONTENT'
+        GROUP BY r.targetId
+        """)
+        List<HeroRatingMetricsDto> findHeroRatingMetrics();
 
       
 

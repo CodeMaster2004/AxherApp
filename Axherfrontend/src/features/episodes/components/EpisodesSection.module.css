@@ -73,6 +73,45 @@
     overflow:hidden;
 }
 
+.upcomingCard {
+    cursor: default;
+    opacity: .75;
+}
+
+.upcomingCard:hover {
+    transform: none;
+    opacity: .85;
+}
+
+.upcomingCard .thumbnail img {
+    filter: brightness(.6);
+}
+
+.upcomingOverlay {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, .15);
+
+    font-size: 1.3rem;
+}
+
+.releaseDate {
+    color: rgba(229, 9, 20, .85) !important;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.lockIcon {
+    width: 25px;
+    height: 25px;
+    color: #e50914;
+
+}
 @media(max-width:640px){
 
     .container{

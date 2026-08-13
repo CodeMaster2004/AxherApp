@@ -1,0 +1,187 @@
+.card {
+    flex: 0 0 220px;
+
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+
+    background:
+    linear-gradient(
+        180deg,
+        #181818 0%,
+        #080808 100%
+    );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+    
+}
+@media (max-width:768px){
+    .card{
+        flex:0 0 170px;
+    }
+}
+
+.card:hover {
+    transform:translateY(-8px);
+    border-color:#f93020;
+    box-shadow:
+        0 25px 50px rgba(0,0,0,.65),
+        0 0 25px rgba(249,48,32,.25);
+}
+
+
+
+.cardLink{
+    position:absolute;
+    inset:0;
+    z-index:2;
+}
+
+
+.posterWrap {
+
+    position:relative;
+    width:100%;
+    aspect-ratio:2/3;
+    overflow:hidden;
+}
+
+.poster {
+    object-fit:cover;
+    transition:transform .5s ease;
+}
+
+
+.card:hover .poster {
+    transform:
+        scale(1.15)
+        translateY(-5px);
+}
+
+.posterWrap::after {
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 25%,
+            rgba(0,0,0,.45) 55%,
+            #000 100%
+        );
+
+}
+
+.cardBody {
+    position:relative;
+    padding:.9rem;
+    z-index:4;
+}
+
+
+.title {
+
+    margin:0;
+    font-size:1rem;
+    font-weight:700;
+    color:#ffffff;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
+.stats {
+    display:flex;
+    gap:1rem;
+    margin-top:.7rem;
+    font-size:.75rem;
+    color:#a1a1aa;
+}
+
+.statItem {
+
+    display:flex;
+    align-items:center;
+    gap:.35rem;
+}
+.ratingBadge {
+
+    position:absolute;
+    top:14px;
+    right:14px;
+
+    display:flex;
+    align-items:center;
+    gap:.35rem;
+
+    color:#ffd166;
+
+    background:
+        rgba(0,0,0,.75);
+
+    border:
+        1px solid rgba(255,209,102,.5);
+
+    padding:.35rem .7rem;
+
+    border-radius:999px;
+
+    font-size:.8rem;
+    font-weight:800;
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+        0 0 15px rgba(255,209,102,.15);
+}
+
+@media (max-width: 900px) {
+
+    .title{
+        font-size:.92rem;
+    }
+
+    .cardBody{
+        padding:.75rem;
+    }
+
+    .stats{
+        gap:.6rem;
+        font-size:.7rem;
+    }
+
+}
+
+@media (max-width:600px){
+
+    .title{
+        font-size:.82rem;
+    }
+
+    .cardBody{
+        padding:.65rem;
+    }
+
+    .ratingBadge{
+        top:10px;
+        right:10px;
+        padding:.28rem .55rem;
+        font-size:.7rem;
+    }
+
+    .stats{
+        font-size:.65rem;
+        gap:.45rem;
+    }
+
+}

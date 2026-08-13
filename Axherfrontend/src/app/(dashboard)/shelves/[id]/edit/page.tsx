@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentShelf, ShelfLayout, ShelfTarget } from "@/entities/types";
+import { ContentShelf, ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
 import { useShelfActions } from "@/features/shelf/hooks/useShelfActions";
 import { shelfService } from "@/features/shelf/services/shelfService";
 import { useParams, useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ export default function EditShelfPage() {
 
     const [layout,setLayout] = useState<ShelfLayout | undefined>();
 
+    const [source,setSource] = useState<ShelfSource | undefined>();
     const [displayOrder,setDisplayOrder] = useState(0);
     const [active,setActive] = useState(true);
 
@@ -52,9 +53,8 @@ export default function EditShelfPage() {
                 setName(shelf.name);
                 setTarget(shelf.target);
                 setLayout(shelf.layout);
-                setDisplayOrder(
-                    shelf.displayOrder
-                );
+                setSource(shelf.source);
+              
                 setActive(
                     shelf.active
                 );
@@ -87,7 +87,7 @@ export default function EditShelfPage() {
                 name:name.trim(),
                 target,
                 layout,
-                displayOrder,
+                source,
                 active
             }
         );
@@ -119,12 +119,12 @@ export default function EditShelfPage() {
                 name={name}
                 target={target}
                 layout={layout}
-                displayOrder={displayOrder}
+                source={source}
                 active={active}
                 setName={setName}
                 setTarget={setTarget}
                 setLayout={setLayout}
-                setDisplayOrder={setDisplayOrder}
+                setSource={setSource}
                 setActive={setActive}
                 onSubmit={handleSubmit}
                 isEditing

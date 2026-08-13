@@ -35,9 +35,6 @@ public class PlaybackHistoryController {
     public ResponseEntity<PlaybackHistoryResponseDto> saveOrUpdate(
         @RequestBody PlaybackHistoryRequestDto dto
     ){
-        System.out.println("🇦CONTENT ID: " + dto.getContentId());
-    System.out.println("🇦EPISODE ID: " + dto.getEpisodeId());
-    System.out.println("🇦SECONDS: " + dto.getWatchedSeconds());
         PlaybackHistory history = service.saveOrUpdate(dto);
 
         return ResponseEntity

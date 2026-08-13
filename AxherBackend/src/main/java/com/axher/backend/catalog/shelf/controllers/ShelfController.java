@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -29,6 +30,14 @@ public class ShelfController {
         ) {
 
         return shelfService.getShelves(target, slug);
+    }
+
+    @GetMapping("/{shelfId}")
+    public ShelfDto getShelfById(
+            @PathVariable Integer shelfId
+        ) {
+
+        return shelfService.getShelfById(shelfId);
     }
     
     

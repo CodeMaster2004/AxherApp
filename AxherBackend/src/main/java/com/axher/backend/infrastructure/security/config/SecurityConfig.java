@@ -47,11 +47,13 @@ public class SecurityConfig {
                 .requestMatchers("/episodes/**").permitAll()
                 .requestMatchers("/trailers/**").permitAll()
                 .requestMatchers("/hero-banners/**").permitAll()
+                .requestMatchers("/api/pages/**").permitAll()
 
 
                 // Catalogo publico
                 .requestMatchers("/api/contents/**").permitAll()
                 .requestMatchers("/api/series/**").permitAll()
+                .requestMatchers("/api/seasons/**").permitAll()
 
                  //Contenido privado streaming
                  .requestMatchers("/api/media/**").authenticated()

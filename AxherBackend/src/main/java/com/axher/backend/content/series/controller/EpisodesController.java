@@ -59,12 +59,22 @@ public class EpisodesController {
         return episodesPage.map(mapper::toDto);
     }
     
-    @GetMapping("/upcoming")
+    /*@GetMapping("/upcoming")
     public Page<UpcomingEpisodeDto> upcoming(
         @RequestParam(defaultValue="0") int page,
         @RequestParam(defaultValue="10") int size
     ){
         Page<Episodes> episodes = service.findUpcoming(PageRequest.of(page, size));
+        return episodes.map(upcomingEpisodeMapper::toDto);
+    }*/
+
+    @GetMapping("/upcoming")
+    public Page<UpcomingEpisodeDto> upcoming(
+        @PathVariable Integer seasonId,
+        @RequestParam(defaultValue="0") int page,
+        @RequestParam(defaultValue="10") int size
+    ){
+        Page<Episodes> episodes = service.findUpcomingBySeasonId(seasonId, PageRequest.of(page, size));
         return episodes.map(upcomingEpisodeMapper::toDto);
     }
     

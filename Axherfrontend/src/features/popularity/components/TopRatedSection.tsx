@@ -4,11 +4,15 @@ import TopRatedCard from "@/features/popularity/components/TopRatedCard";
 import { useTopRated } from "@/features/popularity/hooks/useTopRated";
 import styles from "./TopRatedSection.module.css";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
+import { ContentType } from "@/entities/types";
 
+interface Props {
+    type: ContentType;
+}
 
-export default function TopRatedSection() {
+export default function TopRatedSection({ type }: Props) {
 
-    const { topRated, loading } = useTopRated();
+    const { topRated, loading } = useTopRated(type);
 
     
     if(loading || topRated.length === 0) return null;

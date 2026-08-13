@@ -85,11 +85,14 @@ CREATE TABLE user_role_assignments (
 
 -- Tabla de historial de búsquedas
 CREATE TABLE search_history (
-    search_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    search_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
     term VARCHAR(255) NOT NULL,
-    searched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    searched_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_search_history_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
 );
 
 
@@ -263,6 +266,7 @@ CREATE TABLE content_shelves(
     slug VARCHAR(100) NOT NULL,
     target VARCHAR(20)
     CHECK (target IN ('HOME', 'MOVIES', 'SERIES')),
+    source VARCHAR(20) NOT NULL
     layout VARCHAR(20)
     CHECK (layout IN (
         'POSTER',
@@ -271,7 +275,6 @@ CREATE TABLE content_shelves(
         'FEATURED',
         'SQUARE'
     )),
-    display_order INT DEFAULT 0,
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (slug, target)
@@ -282,13 +285,32 @@ CREATE TABLE shelf_contents(
     shelf_content_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     content_shelf_id INT NOT NULL,
     content_id INT NOT NULL,
-    position INT DEFAULT 0,
+    position INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (content_shelf_id) REFERENCES content_shelves(content_shelf_id) ON DELETE CASCADE,
     FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE,
     UNIQUE (content_shelf_id, content_id)
     
 );
+
+CREATE TABLE page_sections(
+    page_section_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    page varchar(30) NOT NULL,
+    type varchar(30) NOT NULL,
+    display_order INT NOT NULL,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    content_shelf_id INT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_page_section_order
+        UNIQUE (page, display_order)
+            DEFERRABLE INITIALLY DEFERRED;
+
+    CONSTRAINT fk_page_section_shelf
+        FOREIGN KEY (content_shelf_id)
+        REFERENCES content_shelves(content_shelf_id)
+        ON DELETE SET NULL
+
+)
 
 -- Tabla de calificaciones y comentarios
 CREATE TABLE ratings (
@@ -320,9 +342,9 @@ CREATE TABLE playback_history (
 
 
 
--- Tabla de favoritos
-CREATE TABLE favorites (
-    favorite_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+-- Tabla de Lsta de seguimiento (Watchlist)
+CREATE TABLE watchlist (
+    watchlist_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
     content_id INT NOT NULL,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

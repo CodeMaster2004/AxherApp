@@ -16,6 +16,7 @@ interface Props{
     totalPages: number;
     onNextPage: () => void;
     onPrevPage: () => void;
+    onGoToPage?: (page: number) => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
 }
@@ -30,6 +31,7 @@ export default function SystemPermissionsList ({
     totalPages,
     onNextPage,
     onPrevPage,
+    onGoToPage,
     searchTerm,
     onSearchChange
 }: Props) {
@@ -129,6 +131,7 @@ export default function SystemPermissionsList ({
                     totalPages={totalPages}
                     onNextPage={onNextPage}
                     onPrevPage={onPrevPage}
+                    onGoToPage={onGoToPage}
                 />
             )}
         </div>

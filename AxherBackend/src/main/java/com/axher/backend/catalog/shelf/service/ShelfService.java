@@ -1,18 +1,23 @@
 package com.axher.backend.catalog.shelf.service;
 
+import com.axher.backend.catalog.shelf.mapper.ShelfItemMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.axher.backend.catalog.shelf.DTOs.ShelfDto;
+import com.axher.backend.catalog.shelf.DTOs.ShelfItemDto;
 import com.axher.backend.catalog.shelf.entities.ContentShelf;
 import com.axher.backend.catalog.shelf.entities.ShelfContent;
 import com.axher.backend.catalog.shelf.entities.ShelfTarget;
 import com.axher.backend.catalog.shelf.repositories.ContentShelfRepository;
 import com.axher.backend.catalog.shelf.repositories.ShelfContentRepository;
-import com.axher.backend.content.core.DTOs.ContentDetailDto;
-import com.axher.backend.content.core.mapper.ContentMapper;
+import com.axher.backend.content.core.entities.ContentTypeEnum;
+import com.axher.backend.content.core.service.ContentCatalogService;
+import com.axher.backend.content.core.service.PopularityService;
+import com.axher.backend.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,9 +25,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ShelfService {
 
+    private final ShelfItemMapper shelfItemMapper;
     private final ContentShelfRepository contentShelfRepository;
     private final ShelfContentRepository shelfContentRepository;
-    private final ContentMapper contentMapper;
+    private final PopularityService popularityService;
+    private final ContentCatalogService contentCatalogService;
 
 
     public List<ShelfDto> getShelves(
@@ -46,7 +53,7 @@ public class ShelfService {
 
             shelves =
                 contentShelfRepository
-                .findByTargetAndActiveTrueOrderByDisplayOrderAsc(
+                .findByTargetAndActiveTrue(
                     target
                 );
         }
@@ -61,23 +68,96 @@ public class ShelfService {
 
             dto.setName(shelf.getName());
             dto.setSlug(shelf.getSlug());
-
-
-            List<ContentDetailDto> contents =
-                    shelfContentRepository
-                    .findByContentShelfOrderByPositionAsc(shelf)
-                    .stream()
-                    .map(ShelfContent::getContent)
-                    .map(contentMapper::toDto)
-                    .toList();
-
-
-            dto.setContents(contents);
-
+            dto.setSource(shelf.getSource());
+            dto.setItems(
+                resolveContents(shelf, target)
+            );
+            
+            
             response.add(dto);
         }
 
 
         return response;
+    }
+
+      public ShelfDto getShelfById(Integer shelfId) {
+
+            ContentShelf shelf =
+                contentShelfRepository
+                    .findById(shelfId)
+                    .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                            "Shelf no encontrado: " + shelfId
+                        )
+                    );
+
+            return toDto(shelf, shelf.getTarget());
+        }
+
+    private ShelfDto toDto(
+        ContentShelf shelf,
+        ShelfTarget target
+    ){
+        ShelfDto dto = new ShelfDto();
+
+        dto.setName(shelf.getName());
+        dto.setSlug(shelf.getSlug());
+        dto.setSource(shelf.getSource());
+        dto.setItems(
+            resolveContents(shelf, target)
+        );
+
+        return dto;
+    }
+
+    private List<ShelfItemDto> resolveContents(
+        ContentShelf shelf,
+        ShelfTarget target
+    ){
+        ContentTypeEnum type = resolveContentType(target);
+
+        return switch(shelf.getSource()){
+
+            case MANUAL -> shelfContentRepository
+                .findByContentShelfOrderByPositionAsc(shelf)
+                .stream()
+                .map(ShelfContent::getContent)
+                .map(shelfItemMapper::fromContent)
+                .toList();
+
+            case TRENDING -> popularityService
+                .trending(type, PageRequest.of(0, 20))
+                .getContent()
+                .stream()
+                .map(shelfItemMapper::fromTrending)
+                .toList();
+
+            case TOP_RATED -> popularityService
+                .topRated(type)
+                .stream()
+                .map(shelfItemMapper::fromTopRated)
+                .toList();
+            case NEW_RELEASES -> contentCatalogService
+                .findNewContent(
+                    type,
+                    PageRequest.of(0, 20)
+                )
+                .getContent()
+                .stream()
+                .map(shelfItemMapper::fromContent)
+                .toList();
+            case MOST_WATCHED -> List.of();
+        };
+    }
+
+    private ContentTypeEnum resolveContentType(
+        ShelfTarget target
+    ){
+        return switch(target){
+            case MOVIES -> ContentTypeEnum.MOVIE;
+            case SERIES -> ContentTypeEnum.SERIE;
+            case HOME -> null;
+        };
     }
 }

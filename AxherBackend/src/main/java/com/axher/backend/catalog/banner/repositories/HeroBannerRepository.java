@@ -2,7 +2,6 @@ package com.axher.backend.catalog.banner.repositories;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,21 +20,14 @@ public interface HeroBannerRepository extends JpaRepository<HeroBanner, Integer>
         JOIN hb.content c
         WHERE hb.active = true
         AND c.contentStatus.code = 'PUBLISHED'
-        AND (
-            (hb.startDate IS NULL AND hb.endDate IS NULL)
-            OR
-            (:now BETWEEN hb.startDate AND hb.endDate)
-        )
+        AND (hb.startDate IS NULL OR :now >= hb.startDate)
+        AND (hb.endDate IS NULL OR :now <= hb.endDate)
         ORDER BY hb.priority DESC, hb.createdAt DESC
         """)
     List<HeroBanner> findActiveValidBanners(
             @Param("now") LocalDateTime now
     );
 
-    Optional<HeroBanner> findTopByActiveTrueAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(
-        LocalDateTime now,
-        LocalDateTime now2
-    );
 
     @Query("""
         SELECT c

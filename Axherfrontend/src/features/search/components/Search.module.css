@@ -250,3 +250,150 @@ background:#333;
 
     border-radius:16px;
 }
+
+.history {
+    margin-top: 20px;
+
+    background: #101010;
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.5);
+}
+
+.historyHeader {
+    padding: 18px 20px;
+
+    border-bottom: 1px solid #252525;
+}
+
+.historyHeader h3 {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.historyList {
+    display: flex;
+    flex-direction: column;
+}
+
+.historyItem {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+
+    border-bottom: 1px solid #1c1c1c;
+
+    background: transparent;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.historyItem:last-child {
+    border-bottom: none;
+}
+
+.historyTerm {
+    flex: 1;
+
+    border: none;
+    background: transparent;
+
+    color: #aaa;
+
+    text-align: left;
+
+    padding: 15px 20px;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition:
+        color .2s ease,
+        padding-left .2s ease;
+}
+
+.historyTerm:hover {
+    color: white;
+    padding-left: 25px;
+}
+
+.historyDelete {
+    flex: 0 0 44px;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    background: transparent;
+
+    color: #666;
+
+    cursor: pointer;
+
+    transition:
+        color .2s ease,
+        background .2s ease;
+}
+
+.historyDelete:hover {
+    color: white;
+    background: #252525;
+}
+
+.viewAllHistory {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 14px 20px;
+
+    border: none;
+    border-top: 1px solid #252525;
+
+    background: transparent;
+
+    color: #aaa;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.viewAllHistory span:last-child {
+    font-size: 17px;
+
+    transition:
+        transform .2s ease;
+}
+
+.viewAllHistory:hover {
+    background: #181818;
+    color: white;
+}
+
+.viewAllHistory:hover span:last-child {
+    transform: translateX(4px);
+}

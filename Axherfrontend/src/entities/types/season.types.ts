@@ -35,3 +35,11 @@ export interface UpdateSeason{
 
     episodes?: UpdateEpisode[];
 }
+
+export interface UpcomingSeason{
+    seasonId: number;
+    seasonNumber: number;
+    title: string;
+    description?: string;
+    releaseDate: string;
+}

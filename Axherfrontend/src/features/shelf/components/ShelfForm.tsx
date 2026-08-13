@@ -1,24 +1,24 @@
 "use client";
 
-import { ShelfLayout, ShelfTarget } from "@/entities/types";
+import { ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
 import BubbleToggle from "@/shared/components/ui/BubbleToggle";
 import Button from "@/shared/components/ui/Button";
 import Input from "@/shared/components/ui/Input";
 import Select from "@/shared/components/ui/Select";
-import { shelfLayoutOptions, shelfTargetOptions } from "@/shared/constants/selectOptions";
+import { shelfLayoutOptions, shelfSourceOptions, shelfTargetOptions } from "@/shared/constants/selectOptions";
 import styles from "@/shared/styles/shared/Form.module.css";
 
 interface Props {
     name: string;
     target: ShelfTarget | undefined;
     layout: ShelfLayout | undefined;
-    displayOrder: number;
+    source: ShelfSource | undefined;
     active: boolean;
 
     setName: (value: string) => void;
     setTarget: (value: ShelfTarget) => void;
     setLayout: (value: ShelfLayout) => void;
-    setDisplayOrder: (value: number) => void;
+    setSource: (value: ShelfSource) => void;
     setActive: (value: boolean) => void;
 
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -34,13 +34,13 @@ export default function ShelfForm({
     name,
     target,
     layout,
-    displayOrder,
+    source,
     active,
 
     setName,
     setTarget,
     setLayout,
-    setDisplayOrder,
+    setSource,
     setActive,
 
     onSubmit,
@@ -93,16 +93,16 @@ export default function ShelfForm({
                 disabled={saving}
             />
 
-            <Input
-                label="Orden de visualización"
-                type="number"
-                value={displayOrder.toString()}
-                onChange={(value) => 
-                    setDisplayOrder(Number(value))
+            <Select
+                label="Fuente del carrusel"
+                value={source}
+                onChange={(value) =>
+                    setSource(value as ShelfSource)
                 }
-                min={0}
+                options={shelfSourceOptions}
                 disabled={saving}
             />
+
 
             <div className={styles.switchField}>
 

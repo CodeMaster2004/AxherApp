@@ -1,25 +1,37 @@
+/* =========================================================
+   HERO
+========================================================= */
+
 .hero {
-  position: relative;
-  width: 100%;
-  height: 75vh; /* 🔥 más cinematográfico */
-  min-height: 500px;
-  color: #fff;
-  overflow: hidden;
-  /* 🔥 para header fixed */
-}
-.imageWrapper{
-    position:absolute;
-    inset:0;
-    z-index:0;
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    min-height: 500px;
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+    background: #090909;
 }
 
-.imageLayer{
-    position:absolute;
-    inset:0;
+
+/* =========================================================
+   IMAGEN
+========================================================= */
+
+.imageWrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.imageLayer {
+    position: absolute;
+    inset: 0;
     overflow: hidden;
     will-change: opacity, transform;
 }
-/* ===== IMAGEN ===== */
+
 .backdrop {
     position: absolute;
     inset: 0;
@@ -27,207 +39,282 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-    filter: brightness(0.7) contrast(1.15);
+    filter:
+        brightness(.68)
+        contrast(1.10)
+        saturate(.92);
 }
 
 
-/* ===== OVERLAY PRO ===== */
+/* =========================================================
+   ATMÓSFERA DEL HERO
+========================================================= */
+
 .overlay {
     position: absolute;
     inset: 0;
     z-index: 1;
-
     background:
+
+        /* Oscurecimiento para el contenido */
         linear-gradient(
-            to right,
-            rgba(0,0,0,.80) 18%,
-            rgba(0,0,0,.45) 45%,
-            transparent 72%
+            90deg,
+            rgba(0,0,0,.88) 0%,
+            rgba(0,0,0,.62) 28%,
+            rgba(0,0,0,.22) 58%,
+            transparent 82%
         ),
 
+        /* Viñeta superior */
         linear-gradient(
-            to top,
-            rgba(0,0,0,.85),
-            transparent 60%
+            180deg,
+            rgba(0,0,0,.62) 0%,
+            rgba(0,0,0,.18) 24%,
+            transparent 48%
         ),
 
+        /* Oscurecimiento general muy sutil */
         radial-gradient(
-            circle at center,
-            transparent,
-            rgba(0,0,0,.18)
+            ellipse at center,
+            transparent 35%,
+            rgba(0,0,0,.18) 100%
         );
 }
 
-/* 🔥 fade superior (clave para header) */
-.overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent 30%);
+
+/* =========================================================
+   FADE CINEMATOGRÁFICO
+========================================================= */
+
+.hero::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 340px;
+    z-index: 3;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(9,9,9,.04) 12%,
+        rgba(9,9,9,.12) 25%,
+        rgba(9,9,9,.28) 40%,
+        rgba(9,9,9,.50) 56%,
+        rgba(9,9,9,.72) 70%,
+        rgba(9,9,9,.90) 84%,
+        #090909 100%
+    );
 }
 
-/* ===== CONTENIDO ===== */
+
+/* =========================================================
+   CONTENIDO
+========================================================= */
+
 .content {
-  position: relative;
-  z-index: 2;
-  padding-top:40px;
-
-  max-width: 600px; /* 🔥 FIX real */
-  margin-left: 5%;
-
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* 🔥 centrado vertical */
+    position: relative;
+    z-index: 4;
+    width: min(620px, 90%);
+    height: 100%;
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* ===== BADGES ===== */
+/* =========================================================
+   BADGES
+========================================================= */
+
 .badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-bottom: 1rem;
 }
 
-.badge, .rating, .year, .genre {
-  font-size: 0.75rem;
-  background: rgba(20,20,20,.68);
-  backdrop-filter: blur(10px);
-  box-shadow:0 6px 18px rgba(0,0,0,.25);
-  border: 1px solid rgba(255,255,255,.25);
-  border-radius: 999px;
-  padding: .25rem .7rem;
+.badge,
+.rating,
+.year,
+.genre {
+    font-size: .75rem;
+    background: rgba(20, 20, 20, .58);
+    backdrop-filter: blur(10px);
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, .25);
+    border:
+        1px solid rgba(255, 255, 255, .22);
+    border-radius: 999px;
+    padding: .25rem .7rem;
 }
 
-/* ===== TITULO ===== */
+
+/* =========================================================
+   TITULO
+========================================================= */
+
 .title {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  margin: 0.2rem 0 1rem;
-  letter-spacing: 2px;
-  line-height: 1.05;
-  font-weight: 800;
-  text-transform: uppercase;
-  max-width:550px;
-  text-shadow: 0 4px 30px rgba(0,0,0,0.9); /* 🔥 PRO */
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    margin: .2rem 0 1rem;
+    letter-spacing: 1px;
+    line-height: .98;
+    font-weight: 850;
+    text-transform: uppercase;
+    max-width: 600px;
+    text-shadow:
+        0 3px 12px rgba(0,0,0,.65),
+        0 10px 40px rgba(0,0,0,.85);
 }
 
-/* ===== DESCRIPCION ===== */
+
+/* =========================================================
+   DESCRIPCIÓN
+========================================================= */
+
 .description {
-  max-width:580px;
-  font-weight:400;
-  letter-spacing:.2px;
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 1.8rem;
-  line-height: 1.5;
-
-  text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    max-width: 580px;
+    margin-bottom: 1.8rem;
+    font-weight: 400;
+    letter-spacing: .2px;
+    font-size: clamp(
+        .95rem,
+        1.5vw,
+        1.1rem
+    );
+    line-height: 1.5;
+    color: rgba(255, 255, 255, .80);
+    text-shadow:
+        0 2px 20px rgba(0, 0, 0, .8);
 }
 
-/* ===== BOTONES ===== */
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
 .actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
 }
 
 .btnPrimary,
 .btnSecondary {
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  padding: 0.7rem 1.4rem;
-  min-width: 130px;
-  transition:
-  transform .25s,
-  background .25s,
-  box-shadow .25s;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    padding: .7rem 1.4rem;
+    min-width: 130px;
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
 }
 
 .btnPrimary {
-  background: #fff;
-  color: #000;
+    border: none;
+    background: #fff;
+    color: #000;
 }
 
-.btnPrimary:hover{
-
-  transform:
-  translateY(-3px)
-  scale(1.02);
-
-  box-shadow:
-  0 14px 35px rgba(0,0,0,.35);
-
+.btnPrimary:hover {
+    transform:
+        translateY(-3px)
+        scale(1.02);
+    box-shadow:
+        0 14px 35px rgba(0, 0, 0, .35);
 }
+
 .btnSecondary {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.3);
-  backdrop-filter: blur(6px);
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+    border:
+        1px solid rgba(255, 255, 255, .28);
+    backdrop-filter: blur(8px);
 }
 
-.btnSecondary:hover{
-
-  background:rgba(255,255,255,.22);
-
-  transform:
-  translateY(-3px);
-
+.btnSecondary:hover {
+    background: rgba(255, 255, 255, .20);
+    transform:
+        translateY(-3px);
 }
 
-.indicators{
-    position:absolute;
-    left:50%;
-    bottom:28px;
 
-    transform:translateX(-50%);
+/* =========================================================
+   INDICADORES
+========================================================= */
 
-    display:flex;
-    gap:12px;
-
-    z-index:3;
-}
-.dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    border:none;
-    cursor:pointer;
-    background:rgba(255,255,255,.35);
-    transition:all .35s ease;
+.indicators {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 5;
 }
 
-.dot:hover{
-    background:rgba(255,255,255,.7);
+.dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background:
+        rgba(255, 255, 255, .35);
+    transition:
+        all .35s ease;
 }
 
-.activeDot{
-    width:34px;
-    border-radius:999px;
-    background:#e50914;
+.dot:hover {
+    background:
+        rgba(255, 255, 255, .7);
 }
 
-/* ===== RESPONSIVE ===== */
+.activeDot {
+    width: 34px;
+    border-radius: 999px;
+    background: #e50914;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
 @media (max-width: 768px) {
-  .hero {
-    height:65vh;
-    min-height:420px;
-  }
 
-  .content {
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
-    justify-content: center;
-    padding-bottom: 0;
-  }
+    .hero {
+        height: 65vh;
+        min-height: 420px;
+    }
 
-  .title {
-    font-size: clamp(1.8rem, 8vw, 2.8rem);
-  }
+    .content {
+        width: auto;
 
-  .description {
-    max-width: 100%;
-    font-size: 0.95rem;
-  }
+        margin-left: 1.5rem;
+        margin-right: 1.5rem;
+    }
+
+    .title {
+        font-size:
+            clamp(
+                1.8rem,
+                8vw,
+                2.8rem
+            );
+    }
+
+    .description {
+        max-width: 100%;
+
+        font-size: .95rem;
+    }
+
+    .hero::after {
+        height: 240px;
+    }
 }

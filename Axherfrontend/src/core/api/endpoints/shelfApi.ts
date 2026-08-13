@@ -18,5 +18,14 @@ export const shelfApi = {
             },
             ...config
         }
+    ),
+
+    getById: (
+        shelfId:number,
+        config?:AxiosRequestConfig
+    )=>
+    axiosClient.get<Shelf>(
+        `/shelves/${shelfId}`,
+        config
     )
 }

@@ -2,59 +2,45 @@
 
 import ShelfCarousel from "@/features/shelf/components/ShelfCarousel";
 import FeaturedShelf from "@/features/shelf/components/FeaturedShelf";
-import { useShelves } from "@/features/shelf/hooks/useShelves";
+import { useShelf } from "@/features/shelf/hooks/useShelf";
 
 interface Props {
-    target: "HOME" | "MOVIES" | "SERIES";
-    slug?: string;
-    excludeSlugs?: string[];
+    shelfId: number;
 }
 
 export default function ShelfSection({
-    target,
-    slug,
-    excludeSlugs
+    shelfId
 }: Props) {
 
     const {
-        shelves,
-        loading,
-    } = useShelves(target, slug);
-
-    if(loading) return null;
+        shelf,
+        loading
+    } = useShelf(shelfId);
 
 
-    const visibleShelves = excludeSlugs
-        ? shelves.filter(
-            shelf => !excludeSlugs.includes(shelf.slug)
-          )
-        : shelves;
+    if (loading) {
+        return null;
+    }
+
+
+    if (!shelf) {
+        return null;
+    }
+
+
+    if (shelf.slug === "destacados") {
+
+        return (
+            <FeaturedShelf
+                shelf={shelf}
+            />
+        );
+    }
 
 
     return (
-        <>
-            {
-                visibleShelves.map((shelf)=>{
-
-                    if(shelf.slug === "destacados"){
-                        return (
-                            <FeaturedShelf
-                                key={shelf.slug}
-                                shelf={shelf}
-                            />
-                        );
-                    }
-
-
-                    return (
-                        <ShelfCarousel
-                            key={shelf.slug}
-                            shelf={shelf}
-                        />
-                    );
-
-                })
-            }
-        </>
+        <ShelfCarousel
+            shelf={shelf}
+        />
     );
 }

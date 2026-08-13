@@ -1,11 +1,14 @@
 package com.axher.backend.catalog.shelf.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.axher.backend.catalog.shelf.DTOs.CreateShelfDto;
+import com.axher.backend.catalog.shelf.DTOs.ShelfOptionDto;
 import com.axher.backend.catalog.shelf.DTOs.UpdateShelfDto;
 import com.axher.backend.catalog.shelf.entities.ContentShelf;
 import com.axher.backend.catalog.shelf.entities.ShelfTarget;
@@ -23,13 +26,33 @@ public class ContentShelfService {
     private final ContentShelfRepository repository;
     private final SlugGeneratorService slugGenerator;
 
-    public Page<ContentShelf> findAll(Pageable pageable) {
+    public Page<ContentShelf> findAll(ShelfTarget target, Pageable pageable) {
+        if (target != null) {
+            return repository.findByTarget(
+                    target,
+                    pageable
+            );
+        }
+
         return repository.findAll(pageable);
     }
 
     public ContentShelf findById(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Carrusuel no encontrado: " + id));
+    }
+
+    public List<ShelfOptionDto> getOptions(ShelfTarget target) {
+
+        return repository
+            .findByTargetAndActiveTrueOrderByNameAsc(target)
+            .stream()
+            .map(shelf -> new ShelfOptionDto(
+                shelf.getContentShelfId(),
+                shelf.getName(),
+                shelf.getSlug()
+            ))
+            .toList();
     }
 
     public ContentShelf create(CreateShelfDto dto) {
@@ -49,8 +72,9 @@ public class ContentShelfService {
             )
         );
         shelf.setTarget(dto.getTarget());
+        shelf.setSource(dto.getSource());
         shelf.setLayout(dto.getLayout());
-        shelf.setDisplayOrder(dto.getDisplayOrder());
+        //shelf.setDisplayOrder(dto.getDisplayOrder());
         shelf.setActive(Boolean.TRUE.equals(dto.getActive()));
 
         return repository.save(shelf);
@@ -105,13 +129,17 @@ public class ContentShelfService {
             shelf.setTarget(dto.getTarget());
         }
 
+        if (dto.getSource() != null) {
+            shelf.setSource(dto.getSource());
+        }
+
         if (dto.getLayout() != null) {
             shelf.setLayout(dto.getLayout());
         }
 
-        if (dto.getDisplayOrder() != null) {
+        /*if (dto.getDisplayOrder() != null) {
             shelf.setDisplayOrder(dto.getDisplayOrder());
-        }
+        }*/
 
         if (dto.getActive() != null) {
             shelf.setActive(dto.getActive());

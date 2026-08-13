@@ -8,6 +8,7 @@ import UpcomingCarousel from "@/features/upcoming/components/UpcomingCarousel";
 import TrendingSection from "@/features/popularity/components/TrendingSection";
 import ContinueWatchingSection from "@/features/playbackHistory/components/ContinueWatchingSection";
 import TopRatedSection from "@/features/popularity/components/TopRatedSection";
+import HomePageSections from "@/features/pageSection/components/HomePageSections";
 
 
 
@@ -24,12 +25,7 @@ const trendingNow = [
         image:
             "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=520&q=80",
     },
-    {
-        id: 3,
-        title: "Shang-Chi",
-        image:
-            "https://images.unsplash.com/photo-1615986200762-43f7c4e4d0e9?auto=format&fit=crop&w=520&q=80",
-    },
+
     {
         id: 4,
         title: "A Quiet Place II",
@@ -69,10 +65,7 @@ export default async function Home() {
                 <button type="button" className={styles.pill}>Anime</button>
             </div>
             </header>
-            <UpcomingCarousel></UpcomingCarousel>
-            <TrendingSection></TrendingSection>
-            <ContinueWatchingSection></ContinueWatchingSection>
-            <TopRatedSection></TopRatedSection>
+            <HomePageSections/>
 
 
     

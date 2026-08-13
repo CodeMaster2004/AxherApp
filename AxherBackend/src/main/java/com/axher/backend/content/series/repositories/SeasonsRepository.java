@@ -32,9 +32,9 @@ public interface SeasonsRepository extends JpaRepository<Seasons, Integer> {
         LocalDateTime releaseDate
     );
 
-    Page<Seasons> findByContentStatus_CodeOrderByReleaseDateAsc(
-        String code,
-        Pageable pageable
+    List<Seasons> findBySeries_ContentIdAndContentStatus_CodeOrderByReleaseDateAsc(
+        Integer seriesId,
+        String code
     );
 
     @Query("""

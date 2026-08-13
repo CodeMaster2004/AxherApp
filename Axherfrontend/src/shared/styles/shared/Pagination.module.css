@@ -1,20 +1,189 @@
-.container{
+.container {
     display: flex;
-    gap: 10px;
     align-items: center;
     justify-content: center;
-    margin-top: 24px;
-    padding: 16px;
+
+    gap: 0.35rem;
+
+    margin-top: 2.5rem;
+    padding: 0.75rem 0;
 }
 
-.info{
+/* =========================
+   PAGE GROUP
+========================= */
+
+.pages {
+    display: flex;
+    align-items: center;
+
+    gap: 0.2rem;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.page {
+    position: relative;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #777;
+
+    font-size: 0.85rem;
     font-weight: 500;
-    color: var(--text-primary);
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
 }
 
-@media (max-width: 768px){
-    .container{
-        flex-wrap: wrap;
-        gap: 12px;
+.page:hover:not(:disabled) {
+    color: #fff;
+
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.page:active:not(:disabled) {
+    transform: scale(0.92);
+}
+
+/* =========================
+   ACTIVE
+========================= */
+
+.page.active {
+    background: rgba(229, 9, 20, 0.12);
+
+    color: #fff;
+
+    font-weight: 600;
+
+    cursor: default;
+}
+
+.page.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 4px;
+
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    background: #e50914;
+
+    transform: translateX(-50%);
+}
+
+/* =========================
+   ARROWS
+========================= */
+
+.arrow {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #888;
+
+    font-size: 1.7rem;
+    font-weight: 300;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.arrow:hover:not(:disabled) {
+    color: #fff;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    transform: translateX(-1px);
+}
+
+.arrow:last-child:hover:not(:disabled) {
+    transform: translateX(1px);
+}
+
+.arrow:active:not(:disabled) {
+    transform: scale(0.9);
+}
+
+.arrow:disabled {
+    color: #333;
+
+    cursor: not-allowed;
+}
+
+/* =========================
+   ELLIPSIS
+========================= */
+
+.ellipsis {
+    width: 30px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #555;
+
+    font-size: 0.85rem;
+
+    user-select: none;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .container {
+        margin-top: 2rem;
+    }
+
+    .page,
+    .arrow {
+        width: 34px;
+        height: 34px;
+    }
+
+    .ellipsis {
+        width: 24px;
+        height: 34px;
     }
 }

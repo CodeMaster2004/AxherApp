@@ -4,15 +4,20 @@ import { useUpcomingContents } from "@/features/contents/hooks/useUpcomingConten
 import UpcomingCard from "./UpcomingCard";
 import styles from "./UpcomingCarousel.module.css";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
+import { ContentType } from "@/entities/types";
 
+interface Props {
+    type?: ContentType;
+}
 
-
-export default function UpcomingCarousel() {
+export default function UpcomingCarousel({ type }: Props) {
 
     const {
         upcomingContents,
         loading
-    } = useUpcomingContents();
+    } = useUpcomingContents({type});
+
+    
 
     if (loading) {
         return <p>Cargando próximos estrenos...</p>;

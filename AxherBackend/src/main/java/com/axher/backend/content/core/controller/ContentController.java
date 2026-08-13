@@ -89,10 +89,11 @@ public class ContentController {
 
     @GetMapping("/upcoming")
     public Page<UpcomingContentDto> upcoming(
+            @RequestParam(required = false) ContentTypeEnum type,
             @RequestParam(defaultValue="0") int page,
             @RequestParam(defaultValue="10") int size
     ){
-        Page<Content> contents = catalogService.findUpcoming(PageRequest.of(page, size));
+        Page<Content> contents = catalogService.findUpcoming(type, PageRequest.of(page, size));
         return contents.map(upcomingContentMapper::toDto);
     }
 

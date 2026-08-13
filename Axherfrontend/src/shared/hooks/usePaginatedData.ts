@@ -8,11 +8,13 @@ type UsePaginatedDataOptions<T> = {
     initialPage?: number;
     initialSize?: number;
     initialSort?: string;
+
+    extraParams?: Record<string, unknown>;
 }
 
 export function usePaginatedData<T>(
     fetchFn: (
-        params: PaginationParams,
+        params: PaginationParams & Record<string, unknown>,
         search?: string,
         signal?: AbortSignal
     ) => Promise<Page<T>>,
@@ -37,10 +39,12 @@ export function usePaginatedData<T>(
     //Fetch paginado
     const fetchPage = useCallback(
         async (params: PaginationParams, signal?: AbortSignal) => {
+            
             try{
                 setLoading(true);
                 setError(null);
                 const result = await fetchFn({
+                    ...options?.extraParams,
                     size: pageSize,
                     sort,
                     ...params
@@ -64,7 +68,7 @@ export function usePaginatedData<T>(
                 setLoading(false);
             }
         },
-        [fetchFn, pageSize, sort, debouncedSearch]
+        [fetchFn, pageSize, sort, debouncedSearch, options?.extraParams]
     );
 
     //Navegacion

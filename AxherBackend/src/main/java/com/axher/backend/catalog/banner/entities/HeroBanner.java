@@ -2,6 +2,8 @@ package com.axher.backend.catalog.banner.entities;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.axher.backend.content.core.entities.Content;
 
 import jakarta.persistence.Column;
@@ -43,14 +45,18 @@ public class HeroBanner {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String backdropUrl;
 
-    private Integer priority;
+    @Column(nullable = false)
+    private Integer priority = 0;
 
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
 
-    private Boolean active;
+    @Column(nullable = false)
+    private Boolean active = true;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
     
 }

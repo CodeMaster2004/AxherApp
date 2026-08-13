@@ -1,5 +1,5 @@
 import axiosClient from "@/core/api/axiosClient";
-import { EpisodeDetail, Page, PaginationParams } from "@/entities/types";
+import { EpisodeDetail, Page, PaginationParams, UpcomingEpisode } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 
 export const episodesApi = {
@@ -9,4 +9,16 @@ export const episodesApi = {
                     params,
                     ...config
             }),
+    getUpcomingBySeasonId:(
+        seasonId: number,
+        params: PaginationParams,
+        config?: AxiosRequestConfig
+    ) => 
+        axiosClient.get<Page<UpcomingEpisode>>(
+                `/seasons/${seasonId}/episodes/upcoming`,
+                {
+                        params,
+                        ...config
+                }
+        )
 }

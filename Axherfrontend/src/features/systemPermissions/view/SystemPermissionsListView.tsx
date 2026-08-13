@@ -18,6 +18,7 @@ export default function SystemPermissionsListView(){
         totalPages,
         nextPage,
         prevPage,
+        goToPage,
         searchTerm,
         setSearchTerm,
         refetch
@@ -57,6 +58,7 @@ export default function SystemPermissionsListView(){
                 totalPages={totalPages}
                 onNextPage={nextPage}
                 onPrevPage={prevPage}
+                onGoToPage={goToPage}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
             />

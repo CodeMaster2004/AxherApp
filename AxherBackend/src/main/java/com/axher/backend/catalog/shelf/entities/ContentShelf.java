@@ -42,10 +42,12 @@ public class ContentShelf {
     private ShelfTarget target;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private ShelfSource source; 
+
+    @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
     private ShelfLayout layout;
-
-    private Integer displayOrder;
 
     private Boolean active;
 

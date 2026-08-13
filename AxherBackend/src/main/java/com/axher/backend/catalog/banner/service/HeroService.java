@@ -2,24 +2,30 @@ package com.axher.backend.catalog.banner.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.axher.backend.catalog.banner.DTOs.HeroRankedCandidateDto;
 import com.axher.backend.catalog.banner.entities.HeroBanner;
 import com.axher.backend.catalog.banner.repositories.HeroBannerRepository;
 import com.axher.backend.content.core.entities.Content;
+import com.axher.backend.content.core.repositories.ContentRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HeroService {
 
+    private static final int MAX_HERO_ITEMS = 5;
+
     private final HeroBannerRepository heroBannerRepository;
+    private final HeroRankingService heroRankingService;
+    private final ContentRepository contentRepository;
 
 
     public List<HeroBanner> getHeroBanners() {
@@ -33,52 +39,70 @@ public class HeroService {
         List<HeroBanner> activeBanners =
                 heroBannerRepository.findActiveValidBanners(now);
 
-
+        Set<Integer> usedContentIds = new HashSet<>();
         for(HeroBanner banner : activeBanners){
 
-            if(result.size() >= 5){
+            if(result.size() >= MAX_HERO_ITEMS){
                 break;
             }
 
-            result.add(banner);
+            Integer contentId = banner.getContent().getContentId();
+
+            if(usedContentIds.add(contentId)){
+                result.add(banner);
+            }
         }
 
 
 
         // Automáticos
-        List<Content> automaticContents =
-                heroBannerRepository.findHeroContent(Pageable.ofSize(10));
+        if(result.size() < MAX_HERO_ITEMS){
 
+            List<HeroRankedCandidateDto> rankedCandidates = heroRankingService.rank();
 
-        for(Content content : automaticContents){
+            List<Integer> automaticContentIds = 
+                    rankedCandidates.stream()
+                            .map(HeroRankedCandidateDto::getContentId)
+                            .filter(id -> !usedContentIds.contains(id))
+                            .limit(MAX_HERO_ITEMS - result.size())
+                            .toList();
+            if(!automaticContentIds.isEmpty()){
 
+                List<Content> contents = contentRepository.findAllByContentIdIn(automaticContentIds);
 
-            boolean exists = result.stream()
-                    .anyMatch(
-                        banner ->
-                            banner.getContent()
-                            .getContentId()
-                            .equals(content.getContentId())
-                    );
+                Map<Integer, Content> contentMap =
+                        contents.stream()
+                                .collect(
+                                    java.util.stream.Collectors.toMap(
+                                        Content::getContentId,
+                                        content -> content
+                                    )
+                                );
+                for(Integer contentId : automaticContentIds){
+                    
+                    if(result.size() >= MAX_HERO_ITEMS){
+                        break;
+                    }
 
+                    Content content = contentMap.get(contentId);
+                    
+                    if(content == null){
+                        continue;
+                    }
 
-            if(!exists && result.size() < 5){
+                    HeroBanner automatic = new HeroBanner();
 
-                HeroBanner automatic = new HeroBanner();
+                    automatic.setContent(content);
+                    automatic.setActive(true);
+                    automatic.setPriority(0);
 
-                automatic.setContent(content);
-                automatic.setActive(true);
-                automatic.setPriority(0);
-
-                result.add(automatic);
-            }
-
-
-            if(result.size() >= 5){
-                break;
+                    result.add(automatic);
+                    usedContentIds.add(contentId);
+                    
+                }
             }
         }
-
         return result;
+        
     }
 }

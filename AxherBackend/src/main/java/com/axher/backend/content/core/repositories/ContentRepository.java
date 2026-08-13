@@ -9,9 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.axher.backend.content.core.entities.Content;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
+
 
 public interface ContentRepository extends JpaRepository<Content, Integer>, JpaSpecificationExecutor<Content> {
 
@@ -48,10 +50,11 @@ public interface ContentRepository extends JpaRepository<Content, Integer>, JpaS
             LocalDateTime releaseDate
     );
 
-    Page<Content> findByContentStatus_CodeOrderByReleaseDateAsc(
-        String code,
-        Pageable pageable
-    );
+    Page<Content> findByContentStatus_CodeAndTypeOrderByReleaseDateAsc(
+                String status,
+                ContentTypeEnum type,
+                Pageable pageable
+        );
 
     // Nuevas películas publicadas
         Page<Content> findByTypeAndContentStatus_CodeOrderByReleaseDateDesc(
@@ -67,5 +70,22 @@ public interface ContentRepository extends JpaRepository<Content, Integer>, JpaS
         ORDER BY YEAR(c.releaseDate) DESC
         """)
         List<Integer> findAvailableYears(ContentTypeEnum type);
+
+        @Query("""
+        SELECT c
+        FROM Content c
+        WHERE c.contentStatus.code = :status
+        AND (:type IS NULL OR c.type = :type)
+        ORDER BY c.releaseDate ASC
+        """)
+        Page<Content> findUpcoming(
+                @Param("status") String status,
+                @Param("type") ContentTypeEnum type,
+                Pageable pageable
+        );
+
+        List<Content> findByContentStatus_Code(String code);
+
+        List<Content> findAllByContentIdIn(List<Integer> contentIds);
 } 
 

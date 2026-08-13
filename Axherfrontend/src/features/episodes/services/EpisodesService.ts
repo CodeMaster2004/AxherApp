@@ -1,6 +1,6 @@
 import { AdminEpisodesApi } from "@/core/api/endpoints/AdminEpisodesApi";
 import { episodesApi } from "@/core/api/endpoints/EpisodesApi";
-import { EpisodeDetail, Page, PaginationParams, StatusUpdate } from "@/entities/types";
+import { EpisodeDetail, Page, PaginationParams, StatusUpdate, UpcomingEpisode } from "@/entities/types";
 import { AxiosProgressEvent } from "axios";
 
 
@@ -35,6 +35,16 @@ export const episodesService = {
         const res = await AdminEpisodesApi.getById(seasonId, episodeId, { signal });
         return res.data;
     },
+
+    getUpcomingBySeasonId: async(
+        seasonId: number,
+        params: PaginationParams,
+        signal?: AbortSignal
+    ): Promise<Page<UpcomingEpisode>> => {
+        const res = await episodesApi.getUpcomingBySeasonId(seasonId, params , { signal });
+        return res.data;
+    },
+    
 
     create: async(
         seasonId: number,

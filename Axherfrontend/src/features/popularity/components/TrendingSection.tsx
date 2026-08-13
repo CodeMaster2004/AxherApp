@@ -23,21 +23,21 @@ export default function TendingSection({type}: Props ){
             <h2>
                 En tendencia
             </h2>
+            
+                <HorizontalCarousel >
 
-            <HorizontalCarousel >
 
+                        {
+                            trending.map((item, index) => (
+                                <TrendingCard
+                                    key={item.contentId}
+                                    content={item}
+                                    rank={index + 1}
+                                />
+                            ))
+                        }
 
-                    {
-                        trending.map((item, index) => (
-                            <TrendingCard
-                                key={item.contentId}
-                                content={item}
-                                rank={index + 1}
-                            />
-                        ))
-                    }
-
-            </HorizontalCarousel>
+                </HorizontalCarousel>
         </section>
     )
 }

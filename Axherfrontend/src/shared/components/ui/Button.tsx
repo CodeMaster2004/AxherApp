@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from './Button.module.css';
 
-type Variant = 'primary' | 'secondary' | 'danger' | 'animated' | 'delete' | 'edit';
+type Variant = 'primary' | 'secondary' | 'danger' | 'animated' | 'delete' | 'edit' | 'tab';
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   loading?: boolean;
   loadingText?: string;
   icon?: React.ReactNode; // opcional para el signo
+  active?: boolean; // opcional para el estado activo
 }
 
 export default function Button({
@@ -19,11 +20,13 @@ export default function Button({
   icon,
   className = '',
   type = 'button',
+  active = false,
   ...rest
 }: Props) {
   const isAnimated = variant === 'animated';
   const isDelete = variant === 'delete';
   const isEdit = variant === 'edit';
+  const isTab = variant === 'tab';
   const isDisabled = disabled || loading;
 
   // clases base
@@ -33,8 +36,10 @@ export default function Button({
     ? styles.deleteRoot
     : isEdit
     ? styles.editRoot
+    : isTab
+    ? styles.tab
     : (variant === 'secondary' ? styles.secondary : variant === 'danger' ? styles.danger : styles.primary);
-  const classes = `${styles.btn} ${variantClass} ${className}`.trim();
+  const classes = `${styles.btn} ${variantClass} ${active && isTab ? styles.tabActive : ""} ${className}`.trim();
   const disabledClass = isDelete && isDisabled ? styles.deleteDisabled : '';
   const editDisabledClass = isEdit && isDisabled ? styles.editDisabled : '';
 
@@ -44,6 +49,7 @@ export default function Button({
       className={`${classes} ${disabledClass} ${editDisabledClass}`.trim()}
       disabled={isDisabled}
       aria-disabled={isDisabled}
+      aria-pressed={isTab ? active : undefined}
       {...rest}
     >
       {isDelete ? (
