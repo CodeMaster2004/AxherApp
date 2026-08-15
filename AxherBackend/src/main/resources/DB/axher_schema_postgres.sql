@@ -119,28 +119,6 @@ CREATE TABLE user_profiles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-
-
--- Tabla de estados de reporte
-CREATE TABLE report_status (
-    report_status_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    status VARCHAR(50) NOT NULL UNIQUE
-);
-
-
--- Tabla de reportes de problemas
-CREATE TABLE problem_reports (
-    report_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    user_id INT NOT NULL,
-    category VARCHAR(100),
-    description TEXT,
-    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    report_status_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (report_status_id) REFERENCES report_status(report_status_id)
-);
-
-
 -- Tabla de categorías de contenido
 CREATE TABLE content_categories (
     content_category_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -569,3 +547,76 @@ CREATE TABLE content_person_roles(
     FOREIGN KEY (cinematic_role_id) REFERENCES cinematic_roles(cinematic_role_id) ON DELETE CASCADE
 );
 
+-- Tabla de estados de reporte
+CREATE TABLE report_status (
+    report_status_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    code VARCHAR(30) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(200)
+);
+
+
+-- Tabla de reportes de problemas
+CREATE TABLE problem_reports (
+    report_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id INT NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    content_id INT NULL,
+    episode_id INT NULL,
+    report_status_id INT NOT NULL,
+    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE SET NULL,
+    FOREIGN KEY (episode_id) REFERENCES episodes(episode_id) ON DELETE SET NULL,
+    FOREIGN KEY (report_status_id) REFERENCES report_status(report_status_id)
+);
+
+CREATE TABLE support_categories (
+    support_category_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(200)
+);
+
+CREATE TABLE support_tickets_status (
+    support_ticket_status_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    code VARCHAR(30) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(200)
+);
+
+CREATE TABLE support_tickets (
+    support_ticket_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id INT NOT NULL,
+    support_category_id INT NOT NULL,
+    support_ticket_status_id INT NOT NULL,
+    subject VARCHAR(200) NOT NULL,
+
+    subscription_id INT NULL,
+    subscription_payment_id INT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    resolved_at TIMESTAMP NULL,
+    closed_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (support_category_id) REFERENCES support_categories(support_category_id),
+    FOREIGN KEY (support_ticket_status_id) REFERENCES support_tickets_status(support_ticket_status_id),
+    FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id) ON DELETE SET NULL,
+    FOREIGN KEY (subscription_payment_id) REFERENCES subscription_payments(subscription_payment_id) ON DELETE SET NULL
+);
+
+CREATE TABLE support_messages(
+    message_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ticket_id BIGINT NOT NULL,
+    sender_user_id INT NULL,
+    sender_type VARCHAR(20) NOT NULL
+        CHECK (sender_type IN ('USER', 'AGENT', 'SYSTEM', 'BOT')),
+    message TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ticket_id) REFERENCES support_tickets(support_ticket_id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_user_id) REFERENCES users(user_id) ON DELETE SET NULL
+)

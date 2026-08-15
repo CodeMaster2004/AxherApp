@@ -36,7 +36,7 @@ public class ContentStatusController {
         "contentStatusId", "status", "description"
     );
 
-   @GetMapping
+    @GetMapping
     @PreAuthorize("hasAuthority('CONTENT_STATUS:VIEW')")
     public Page<ContentStatus> findAll(
         @RequestParam(defaultValue = "0") int page,

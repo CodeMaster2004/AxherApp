@@ -21,8 +21,14 @@ public class ReportStatus {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer reportStatusId;
 
-        @Column(length = 50, nullable = false)
-        private String status;
+        @Column(length = 50, nullable = false, unique = true)
+        private String code;
+
+        @Column(length = 50, nullable = false, unique = true)
+        private String name;
+
+        @Column(length = 200)
+        private String description;
 
 }
 
