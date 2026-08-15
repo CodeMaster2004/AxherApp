@@ -20,11 +20,11 @@ export default function DiscountsListView(){
     });
 
     const handleCreate = () => {
-        router.push("/discounts/create");
+        router.push("/admin/discounts/create");
     };
 
     const handleEdit = (discounts: Discounts) => {
-        router.push(`/discounts/${discounts.discountId}/edit`);
+        router.push(`/admin/discounts/${discounts.discountId}/edit`);
     }
 
     return(

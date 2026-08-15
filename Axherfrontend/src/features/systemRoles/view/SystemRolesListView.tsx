@@ -31,11 +31,11 @@ export default function SystemRolesListView(){
     });
 
     const handleCreate = () => {
-        router.push("/systemRoles/create");
+        router.push("/admin/systemRoles/create");
     };
 
     const handleEdit = (systemRoles: SystemRoles) => {
-        router.push(`/systemRoles/${systemRoles.systemRoleId}/edit`);
+        router.push(`/admin/systemRoles/${systemRoles.systemRoleId}/edit`);
     }
 
     return(

@@ -31,11 +31,11 @@ export default function HeroBannerListView() {
     });
 
     const handleCreate = () => {
-        router.push("/hero-banners/create");
+        router.push("/admin/hero-banners/create");
     }
 
     const handleEdit = (banner: HeroBanner) => {
-        router.push(`/hero-banners/${banner.heroBannerId}/edit`);
+        router.push(`/admin/hero-banners/${banner.heroBannerId}/edit`);
     }
 
     const handleToggle = async (id: number) => {

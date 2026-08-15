@@ -46,24 +46,24 @@ export default function SeriesDetailView() {
 
     useEffect(() => {
         if(!contentId){
-            router.push("/contents");
+            router.push("/admin/contents");
         }
     }, [contentId, router]);
 
     const handleAddSeason = () => {
-        router.push(`/series/${contentId}/seasons/create`);
+        router.push(`/admin/series/${contentId}/seasons/create`);
     };
 
     const handleEditSeason = (season: SeasonDetail) => {
-        router.push(`/series/${contentId}/seasons/${season.seasonId}/edit`);
+        router.push(`/admin/series/${contentId}/seasons/${season.seasonId}/edit`);
     };
 
     const handleViewEpisodes = (seasonId: number) => {
-        router.push(`/series/${contentId}/seasons/${seasonId}/episodes`);
+        router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes`);
     };
 
     const handleCreateEpisode = (seasonId: number) => {
-        router.push(`/series/${contentId}/seasons/${seasonId}/episodes/create`);
+        router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/create`);
     };
 
     if(seriesLoading){
@@ -74,14 +74,14 @@ export default function SeriesDetailView() {
         return (
             <div className={layoutStyles.pageContainer}>
                 <p style={{color: "red"}}>Error al cargar la serie</p>
-                <Button onClick={() => router.push("/contents")}>Volver</Button>
+                <Button onClick={() => router.push("/admin/contents")}>Volver</Button>
             </div>
         );
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <Button variant="secondary" onClick={() => router.push("/series")}>
+            <Button variant="secondary" onClick={() => router.push("/admin/series")}>
                 ← Volver
             </Button>
 

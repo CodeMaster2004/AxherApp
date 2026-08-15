@@ -32,11 +32,11 @@ export default function SystemPermissionsListView(){
     });
 
     const handleCreate = () => {
-        router.push("/systemPermissions/create");
+        router.push("/admin/systemPermissions/create");
     }
 
     const handleEdit = (systemPermissions: SystemPermissions) => {
-        router.push(`/systemPermissions/${systemPermissions.systemPermissionId}/edit`);
+        router.push(`/admin/systemPermissions/${systemPermissions.systemPermissionId}/edit`);
     }
 
     return (

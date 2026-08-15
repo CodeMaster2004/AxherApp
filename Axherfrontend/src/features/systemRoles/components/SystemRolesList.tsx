@@ -100,7 +100,7 @@ export default function SystemRolesList ({
                                             items={[
                                                 {
                                                     label: "Permisos",
-                                                    onClick: () => router.push(`/systemRoles/${role.systemRoleId}/permissions`),
+                                                    onClick: () => router.push(`/admin/systemRoles/${role.systemRoleId}/permissions`),
                                                 },
                                                 {
                                                     label: "Editar",

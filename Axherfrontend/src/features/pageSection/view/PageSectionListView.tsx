@@ -41,7 +41,7 @@ export default function PageSectionListView() {
     const handleCreate = () => {
 
         router.push(
-            "/page-sections/create"
+            "/admin/page-sections/create"
         );
 
     };
@@ -52,7 +52,7 @@ export default function PageSectionListView() {
     ) => {
 
         router.push(
-            `/page-sections/${section.pageSectionId}/edit`
+            `/admin/page-sections/${section.pageSectionId}/edit`
         );
 
     };

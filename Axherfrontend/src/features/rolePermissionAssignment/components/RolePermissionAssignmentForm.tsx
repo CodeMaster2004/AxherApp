@@ -124,7 +124,7 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
         return (
         <div className={layoutStyles.pageContainer}>
             <p>Rol inválido</p>
-            <button onClick={() => router.push("/systemRoles")}>Volver</button>
+            <button onClick={() => router.push("/admin/systemRoles")}>Volver</button>
         </div>
         );
     }
@@ -195,7 +195,7 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
             <Button
             type="button"
             variant="secondary"
-            onClick={() => router.push("/systemRoles")}
+            onClick={() => router.push("/admin/systemRoles")}
             disabled={updating}
             >
             Cancelar

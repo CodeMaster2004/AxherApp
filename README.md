@@ -40,12 +40,13 @@
 - 🔑 **Inicio de sesión con Google** (OAuth 2.0)
 - 📧 **Confirmación de correo** mediante OTP
 - 🎥 **Exploración de películas y series** con filtros, búsqueda y categorías
-- 🎠 **Estantes de contenido** (shelves) personalizados y ordenables
+- 🎠 **Estantes de contenido** (shelves) personalizados y ordenables con **fuentes dinámicas** (trending, top rated, nuevos estrenos, más vistos)
 - 🆕 **Sección de próximos estrenos** (upcoming) con temporadas y episodios
 - ⭐ **Sistema de calificaciones** y reseñas
-- 📺 **Historial de reproducción** y popularidad
+- 📺 **Reproductor de video** con controles personalizados, auto-ocultamiento de cursor y guardado automático de progreso
 - 📋 **Mi Lista (Watchlist)** — guarda películas y series para verlas después
 - 🔍 **Historial de búsquedas** — registro de términos buscados por el usuario
+- 🐛 **Reporte de problemas** — los usuarios pueden reportar fallos de video, audio, subtítulos, reproducción o contenido desde el reproductor o la sección de reportes
 - 👤 **Perfil de usuario** con foto y datos personales
 - 💳 **Sistema de pagos y suscripciones** (en desarrollo)
 
@@ -61,7 +62,9 @@
 - 🔐 **Sistema de roles y permisos** granulares
 - 📁 **Carga de archivos multimedia** (imágenes, videos)
 - ⏰ **Programación de publicaciones** con Quartz (contenido, temporadas y episodios)
-- 📊 **Reportes** (en desarrollo)
+- 🐛 **Gestión de reportes de problemas** — panel admin para revisar, filtrar y cambiar el estado de los reportes de los usuarios
+- 📊 **Estados de reportes** configurables (CRUD completo)
+- 🎫 **Tickets de soporte** (backend) — sistema de tickets con categorías, estados y mensajes
 
 ---
 
@@ -86,11 +89,12 @@ AxherApp/
 │   │   │   ├── media/                   # Archivos multimedia
 │   │   │   ├── movies/                  # Películas
 │   │   │   ├── series/                  # Series
-│   │   │   ├── playback/                # Reproducción
+│   │   │   ├── playback/                # Reproducción e historial
 │   │   │   ├── ratings/                 # Calificaciones
 │   │   │   └── people/                  # Personas (actores, directores)
 │   │   ├── infrastructure/              # Infraestructura
 │   │   │   ├── security/                # Configuración de seguridad
+│   │   │   ├── specification/           # Especificaciones JPA (filtros dinámicos)
 │   │   │   ├── storage/                 # Almacenamiento de archivos
 │   │   │   ├── email/                   # Servicio de correos
 │   │   │   ├── quartz/                  # Programación de publicaciones
@@ -98,7 +102,9 @@ AxherApp/
 │   │   │   └── seeder/                  # Datos de prueba
 │   │   ├── search/                      # Historial de búsquedas
 │   │   ├── users/                       # Gestión de usuarios
-│   │   ├── support/                     # Reportes
+│   │   ├── support/                     # Soporte
+│   │   │   ├── reports/                 # Reportes de problemas (usuario + admin)
+│   │   │   └── tickets/                 # Tickets de soporte
 │   │   └── shared/                      # Utilidades compartidas
 │   └── pom.xml
 │
@@ -106,25 +112,30 @@ AxherApp/
 │   ├── src/
 │   │   ├── app/                         # Páginas y rutas (App Router)
 │   │   │   ├── (auth)/                  # Login, registro, confirmación
-│   │   │   ├── (dashboard)/             # Panel administrativo
+│   │   │   ├── (dashboard)/             # Panel de usuario (mi-lista, reportes, historial)
+│   │   │   ├── admin/                   # Panel administrativo (CRUDs, reportes, roles)
 │   │   │   ├── peliculas/               # Catálogo de películas
 │   │   │   ├── serie/                   # Catálogo de series
-│   │   │   ├── mi-lista/                # Mi Lista (watchlist)
-│   │   │   └── historial-busquedas/     # Historial de búsquedas
+│   │   │   └── 403/                     # Página de acceso denegado
 │   │   ├── core/                        # Configuración central
-│   │   │   └── api/                     # Cliente Axios, interceptores
+│   │   │   └── api/                     # Cliente Axios, interceptores, endpoints
 │   │   ├── entities/                    # Tipos e interfaces TypeScript
 │   │   ├── features/                    # Módulos funcionales
 │   │   │   ├── auth/                    # Autenticación
 │   │   │   ├── movies/                  # Películas
 │   │   │   ├── series/                  # Series
 │   │   │   ├── contents/                # Contenido general
+│   │   │   ├── contentCategories/       # Categorías de contenido
+│   │   │   ├── contentStatus/           # Estados de contenido
 │   │   │   ├── shelf/                   # Estantes
 │   │   │   ├── heroBanner/              # Banners hero
 │   │   │   ├── upcoming/                # Próximos estrenos
 │   │   │   ├── pageSection/             # Secciones de página
 │   │   │   ├── watchlist/               # Mi Lista
 │   │   │   ├── search/                  # Búsqueda e historial
+│   │   │   ├── media/                   # Reproductor de video
+│   │   │   ├── reports/                 # Reportes de problemas (usuario + admin)
+│   │   │   ├── reportStatus/            # Estados de reportes
 │   │   │   ├── users/                   # Usuarios
 │   │   │   ├── profile/                 # Perfil de usuario
 │   │   │   └── ...                      # Más módulos
@@ -258,9 +269,11 @@ La aplicación abrirá en `http://localhost:3000`.
 - [x] Mi Lista (watchlist) para guardar contenido
 - [x] Historial de búsquedas
 - [x] Programación de publicaciones con Quartz
+- [x] Reproductor de video con controles personalizados y guardado de progreso
+- [x] Reportes de problemas (usuario + panel admin con estados configurables)
 - [ ] 🚧 Sistema de pagos y suscripciones
-- [ ] 🎬 Reproductor de video
-- [ ] 📊 Reportes y estadísticas
+- [ ] 🎫 Tickets de soporte (frontend)
+- [ ] 📊 Reportes y estadísticas avanzadas
 - [ ] 🌙 Modo oscuro
 - [ ] 🧪 Pruebas unitarias y de integración
 - [ ] 🚀 Despliegue en producción

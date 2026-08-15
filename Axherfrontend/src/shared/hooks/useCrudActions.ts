@@ -3,9 +3,9 @@
 import { useCallback, useState } from "react";
 
 type CrudService<TEntity, TCreate, TUpdate = Partial<TEntity>> = {
-    create(data: TCreate): Promise<TEntity>;
-    update(id: number, data: TUpdate): Promise<TEntity>;
-    delete(id: number): Promise<void>;
+    create?: (data: TCreate) => Promise<TEntity>; 
+    update?: (id: number, data: TUpdate) => Promise<TEntity>; 
+    delete?: (id: number) => Promise<void>;
 };
 
 type Options<TEntity> = {
@@ -27,6 +27,7 @@ export function useCrudActions<
     
     const add = useCallback(
         async (data: TCreate) => {
+            if (!service.create) { throw new Error("Create operation is not supported"); }
             setSaving(true);
             setError(null);
 
@@ -48,6 +49,7 @@ export function useCrudActions<
     const edit = useCallback(
 
         async (id: number, data: TUpdate) => {
+            if (!service.update) { throw new Error("Update operation is not supported"); }
             setSaving(true);
             setError(null);
 
@@ -67,7 +69,9 @@ export function useCrudActions<
     );
 
     const remove = useCallback(
+        
         async (id: number) => {
+            if (!service.delete) { throw new Error("Delete operation is not supported"); }
             setDeleting(id);
             setError(null);
 

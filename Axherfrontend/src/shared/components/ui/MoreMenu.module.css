@@ -1,64 +1,104 @@
-/* Contenedor relativo para posicionar el menú */
 .container {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
-/* Botón disparador: tres puntos */
+/* =========================
+   TRIGGER
+========================= */
+
 .trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+
+    background: var(--bg-surface);
+    color: var(--text-primary);
+
+    cursor: pointer;
 }
 
 .trigger:hover {
-  background: rgba(var(--accent-rgb), 0.08);
+    background: rgba(var(--accent-rgb), 0.08);
 }
 
-/* Panel flotante del menú */
+.dots {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* =========================
+   MENU
+========================= */
+
 .menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 6px;
-  min-width: 160px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  padding: 6px;
-  z-index: 10;
+    position: absolute;
+
+    top: 100%;
+    right: 0;
+
+    margin-top: 6px;
+
+    min-width: 160px;
+
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    padding: 6px;
+
+    z-index: 1000;
 }
 
-/* Botón por opción */
+/* Menú hacia arriba */
+
+.menuTop {
+    top: auto;
+    bottom: 100%;
+
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+/* =========================
+   ITEM
+========================= */
+
 .item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  color: var(--text-primary);
-  cursor: pointer;
-  user-select: none;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 10px;
+
+    border-radius: 6px;
+
+    color: var(--text-primary);
+
+    cursor: pointer;
+    user-select: none;
+
+    white-space: nowrap;
 }
 
 .item:hover {
-  background: rgba(var(--accent-rgb), 0.08);
+    background: rgba(var(--accent-rgb), 0.08);
 }
 
-/* Variante de peligro (eliminar) */
 .danger {
-  color: #c62828;
+    color: #c62828;
 }
-
 /* Separador opcional si se necesitara dividir grupos */
 .separator {
   height: 1px;

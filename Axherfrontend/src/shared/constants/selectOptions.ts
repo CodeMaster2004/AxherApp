@@ -1,4 +1,5 @@
 import { ShelfLayout, ShelfTarget } from "@/entities/types";
+import { ProblemReportCategory } from "@/entities/types/problemReport.types";
 
 export const shelfTargetOptions = [
     { value: ShelfTarget.HOME, label: "Inicio" },
@@ -65,4 +66,27 @@ export const shelfSourceOptions = [
     { value: "TOP_RATED", label: "Mejor valoradas" },
     { value: "NEW_RELEASES", label: "Nuevos lanzamientos" },
     { value: "MOST_WATCHED", label: "Más vistas" }
+];
+
+export const problemReportCategoryOptions = [
+    {
+        value: ProblemReportCategory.VIDEO,
+        label: "Video",
+    },
+    {
+        value: ProblemReportCategory.AUDIO,
+        label: "Audio",
+    },
+    {
+        value: ProblemReportCategory.SUBTITLES,
+        label: "Subtítulos",
+    },
+    {
+        value: ProblemReportCategory.PLAYBACK,
+        label: "Reproducción",
+    },
+    {
+        value: ProblemReportCategory.OTHER,
+        label: "Otro",
+    },
 ];

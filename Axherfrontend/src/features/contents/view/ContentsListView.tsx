@@ -31,15 +31,15 @@ export default function ContentsListView() {
     const {contentStatus} = useContentStatus();
 
     const handleCreate = () => {
-        router.push("/contents/create");
+        router.push("/admin/contents/create");
     };
 
     const handleEdit = (content: ContentDetail) => {
-        router.push(`/contents/${content.contentId}/edit`);
+        router.push(`/admin/contents/${content.contentId}/edit`);
     };
 
     const handleViewSeries = (content: ContentDetail) => {
-        router.push(`/series/${content.contentId}`);
+        router.push(`/admin/series/${content.contentId}`);
     };
 
     return (

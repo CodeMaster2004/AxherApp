@@ -20,11 +20,11 @@ export default function ContentCategoriesListView() {
   });
 
   const handleCreate = () => {
-    router.push("/contentCategories/create");
+    router.push("/admin/contentCategories/create");
   };
 
   const handleEdit = (category: ContentCategories) => {
-    router.push(`/contentCategories/${category.contentCategoryId}/edit`);
+    router.push(`/admin/contentCategories/${category.contentCategoryId}/edit`);
   };
 
   return (

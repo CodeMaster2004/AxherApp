@@ -12,12 +12,14 @@ import {
 } from "lucide-react";
 
 import { UseVideoPlayer } from "@/features/media/hooks/useVideoPlayer";
+import MoreMenu from "@/shared/components/ui/MoreMenu";
 
 interface Props {
     player: UseVideoPlayer;
+    onReportProblem?: () => void;
 }
 
-export default function VideoControls({ player }: Props) {
+export default function VideoControls({ player, onReportProblem }: Props) {
 
        
     return (
@@ -107,6 +109,18 @@ export default function VideoControls({ player }: Props) {
                             )
                         }
                     />
+                    {onReportProblem && (
+                        <MoreMenu
+                            placement="top"
+                            ariaLabel="Opciones del reproductor"
+                            items={[
+                                {
+                                    label: "Reportar problema",
+                                    onClick: onReportProblem,
+                                },
+                            ]}
+                        />
+                    )}
 
                     <button
                         className={styles.iconButton}

@@ -42,7 +42,7 @@ export default function ShelfListView() {
 
 
     const handleCreate = () => {
-        router.push("/shelves/create");
+        router.push("/admin/shelves/create");
     };
 
 
@@ -52,7 +52,7 @@ export default function ShelfListView() {
     )=>{
 
         router.push(
-            `/shelves/${shelf.contentShelfId}/edit`
+            `/admin/shelves/${shelf.contentShelfId}/edit`
         );
 
     };

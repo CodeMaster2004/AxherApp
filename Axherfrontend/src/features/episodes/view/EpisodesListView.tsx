@@ -37,18 +37,18 @@ export default function EpisodesListView({ contentId, seasonId }: Props) {
   const {contentStatus} = useContentStatus();
 
   const handleCreate = () => {
-    router.push(`/series/${contentId}/seasons/${seasonId}/episodes/create`);
+    router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/create`);
   };
 
   const handleEdit = (episode: EpisodeDetail) => {
-    router.push(`/series/${contentId}/seasons/${seasonId}/episodes/${episode.episodeId}/edit`);
+    router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/${episode.episodeId}/edit`);
   };
 
   return (
     <div className={layoutStyles.pageContainer}>
       <Button
         variant="secondary"
-        onClick={() => router.push(`/series/${contentId}/seasons`)}
+        onClick={() => router.push(`/admin/series/${contentId}/seasons`)}
       >
         ← Volver a temporadas
       </Button>

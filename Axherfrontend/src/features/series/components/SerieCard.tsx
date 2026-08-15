@@ -31,7 +31,7 @@ export default function SerieCard({ serie }: SerieCardProps) {
 
                         <div className={styles.meta}>
                             <span>{serie.type}</span>
-                            <span>{serie.status.status}</span>
+                            <span>{serie.status.code}</span>
                         </div>
                     </div>
             </Link>

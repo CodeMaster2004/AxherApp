@@ -13,15 +13,15 @@ export default function ContentStatusListView(){
     const router = useRouter();
     const {contentStatus, loading, currentPage, totalPages, nextPage, prevPage, searchTerm, setSearchTerm, refetch} = useContentStatus();
     const fetchData = async () => {
-  try {
-    await refetch();
-  } catch (error) {
-    console.log("Error capturado:", error);
-    if (error instanceof Error && error.message === "FORBIDDEN") {
-      router.replace("/403");
-    }
-  }
-};
+        try {
+            await refetch();
+        } catch (error) {
+            console.log("Error capturado:", error);
+            if (error instanceof Error && error.message === "FORBIDDEN") {
+            router.replace("/403");
+            }
+        }
+    };
     const {
         deleting,
         removeContentStatus,
@@ -30,11 +30,11 @@ export default function ContentStatusListView(){
     });
 
     const handleCreate = () => {
-        router.push("/contentStatus/create");
+        router.push("/admin/contentStatus/create");
     };
 
     const handleEdit = (status: ContentStatus) => {
-        router.push(`/contentStatus/${status.contentStatusId}/edit`);
+        router.push(`/admin/contentStatus/${status.contentStatusId}/edit`);
     };
 
 useEffect(() => {

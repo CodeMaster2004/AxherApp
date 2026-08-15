@@ -6,6 +6,7 @@ import VideoControls from "./VideoControls";
 import styles from "./VideoPlayerModal.module.css";
 import { useVideoPlayer } from "@/features/media/hooks/useVideoPlayer";
 import { usePlaybackProgress } from "@/features/playbackHistory/hooks/usePlaybackProgress";
+import ProblemReportModal from "@/features/reports/components/ProblemReportModal";
 
 interface Props {
     isOpen: boolean;
@@ -34,6 +35,7 @@ export default function VideoPlayerModal({
     const [mounted, setMounted] = useState(false);
     const playback = usePlaybackProgress();
     const lastSaved = useRef(0);
+    const [showReportModal, setShowReportModal] = useState(false);
     
     const handleClose = useCallback(async () => {
 
@@ -223,6 +225,7 @@ export default function VideoPlayerModal({
                 <h2 className={styles.title}>
                     {title}
                 </h2>
+               
             </header>
 
             <video
@@ -234,7 +237,16 @@ export default function VideoPlayerModal({
                 playsInline
             />
 
-            <VideoControls player={player} />
+            <VideoControls 
+                player={player} 
+                onReportProblem={() => setShowReportModal(true)}
+            />
+            <ProblemReportModal
+                isOpen={showReportModal}
+                contentId={contentId}
+                episodeId={episodeId}
+                onClose={() => setShowReportModal(false)}
+            />
 
         </div>,
 

@@ -10,7 +10,6 @@ export const menuConfig: MenuItem[] = [
     {id: "home", label: "Inicio", href: "/"},
     {id: "movies", label: "Peliculas", href: "/peliculas"},
     {id: "series", label: "Series", href: "/serie"},
-    {id: "favorites", label: "Favoritos", href: "/favorites"},
     {id: "settings", label: "Configuración", href: "/settings"},
 
     {
@@ -21,12 +20,12 @@ export const menuConfig: MenuItem[] = [
                 id: "content-management",
                 label:"Gestión de Contenido",
                 children: [
-                    {id: "content-categories", label: "Categorías", href: "/contentCategories", permission: "CATEGORY:VIEW"},
-                    {id: "content-status", label: "Estado Películas", href: "/contentStatus", permission: "CONTENT:VIEW"},
-                    {id: "movies-admin", label: "Películas", href: "/movies", permission: "CONTENT:VIEW"},
-                    {id: "series-admin", label: "Series", href: "/series", permission: "CONTENT:VIEW"},
-                    {id: "shelves", label: "Carruseles", href: "/shelves"},
-                    {id: "page-sections", label: "Secciones de Página", href: "/page-sections"},
+                    {id: "content-categories", label: "Categorías", href: "/admin/contentCategories", permission: "CATEGORY:VIEW"},
+                    {id: "content-status", label: "Estado Películas", href: "/admin/contentStatus", permission: "CONTENT:VIEW"},
+                    {id: "movies-admin", label: "Películas", href: "/admin/movies", permission: "CONTENT:VIEW"},
+                    {id: "series-admin", label: "Series", href: "/admin/series", permission: "CONTENT:VIEW"},
+                    {id: "shelves", label: "Carruseles", href: "/admin/shelves"},
+                    {id: "page-sections", label: "Secciones de Página", href: "/admin/page-sections"},
                 ],
 
                 
@@ -36,18 +35,20 @@ export const menuConfig: MenuItem[] = [
                 id: "commercial-management",
                 label:"Gestión Comercial",
                 children: [
-                    {id: "discounts", label: "Descuentos", href: "/discounts", permission: "DISCOUNT:VIEW"},
-                    {id: "hero-banners", label: "Hero Banners", href: "/hero-banners"},
+                    {id: "discounts", label: "Descuentos", href: "/admin/discounts", permission: "DISCOUNT:VIEW"},
+                    {id: "hero-banners", label: "Hero Banners", href: "/admin/hero-banners"},
                 ],
             },
              {
                 id: "system",
                 label:"Sistema",
                 children: [
-                    {id: "contents", label: "Contents", href: "/contents", permission: "CONTENT:VIEW"},
-                    {id: "users", label: "Usuarios", href: "/users", permission: "USER:VIEW"},
-                    {id: "system-roles", label: "Roles", href: "/systemRoles", permission: "ROLE:VIEW"},
-                    {id: "system-permissions", label: "Permisos", href: "/systemPermissions", permission: "SYSTEM_PERMISSION:VIEW"},
+                    {id: "contents", label: "Contents", href: "/admin/contents", permission: "CONTENT:VIEW"},
+                    {id: "users", label: "Usuarios", href: "/admin/users", permission: "USER:VIEW"},
+                    {id: "system-roles", label: "Roles", href: "/admin/systemRoles", permission: "ROLE:VIEW"},
+                    {id: "system-permissions", label: "Permisos", href: "/admin/systemPermissions", permission: "SYSTEM_PERMISSION:VIEW"},
+                    {id: "problem-status", label: "Estados de Reportes", href: "/admin/report-status"},
+                    {id: "problem-reports", label: "Reportes de Problemas", href: "/admin/reports/problems"},
                 ],
              }
         ]

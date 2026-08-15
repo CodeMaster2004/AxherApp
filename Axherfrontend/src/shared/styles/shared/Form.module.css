@@ -165,3 +165,52 @@
   color: var(--accent-hover, #0056b3);
 }
 
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.select {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+
+    font: inherit;
+
+    outline: none;
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.select:focus {
+    border-color: var(--accent);
+    background-color: var(--bg-surface-strong);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+}
+
+.select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dropdown */
+.select option {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}

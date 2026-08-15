@@ -1,0 +1,31 @@
+.section {
+    width: 100%;
+}
+
+.section h2 {
+    margin: 0 0 1.5rem;
+
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+
+    color: var(--text-primary);
+}
+
+.list {
+    display: grid;
+    gap: 1rem;
+}
+
+.empty {
+    padding: 3rem 2rem;
+
+    text-align: center;
+
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+
+    background: var(--bg-surface);
+
+    color: var(--text-secondary);
+}

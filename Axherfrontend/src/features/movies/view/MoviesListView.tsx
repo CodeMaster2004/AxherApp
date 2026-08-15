@@ -33,8 +33,8 @@ export default function MoviesListView() {
 
   const { contentStatus } = useContentStatus();
 
-  const handleCreate = () => router.push("/movies/create");
-  const handleEdit = (content: ContentDetail) => router.push(`/movies/${content.contentId}/edit`);
+  const handleCreate = () => router.push("/admin/movies/create");
+  const handleEdit = (content: ContentDetail) => router.push(`/admin/movies/${content.contentId}/edit`);
 
   return (
     <div className={layoutStyles.pageContainer}>

@@ -124,12 +124,16 @@ export default function UserMenu() {
                                                 `/profile/${profile.profileId}`
                                             )
                                         }}
+                                        onViewWatchlist={() => {
+                                            router.push("/mi-lista");
+                                        }}
                                         onEditProfile={() => {
                                             router.push(
                                                 `/userProfile/edit/${profile.profileId}`
                                             )
                                         }}
                                         onLogout={handleLogout}
+                                        
                                     />
                                 </div>
                             )

@@ -36,23 +36,23 @@ export default function SeriesListView() {
     const { contentStatus } = useContentStatus();
 
     const handleCreate = () => {
-        router.push("/contents/create?type=SERIE");
+        router.push("/admin/contents/create?type=SERIE");
     };
 
     const handleViewSeries = (content: ContentDetail) => {
-        router.push(`/series/${content.contentId}`);
+        router.push(`/admin/series/${content.contentId}`);
     };
 
     const handleEdit = (content: ContentDetail) => {
-        router.push(`/contents/${content.contentId}/edit`);
+        router.push(`/admin/contents/${content.contentId}/edit`);
     };
 
     const handleViewSeasons = (content: ContentDetail) => {
-    router.push(`/series/${content.contentId}/seasons`);
+    router.push(`/admin/series/${content.contentId}/seasons`);
     };
 
     const handleCreateSeason = (content: ContentDetail) => {
-    router.push(`/series/${content.contentId}/seasons/create`);
+    router.push(`/admin/series/${content.contentId}/seasons/create`);
     };
 
     return (

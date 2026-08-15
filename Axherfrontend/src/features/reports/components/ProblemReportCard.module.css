@@ -1,0 +1,167 @@
+.card {
+    width: 100%;
+
+    padding: 1.25rem 1.4rem;
+
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.015)
+        );
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.card:hover {
+    border-color: rgba(var(--accent-rgb), 0.28);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.05),
+            rgba(255, 255, 255, 0.02)
+        );
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 1rem;
+}
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.category {
+    font-size: 0.82rem;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    color: var(--text-primary);
+}
+
+.reportId {
+    margin: 0;
+
+    font-size: 0.78rem;
+
+    color: var(--text-secondary);
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    flex-shrink: 0;
+
+    padding: 0.35rem 0.65rem;
+
+    border-radius: 999px;
+
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text-secondary);
+
+    white-space: nowrap;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+    margin-top: 1rem;
+}
+
+.description {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 0.95rem;
+    line-height: 1.55;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    display: flex;
+    align-items: center;
+
+    gap: 2rem;
+
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+
+    border-top: 1px solid var(--border-subtle);
+}
+
+.date {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    font-size: 0.8rem;
+
+    color: var(--text-secondary);
+}
+
+.dateLabel {
+    font-size: 0.7rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    color: var(--text-secondary);
+}
+
+
+@media (max-width: 600px) {
+
+    .card {
+        padding: 1rem;
+    }
+
+    .header {
+        flex-direction: column;
+    }
+
+    .footer {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+}
