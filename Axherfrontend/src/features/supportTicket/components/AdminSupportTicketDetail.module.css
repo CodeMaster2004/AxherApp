@@ -1,0 +1,10 @@
+.container {
+    width: min(900px, 94vw);
+    margin: 0 auto;
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+}
+
+.title {
+    margin: 0 0 2rem;
+}

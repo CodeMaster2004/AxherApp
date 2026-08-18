@@ -30,21 +30,26 @@ public class SubscriptionPayments {
     private Integer subscriptionPaymentId;
 
     @ManyToOne
-    @JoinColumn(name = "subscriptions_id")
+    @JoinColumn(name = "subscription_id", nullable = false)
     private Subscriptions subscription;
     
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
-    @Column(columnDefinition = "DATETIME")
     private LocalDateTime paymentDate;
 
     @ManyToOne
     @JoinColumn(name = "payment_method_id")
-    private PaymentMethods paymentMethodId;
+    private PaymentMethods paymentMethod;
 
     @ManyToOne
     @JoinColumn(name = "payment_status_id")
-    private PaymentStatus paymentStatusId;
+    private PaymentStatus paymentStatus;
+
+    @Column(nullable = false, unique = true, length = 150)
+    private String providerPaymentId;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
     
 }

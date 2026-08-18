@@ -30,13 +30,12 @@ public class Subscriptions {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private Users user;
 
     @ManyToOne
     @JoinColumn(name = "subscription_plan_id", nullable = false)
-    private SubscriptionPlans subscriptionPlanId;
+    private SubscriptionPlans subscriptionPlan;
 
-    @Column(nullable = false)
     private LocalDate startDate;
 
     @Column
@@ -44,9 +43,9 @@ public class Subscriptions {
 
     @ManyToOne
     @JoinColumn(name = "discount_id")
-    private Discounts discountId;
+    private Discounts discount;
 
     @ManyToOne
-    @JoinColumn(name = "sucscription_status_id")
-    private SubscriptionStatus subscriptionStatusId;
+    @JoinColumn(name = "subscription_status_id")
+    private SubscriptionStatus subscriptionStatus;
 }

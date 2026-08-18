@@ -23,22 +23,44 @@ import lombok.NoArgsConstructor;
 @Table(name = "payment_methods")
 public class PaymentMethods {
 
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer paymentMethodId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users userId;
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
 
-    @Column(nullable = false, length = 50)
-    private String paymentType;
+    @Column(nullable = false, length = 30)
+    private String provider;
 
-    @Column(length = 500)
-    private String paymentDetails;
+    @Column(length = 150)
+    private String providerCustomerId;
 
-    @Column(columnDefinition = "DATETIME")
-    private LocalDateTime registeredAt;
+    @Column(nullable = false, length = 150)
+    private String providerPaymentMethodId;
+
+    @Column(length = 30)
+    private String cardBrand;
+
+    @Column(length = 4)
+    private String cardLastFour;
+
+    private Short expirationMonth;
+
+    private Short expirationYear;
+
+    @Column(nullable = false)
+    private Boolean isDefault = false;
+
+    @Column(nullable = false)
+    private Boolean active = true;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 }
 

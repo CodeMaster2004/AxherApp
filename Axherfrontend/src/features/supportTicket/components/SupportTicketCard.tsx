@@ -1,0 +1,85 @@
+"use client";
+
+import { SupportTicketResponse } from "@/entities/types";
+import { formatDate } from "@/shared/utils/date";
+import styles from "./SupportTicketCard.module.css";
+
+interface Props {
+    ticket: SupportTicketResponse;
+    onClick?: () => void;
+}
+
+export default function SupportTicketCard({
+    ticket,
+    onClick,
+}: Props) {
+
+    return (
+        <article
+            className={styles.card}
+            onClick={onClick}
+            role={onClick ? "button" : undefined}
+            tabIndex={onClick ? 0 : undefined}
+            onKeyDown={(e) => {
+                if (!onClick) return;
+
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onClick();
+                }
+            }}
+        >
+
+            <div className={styles.top}>
+
+                <div className={styles.subjectWrapper}>
+
+                    <h3 className={styles.subject}>
+                        {ticket.subject}
+                    </h3>
+
+                    <span className={styles.ticketId}>
+                        #{ticket.supportTicketId}
+                    </span>
+
+                </div>
+
+                <span className={styles.status}>
+                    {ticket.supportTicketStatusName}
+                </span>
+
+            </div>
+
+            <div className={styles.meta}>
+
+                <span className={styles.category}>
+                    {ticket.supportCategoryName}
+                </span>
+
+                <span className={styles.date}>
+                    Creado {formatDate(ticket.createdAt)}
+                </span>
+
+                {ticket.updatedAt && (
+                    <span className={styles.date}>
+                        Actualizado {formatDate(ticket.updatedAt)}
+                    </span>
+                )}
+
+            </div>
+
+            {onClick && (
+                <div className={styles.footer}>
+                    <span>
+                        Ver conversación
+                    </span>
+
+                    <span className={styles.arrow}>
+                        →
+                    </span>
+                </div>
+            )}
+
+        </article>
+    );
+}

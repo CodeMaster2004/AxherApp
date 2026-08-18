@@ -1,12 +1,13 @@
 import { UserProfile } from "@/entities/types";
 import styles from "@/shared/styles/shared/UsersProfileCard.module.css";
-import { List, LogOut, SettingsIcon, User } from "lucide-react";
+import { LifeBuoy, List, LogOut, SettingsIcon, User } from "lucide-react";
 import Image from "next/image";
 
 interface Props {
     profile: UserProfile;
     onViewProfile?: () => void;
     onViewWatchlist?: () => void;
+    onViewSupport?: () => void;
     onEditProfile?: () => void;
     onLogout?: () => void;
     isOwnProfile?: boolean;
@@ -17,6 +18,7 @@ export default function ProfileCard({
     profile,
     onViewProfile,
     onViewWatchlist,
+    onViewSupport,
     onEditProfile,
     onLogout,
     isOwnProfile = false 
@@ -66,6 +68,13 @@ export default function ProfileCard({
             <div className={styles.menuItem} onClick={onViewWatchlist}>
                 <List size={16} />
                 <span>Mi lista</span>
+            </div>
+        )}
+
+        {isOwnProfile && onViewSupport && (
+            <div className={styles.menuItem} onClick={onViewSupport}>
+                <LifeBuoy size={16} />
+                <span>Soporte</span>
             </div>
         )}
 

@@ -127,6 +127,9 @@ export default function UserMenu() {
                                         onViewWatchlist={() => {
                                             router.push("/mi-lista");
                                         }}
+                                        onViewSupport={() => {
+                                            router.push("/soporte/tickets")
+                                        }}
                                         onEditProfile={() => {
                                             router.push(
                                                 `/userProfile/edit/${profile.profileId}`

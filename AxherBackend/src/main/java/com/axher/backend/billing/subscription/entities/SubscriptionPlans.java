@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "suscription_plans")
+@Table(name = "subscription_plans")
 public class SubscriptionPlans {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer suscriptionPlanId;
+    private Integer subscriptionPlanId;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -36,7 +36,7 @@ public class SubscriptionPlans {
     @Column(nullable = false)
     private Integer durationDays;
 
-    @Column(columnDefinition = "DATETIME")
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 }
 

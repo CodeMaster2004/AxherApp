@@ -26,9 +26,25 @@ export const menuConfig: MenuItem[] = [
                     {id: "series-admin", label: "Series", href: "/admin/series", permission: "CONTENT:VIEW"},
                     {id: "shelves", label: "Carruseles", href: "/admin/shelves"},
                     {id: "page-sections", label: "Secciones de Página", href: "/admin/page-sections"},
+                    {id: "hero-banners", label: "Hero Banners", href: "/admin/hero-banners"},
+
                 ],
 
                 
+            },
+
+            {
+                id: "support",
+                label: "Soporte",
+                children: [
+                    {id: "support-tickets", label: "Tickets de Soporte", href: "/admin/support/tickets"},
+                    {id: "support-categories", label: "Categorias de soporte", href: "/admin/support/ticket-category"},
+                    {id: "support-tickets-status", label: "Estados de Tickest", href:"/admin/support/ticket-status"},
+                    {id: "problem-reports", label: "Reportes de Problemas", href: "/admin/reports/problems",},
+                    {id: "problem-status", label: "Estados de Reportes", href: "/admin/report-status",},
+
+
+                ]
             },
 
             {
@@ -36,19 +52,24 @@ export const menuConfig: MenuItem[] = [
                 label:"Gestión Comercial",
                 children: [
                     {id: "discounts", label: "Descuentos", href: "/admin/discounts", permission: "DISCOUNT:VIEW"},
-                    {id: "hero-banners", label: "Hero Banners", href: "/admin/hero-banners"},
                 ],
             },
-             {
+            {
+                id: "users-management",
+                label: "Usuarios y Acceso",
+                children: [
+
+                    {id: "users", label: "Usuarios", href: "/admin/users", permission: "USER:VIEW"},
+                    {id: "system-roles", label: "Roles", href: "/admin/systemRoles", permission: "ROLE:VIEW"},
+                    {id: "system-permissions", label: "Permisos", href: "/admin/systemPermissions", permission: "SYSTEM_PERMISSION:VIEW"},
+
+                ]
+            },
+            {
                 id: "system",
                 label:"Sistema",
                 children: [
                     {id: "contents", label: "Contents", href: "/admin/contents", permission: "CONTENT:VIEW"},
-                    {id: "users", label: "Usuarios", href: "/admin/users", permission: "USER:VIEW"},
-                    {id: "system-roles", label: "Roles", href: "/admin/systemRoles", permission: "ROLE:VIEW"},
-                    {id: "system-permissions", label: "Permisos", href: "/admin/systemPermissions", permission: "SYSTEM_PERMISSION:VIEW"},
-                    {id: "problem-status", label: "Estados de Reportes", href: "/admin/report-status"},
-                    {id: "problem-reports", label: "Reportes de Problemas", href: "/admin/reports/problems"},
                 ],
              }
         ]

@@ -18,3 +18,8 @@ export * from "./heroBanner.types";
 export * from "./searchHistory.types";
 export * from "./Watchlist.types";
 export * from "./reportStatus.types";
+export * from "./supportCategory.types";
+export * from "./supportTicketStatus.types";
+export * from "./supportMessage.types";
+export * from "./problemReport.types";
+export * from "./supportTicket.types";

@@ -1,0 +1,168 @@
+.card {
+    width: 100%;
+
+    padding: 1.25rem 1.4rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.018)
+        );
+
+    color: #fff;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+
+    box-sizing: border-box;
+}
+
+.card[role="button"] {
+    cursor: pointer;
+}
+
+.card[role="button"]:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(255, 255, 255, 0.18);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.065),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.card[role="button"]:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.45);
+    outline-offset: 3px;
+}
+
+/* =========================
+   TOP
+========================= */
+
+.top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 1rem;
+}
+
+.subjectWrapper {
+    display: flex;
+    align-items: center;
+
+    min-width: 0;
+
+    gap: 0.7rem;
+}
+
+.subject {
+    margin: 0;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    color: rgba(255, 255, 255, 0.94);
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ticketId {
+    flex-shrink: 0;
+
+    font-size: 0.78rem;
+
+    color: rgba(255, 255, 255, 0.38);
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    flex-shrink: 0;
+
+    padding: 0.3rem 0.65rem;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* =========================
+   META
+========================= */
+
+.meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 0.75rem;
+
+    margin-top: 0.75rem;
+}
+
+.category {
+    font-size: 0.8rem;
+
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.date {
+    font-size: 0.75rem;
+
+    color: rgba(255, 255, 255, 0.38);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    font-size: 0.78rem;
+
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.arrow {
+    font-size: 1rem;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    transition: transform 0.2s ease;
+}
+
+.card:hover .arrow {
+    transform: translateX(4px);
+}

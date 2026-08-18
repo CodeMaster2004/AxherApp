@@ -1,0 +1,16 @@
+package com.axher.backend.support.tickets.DTOs;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class CreateSupportTicketRequestDto {
+
+    private String subject;
+    private Integer supportCategoryId;
+    private Integer subscriptionId;
+    private Integer subscriptionPaymentId;
+    private String message;
+    
+}

@@ -347,7 +347,9 @@ CREATE TABLE subscription_plans (
 -- Tabla de estados de suscripción
 CREATE TABLE subscription_status (
     subscription_status_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    status VARCHAR(50) NOT NULL UNIQUE
+    code VARCHAR(30) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(200)
 );
 
 
@@ -357,8 +359,8 @@ CREATE TABLE subscriptions (
     subscription_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
     subscription_plan_id INT NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE,
+    start_date DATE NULL,
+    end_date DATE NULL,
     discount_id INT,
     subscription_status_id INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
@@ -401,10 +403,19 @@ CREATE TABLE ads (
 CREATE TABLE payment_methods (
     payment_method_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
-    payment_type VARCHAR(50) NOT NULL,
-    payment_details VARCHAR(500),
-    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    provider VARCHAR(30) NOT NULL,
+    provider_customer_id VARCHAR(150),
+    provider_payment_method_id VARCHAR(150) NOT NULL,
+    card_brand VARCHAR(30),
+    card_last_four VARCHAR(4),
+    expiration_month SMALLINT,
+    expiration_year SMALLINT,
+    is_default BOOLEAN NOT NULL DEFAULT FALSE,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_payment_method_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT uq_user_provider_payment UNIQUE (user_id, provider, provider_payment_method_id)
 );
 
 
@@ -413,7 +424,10 @@ CREATE TABLE payment_methods (
 -- Tabla de estados de pago
 CREATE TABLE payment_status (
     payment_status_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    status VARCHAR(50) NOT NULL UNIQUE
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(200)
+
 );
 
 
@@ -427,14 +441,27 @@ CREATE TABLE subscription_payments (
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     payment_method_id INT,
     payment_status_id INT,
-    FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id),
-    FOREIGN KEY (payment_method_id) REFERENCES payment_methods(payment_method_id),
-    FOREIGN KEY (payment_status_id) REFERENCES payment_status(payment_status_id)
+    provider_payment_id VARCHAR(150) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_subscription_payment_subscription
+        FOREIGN KEY (subscription_id)
+        REFERENCES subscriptions(subscription_id),
+
+    CONSTRAINT fk_subscription_payment_method
+        FOREIGN KEY (payment_method_id)
+        REFERENCES payment_methods(payment_method_id),
+
+    CONSTRAINT fk_subscription_payment_status
+        FOREIGN KEY (payment_status_id)
+        REFERENCES payment_status(payment_status_id),
+
+    CONSTRAINT uq_subscription_payment_provider_payment
+        UNIQUE (provider_payment_id)
 );
 
 
 
--- Tabla de pagos por contenido 
+/*-- Tabla de pagos por contenido 
 CREATE TABLE content_payments (
     series_content_payment_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
@@ -455,14 +482,14 @@ CREATE TABLE content_payments (
 
 
 
--- Tabla de tipos de pago
+/*-- Tabla de tipos de pago
 CREATE TABLE payment_types (
     payment_type_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
-);
+);*/
 
 
--- Tabla de historial de pagos
+/*-- Tabla de historial de pagos
 CREATE TABLE payment_history (
     payment_history_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
@@ -476,7 +503,7 @@ CREATE TABLE payment_history (
     FOREIGN KEY (payment_type_id) REFERENCES payment_types(payment_type_id),
     FOREIGN KEY (payment_method_id) REFERENCES payment_methods(payment_method_id),
     FOREIGN KEY (payment_status_id) REFERENCES payment_status(payment_status_id)
-);
+);*/
 
 
 -- Tabla de pistas de audio
@@ -620,3 +647,19 @@ CREATE TABLE support_messages(
     FOREIGN KEY (ticket_id) REFERENCES support_tickets(support_ticket_id) ON DELETE CASCADE,
     FOREIGN KEY (sender_user_id) REFERENCES users(user_id) ON DELETE SET NULL
 )
+
+CREATE TABLE support_faqs (
+    support_faq_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    support_category_id INT NOT NULL,
+    question VARCHAR(300) NOT NULL,
+    answer TEXT NOT NULL,
+    display_order INT NOT NULL DEFAULT 0,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_support_faq_category
+        FOREIGN KEY (support_category_id)
+        REFERENCES support_categories(support_category_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT chk_support_faq_display_order CHECK (display_order >= 0)
+); 

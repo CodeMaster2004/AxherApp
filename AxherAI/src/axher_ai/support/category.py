@@ -1,0 +1,13 @@
+from enum import StrEnum
+
+
+class SupportCategory(StrEnum):
+    ACCOUNT = "ACCOUNT"
+    SUBSCRIPTION = "SUBSCRIPTION"
+    PAYMENT = "PAYMENT"
+    PLAYBACK = "PLAYBACK"
+    CONTENT = "CONTENT"
+    PROFILE = "PROFILE"
+    TECHNICAL = "TECHNICAL"
+    GENERAL = "GENERAL"
+    UNKNOWN = "UNKNOWN"

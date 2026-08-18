@@ -21,6 +21,12 @@ public class SubscriptionStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer subscriptionStatusId;
 
-    @Column(nullable = false, unique = true)
-    private String status; // Ej: Activa, Cancelada
+    @Column(nullable = false, unique = true, length = 30)
+    private String code;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String name;
+
+    @Column(length = 200)
+    private String description;
 }

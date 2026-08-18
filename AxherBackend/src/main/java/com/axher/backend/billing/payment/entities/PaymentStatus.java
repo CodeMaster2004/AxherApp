@@ -21,7 +21,13 @@ public class PaymentStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer paymentStatusId;
 
-    @Column(nullable = false, length = 50)
-    private String status;
+    @Column(nullable = false, unique = true, length = 50)
+    private String code;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String name;
+
+    @Column(length = 200)
+    private String description;
 
 }

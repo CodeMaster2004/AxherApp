@@ -1,0 +1,54 @@
+.message {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.messageUser {
+    justify-content: flex-end;
+}
+
+.messageAgent {
+    justify-content: flex-start;
+}
+
+.bubble {
+    max-width: 75%;
+    padding: 0.9rem 1.1rem;
+    border-radius: 14px;
+}
+
+.userBubble {
+    background: var(--accent);
+    border-bottom-right-radius: 4px;
+}
+
+.agentBubble {
+    background: #181a20;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom-left-radius: 4px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+}
+
+.sender {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.date {
+    font-size: 0.7rem;
+    opacity: 0.55;
+}
+
+.text {
+    margin: 0;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}

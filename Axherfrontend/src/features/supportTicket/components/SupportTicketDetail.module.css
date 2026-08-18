@@ -1,0 +1,11 @@
+.container {
+    width: min(900px, 94vw);
+    margin: 0 auto;
+
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.header {
+    margin: 0 0 2rem;
+}
