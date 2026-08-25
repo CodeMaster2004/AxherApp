@@ -5,12 +5,14 @@ import SystemPermissionsList from "@/features/systemPermissions/components/Syste
 import { useSystemPermissions, useSystemPermissionsActions } from "@/features/systemPermissions/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 
 
 export default function SystemPermissionsListView(){
     const router = useRouter();
+    const t = useTranslations("common");
     const {
         systemPermissions,
         loading,
@@ -45,7 +47,7 @@ export default function SystemPermissionsListView(){
             <div className={layoutStyles.header}>
                 <h1>Permisos del Sistema</h1>
                 <Button variant="animated" onClick={handleCreate}>
-                    Nuevo
+                    {t("new")}
                 </Button>
             </div>
             <SystemPermissionsList

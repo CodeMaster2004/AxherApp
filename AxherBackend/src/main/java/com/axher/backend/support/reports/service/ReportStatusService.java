@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 import com.axher.backend.shared.util.TextNormalizer;
-import com.axher.backend.support.reports.DTOS.ReportStatusRequestDto;
 import com.axher.backend.support.reports.entities.ReportStatus;
 import com.axher.backend.support.reports.repositories.ReportStatusRepository;
-
+import com.axher.backend.support.reports.DTOS.ReportStatusRequestDto;
+import com.axher.backend.support.reports.DTOS.ReportStatusTranslationRequestDto;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,14 +20,14 @@ import lombok.RequiredArgsConstructor;
 public class ReportStatusService {
 
     private final ReportStatusRepository repository;
+    private final ReportStatusTranslationService translationService;
 
-    
-    public Page<ReportStatus> findAll(Pageable pageable, String search) {
+    public Page<ReportStatus> findAll(Pageable pageable, Integer languageId, String search) {
 
         if(search == null || search.isBlank()){
             return repository.findAll(pageable);
         }
-        return repository.findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(search, search, search, pageable);
+        return repository.search(search, languageId, pageable);
     }
 
     public ReportStatus findById(Integer id){
@@ -46,25 +46,59 @@ public class ReportStatusService {
 
     public ReportStatus create(ReportStatusRequestDto dto){
 
-        String normalize = TextNormalizer.normalizeCode(dto.getCode());
-
-        dto.setCode(normalize);
-
-        if(repository.existsByCode(normalize)){
-            throw new DuplicateResourceException("El estado de reporte ya existe: " + normalize);
+        if (dto.getCode() == null || dto.getCode().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El código no puede estar vacío"
+            );
         }
 
-        if(repository.existsByNameIgnoreCase(dto.getName())){
-            throw new DuplicateResourceException("El nombre de estado de reporte ya existe: " + dto.getName());
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre no puede estar vacío"
+            );
         }
 
-        ReportStatus reportStatus = new ReportStatus();
+        if (dto.getLanguageId() == null) {
+            throw new IllegalArgumentException(
+                    "El idioma es obligatorio"
+            );
+        }
 
-        reportStatus.setCode(normalize);
-        reportStatus.setName(dto.getName());
-        reportStatus.setDescription(dto.getDescription());
+        String normalizedCode = TextNormalizer.normalizeCode(dto.getCode());
 
-        return repository.save(reportStatus);
+        if(repository.existsByCode(normalizedCode)){
+            throw new DuplicateResourceException("El estado de reporte ya existe: " + normalizedCode);
+        }
+
+        if (translationService.existsByNameAndLanguage(
+                dto.getName().trim(),
+                dto.getLanguageId()
+        )) {
+            throw new DuplicateResourceException(
+                    "El nombre ya existe en este idioma: "
+                            + dto.getName()
+            );
+        }
+
+        ReportStatus status = new ReportStatus();
+
+        status.setCode(normalizedCode);
+
+        ReportStatus saved = repository.save(status);
+
+        ReportStatusTranslationRequestDto translationDto =
+                new ReportStatusTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(dto.getName().trim());
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+                saved.getReportStatusId(),
+                translationDto
+        );
+
+        return saved;
     }
 
     public ReportStatus update(Integer id, ReportStatusRequestDto dto){
@@ -86,21 +120,46 @@ public class ReportStatusService {
             existing.setCode(normalize);
         }
 
-        if(dto.getName() != null) {
-            
-            if(dto.getName().isBlank()){
-                throw new IllegalArgumentException("El nombre de estado de reporte no puede estar vacío");
+        if (dto.getName() != null) {
+
+            String name = dto.getName().trim();
+
+            if (name.isBlank()) {
+                throw new IllegalArgumentException(
+                        "El nombre del estado de reporte no puede estar vacío"
+                );
             }
 
-            if(!dto.getName().equalsIgnoreCase(existing.getName())
-                && repository.existsByNameIgnoreCase(dto.getName())){
-                throw new DuplicateResourceException("El nombre de estado de reporte ya existe: " + dto.getName());
+            if (dto.getLanguageId() == null) {
+                throw new IllegalArgumentException(
+                        "El idioma es obligatorio"
+                );
             }
 
-            existing.setName(dto.getName());
-        }
-        if(dto.getDescription() != null){
-            existing.setDescription(dto.getDescription());
+            if (translationService
+                    .existsByNameAndLanguageAndStatusNot(
+                            name,
+                            dto.getLanguageId(),
+                            id
+                    )) {
+
+                throw new DuplicateResourceException(
+                        "El nombre ya existe en este idioma: "
+                                + name
+                );
+            }
+
+            ReportStatusTranslationRequestDto translationDto =
+                    new ReportStatusTranslationRequestDto();
+
+            translationDto.setLanguageId(dto.getLanguageId());
+            translationDto.setName(name);
+            translationDto.setDescription(dto.getDescription());
+
+            translationService.save(
+                    existing.getReportStatusId(),
+                    translationDto
+            );
         }
 
         return repository.save(existing);

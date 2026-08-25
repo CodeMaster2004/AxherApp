@@ -16,11 +16,14 @@ import com.axher.backend.content.core.entities.ContentStatusCode;
 import com.axher.backend.content.core.service.ContentStatusService;
 import com.axher.backend.content.series.DTOs.seasonDTOs.CreateSeasonRequestDto;
 import com.axher.backend.content.series.DTOs.seasonDTOs.UpdateSeasonRequestDto;
+import com.axher.backend.content.series.entities.SeasonTranslation;
 import com.axher.backend.content.series.entities.Seasons;
 import com.axher.backend.content.series.entities.Series;
+import com.axher.backend.content.series.repositories.SeasonTranslationRepository;
 import com.axher.backend.content.series.repositories.SeasonsRepository;
 import com.axher.backend.infrastructure.quartz.SeasonPublicationScheduler;
 import com.axher.backend.infrastructure.storage.FileStorageService;
+import com.axher.backend.language.entities.Language;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,7 @@ public class SeasonsService {
     private final FileStorageService fileStorageService;
     private final SeasonPublicationScheduler seasonPublicationScheduler;
     private final ContentStatusService statusService;
+    private final SeasonTranslationRepository seasonTranslationRepository;
 
     @Transactional(readOnly = true)
     public Page<Seasons> findBySeriesId(Integer seriesId, Pageable pageable){
@@ -92,7 +96,7 @@ public class SeasonsService {
 
     @Transactional(readOnly = true)
     public List<Seasons> searchByTitle(Integer seriesId, String keyword){
-        return seasonsRepository.findBySeries_ContentIdAndTitleContainingIgnoreCase(seriesId, keyword);
+        return seasonsRepository.searchByTitle(seriesId, keyword);
     }
 
     public List<Seasons> findUpcoming(Integer seriesId) {
@@ -143,13 +147,23 @@ public class SeasonsService {
 
         Seasons season = new Seasons();
         season.setSeasonNumber(dto.getSeasonNumber());
-        season.setTitle(dto.getTitle());
-        season.setDescription(dto.getDescription());
         season.setReleaseDate(dto.getReleaseDate());
         season.setContentStatus(defaultStatus);
         season.setSeries(series);
 
-        return seasonsRepository.save(season);
+        Seasons saved = seasonsRepository.save(season);
+
+        /*
+         * Guardar traducción original.
+         */
+        createOriginalTranslation(
+                saved,
+                series.getContent().getOriginalLanguage(),
+                dto.getTitle(),
+                dto.getDescription()
+        );
+
+        return saved;
     }
 
     public Seasons update(Integer seriesId, Integer seasonId, UpdateSeasonRequestDto dto){
@@ -166,14 +180,6 @@ public class SeasonsService {
             season.setSeasonNumber(dto.getSeasonNumber());
         }
 
-        if(dto.getTitle() != null){
-            season.setTitle(dto.getTitle());
-        }
-
-        if(dto.getDescription() != null){
-            season.setDescription(dto.getDescription());
-        }
-
         if(dto.getReleaseDate() != null){
             season.setReleaseDate(dto.getReleaseDate());
         }
@@ -185,6 +191,16 @@ public class SeasonsService {
 
         Seasons saved = seasonsRepository.save(season);
 
+        // Actualizar traducción original
+        if(dto.getTitle() != null ||
+        dto.getDescription() != null){
+
+            updateOriginalTranslation(
+                    season,
+                    dto.getTitle(),
+                    dto.getDescription()
+            );
+        }
         try {
             syncPublication(saved);
         }catch (Exception e) {
@@ -252,6 +268,57 @@ public class SeasonsService {
             
             seasonPublicationScheduler.cancel(season.getSeasonId());
         }
+    }
+
+    private void createOriginalTranslation(
+            Seasons season,
+            Language language,
+            String title,
+            String description
+    ){
+        SeasonTranslation translation = new SeasonTranslation();
+
+        translation.setSeason(season);
+        translation.setLanguage(language);
+        translation.setTitle(title);
+        translation.setDescription(description);
+
+        seasonTranslationRepository.save(translation);
+    }
+
+    private void updateOriginalTranslation(
+            Seasons season,
+            String title,
+            String description
+    ){
+
+        Language originalLanguage =
+                season.getSeries()
+                        .getContent()
+                        .getOriginalLanguage();
+
+        SeasonTranslation translation =
+                seasonTranslationRepository
+                        .findBySeason_SeasonIdAndLanguage_LanguageId(
+                                season.getSeasonId(),
+                                originalLanguage.getLanguageId()
+                        )
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Traducción original no encontrada para la temporada: "
+                                                + season.getSeasonId()
+                                )
+                        );
+
+        if(title != null){
+            translation.setTitle(title);
+        }
+
+        if(description != null){
+            translation.setDescription(description);
+        }
+
+        seasonTranslationRepository.save(translation);
     }
 }
 

@@ -55,17 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if (jwtService.validateToken(token)) {
-                 System.out.println("✅ Token válido. Procediendo a autenticar.");
-                Integer userId = jwtService.getUserIdFromToken(token);
-                Users user = usersService.findById(userId);
-                // 🚨 BLOQUE CRÍTICO
-                /*if (!user.getIsConfirmed()) {
-                    System.out.println("❌ Usuario NO confirmado → ignorando token");
+                System.out.println("✅ Token válido. Procediendo a autenticar.");
 
-                    SecurityContextHolder.clearContext(); // 🔥 importante
-                    filterChain.doFilter(request, response);
-                    return;
-                }*/
+                Integer userId = jwtService.getUserIdFromToken(token);
+
+                Users user = usersService.findById(userId);
+                
                 var permissions = usersService.getPermissions(user);
 
                 var authorities = permissions.stream()
@@ -76,7 +71,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .stream()
                         .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
                         .toList();
+
                 var allAuthorities = new java.util.ArrayList<SimpleGrantedAuthority>();
+
                 allAuthorities.addAll(authorities);
                 allAuthorities.addAll(roleAuthorities);
 
@@ -90,22 +87,46 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                 System.out.println("🔐 Autenticación establecida para usuario ID: " + userId);
-                 var authContext = SecurityContextHolder.getContext().getAuthentication();
-if (authContext != null) {
-    System.out.println("---- Granted authorities:");
-    authContext.getAuthorities().forEach(a -> System.out.println("  " + a.getAuthority()));
-}
+                System.out.println("🔐 Autenticación establecida para usuario ID: " + userId);
+                var authContext = SecurityContextHolder.getContext().getAuthentication();
+                if (authContext != null) {
+                    System.out.println("---- Granted authorities:");
+                    authContext.getAuthorities().forEach(a -> System.out.println("  " + a.getAuthority()));
+                }
             }else{
-                System.out.println("❌ Token inválido o expirado. Limpiando contexto.");
+                SecurityContextHolder.clearContext();
+                if(jwtService.isTokenExpired(token)){
+                    System.out.println("⏰ Token expirado. Limpiando contexto.");
+                    request.setAttribute(
+                        "ACCESS_TOKEN_EXPIRED",
+                        true
+                    );
+                }else {
+                    System.out.println("❌ Token inválido. Limpiando contexto.");
+                    request.setAttribute(
+                        "INVALID_ACCESS_TOKEN",
+                        true
+                    );
+                }
             }
         } catch (Exception e) {
             
             // Limpia contexto de seguridad si hay error
             SecurityContextHolder.clearContext();
+                    System.out.println(
+                    "💥 Error procesando access token: "
+                    + e.getClass().getSimpleName()
+            );
+
+            request.setAttribute(
+                    "INVALID_ACCESS_TOKEN",
+                    true
+            );
         }
 
         // ⚡ Muy importante: pasar al siguiente filtro
         filterChain.doFilter(request, response);
     }
+
+    
 }

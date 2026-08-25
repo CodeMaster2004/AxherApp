@@ -1,11 +1,12 @@
 "use client";
 
-import { ContentStatus } from "@/entities/types";
+import { ContentStatusResponse } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import Input from "@/shared/components/ui/Input";
 import Select, { SelectOption } from "@/shared/components/ui/Select";
 import TextArea from "@/shared/components/ui/TextArea";
 import formStyles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     seasonNumber: number;
@@ -13,7 +14,7 @@ interface Props {
     description?: string;
     releaseDate?: string;
     selectedStatusId?: number;
-    availableStatuses: ContentStatus[];
+    availableStatuses: ContentStatusResponse[];
 
     setSeasonNumber: (value: number) => void;
     setTitle: (value: string) => void;
@@ -44,17 +45,21 @@ export default function SeasonsForm({
     saving = false,
     onCancel,
 }: Props) {
+
+    const common = useTranslations("common");
+    const t = useTranslations("seasons");
+    
     const statusOptions: SelectOption[] = availableStatuses.map((status) => ({
         value: status.contentStatusId,
         label: status.name,
     }));
+
     return (
         
         <form onSubmit={onSubmit} className={formStyles.form}>
-            <h2>{isEditing ? "Editar Temporada" : "Crear Temporada"}</h2>
 
             <Input
-                label="Número de Temporada"
+                label={t("form.seasonNumber")}
                 type="number"
                 value={seasonNumber.toString()}
                 onChange={(val) => setSeasonNumber(Number(val))}
@@ -65,7 +70,7 @@ export default function SeasonsForm({
             />
             
             <Input
-                label="Título"
+                label={common("title")}
                 value={title}
                 onChange={setTitle}
                 required
@@ -73,7 +78,7 @@ export default function SeasonsForm({
             />
             
             <TextArea
-                label="Descripción"
+                label={common("description")}
                 value={description || ""}
                 onChange={setDescription}
                 rows={4}
@@ -81,7 +86,7 @@ export default function SeasonsForm({
             />
 
             <Input
-                label="Fecha de Estreno"
+                label={t("form.releaseDate")}
                 type="datetime-local"
                 value={releaseDate || ""}
                 onChange={setReleaseDate}
@@ -89,11 +94,11 @@ export default function SeasonsForm({
             />
 
             <Select
-                label="Estado"
+                label={common("status")}
                 options={statusOptions}
                 value={selectedStatusId}
                 onChange={(val) => setSelectedStatusId(val as number | undefined)}
-                placeholder="Selecciona un estado"
+                placeholder={t("placeholders.selectStatus")}
                 disabled={saving}
             />
 
@@ -102,9 +107,9 @@ export default function SeasonsForm({
                     type="submit"
                     variant="animated"
                     disabled={saving}
-                    loadingText={isEditing ? "Actualizando..." : "Creando..."}
+                    loadingText={isEditing ? common("updating") : common("creating")}
                     >
-                    {isEditing ? "Actualizar" : "Crear"}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
 
                 {onCancel && (
@@ -114,7 +119,7 @@ export default function SeasonsForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {common("cancel")}
 
                     </Button>
                 )}

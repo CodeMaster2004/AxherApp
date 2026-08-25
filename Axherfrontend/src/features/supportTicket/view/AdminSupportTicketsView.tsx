@@ -6,6 +6,7 @@ import { useAdminSupportTicketActions } from "@/features/supportTicket/hooks/use
 import { useAdminSupportTickets } from "@/features/supportTicket/hooks/useAdminSupportTickets";
 import { useSupportTicketStatus } from "@/features/supportTicketStatus/hooks/useSupportTicketStatus";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 
 export default function AdminSupportTicketsView() {
 
@@ -13,7 +14,7 @@ export default function AdminSupportTicketsView() {
         supportTicketStatus,
         loading: statusesLoading
     } = useSupportTicketStatus();
-
+    const t = useTranslations("supportTickets");
     const {
         supportCategory: categories,
         loading: categoriesLoading,
@@ -41,7 +42,7 @@ export default function AdminSupportTicketsView() {
         <div className={layoutStyles.pageContainer}>
 
             <div className={layoutStyles.header}>
-                <h1>Tickets de soporte</h1>
+                <h1>{t("title")}</h1>
             </div>
 
             <AdminSupportTicketList

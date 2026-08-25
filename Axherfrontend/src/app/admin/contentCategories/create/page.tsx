@@ -1,55 +1,87 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import ContentCategoriesForm from "@/features/contentCategories/components/ContentCategoriesForm";
 import { useContentCategoriesActions } from "@/features/contentCategories/hooks";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useState } from "react";
+import { ContentCategoryRequest } from "@/entities/types";
+import { useTranslations } from "next-intl";
 
 export default function CreateContentCategoryPage() {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  const { addContentCategory, saving } = useContentCategoriesActions({
-    onSuccess: () => router.push("/admin/contentCategories"),
-  });
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const nameTrim = name.trim();
-    const descriptionTrim = description.trim();
-    
-    if (!nameTrim || !descriptionTrim) {
-      alert("Por favor completa todos los campos");
-      return;
-    }
-
-    await addContentCategory({
-      name: nameTrim, description: descriptionTrim,
-      
+    const router = useRouter();
+    const [error, setError] = useState("");
+    const common = useTranslations("common");
+    const t = useTranslations("contentCategories");
+    const { addContentCategory, saving } = useContentCategoriesActions({
+        onSuccess: () => router.push("/admin/contentCategories"),
     });
-  };
+    
+    const {languages, loading: languagesLoading} = useLanguage();
+    const [form, setForm] =
+        useState<ContentCategoryRequest>({
+            name: "",
+            description: "",
+            languageId: 0,
+        });
 
-  const handleCancel = () => {
-    router.push("/admin/contentCategories");
-  };
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        const nameTrim = form.name.trim();
+        const descriptionTrim = form.description.trim();
+        
+        if (!nameTrim) {
+            setError(
+                t("form.validation.nameRequired")
+            );
+            return;
+        }
+        if (!form.languageId) {
+            setError(
+                t("form.validation.languageRequired")
+            );
+            return;
+        }
 
-  return (
-    <div className={layoutStyles.pageContainer}>
-      <h1>Crear Nueva Categoría</h1>
-      
-      <ContentCategoriesForm
-        contentCategories={name}
-        description={description}
-        setContentCategories={setName}
-        setDescription={setDescription}
-        onSubmit={handleSubmit}
-        isEditing={false}
-        onCancel={handleCancel}
-        saving={saving}
-      />
-    </div>
-  );
+        if (!descriptionTrim) {
+            setError(
+                t("form.validation.descriptionRequired")
+            );
+            return;
+        }
+
+        await addContentCategory({
+            name: nameTrim,
+            description: descriptionTrim,
+            languageId: form.languageId,
+        });
+    };
+
+    const handleCancel = () => {
+        router.push("/admin/contentCategories");
+    };
+
+    return (
+        <div className={layoutStyles.pageContainer}>
+        <h1>{common("create")} {t("title")}</h1>
+        
+        <ContentCategoriesForm
+            value={form}
+            onChange={(value) => {
+                setForm(value);
+
+                if (error) {
+                    setError("");
+                }
+            }}
+            languages={languages}
+            onSubmit={handleSubmit}
+            isEditing={false}
+            onCancel={handleCancel}
+            saving={saving || languagesLoading}
+        />
+        </div>
+    );
 }

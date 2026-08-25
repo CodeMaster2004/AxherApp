@@ -5,6 +5,7 @@ import SupportTicketCard from "@/features/supportTicket/components/SupportTicket
 import Button from "@/shared/components/ui/Button";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 interface Props {
     tickets: SupportTicketResponse[];
@@ -27,7 +28,8 @@ export default function SupportTicketList({
 }: Props) {
 
     const router = useRouter();
-
+    const common = useTranslations("common");
+    const t = useTranslations("supportTickets");
     const handleTicketClick = (ticketId: number) => {
         router.push(`/soporte/tickets/${ticketId}`);
     };
@@ -40,24 +42,23 @@ export default function SupportTicketList({
     return (
         <section className={layoutStyles.pageContainer}>
 
-            <h2>Mis tickets</h2>
+            <h2>{t("list.myTickets")}</h2>
             <p>
-                Consulta tus solicitudes y conversaciones
-                con soporte.
+                {t("list.description")}
             </p>
             <Button
                 type="button"
                 variant="animated"
                 onClick={handleCreateTicket}
             >
-                Nuevo
+                {common("new")}
             </Button>
 
             {tickets.length === 0 ? (
                 <div>
                     {loading
-                        ? "Cargando tickets..."
-                        : "No tienes tickets de soporte."
+                        ? t("loading")
+                        : t("list.emptyUser")
                     }
                 </div>
             ) : (

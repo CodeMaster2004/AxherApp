@@ -6,6 +6,7 @@ import SeasonsForm from "@/features/seasons/components/SeasonsForm";
 import { useSeasonsActions } from "@/features/seasons/hooks";
 import { seasonsService } from "@/features/seasons/services/SeasonsService";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -15,7 +16,8 @@ export default function EditSeasonPage() {
     const params = useParams();
     const contentId = params?.contentId ? Number(params.contentId) : null;
     const seasonId = params?.seasonId ? Number(params.seasonId) : null;
-
+    const common = useTranslations("common");
+    const t = useTranslations("seasons");
     const [seasonNumber, setSeasonNumber] = useState(1);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -25,7 +27,7 @@ export default function EditSeasonPage() {
     const [error, setError] = useState("");
 
     const { saving, editSeason } = useSeasonsActions(contentId || 0, {
-        onSuccess: () => router.push(`/admin/series/${contentId}`),
+        onSuccess: () => router.push(`/admin/contents/${contentId}`),
     });
 
     useEffect(() => {
@@ -47,8 +49,8 @@ export default function EditSeasonPage() {
                     );
                 }
             } catch (err) {
-                console.error("Error cargando temporada:", err);
-                router.push(`/admin/series/${contentId}`);
+                console.error(t("errors.load"), err);
+                router.push(`/admin/contents/${contentId}`);
             } finally {
                 setLoading(false);
             }
@@ -61,7 +63,7 @@ export default function EditSeasonPage() {
         e.preventDefault();
 
         if (!title.trim()) {
-            setError("El título es obligatorio");
+            setError(t("form.validation.titleRequired"));
             return;
         }
 
@@ -79,22 +81,22 @@ export default function EditSeasonPage() {
         try {
             await editSeason(seasonId!, formData);
         } catch (err) {
-            setError("Error al actualizar la temporada");
+            setError(t("errors.update"));
             console.error(err);
         }
     };
 
     const handleCancel = () => {
-        router.push(`/admin/series/${contentId}`);
+        router.push(`/admin/contents/${contentId}`);
     };
 
     if (loading) {
-        return <div className={layoutStyles.loading}>Cargando...</div>;
+        return <div className={layoutStyles.loading}>{common("loading")}...</div>;
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Temporada</h1>
+            <h1>{t("form.editTitle")}</h1>
             
             {error && <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>}
 

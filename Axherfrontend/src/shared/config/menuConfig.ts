@@ -20,10 +20,9 @@ export const menuConfig: MenuItem[] = [
                 id: "content-management",
                 label:"Gestión de Contenido",
                 children: [
+                    {id: "contents", label: "Contents", href: "/admin/contents", permission: "CONTENT:VIEW"},
                     {id: "content-categories", label: "Categorías", href: "/admin/contentCategories", permission: "CATEGORY:VIEW"},
                     {id: "content-status", label: "Estado Películas", href: "/admin/contentStatus", permission: "CONTENT:VIEW"},
-                    {id: "movies-admin", label: "Películas", href: "/admin/movies", permission: "CONTENT:VIEW"},
-                    {id: "series-admin", label: "Series", href: "/admin/series", permission: "CONTENT:VIEW"},
                     {id: "shelves", label: "Carruseles", href: "/admin/shelves"},
                     {id: "page-sections", label: "Secciones de Página", href: "/admin/page-sections"},
                     {id: "hero-banners", label: "Hero Banners", href: "/admin/hero-banners"},
@@ -42,6 +41,7 @@ export const menuConfig: MenuItem[] = [
                     {id: "support-tickets-status", label: "Estados de Tickest", href:"/admin/support/ticket-status"},
                     {id: "problem-reports", label: "Reportes de Problemas", href: "/admin/reports/problems",},
                     {id: "problem-status", label: "Estados de Reportes", href: "/admin/report-status",},
+                    {id: "problem-categories", label: "Categorias de Reportes", href: "/admin/report-category",},
 
 
                 ]
@@ -69,7 +69,7 @@ export const menuConfig: MenuItem[] = [
                 id: "system",
                 label:"Sistema",
                 children: [
-                    {id: "contents", label: "Contents", href: "/admin/contents", permission: "CONTENT:VIEW"},
+                    {id: "languages", label: "Languages", href: "/admin/languages"},
                 ],
              }
         ]

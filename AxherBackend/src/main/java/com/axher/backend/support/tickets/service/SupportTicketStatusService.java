@@ -9,6 +9,7 @@ import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 import com.axher.backend.shared.util.TextNormalizer;
 import com.axher.backend.support.tickets.DTOs.SupportTicketStatusRequestDto;
+import com.axher.backend.support.tickets.DTOs.SupportTicketStatusTranslationRequestDto;
 import com.axher.backend.support.tickets.entities.SupportTicketStatus;
 import com.axher.backend.support.tickets.repositories.SupportTicketStatusRepository;
 
@@ -20,9 +21,11 @@ import lombok.RequiredArgsConstructor;
 public class SupportTicketStatusService {
     
     private final SupportTicketStatusRepository repository;
+    private final SupportTicketStatusTranslationService translationService;
 
     public Page<SupportTicketStatus> findAll(
         Pageable pageable,
+        Integer languageId,
         String search
     ) {
 
@@ -31,10 +34,9 @@ public class SupportTicketStatusService {
         }
 
         return repository
-            .findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+            .search(
                 search,
-                search,
-                search,
+                languageId,
                 pageable
             );
     }
@@ -63,10 +65,27 @@ public class SupportTicketStatusService {
         SupportTicketStatusRequestDto dto
     ) {
 
+        if (dto.getCode() == null || dto.getCode().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El código no puede estar vacío"
+            );
+        }
+
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre no puede estar vacío"
+            );
+        }
+
+        if (dto.getLanguageId() == null) {
+            throw new IllegalArgumentException(
+                    "El idioma es obligatorio"
+            );
+        }
+
         String normalize =
             TextNormalizer.normalizeCode(dto.getCode());
 
-        dto.setCode(normalize);
 
         if (repository.existsByCode(normalize)) {
             throw new DuplicateResourceException(
@@ -74,20 +93,34 @@ public class SupportTicketStatusService {
             );
         }
 
-        if (repository.existsByNameIgnoreCase(dto.getName())) {
+        if (translationService.existsByNameAndLanguage(
+                dto.getName().trim(),
+                dto.getLanguageId()
+        )) {
             throw new DuplicateResourceException(
-                "El nombre de estado de ticket ya existe: "
-                + dto.getName()
+                    "El nombre ya existe en este idioma: "
+                            + dto.getName()
             );
         }
-
         SupportTicketStatus status = new SupportTicketStatus();
 
         status.setCode(normalize);
-        status.setName(dto.getName());
-        status.setDescription(dto.getDescription());
 
-        return repository.save(status);
+        SupportTicketStatus saved = repository.save(status);
+
+        SupportTicketStatusTranslationRequestDto translationDto =
+                new SupportTicketStatusTranslationRequestDto();
+        
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(dto.getName().trim());
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+                saved.getSupportTicketStatusId(),
+                translationDto
+        );
+
+        return saved;
     }
 
     public SupportTicketStatus update(
@@ -122,28 +155,42 @@ public class SupportTicketStatusService {
 
         if (dto.getName() != null) {
 
-            if (dto.getName().isBlank()) {
+            String name = dto.getName().trim();
+
+            if (name.isBlank()) {
                 throw new IllegalArgumentException(
-                    "El nombre de estado de ticket no puede estar vacío"
+                        "El nombre de estado de ticket no puede estar vacío"
                 );
             }
+
 
             if (
-                !dto.getName().equalsIgnoreCase(existing.getName())
-                && repository.existsByNameIgnoreCase(dto.getName())
+                translationService
+                    .existsByNameAndLanguageAndStatusNot(
+                        name,
+                        dto.getLanguageId(),
+                        id
+                    )
             ) {
                 throw new DuplicateResourceException(
-                    "El nombre de estado de ticket ya existe: "
-                    + dto.getName()
+                        "El nombre ya existe en este idioma: "
+                                + name
                 );
             }
 
-            existing.setName(dto.getName());
+            SupportTicketStatusTranslationRequestDto translationDto =
+                    new SupportTicketStatusTranslationRequestDto();
+
+            translationDto.setLanguageId(dto.getLanguageId());
+            translationDto.setName(name);
+            translationDto.setDescription(dto.getDescription());
+
+            translationService.save(
+                    existing.getSupportTicketStatusId(),
+                    translationDto
+            );
         }
 
-        if (dto.getDescription() != null) {
-            existing.setDescription(dto.getDescription());
-        }
 
         return repository.save(existing);
     }

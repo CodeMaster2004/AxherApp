@@ -9,7 +9,6 @@ import DesktopMenu from './DesktopMenu';
 import SearchButton from '@/features/search/components/SearchButton';
 import UserMenu from '@/features/profile/components/UserMenu';
 import { useEffect, useState } from 'react';
-
 interface HeaderTopProps{
   onMenuToggle: () => void;
   isOpen: boolean;
@@ -19,7 +18,6 @@ export default function HeaderTop({onMenuToggle, isOpen}: HeaderTopProps) {
     const router = useRouter();
  
     const [scrolled,setScrolled] = useState(false);
-
 
     useEffect(()=>{
 
@@ -42,7 +40,7 @@ export default function HeaderTop({onMenuToggle, isOpen}: HeaderTopProps) {
         };
 
     },[]);
-
+    
     return (
         <header 
             className={`
@@ -80,6 +78,7 @@ export default function HeaderTop({onMenuToggle, isOpen}: HeaderTopProps) {
 
             {/*DERECHA*/}
             <div className={styles.rightSide}>
+               
                 <SearchButton></SearchButton>
                 <UserMenu></UserMenu>
 

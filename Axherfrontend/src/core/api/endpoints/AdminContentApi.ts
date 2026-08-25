@@ -1,4 +1,4 @@
-import { ContentDetail, ContentQueryParams, Page, PaginationParams, StatusUpdate } from "@/entities/types";
+import { ContentDetail, ContentQueryParams, ContentTranslation, ContentTranslationRequest, Page, PaginationParams, StatusUpdate } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 
@@ -46,5 +46,34 @@ export const contentApi = {
 
     delete: (id: number, config?: AxiosRequestConfig) =>
         axiosClient.delete(`/admin/contents/${id}`, config),
+
+    getTranslations: (
+        contentId: number,
+        contig?: AxiosRequestConfig
+    ) =>
+        axiosClient.get<ContentTranslation[]>(
+            `/admin/contents/${contentId}/translations`,
+            contig
+        ),
+    saveTranslation: (
+        contentId: number,
+        data: ContentTranslationRequest,
+        config?: AxiosRequestConfig
+    ) => 
+        axiosClient.patch<ContentTranslation>(
+            `/admin/contents/${contentId}/translations`,
+            data,
+            config
+        ),
+
+    deleteTranslation: (
+        contentId: number,
+        languageId: number,
+        config?: AxiosRequestConfig
+    ) => 
+        axiosClient.delete(
+            `/admin/contents/${contentId}/translations/${languageId}`,
+            config
+        )
     
 }

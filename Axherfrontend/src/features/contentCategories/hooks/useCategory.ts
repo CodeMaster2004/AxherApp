@@ -1,12 +1,12 @@
 "use client";
 
-import { Category } from "@/entities/types";
+import { ContentCategoryResponse } from "@/entities/types";
 import { contentCategoriesService } from "@/features/contentCategories/services/ContentCategoriesService";
 import { useEffect, useState } from "react";
 
 export const useCategory = (slug: string) => {
 
-    const [category, setCategory] = useState<Category | null>(null);
+    const [category, setCategory] = useState<ContentCategoryResponse | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

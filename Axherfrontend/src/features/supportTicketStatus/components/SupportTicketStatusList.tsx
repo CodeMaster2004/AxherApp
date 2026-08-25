@@ -7,6 +7,7 @@ import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import Pagination from "@/shared/components/ui/Pagination";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface Props {
     supportTicketStatus: SupportTicketStatusResponse[];
@@ -21,6 +22,7 @@ interface Props {
     onPrevPage: () => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
+    onTranslations?: (supportTicketStatus: SupportTicketStatusResponse) => void;
 }
 
 export default function SupportTicketStatusList({
@@ -35,9 +37,12 @@ export default function SupportTicketStatusList({
     onNextPage,
     onPrevPage,
     searchTerm,
-    onSearchChange
+    onSearchChange,
+    onTranslations,
 }: Props) {
 
+    const t = useTranslations("common");
+    
     const [confirmDialog, setConfirmDialog] = useState<{ isOpen: boolean, supportTicketStatusId: number, name: string }>({
         isOpen: false,
         supportTicketStatusId: 0,
@@ -64,8 +69,8 @@ export default function SupportTicketStatusList({
                 isOpen={confirmDialog.isOpen}
                 title="Confirmar Eliminación"
                 message={`¿Estás seguro de que deseas eliminar el estado del ticket de soporte "${confirmDialog.name}"? Esta acción no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                confirmText={t("delete")}
+                cancelText={t("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
@@ -83,7 +88,7 @@ export default function SupportTicketStatusList({
             </div>
 
             {supportTicketStatus.length === 0 ? (
-                <p>{loading ? "Cargando..." : "No se encontraron estados de ticket de soporte."}</p>
+                <p>{loading ? t("loading") : "No se encontraron estados de ticket de soporte."}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                   <table className={tableStyles.table}>
@@ -109,14 +114,18 @@ export default function SupportTicketStatusList({
                                             <MoreMenu
                                                 items={[
                                                     {
-                                                        label: "Editar",
+                                                        label: t("edit"),
                                                         onClick: () => onEdit(supportTicketStatus),
                                                     },
+                                                    ...(onTranslations ? [{
+                                                        label: "Traducciones",
+                                                        onClick: () => onTranslations(supportTicketStatus),
+                                                    }] : []),
                                                     {
                                                         label:
                                                             deletingId === supportTicketStatus.supportTicketStatusId
                                                                 ? "Eliminando..."
-                                                                : "Eliminar",
+                                                                : t("delete"),
                                                         onClick: () => handleDeleteClick(supportTicketStatus.supportTicketStatusId, supportTicketStatus.code),
                                                         variant: "danger",
                                                     },

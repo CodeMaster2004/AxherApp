@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentDetail, ContentStatus } from "@/entities/types";
+import { ContentDetail, ContentStatusResponse, ContentType } from "@/entities/types";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
@@ -8,9 +8,10 @@ import Image from "next/image";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 interface Props{
     contents: ContentDetail[];
-    statuses: ContentStatus[];
+    statuses: ContentStatusResponse[];
 
     onDelete: (id: number) => void;
     onEdit: (content: ContentDetail) => void;
@@ -28,6 +29,7 @@ interface Props{
     onPrevPage: () => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
+    onTranslations?: (content: ContentDetail) => void;
 }
 
 export default function ContentsList({
@@ -47,6 +49,7 @@ export default function ContentsList({
     onPrevPage,
     searchTerm,
     onSearchChange,
+    onTranslations,
 }: Props){
     const [pendingStatus, setPendingStatus] = useState<Record<number,number>>({});
     const [confirmDialog, setConfirmDialog] = useState<{
@@ -73,6 +76,7 @@ export default function ContentsList({
         contentTitle: "",
     });
 
+    
     const formatDate = (dateStr: string): string => {
         if(!dateStr) return '-';
         const [year, month, day] = dateStr.split('-');
@@ -108,6 +112,8 @@ export default function ContentsList({
         handleCancelStatus();
     };
 
+    const common = useTranslations("common");
+    const t = useTranslations("contents");
 
     const handleCancelStatus = () => {
 
@@ -131,33 +137,29 @@ export default function ContentsList({
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Confirmar Eliminacion"
-                message={`¿Estas seguro que deseas eliminar "${confirmDialog.title}"? Esta accion no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", {title: confirmDialog.title})}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             />
             <ConfirmDialog
                 isOpen={statusDialog.isOpen}
-                title="Cambiar estado"
-                message={
-                    `¿Seguro que deseas cambiar "${statusDialog.contentTitle}" a "${statusDialog.statusName}"?`
-                }
-                confirmText="Cambiar"
-                cancelText="Cancelar"
+                title={t("status.changeTitle")}
+                message={t("status.changeMessage", {title: statusDialog.contentTitle, status: statusDialog.statusName})}
+                confirmText={common("change")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmStatus}
                 onCancel={handleCancelStatus}
                 variant="info"
             />
 
-            <h2>Listado de Contenidos</h2>
-
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar contenido..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -166,23 +168,23 @@ export default function ContentsList({
             </div>
 
             {contents.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay contenidos registrados"}</p>
+                <p>{loading ? common("searching") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
 
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
-                                <th className={`${tableStyles.headCell} ${tableStyles.idColum}`}>ID</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.posterColumn}`}>Poster</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.titleColumn}`}>Titulo</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.typeColumn}`}>Tipo</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.priceColumn}`}>Precio</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.categoriesColumn}`}>categorias</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.statusColumn}`}>Estado</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.discountColumn}`}>Descuento</th>
-                                <th className={`${tableStyles.headCell} ${tableStyles.registeredAtcolumn}`}>Registrado</th>
-                                <th className={tableStyles.actionsColumn}>Acciones</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.idColum}`}>{common("id")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.posterColumn}`}>{t("list.poster")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.titleColumn}`}>{common("title")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.typeColumn}`}>{t("list.type")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.priceColumn}`}>{t("list.price")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.categoriesColumn}`}>{t("list.categories")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.statusColumn}`}>{common("status")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.discountColumn}`}>{t("list.discount")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.registeredAtcolumn}`}>{t("list.registeredAt")}</th>
+                                <th className={tableStyles.actionsColumn}>{common("actions")}</th>
                                 
                             </tr>
                         </thead>
@@ -209,7 +211,7 @@ export default function ContentsList({
 
                                     <td>
                                         <span className={content.type === "SERIE" ? tableStyles.badgeSeries : tableStyles.badgeMovie}>
-                                            {content.type === "SERIE" ? "Serie" : "Pelicula"}
+                                            {content.type === "SERIE" ? t("list.series") : t("list.movie")}
                                         </span>
                                     </td>
 
@@ -255,33 +257,49 @@ export default function ContentsList({
                                             }
                                         </select>
                                     </td>
-                                    <td>{content.discountAmount ? `${content.discountAmount}%` : "Sin descuento"}</td>
+                                    <td>{content.discountAmount ? `${content.discountAmount}%` : t("list.noDiscount")}</td>
 
                                     <td>{formatDate(content.registeredAt)}</td>
 
                                     <td>
                                         <MoreMenu
                                             items={[
-                                                ...(onView && content.type === "SERIE" ? [{
-                                                    label: "Ver Serie",
-                                                    onClick: () => onView(content),
-                                                }] : []),
-                                                ...(onViewSeasons && content.type === "SERIE" ? [{
-                                                    label: "Ver temporadas",
-                                                    onClick: () => onViewSeasons(content),
-                                                }] : []),
-                                                ...(onCreateSeason && content.type === "SERIE" ? [{
-                                                    label: "Crear temporada",
-                                                    onClick: () => onCreateSeason(content),
-                                                }] : []),
+                                                ...(content.type === ContentType.SERIE && onViewSeasons
+                                                    ? [{
+                                                        label: t("actions.viewSeasons"),
+                                                        onClick: () => onViewSeasons(content),
+                                                    }]
+                                                    : []),
+
+                                                ...(content.type === ContentType.SERIE && onCreateSeason
+                                                    ? [{
+                                                        label: t("actions.createSeason"),
+                                                        onClick: () => onCreateSeason(content),
+                                                    }]
+                                                    : []),
+
                                                 {
-                                                    label: "Editar",
+                                                    label: common("edit"),
                                                     onClick: () => onEdit(content),
                                                 },
-                                                
+
+                                                ...(onTranslations
+                                                    ? [{
+                                                        label: t("actions.translations"),
+                                                        onClick: () => onTranslations(content),
+                                                    }]
+                                                    : []),
+
                                                 {
-                                                    label: deletingId === content.contentId ? "Eliminando..." : "Eliminar",
-                                                    onClick: () => handleDeleteClick(content.contentId, content.title),
+                                                    label:
+                                                        deletingId === content.contentId
+                                                            ? common("deleting")
+                                                            : common("delete"),
+                                                    onClick: () =>
+                                                        handleDeleteClick(
+                                                            content.contentId,
+                                                            content.title
+                                                        ),
                                                     variant: "danger",
                                                 },
                                             ]}

@@ -11,6 +11,8 @@ import com.axher.backend.auth.DTOs.UserAuthResponseDto;
 import com.axher.backend.authorization.entities.SystemRoles;
 import com.axher.backend.authorization.service.RolePermissionAssignmentsService;
 import com.axher.backend.infrastructure.security.jwt.JwtService;
+import com.axher.backend.language.entities.Language;
+import com.axher.backend.language.repositories.LanguageRepository;
 import com.axher.backend.users.entities.Users;
 import com.axher.backend.users.repositories.UserRoleAssignmentsRepository;
 import com.axher.backend.users.repositories.UsersRepository;
@@ -31,10 +33,11 @@ public class OAuthService {
     private final RefreshTokenService refreshTokenService;
     private final UserRoleAssignmentsRepository userRoleAssignmentsRepository;
     private final RolePermissionAssignmentsService rolePermissionService;
+    private final LanguageRepository languageRepository;
 
     private final String DEFAULT_ROLE = "USER";
 
-    public UserAuthResponseDto loginOrRegister(String email, String provider, String providerUserId, GoogleUserDto userInfo) {
+    public UserAuthResponseDto loginOrRegister(String email, String provider, String providerUserId, GoogleUserDto userInfo, String preferredLanguageCode) {
 
         //Buscar usuario por providerUserId
         Users user = usersRepository.findByProviderUserId(providerUserId).orElse(null);
@@ -57,6 +60,15 @@ public class OAuthService {
                 newUser.setProviderUserId(providerUserId);
                 newUser.setIsConfirmed(true);
                 newUser.setCreatedAt(LocalDateTime.now());
+                if (preferredLanguageCode != null &&
+                    !preferredLanguageCode.isBlank()) {
+
+                    languageRepository
+                        .findByCodeIgnoreCase(preferredLanguageCode.trim())
+                        .filter(Language::getActive)
+                        .ifPresent(newUser::setPreferredLanguage);
+                }
+
                 newUser = usersRepository.save(newUser);
 
                 // Crear perfil por defecto
@@ -73,7 +85,7 @@ public class OAuthService {
     }
 
     // Login con cualquier provider (Google, Facebook, etc)
-    public UserAuthResponseDto loginWithProvider(String provider, String idToken) {
+    public UserAuthResponseDto loginWithProvider(String provider, String idToken, String preferredLanguageCode) {
 
         String email;
         String providerUserId;
@@ -97,7 +109,7 @@ public class OAuthService {
                 throw new RuntimeException("Provider no soportado");
         }
 
-        return loginOrRegister(email, provider, providerUserId, userInfo);
+        return loginOrRegister(email, provider, providerUserId, userInfo, preferredLanguageCode );
     } 
     
     private UserAuthResponseDto buildAuthResponse(Users user){
@@ -128,6 +140,11 @@ public class OAuthService {
         response.setToken(token);
         response.setRefreshToken(refreshToken);
         response.setProvider(user.getProvider());
+        response.setPreferredLanguageCode(
+            user.getPreferredLanguage() != null
+                ? user.getPreferredLanguage().getCode()
+                : null
+        );
         return response;
     }
 

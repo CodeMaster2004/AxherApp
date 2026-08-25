@@ -1,11 +1,11 @@
 "use client";
 
-import { Category } from "@/entities/types";
+import { ContentCategoryResponse } from "@/entities/types";
 import { useRouter } from "next/navigation";
 import styles from "./GenreBar.module.css";
 
 interface Props {
-    categories: Category[];
+    categories: ContentCategoryResponse[];
     basePath: string;
 }
 
@@ -18,7 +18,7 @@ export default function GenreBar({ categories, basePath }: Props) {
         <nav className={styles.filterPills}>
             {categories.map(category => (
                 <button
-                    key={category.categoryId}
+                    key={category.contentCategoryId}
                     className={styles.pill}
                     onClick={() =>
                             router.push(

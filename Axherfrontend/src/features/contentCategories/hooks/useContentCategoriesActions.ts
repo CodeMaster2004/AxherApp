@@ -1,11 +1,11 @@
 "use client";
 
-import { ContentCategories } from "@/entities/types";
 import { useCrudActions } from "@/shared/hooks/useCrudActions";
 import { contentCategoriesService } from "../services/ContentCategoriesService";
+import { ContentCategoryResponse } from "@/entities/types";
 
 type Options = {
-    onSuccess?: (result?: ContentCategories) => void;
+    onSuccess?: (result?: ContentCategoryResponse) => void;
     onError?: (error: unknown) => void;
 };
 

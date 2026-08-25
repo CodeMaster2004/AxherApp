@@ -27,7 +27,7 @@
 
 ## 📖 Descripción
 
-**AxherApp** es una plataforma de streaming completa que permite a los usuarios explorar, reproducir y gestionar contenido multimedia. Cuenta con un **panel administrativo** para la gestión de contenido, usuarios, roles y permisos, así como un sistema de **autenticación seguro** con JWT y soporte para inicio de sesión con Google.
+**AxherApp** es una plataforma de streaming completa que permite a los usuarios explorar, reproducir y gestionar contenido multimedia. Cuenta con un **panel administrativo** para la gestión de contenido, usuarios, roles y permisos, así como un sistema de **autenticación seguro** con JWT y soporte para inicio de sesión con Google, además de un **sistema multilingüe (i18n)** para traducir el contenido y la interfaz a distintos idiomas.
 
 > 💡 Este proyecto nace como una solución integral para la gestión y consumo de contenido audiovisual, combinando un backend robusto con un frontend moderno y responsive.
 
@@ -48,6 +48,7 @@
 - 🔍 **Historial de búsquedas** — registro de términos buscados por el usuario
 - 🐛 **Reporte de problemas** — los usuarios pueden reportar fallos de video, audio, subtítulos, reproducción o contenido desde el reproductor o la sección de reportes
 - 👤 **Perfil de usuario** con foto y datos personales
+- 🌐 **Soporte multilingüe (i18n)** — interfaz y contenido en español, inglés, portugués, francés y alemán, con **selector de idioma** y preferencia de idioma guardada por usuario
 - 💳 **Sistema de pagos y suscripciones** (en desarrollo)
 
 ### 🛠️ Para administradores
@@ -65,6 +66,9 @@
 - 🐛 **Gestión de reportes de problemas** — panel admin para revisar, filtrar y cambiar el estado de los reportes de los usuarios
 - 📊 **Estados de reportes** configurables (CRUD completo)
 - 🎫 **Tickets de soporte** (backend) — sistema de tickets con categorías, estados y mensajes
+- 🏷️ **Categorías de reportes** — clasificación de reportes de problemas (CRUD completo)
+- 🌐 **Gestión de idiomas** — CRUD completo de los idiomas disponibles en la plataforma
+- 🈶 **Sistema de traducciones** — contenido, categorías, estados, temporadas, episodios, banners hero, estantes, reportes, tickets de soporte, planes y estados de suscripción, y estados de pago
 
 ---
 
@@ -80,20 +84,20 @@ AxherApp/
 │   │   │   ├── payment/                 # Pagos de contenido
 │   │   │   └── subscription/            # Planes de suscripción
 │   │   ├── catalog/                     # Catálogo
-│   │   │   ├── banner/                  # Banners hero + ranking automático
+│   │   │   ├── banner/                  # Banners hero + ranking automático + traducciones
 │   │   │   ├── page/                    # Secciones de página configurables
-│   │   │   ├── shelf/                   # Estantes de contenido
+│   │   │   ├── shelf/                   # Estantes de contenido + traducciones
 │   │   │   └── watchlist/               # Mi Lista (watchlist del usuario)
 │   │   ├── content/                     # Gestión de contenido
-│   │   │   ├── core/                    # Contenido principal
+│   │   │   ├── core/                    # Contenido principal (películas, categorías, estados)
 │   │   │   ├── media/                   # Archivos multimedia
 │   │   │   ├── movies/                  # Películas
-│   │   │   ├── series/                  # Series
+│   │   │   ├── series/                  # Series (temporadas y episodios + traducciones)
 │   │   │   ├── playback/                # Reproducción e historial
 │   │   │   ├── ratings/                 # Calificaciones
 │   │   │   └── people/                  # Personas (actores, directores)
 │   │   ├── infrastructure/              # Infraestructura
-│   │   │   ├── security/                # Configuración de seguridad
+│   │   │   ├── security/                # Configuración de seguridad (incl. resolución de idioma)
 │   │   │   ├── specification/           # Especificaciones JPA (filtros dinámicos)
 │   │   │   ├── storage/                 # Almacenamiento de archivos
 │   │   │   ├── email/                   # Servicio de correos
@@ -101,9 +105,10 @@ AxherApp/
 │   │   │   ├── scheduler/               # Tareas programadas
 │   │   │   └── seeder/                  # Datos de prueba
 │   │   ├── search/                      # Historial de búsquedas
-│   │   ├── users/                       # Gestión de usuarios
+│   │   ├── users/                       # Gestión de usuarios (incl. preferencia de idioma)
+│   │   ├── language/                    # Idiomas disponibles y localización (i18n)
 │   │   ├── support/                     # Soporte
-│   │   │   ├── reports/                 # Reportes de problemas (usuario + admin)
+│   │   │   ├── reports/                 # Reportes de problemas (usuario + admin + categorías)
 │   │   │   └── tickets/                 # Tickets de soporte
 │   │   └── shared/                      # Utilidades compartidas
 │   └── pom.xml
@@ -133,13 +138,17 @@ AxherApp/
 │   │   │   ├── pageSection/             # Secciones de página
 │   │   │   ├── watchlist/               # Mi Lista
 │   │   │   ├── search/                  # Búsqueda e historial
+│   │   │   ├── language/                # Gestión de idiomas, contexto y selector de idioma
+│   │   │   ├── ReportCategory/          # Categorías de reportes de problemas
 │   │   │   ├── media/                   # Reproductor de video
 │   │   │   ├── reports/                 # Reportes de problemas (usuario + admin)
 │   │   │   ├── reportStatus/            # Estados de reportes
 │   │   │   ├── users/                   # Usuarios
 │   │   │   ├── profile/                 # Perfil de usuario
-│   │   │   └── ...                      # Más módulos
+│   │   │   ├── ...                      # Más módulos
 │   │   ├── shared/                      # Componentes y utilidades
+│   │   │   └── i18n/                    # Utilidades de localización (idioma, eventos)
+│   │   ├── messages/                    # Archivos de traducción (es, en, pt, fr, de)
 │   │   └── widgets/                     # Componentes reutilizables
 │   └── package.json
 │
@@ -181,6 +190,7 @@ AxherApp/
 | 🧩 @dnd-kit | 6.3.1 | Drag & drop (ordenamiento) |
 | 🖼️ react-easy-crop | 5.5.7 | Recorte de imágenes |
 | 🔑 @react-oauth/google | 0.13.4 | Google OAuth |
+| 🌐 next-intl | — | Internacionalización (i18n) multiidioma |
 
 ---
 
@@ -270,9 +280,11 @@ La aplicación abrirá en `http://localhost:3000`.
 - [x] Historial de búsquedas
 - [x] Programación de publicaciones con Quartz
 - [x] Reproductor de video con controles personalizados y guardado de progreso
-- [x] Reportes de problemas (usuario + panel admin con estados configurables)
+- [x] Reportes de problemas (usuario + panel admin con estados y categorías configurables)
+- [x] Sistema multilingüe (i18n) — interfaz y contenido en es, en, pt, fr, de
+- [x] Gestión de idiomas y traducciones desde el panel admin
 - [ ] 🚧 Sistema de pagos y suscripciones
-- [ ] 🎫 Tickets de soporte (frontend)
+- [x] 🎫 Tickets de soporte (frontend)
 - [ ] 📊 Reportes y estadísticas avanzadas
 - [ ] 🌙 Modo oscuro
 - [ ] 🧪 Pruebas unitarias y de integración

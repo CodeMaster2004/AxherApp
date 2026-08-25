@@ -7,6 +7,7 @@ import Button from "../../../shared/components/ui/Button";
 import Input from "../../../shared/components/ui/Input";
 import Select, { SelectOption } from "../../../shared/components/ui/Select";
 import TextArea from "../../../shared/components/ui/TextArea";
+import { useTranslations } from "next-intl";
 
 interface Props {
     displayName: string;
@@ -55,6 +56,9 @@ export default function EditProfileForm ({
     onCancel,
     saving = false,
 }: Props ){
+
+    const t = useTranslations("common");
+
     const typeOptions: SelectOption[] = [
             { value: "", label: "No especificar" },
             { value: "MALE", label: "Masculino" },
@@ -147,12 +151,12 @@ export default function EditProfileForm ({
 
             <div className={formStyles.formActions}>
                 <Button type="submit" variant="animated" disabled={saving} loadingText="Guardando...">
-                    Guardar Cambios
+                    {t("save")}
                 </Button>
 
                 {onCancel && (
                     <Button type="button" variant="secondary" onClick={onCancel} disabled={saving}>
-                        Cancelar
+                        {t("cancel")}
                     </Button>
                 )}
             </div>

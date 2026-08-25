@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentStatus, EpisodeDetail } from "@/entities/types";
+import { ContentStatusResponse, EpisodeDetail } from "@/entities/types";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
@@ -8,10 +8,11 @@ import { formatDuration } from "@/shared/utils/formatDuration";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 
 interface Props{
     episodes: EpisodeDetail[];
-    statuses: ContentStatus[];
+    statuses: ContentStatusResponse[];
     onDelete: (episodeId: number) => void;
     onEdit: (episode: EpisodeDetail) => void;
     onUpdateStatus: (id: number, statusId: number) => void;
@@ -24,6 +25,7 @@ interface Props{
     onPrevPage: () => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
+    onTranslations?: (episode: EpisodeDetail) => void;
 }
 
 export default function EpisodesList({
@@ -40,6 +42,7 @@ export default function EpisodesList({
     onPrevPage,
     searchTerm,
     onSearchChange,
+    onTranslations
 } : Props) {
      const [pendingStatus, setPendingStatus] = useState<Record<number,number>>({});
 
@@ -120,14 +123,17 @@ export default function EpisodesList({
         });
     };
 
+    const common = useTranslations("common");
+    const t = useTranslations("episodes");
+
     return (
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Confirmar eliminación"
-                message={`¿Eliminar el episodio "${confirmDialog.title}"? Esta acción no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", { title: confirmDialog.title })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
@@ -135,43 +141,39 @@ export default function EpisodesList({
 
             <ConfirmDialog
                 isOpen={statusDialog.isOpen}
-                title="Cambiar estado"
-                message={
-                    `¿Seguro que deseas cambiar "${statusDialog.contentTitle}" a "${statusDialog.statusName}"?`
-                }
-                confirmText="Cambiar"
-                cancelText="Cancelar"
+                title={t("status.changeTitle")}
+                message={t("status.changeMessage", { title: statusDialog.contentTitle, status: statusDialog.statusName })}
+                confirmText={t("change")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmStatus}
                 onCancel={handleCancelStatus}
                 variant="info"
             />
 
-            <h2>Listado de Episodios</h2>
-
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar episodio..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
                 />
             </div>
             {episodes.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay episodios registrados"}</p>
+                <p>{loading ? common("searching") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
-                                <th className={tableStyles.headCell}>ID</th>
-                                <th className={tableStyles.headCell}>N° Episodio</th>
-                                <th className={tableStyles.headCell}>Titulo</th>
-                                <th className={tableStyles.headCell}>Duración</th>
-                                <th className={tableStyles.headCell}>Fecha estreno</th>
-                                <th className={tableStyles.headCell}>Estado</th>
-                                <th className={tableStyles.headCell}>Video</th>
-                                <th className={tableStyles.headCell}>Acciones</th>
+                                <th className={tableStyles.headCell}>{common("id")}</th>
+                                <th className={tableStyles.headCell}>{t("list.episodeNumber")}</th>
+                                <th className={tableStyles.headCell}>{common("title")}</th>
+                                <th className={tableStyles.headCell}>{t("list.duration")}</th>
+                                <th className={tableStyles.headCell}>{t("list.releaseDate")}</th>
+                                <th className={tableStyles.headCell}>{t("list.status")}</th>
+                                <th className={tableStyles.headCell}>{t("list.video")}</th>
+                                <th className={tableStyles.headCell}>{common("actions")}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -226,7 +228,7 @@ export default function EpisodesList({
                                     <td>
                                         {episode.episodeUrl ? (
                                             <a href={episode.episodeUrl} target="_blank" rel="noopener noreferrer">
-                                                Ver episodio
+                                                {t("list.viewEpisode")}
                                             </a>
                                         ) : (
                                             "-"
@@ -236,14 +238,18 @@ export default function EpisodesList({
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: "Editar",
+                                                    label: common("edit"),
                                                     onClick: () => onEdit(episode),
                                                 },
+                                                ...(onTranslations ? [{
+                                                    label: t("actions.translations"),
+                                                    onClick: () => onTranslations(episode),
+                                                }]: []),
                                                 {
                                                     label:
                                                         deletingId === episode.episodeId
-                                                            ? "Eliminando..."
-                                                            : "Eliminar",
+                                                            ? common("deleting")
+                                                            : common("delete"),
                                                         onClick: () =>
                                                             handleDeleteClick(episode.episodeId, episode.title),
                                                         variant: "danger",

@@ -5,6 +5,7 @@ import { Eye, Flame, User } from "lucide-react";
 import styles from "./TrendingCard.module.css";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface TrendingCardProps {
     content: TrendingContent;
@@ -12,7 +13,7 @@ interface TrendingCardProps {
 }
 
 export default function TrendingCard({ content, rank }: TrendingCardProps) {
-
+    const t = useTranslations("popularity");
     const href =
     content.type === "MOVIE"
         ? `/peliculas/${content.contentId}`
@@ -36,7 +37,7 @@ export default function TrendingCard({ content, rank }: TrendingCardProps) {
             <span className={styles.score}>
                     <Flame size={14} fill="currentColor"/> 
                     #{rank}
-                    <small>Tendencia</small>
+                    <small>{t("trending.badge")}</small>
                 </span>
 
             <div className={styles.cardBody}>

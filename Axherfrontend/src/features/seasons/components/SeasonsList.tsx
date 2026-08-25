@@ -1,16 +1,17 @@
 "use client";
 
-import { ContentStatus, SeasonDetail } from "@/entities/types";
+import { ContentStatusResponse, SeasonDetail } from "@/entities/types";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 
 interface Props{
     seasons: SeasonDetail[];
-    statuses: ContentStatus[];
+    statuses: ContentStatusResponse[];
     onDelete: (seasonId: number) => void;
     onEdit: (season: SeasonDetail) => void;
     onUpdateStatus: (seasonId: number, statusId: number) => void;
@@ -25,6 +26,7 @@ interface Props{
     onPrevPage: () => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
+    onTranslations?: (season: SeasonDetail) => void;
 }
 
 export default function SeasonsList({
@@ -43,7 +45,11 @@ export default function SeasonsList({
     onPrevPage,
     searchTerm,
     onSearchChange,
+    onTranslations
 }: Props){
+    const common = useTranslations("common");
+    const t = useTranslations("seasons");
+
     const [pendingStatus, setPendingStatus] = useState<Record<number,number>>({});
     const [confirmDialog, setConfimDialog] = useState<{
         isOpen: boolean;
@@ -126,10 +132,10 @@ export default function SeasonsList({
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Confirmar Eliminacion"
-                message={`¿Eliminar la temporada "${confirmDialog.title}"? Esta acción no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", { title: confirmDialog.title })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
@@ -138,23 +144,19 @@ export default function SeasonsList({
 
             <ConfirmDialog
                 isOpen={statusDialog.isOpen}
-                title="Cambiar estado"
-                message={
-                    `¿Seguro que deseas cambiar "${statusDialog.contentTitle}" a "${statusDialog.statusName}"?`
-                }
-                confirmText="Cambiar"
-                cancelText="Cancelar"
+                title={t("status.changeTitle")}
+                message={t("status.changeMessage", { title: statusDialog.contentTitle, status: statusDialog.statusName })}
+                confirmText={common("change")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmStatus}
                 onCancel={handleCancelStatus}
                 variant="info"
             />
 
-            <h2>Listado de Temporadas  </h2>
-
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar temporadas..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -163,20 +165,20 @@ export default function SeasonsList({
             </div>
 
             {seasons.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay temporadas registradas"}</p>
+                <p>{loading ? common("searching") : t("messages.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loadig : ""}`}>
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
-                                <th className={tableStyles.headCell}>ID</th>
-                                <th className={tableStyles.headCell}>N° Temporadas</th>
-                                <th className={tableStyles.headCell}>Titulo</th>
-                                <th className={tableStyles.headCell}>Descripción</th>
-                                <th className={tableStyles.headCell}>Fecha estreno</th>
-                                <th className={tableStyles.headCell}>Estado</th>
-                                <th className={tableStyles.headCell}>Episodios</th>
-                                <th className={tableStyles.headCell}>Acciones</th>
+                                <th className={tableStyles.headCell}>{common("id")}</th>
+                                <th className={tableStyles.headCell}>{t("list.seasonNumber")}</th>
+                                <th className={tableStyles.headCell}>{common("title")}</th>
+                                <th className={tableStyles.headCell}>{common("description")}</th>
+                                <th className={tableStyles.headCell}>{t("list.releaseDate")}</th>
+                                <th className={tableStyles.headCell}>{common("status")}</th>
+                                <th className={tableStyles.headCell}>{t("list.episodes")}</th>
+                                <th className={tableStyles.headCell}>{common("actions")}</th>
 
                             </tr>
                         </thead>
@@ -232,22 +234,26 @@ export default function SeasonsList({
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: "Ver episodios",
+                                                    label: t("actions.viewEpisodes"),
                                                     onClick: () => onViewEpisodes(season.seasonId),
                                                 },
                                                 {
-                                                    label: "Crear episodio",
+                                                    label: t("actions.createEpisode"),
                                                     onClick: () => onCreateEpisode(season.seasonId),
                                                 },
                                                 {
-                                                    label: "Editar",
+                                                    label: common("edit"),
                                                     onClick: () => onEdit(season),
                                                 },
+                                                ...(onTranslations ? [{
+                                                    label: common("translations"),
+                                                    onClick: () => onTranslations(season),
+                                                }]: []),
                                                 {
                                                     label:
                                                         deletingId === season.seasonId
-                                                            ? "Eliminando..."
-                                                            : "Eliminar",
+                                                            ? common("deleting")
+                                                            : common("delete"),
                                                         onClick: () =>
                                                             handleDeleteClick(season.seasonId, season.title),
                                                         variant: "danger",

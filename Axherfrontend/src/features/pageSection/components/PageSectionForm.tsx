@@ -9,6 +9,7 @@ import Input from "@/shared/components/ui/Input";
 import Select from "@/shared/components/ui/Select";
 import { pageSectionTypeOptions, pageTypeOptions } from "@/shared/constants/selectOptions";
 import styles from "@/shared/styles/shared/Form.module.css"
+import { useTranslations } from "next-intl";
 
 
 interface Props {
@@ -57,6 +58,9 @@ export default function PageSectionForm({
     onCancel
 }: Props){
 
+    const common = useTranslations("common");
+    const t = useTranslations("pageSections");
+    
     const shelfTarget = page as ShelfTarget;
 
     const {
@@ -71,16 +75,12 @@ export default function PageSectionForm({
 
         <form className={styles.form} onSubmit={onSubmit}>
 
-            <h2>
-                {isEditing ? 'Editar Sección' : 'Crear Sección'}
-            </h2>
-
             {error && (
                 <p className={styles.errorMessage}>{error}</p>
             )}
 
             <Select
-                label="Página"
+                label={t("form.page")}
                 value={page}
                 onChange={(value) =>
                     setPage(value as PageType)
@@ -90,7 +90,7 @@ export default function PageSectionForm({
             />
 
             <Select
-                label="Tipo de Sección"
+                label={t("form.type")}
                 value={type}
                 onChange={(value) =>
                     setType(value as PageSectionType)
@@ -100,7 +100,7 @@ export default function PageSectionForm({
             />
 
             <Input
-                label="Orden de visualización"
+                label={t("form.displayOrder")}
                 type="number"
                 value={displayOrder?.toString() ?? ""}
                 onChange={(value) =>
@@ -112,7 +112,7 @@ export default function PageSectionForm({
 
             {type === "SHELF" && (
                 <Select
-                    label="Carrusel"
+                    label={t("form.shelf")}
                     value={contentShelfId?.toString() ?? ""}
                     onChange={(value) => {
 
@@ -137,7 +137,7 @@ export default function PageSectionForm({
 
             <div className={styles.switchField}>
 
-                <span>Activo</span>
+                <span>{common("active")}</span>
 
                 <BubbleToggle
                     checked={active}
@@ -153,10 +153,10 @@ export default function PageSectionForm({
                     variant="animated"
                     disabled={saving}
                     loadingText={
-                        isEditing ? 'Actualizando...' : 'Creando...'
+                        isEditing ? common("updating") : common("creating")
                     }
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
 
                 {onCancel && (
@@ -166,7 +166,7 @@ export default function PageSectionForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {common("cancel")}
                     </Button>
                 )}
             </div>

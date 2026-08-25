@@ -1,6 +1,6 @@
 import axiosClient from "@/core/api/axiosClient";
 import { Page, PaginationParams } from "@/entities/types";
-import { ContentShelf, CreateShelf, ShelfOption, UpdateShelf } from "@/entities/types/shelf.types";
+import { ContentShelf, ContentShelfTranslationRequest, ContentShelfTranslationResponse, CreateShelf, ShelfOption, UpdateShelf } from "@/entities/types/shelf.types";
 import { AxiosRequestConfig } from "axios";
 
 export const adminShelfApi = {
@@ -76,5 +76,44 @@ export const adminShelfApi = {
         axiosClient.delete(
             `/admin/shelves/${id}`,
             config
-        )
+        ),
+
+    translations: {
+
+        getAll: (
+            shelfId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.get<
+                ContentShelfTranslationResponse[]
+            >(
+                `/admin/content-shelves/${shelfId}/translations`,
+                config
+            ),
+
+
+        save: (
+            shelfId: number,
+            data: ContentShelfTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<
+                ContentShelfTranslationResponse
+            >(
+                `/admin/content-shelves/${shelfId}/translations`,
+                data,
+                config
+            ),
+
+
+        delete: (
+            shelfId: number,
+            languageId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.delete(
+                `/admin/content-shelves/${shelfId}/translations/${languageId}`,
+                config
+            ),
+    },
 }

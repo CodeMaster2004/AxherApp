@@ -1,115 +1,132 @@
 "use client";
+import { HeroBannerRequest, LanguageResponse } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import ContentSelector from "@/shared/components/ui/ContentSelector";
 import FileInput from "@/shared/components/ui/FileInput";
 import FilePreviewOrLink from "@/shared/components/ui/FilePreviewOrLink";
 import Input from "@/shared/components/ui/Input";
+import Select, { SelectOption } from "@/shared/components/ui/Select";
 import TextArea from "@/shared/components/ui/TextArea";
 import styles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
-    contentId?: number;
-    titleOverride: string;
-    descriptionOverride: string;
+    
+    value: HeroBannerRequest;
+    onChange: React.Dispatch<
+        React.SetStateAction<HeroBannerRequest>
+    >;
+    languages: LanguageResponse[];
     backdropFile: File | null;
     backdropUrl?: string;
-    startDate: string;
-    endDate: string;
-    priority: number;
-    active: boolean;
-
-
-    setContentId:(value:number)=>void;
-    setTitleOverride:(value:string)=>void;
-    setDescriptionOverride:(value:string)=>void;
     setBackdropFile:(file: File | null) => void;
-    setBackdropUrl?:(value:string)=>void;
-    setStartDate:(value:string)=>void;
-    setEndDate:(value:string)=>void;
-    setPriority:(value:number)=>void;
-    setActive:(value:boolean)=>void;
-
-
     onSubmit: (e: React.SyntheticEvent<HTMLFormElement>) => void;
     isEditing?:boolean;
     saving?:boolean;
+    error?:string;
     onCancel?:()=>void;
 
 }
 
 export default function HeroBannerForm({
-
-    contentId,
-    titleOverride,
-    descriptionOverride,
+    value,
+    onChange,
+    languages,
     backdropUrl,
     backdropFile,
-    startDate,
-    endDate,
-    priority,
-    active,
-
-    setContentId,
-    setTitleOverride,
-    setDescriptionOverride,
-    setBackdropUrl,
     setBackdropFile,
-    setStartDate,
-    setEndDate,
-    setPriority,
-    setActive,
-
     onSubmit,
     isEditing,
     saving = false,
+    error,
     onCancel
 
 }: Props){
 
+    const languageOptions: SelectOption[] = languages.map(language => ({
+        value: language.languageId,
+        label: `${language.name} (${language.nativeName})`,
+    }));
+
+    const common = useTranslations("common");
+    const t = useTranslations("heroBanner");
+    
     return (
         <form className={styles.form} onSubmit={onSubmit}>
 
-            <h2>
-                {
-                    isEditing
-                    ? "Editar Hero Banner"
-                    : "Crear Hero Banner"
-                }
-            </h2>
+            {error && (
+                <p className={styles.errorMessage}>
+                    {error}
+                </p>
+            )}
 
             <ContentSelector
-                value={contentId}
-                onChange={setContentId}
+                value={value.contentId}
+                onChange={(contentId) =>
+                    onChange(prev => ({
+                        ...prev,
+                        contentId,
+                    }))
+                }
+            />
+
+            <Select
+                label={common("language")}
+                options={languageOptions}
+                value={value.languageId ?? ""}
+                onChange={(languageId) =>
+                    onChange(prev => ({
+                        ...prev,
+                        languageId: Number(languageId),
+                    }))
+                }
+                placeholder={common("languagePlaceholder")}
+                disabled={saving || isEditing}
             />
 
             <Input
-                label="Título (opcional)"
-                value={titleOverride}
-                onChange={setTitleOverride}
-                placeholder="Dejar vacio para usar titulo original"
+                label={t("titleOverride")}
+                value={value.titleOverride ?? ""}
+                onChange={(titleOverride) =>
+                    onChange(prev => ({
+                        ...prev,
+                        titleOverride,
+                    }))
+                }
+                placeholder={t("titleOverridePlaceholder")}
                 disabled={saving}
             />
 
             <TextArea
-                label="Descripción (opcional)"
-                value={descriptionOverride}
-                onChange={setDescriptionOverride}
-                placeholder="Dejar vacio para usar descripción original"
+                label={t("descriptionOverride")}
+                value={value.descriptionOverride ?? ""}
+                onChange={(descriptionOverride) =>
+                    onChange(prev => ({
+                        ...prev,
+                        descriptionOverride,
+                    }))
+                }
+                placeholder={t("descriptionOverridePlaceholder")}
                 rows={4}
                 disabled={saving}
             />
 
             <Input
-                label="Prioridad"
+                label={t("priority")}
                 type="number"
-                value={priority.toString()}
-                onChange={(value)=>setPriority(Number(value))}
+                value={(value.priority ?? 0).toString()}
+                onChange={(priority) =>
+                    onChange(prev => ({
+                        ...prev,
+                        priority: Number(priority),
+                    }))
+                }
                 min={0}
                 disabled={saving}
             />
 
             <FileInput
-                label="Imagen de fondo"
+                label={t("backdrop")}
                 accept="image/*"
                 onChange={setBackdropFile}
                 disabled={saving}
@@ -120,36 +137,51 @@ export default function HeroBannerForm({
                     <FilePreviewOrLink
                         url={backdropUrl}
                         type="image"
-                        label="Imagen de fondo actual"
+                        label={t("currentBackdrop")}
                         file={null}
                     />
                 )
             }
 
             <Input
-                label="Fecha inicio"
+                label={t("startDate")}
                 type="datetime-local"
-                value={startDate || ""}
-                onChange={setStartDate}
+                value={value.startDate ?? ""}
+                onChange={(startDate) =>
+                    onChange(prev => ({
+                        ...prev,
+                        startDate,
+                    }))
+                }
                 disabled={saving}
             />
 
             <Input
-                label="Fecha fin"
+                label={t("endDate")}
                 type="datetime-local"
-                value={endDate || ""}
-                onChange={setEndDate}
+                value={value.endDate ?? ""}
+                onChange={(endDate) =>
+                    onChange(prev => ({
+                        ...prev,
+                        endDate,
+                    }))
+                }
                 disabled={saving}
             />
 
             <label>
                 <input
                     type="checkbox"
-                    checked={active}
-                    onChange={(e)=>setActive(e.target.checked)}
+                    checked={value.active}
+                    onChange={(e) =>
+                        onChange(prev => ({
+                            ...prev,
+                            active: e.target.checked,
+                        }))
+                    }
                     disabled={saving}
                 />
-                Activo
+                {t("active")}
             </label>
                 
             <div className={styles.formActions}>
@@ -160,14 +192,14 @@ export default function HeroBannerForm({
                     loading={saving}
                     loadingText={
                         isEditing
-                        ? "Actualizando..."
-                        : "Creando..."
+                        ? common("updating")
+                        : common("creating")
                     }
                 >
                     {
                         isEditing
-                        ? "Actualizar"
-                        : "Crear"
+                        ? common("update")
+                        : common("create")
                     }
                 </Button>
 
@@ -179,7 +211,7 @@ export default function HeroBannerForm({
                             onClick={onCancel}
                             disabled={saving}
                         >
-                            Cancelar
+                            {common("cancel")}
                         </Button>
                     )
                 }

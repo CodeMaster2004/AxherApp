@@ -3,22 +3,34 @@ package com.axher.backend.content.playback.mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.axher.backend.content.core.service.ContentLocalizationService;
 import com.axher.backend.content.playback.DTOs.ContinueWatchingDto;
 import com.axher.backend.content.playback.entities.PlaybackHistory;
+import com.axher.backend.content.series.service.EpisodeLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class ContinueWatchingMapper {
 
     @Value("${app.base-url}")
     private String baseUrl;
 
+    private final ContentLocalizationService contentLocalizationService;
+    private final EpisodeLocalizationService episodeLocalizationService;
+
     public ContinueWatchingDto toContinueWatching(PlaybackHistory history){
 
         ContinueWatchingDto dto = new ContinueWatchingDto();
+
         var content = history.getContent();
 
+        var localized =
+                contentLocalizationService.resolve(content);
+
         dto.setContentId(content.getContentId());
-        dto.setTitle(content.getTitle());
+        dto.setTitle(localized.title());
         dto.setBackdropUrl(buildUrl(content.getBackdropUrl()));
         dto.setContentType(content.getType());
 
@@ -26,10 +38,13 @@ public class ContinueWatchingMapper {
 
             var episode = history.getEpisode();
 
+            var episodeLocalized =
+                    episodeLocalizationService.resolve(episode);
+
             dto.setEpisodeId(episode.getEpisodeId());
             dto.setSeasonNumber(episode.getSeason().getSeasonNumber());
             dto.setEpisodeNumber(episode.getEpisodeNumber());
-            dto.setEpisodeTitle(episode.getTitle());
+            dto.setEpisodeTitle(episodeLocalized.title());
             dto.setDurationSeconds(episode.getDurationSeconds());
 
         }else{

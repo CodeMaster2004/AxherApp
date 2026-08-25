@@ -7,10 +7,12 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import Button from "@/shared/components/ui/Button";
 import SupportTicketStatusList from "@/features/supportTicketStatus/components/SupportTicketStatusList";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function SupportTicketStatusListView() {
 
     const router = useRouter();
+    const t = useTranslations("common");
     const {
         supportTicketStatus,
         loading,
@@ -35,6 +37,10 @@ export default function SupportTicketStatusListView() {
         router.push(`/admin/support/ticket-status/${supportTicketStatus.supportTicketStatusId}/edit`);
     }
 
+    const handleTranslations = (supportTicketStatus: SupportTicketStatusResponse) => {
+        router.push(`/admin/support/ticket-status/${supportTicketStatus.supportTicketStatusId}/translations`);
+    }
+
     return (
 
         <div className={layoutStyles.pageContainer}>
@@ -44,7 +50,7 @@ export default function SupportTicketStatusListView() {
                     variant="animated"
                     onClick={handleCreate}
                 >
-                    Nuevo
+                    {t("new")}
                 </Button>
             </div>
             <SupportTicketStatusList
@@ -59,6 +65,7 @@ export default function SupportTicketStatusListView() {
                 onNextPage={nextPage}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
+                onTranslations={handleTranslations}
             />
         </div>
 

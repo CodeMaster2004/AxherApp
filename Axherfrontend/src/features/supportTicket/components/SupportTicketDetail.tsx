@@ -8,6 +8,7 @@ import { useSupportMessages } from "@/features/supportTicket/hooks/useSupportMes
 import { supportTicketService } from "@/features/supportTicket/service/SupportTicketService";
 import { useEffect, useState } from "react";
 import styles from "./SupportTicketDetail.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     ticketId: number;
@@ -24,7 +25,7 @@ export default function SupportTicketDetail({
     const [loadingTicket, setLoadingTicket] = useState(true);
 
     const { refetch } = useSupportMessages(ticketId);
-
+    const t = useTranslations("supportTickets");
     const {
         saving,
         error,
@@ -52,7 +53,7 @@ export default function SupportTicketDetail({
             } catch (error) {
 
                 console.error(
-                    "Error al cargar ticket:",
+                    t("error.load"),
                     error
                 );
 
@@ -93,7 +94,7 @@ export default function SupportTicketDetail({
         <section className={styles.container}>
 
             <h2 className={styles.header}>
-                {ticket?.subject ?? `Ticket #${ticketId}`}
+                {ticket?.subject ?? `${t("detail.subject")}: #${ticketId}`}
             </h2>
 
             {!loadingTicket && ticket && (
@@ -107,15 +108,15 @@ export default function SupportTicketDetail({
 
                     <strong>
                         {isClosed
-                            ? "Ticket cerrado"
-                            : "Solicitud recibida"
+                            ? t("detail.closed")
+                            : t("detail.requestReceived")
                         }
                     </strong>
 
                     <p>
                         {isClosed
-                            ? "Este ticket ha sido cerrado y ya no puedes enviar nuevos mensajes."
-                            : "Tu solicitud fue recibida. El equipo de soporte revisará tu caso y responderá cuando esté disponible."
+                            ? t("detail.closedMessage")
+                            : t("detail.requestReceivedMessage")
                         }
                     </p>
 

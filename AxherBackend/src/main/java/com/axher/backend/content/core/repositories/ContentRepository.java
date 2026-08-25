@@ -17,7 +17,16 @@ import com.axher.backend.content.core.entities.ContentTypeEnum;
 
 public interface ContentRepository extends JpaRepository<Content, Integer>, JpaSpecificationExecutor<Content> {
 
-    Page<Content> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+    @Query("""
+        SELECT DISTINCT c
+        FROM Content c
+        JOIN c.translations t
+        WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))
+        """)
+        Page<Content> searchByTitle(
+        @Param("title") String title,
+        Pageable pageable
+        );
 
     // Buscar por categoría (con paginación)
     Page<Content> findByCategories_ContentCategoryId(Integer categoryId, Pageable pageable);
@@ -38,11 +47,18 @@ public interface ContentRepository extends JpaRepository<Content, Integer>, JpaS
     );
 
 
-    Page<Content> findByTitleContainingIgnoreCaseAndContentStatus_Code(
-            String title,
-            String code,
-            Pageable pageable
-    );
+    @Query("""
+        SELECT DISTINCT c
+        FROM Content c
+        JOIN c.translations t
+        WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))
+        AND c.contentStatus.code = :code
+        """)
+        Page<Content> searchByTitleAndStatus(
+        @Param("title") String title,
+        @Param("code") String code,
+        Pageable pageable
+        );
 
     // Para la publicación automática
     List<Content> findByContentStatus_CodeAndReleaseDateLessThanEqual(

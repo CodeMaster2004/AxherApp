@@ -4,6 +4,7 @@ import formStyles from "@/shared/styles/shared/Form.module.css";
 import Input from "../../../shared/components/ui/Input";
 import TextArea from "../../../shared/components/ui/TextArea";
 import Button from "../../../shared/components/ui/Button";
+import { useTranslations } from "next-intl";
 
 interface Props{
     discountType: string;
@@ -40,7 +41,7 @@ export default function DiscountsForm({
     onCancel,
     saving = false,
 }: Props) {
-    
+    const t = useTranslations("common");
     return(
         <form onSubmit={onSubmit} className={formStyles.form}>
             <h2>{isEditing ? 'Editar Descuento' : 'Crear Descuento'}</h2>
@@ -101,7 +102,7 @@ export default function DiscountsForm({
                     disabled={saving}
                     loadingText={isEditing ? 'Actualizando...' : 'creando...'}
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? 'Actualizar' : t("create")}
                 </Button>
 
                 {onCancel && (
@@ -111,7 +112,7 @@ export default function DiscountsForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {t("cancel")}
 
                     </Button>
                 )}

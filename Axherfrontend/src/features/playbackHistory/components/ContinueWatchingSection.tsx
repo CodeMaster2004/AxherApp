@@ -4,18 +4,19 @@ import ContinueWatchingCard from "@/features/playbackHistory/components/Continue
 import { useContinueWatching } from "@/features/playbackHistory/hooks/useContinueWatching";
 import styles from "./ContinueWatchingSection.module.css";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
+import { useTranslations } from "next-intl";
 
 export default function ContinueWatchingSection() {
 
     const { continueWatching, loading } = useContinueWatching();
-
+    const t = useTranslations("playbackHistory");
     if(loading || continueWatching.length === 0) return null;
 
     return (
 
         <section className={styles.section}>
             <h2>
-                Continue Viendo
+                {t("continueWatching")}
             </h2>
             <HorizontalCarousel>
 

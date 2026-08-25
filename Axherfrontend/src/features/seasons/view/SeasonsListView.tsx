@@ -6,6 +6,7 @@ import SeasonsList from "@/features/seasons/components/SeasonsList";
 import { useSeasons, useSeasonsActions } from "@/features/seasons/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 
 type Props = {
@@ -14,6 +15,8 @@ type Props = {
 
 
 export default function SeasonsListView({ seriesId }: Props) {
+    const t = useTranslations("seasons");
+    const common = useTranslations("common");
     const router = useRouter();
     const params = useParams();
     const contentId = params?.contentId ? Number(params.contentId) : null;
@@ -53,16 +56,20 @@ export default function SeasonsListView({ seriesId }: Props) {
     router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/create`);
     };
 
+    const handleTranslations = (season: SeasonDetail) => {
+            router.push(`/admin/series/${contentId}/seasons/${season.seasonId}/translations`);
+    };
+
     return (
         <div className={layoutStyles.pageContainer}>
-            <Button variant="secondary" onClick={() => router.push(`/admin/series/${contentId}`)}>
-                ← Volver a Serie
+            <Button variant="secondary" onClick={() => router.push(`/admin/contents`)}>
+                ← {common("back")}
             </Button>
 
             <div className={layoutStyles.header}>
-                <h1>Temporadas</h1>
+                <h1>{t("title")}</h1>
                 <Button variant="animated" onClick={handleCreate}>
-                    Crear Temporada
+                    {common("create")}
                 </Button>
             </div>
 
@@ -84,6 +91,7 @@ export default function SeasonsListView({ seriesId }: Props) {
                 onPrevPage={prevPage}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
+                onTranslations={handleTranslations}
             />
         </div>
     );

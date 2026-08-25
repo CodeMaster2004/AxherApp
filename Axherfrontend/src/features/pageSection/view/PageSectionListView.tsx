@@ -10,6 +10,7 @@ import Button from "@/shared/components/ui/Button";
 
 import PageSectionList from "@/features/pageSection/components/PageSectionList";
 import { useAdminPageSections } from "@/features/pageSection/hooks/useAdminPageSections";
+import { useTranslations } from "next-intl";
 
 export default function PageSectionListView() {
 
@@ -71,6 +72,9 @@ export default function PageSectionListView() {
 
     };
 
+    const t = useTranslations("pageSections");
+    const common = useTranslations("common");
+
 
     return (
 
@@ -79,14 +83,14 @@ export default function PageSectionListView() {
             <div className={layoutStyles.header}>
 
                 <h1>
-                    Secciones de página
+                    {t("title")}
                 </h1>
 
                 <Button
                     variant="animated"
                     onClick={handleCreate}
                 >
-                    Crear Sección
+                    {common("create")}
                 </Button>
 
             </div>
@@ -99,7 +103,7 @@ export default function PageSectionListView() {
                     active={page === "HOME"}
                     onClick={() => setPage("HOME")}
                 >
-                    Home
+                    {t("home")}
                 </Button>
 
                 <Button
@@ -107,7 +111,7 @@ export default function PageSectionListView() {
                     active={page === "MOVIES"}
                     onClick={() => setPage("MOVIES")}
                 >
-                    Películas
+                    {t("movies")}
                 </Button>
 
                 <Button
@@ -115,7 +119,7 @@ export default function PageSectionListView() {
                     active={page === "SERIES"}
                     onClick={() => setPage("SERIES")}
                 >
-                    Series
+                    {t("series")}
                 </Button>
 
             </div>

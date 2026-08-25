@@ -19,5 +19,6 @@ public class HeroBannerRequestDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Boolean active;
+    private Integer languageId;
     
 }

@@ -1,4 +1,4 @@
-import { ContentStatus, EpisodeDetail, RatingTargetType, SeriesDetail } from "@/entities/types";
+import { ContentStatusResponse, EpisodeDetail, RatingTargetType, SeriesDetail } from "@/entities/types";
 import VideoPlayerModal from "@/features/media/components/VideoPlayerModal";
 import Rating from "@/features/ratings/components/Rating";
 import { useContentRating } from "@/features/ratings/hooks/useContentRating";
@@ -6,10 +6,11 @@ import Image from "next/image";
 import { useState } from "react";
 import styles from "./SerieDetail.module.css";
 import WatchlistButton from "@/features/watchlist/components/WatchlistButton";
+import { useTranslations } from "next-intl";
 
 interface SeriesDetailProps {
     series: SeriesDetail;
-    statuses: ContentStatus[];
+    statuses: ContentStatusResponse[];
     onSelectEpisode:(episode: EpisodeDetail)=>void;
 }
 
@@ -27,7 +28,7 @@ export default function SerieDetail({ series }: SeriesDetailProps) {
         RatingTargetType.CONTENT
     );
     const [playerSource, setPlayerSource] = useState<string | null>(null);
-
+    const t = useTranslations("series");
     
     return (
 
@@ -80,21 +81,17 @@ export default function SerieDetail({ series }: SeriesDetailProps) {
                             onChange={rate}
                         />
                         <p className={styles.description}>
-                            {series.description || "No hay descripción disponible."}
+                            {series.description || t("detail.noDescription")}
                         </p>
 
-                        <div className={styles.subscription}>
-                            Contenido incluido con AlexMovies.{""}
-                            <span>Activa 30 días sin costo</span>
-                        </div>
-
+                        
                         <div className={styles.actions}>
                             {series.trailerUrl && (
                                 <button
                                     className={styles.primaryButton}
                                     onClick={() => setPlayerSource(series.trailerUrl)}
                                 >
-                                    Ver tráiler
+                                    {t("detail.watchTrailer")}
                                 </button>
                             )}
                             <WatchlistButton contentId={series.contentId} />

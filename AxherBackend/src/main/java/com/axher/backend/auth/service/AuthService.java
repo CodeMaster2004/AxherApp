@@ -24,6 +24,8 @@ import com.axher.backend.infrastructure.email.EmailService;
 import com.axher.backend.infrastructure.email.OtpService;
 import com.axher.backend.infrastructure.security.crypto.PasswordProtection;
 import com.axher.backend.infrastructure.security.jwt.JwtService;
+import com.axher.backend.language.entities.Language;
+import com.axher.backend.language.repositories.LanguageRepository;
 import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.EmailNotConfirmedException;
 import com.axher.backend.shared.exception.UnauthorizedException;
@@ -53,6 +55,7 @@ public class AuthService {
     private final UserRoleAssignmentsRepository userRoleAssignmentsRepository;
     private final RolePermissionAssignmentsService rolePermissionService;
     private final SystemPermissionsRepository permissionsRepository;
+    private final LanguageRepository languageRepository;
 
 
     public Users findById(Integer userId) {
@@ -78,6 +81,14 @@ public class AuthService {
         user.setSalt(salt);
         user.setIsConfirmed(false);
         user.setCreatedAt(LocalDateTime.now());
+        if (request.getPreferredLanguageCode() != null &&
+            !request.getPreferredLanguageCode().isBlank()) {
+
+            languageRepository
+                .findByCodeIgnoreCase(request.getPreferredLanguageCode().trim())
+                .filter(Language::getActive)
+                .ifPresent(user::setPreferredLanguage);
+        }
         // Guardar fecha de expiración del OTP
         user.setOtpExpiresAt(LocalDateTime.now().plusHours(OTP_EXPIRATION_HOURS));
         usersRepository.save(user);
@@ -139,6 +150,12 @@ public class AuthService {
             setPermissions(permissions);
             setToken(token);
             setRefreshToken(refreshToken);
+            setPreferredLanguageCode(
+                user.getPreferredLanguage() != null
+                    ? user.getPreferredLanguage().getCode()
+                    : null
+            );
+            
         }};
     }
 
@@ -195,6 +212,11 @@ public class AuthService {
             setPermissions(permissions);
             setToken(token);
             setRefreshToken(refreshToken);
+            setPreferredLanguageCode(
+                user.getPreferredLanguage() != null
+                    ? user.getPreferredLanguage().getCode()
+                    : null
+            );
         }};
     }
     
@@ -285,6 +307,16 @@ public class AuthService {
         dto.setRoles(userRoleAssignmentsRepository.findRoleNamesByUserId(user.getUserId()));
         dto.setPermissions(new ArrayList<>(getPermissions(user)));
         dto.setProvider(user.getProvider());
+        dto.setPreferredLanguageCode(
+            user.getPreferredLanguage() != null
+                ? user.getPreferredLanguage().getCode()
+                : null
+        );
+        dto.setPreferredLanguageId(
+            user.getPreferredLanguage() != null
+                ? user.getPreferredLanguage().getLanguageId()
+                : null
+        );
         dto.setToken(null); // No exponer token
         dto.setRefreshToken(null); // No exponer refresh
         return dto;

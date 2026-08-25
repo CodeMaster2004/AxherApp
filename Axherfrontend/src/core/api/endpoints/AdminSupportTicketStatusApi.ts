@@ -1,5 +1,5 @@
 import axiosClient from "@/core/api/axiosClient";
-import { Page, PaginationParams, SupportTicketStatusRequest, SupportTicketStatusResponse } from "@/entities/types";
+import { Page, PaginationParams, SupportTicketStatusRequest, SupportTicketStatusResponse, SupportTicketStatusTranslationRequest, SupportTicketStatusTranslationResponse } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 
 export const AdminSupportTicketStatusApi = {
@@ -57,5 +57,39 @@ export const AdminSupportTicketStatusApi = {
         axiosClient.delete(
             `/admin/support/ticket-status/${supportTicketStatusId}`,
             config
-        )
+        ),
+
+    translations: {
+
+        getAll: (
+            statusId: number,
+            config?: object
+        ) =>
+            axiosClient.get<SupportTicketStatusTranslationResponse[]>(
+                `/admin/support-ticket-statuses/${statusId}/translations`,
+                config
+            ),
+
+        save: (
+            statusId: number,
+            data: SupportTicketStatusTranslationRequest,
+            config?: object
+        ) =>
+            axiosClient.patch<SupportTicketStatusTranslationResponse>(
+                `/admin/support-ticket-statuses/${statusId}/translations`,
+                data,
+                config
+            ),
+
+        delete: (
+            statusId: number,
+            languageId: number,
+            config?: object
+        ) =>
+            axiosClient.delete(
+                `/admin/support-ticket-statuses/${statusId}/translations/${languageId}`,
+                config
+            ),
+
+    },
 }

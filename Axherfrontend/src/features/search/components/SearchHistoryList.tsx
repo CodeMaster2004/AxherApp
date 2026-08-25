@@ -5,6 +5,7 @@ import { getDateGroup } from "@/shared/utils/date";
 import { useState } from "react";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import { Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Props {
     items: SearchHistoryResponse[];
@@ -26,6 +27,9 @@ export default function SearchHistoryList({
     onClear,
 }: Props) {
 
+    const common = useTranslations("common");
+    const t = useTranslations("search");
+    
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     const handleConfirmClear = async () => {
@@ -40,7 +44,7 @@ export default function SearchHistoryList({
     if (loading) {
         return (
             <div className={styles.loading}>
-                Cargando historial...
+                {t("history.loading")}
             </div>
         );
     }
@@ -48,7 +52,7 @@ export default function SearchHistoryList({
     if (items.length === 0) {
         return (
             <div className={styles.empty}>
-                No tienes búsquedas recientes
+                {t("history.empty")}
             </div>
         );
     }
@@ -74,10 +78,10 @@ export default function SearchHistoryList({
         <>
             <ConfirmDialog
                 isOpen={confirmOpen}
-                title="Vaciar historial"
-                message="¿Estás seguro de que deseas eliminar todo tu historial de búsquedas? Esta acción no se puede deshacer."
-                confirmText={clearing ? "Vaciando..." : "Vaciar historial"}
-                cancelText="Cancelar"
+                title={t("history.deleteConfirmTitle")}
+                message={t("history.deleteConfirmMessage")}
+                confirmText={clearing ? t("history.clearing") : t("history.clear")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmClear}
                 onCancel={() => {
                     if (!clearing) {
@@ -94,7 +98,7 @@ export default function SearchHistoryList({
                     <div>
 
                         <p className={styles.subtitle}>
-                            Todas tus búsquedas recientes
+                            {t("history.subtitle")}
                         </p>
                     </div>
 
@@ -108,8 +112,8 @@ export default function SearchHistoryList({
 
                         <span>
                             {clearing
-                                ? "Vaciando..."
-                                : "Vaciar historial"
+                                ? t("history.clearing")
+                                : t("history.clear")
                             }
                         </span>
                     </button>

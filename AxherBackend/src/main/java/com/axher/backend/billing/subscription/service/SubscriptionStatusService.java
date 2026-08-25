@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.axher.backend.billing.subscription.DTOs.SubscriptionStatusRequestDto;
+import com.axher.backend.billing.subscription.DTOs.SubscriptionStatusTranslationRequestDto;
 import com.axher.backend.billing.subscription.entities.SubscriptionStatus;
 import com.axher.backend.billing.subscription.repositories.SubscriptionStatusRepository;
 import com.axher.backend.shared.exception.DuplicateResourceException;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class SubscriptionStatusService {
     private final SubscriptionStatusRepository repository;
+    private final SubscriptionStatusTranslationService translationService;
 
     public Page<SubscriptionStatus> findAll(
             Pageable pageable,
@@ -30,9 +32,7 @@ public class SubscriptionStatusService {
         }
 
         return repository
-                .findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-                        search,
-                        search,
+                .search(
                         search,
                         pageable
                 );
@@ -60,29 +60,60 @@ public class SubscriptionStatusService {
 
     public SubscriptionStatus create(SubscriptionStatusRequestDto dto) {
 
-        String normalize = TextNormalizer.normalizeCode(dto.getCode());
-
-        dto.setCode(normalize);
-
-        if (repository.existsByCode(normalize)) {
-            throw new DuplicateResourceException(
-                    "El estado de suscripción ya existe: " + normalize
+        if (dto.getCode() == null || dto.getCode().isBlank()) {
+            throw new IllegalArgumentException(
+                "El código no puede estar vacío"
             );
         }
 
-        if (repository.existsByNameIgnoreCase(dto.getName())) {
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new IllegalArgumentException(
+                "El nombre no puede estar vacío"
+            );
+        }
+
+        if (dto.getLanguageId() == null) {
+            throw new IllegalArgumentException(
+                "El idioma es obligatorio"
+            );
+        }
+
+        String normalizedCode = TextNormalizer.normalizeCode(dto.getCode());
+
+        if (repository.existsByCode(normalizedCode)) {
             throw new DuplicateResourceException(
-                    "El nombre de estado de suscripción ya existe: " + dto.getName()
+                    "El estado de suscripción ya existe: " + normalizedCode
+            );
+        }
+
+        if (translationService.existsByNameAndLanguage(
+                dto.getName().trim(),
+                dto.getLanguageId()
+        )) {
+            throw new DuplicateResourceException(
+                "El nombre ya existe en este idioma: "
+                    + dto.getName()
             );
         }
 
         SubscriptionStatus status = new SubscriptionStatus();
+        status.setCode(normalizedCode);
 
-        status.setCode(normalize);
-        status.setName(dto.getName());
-        status.setDescription(dto.getDescription());
+        SubscriptionStatus saved = repository.save(status);
 
-        return repository.save(status);
+         SubscriptionStatusTranslationRequestDto translationDto =
+            new SubscriptionStatusTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(dto.getName());
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+            saved.getSubscriptionStatusId(),
+            translationDto
+        );
+
+        return saved;
     }
 
     public SubscriptionStatus update(
@@ -100,44 +131,61 @@ public class SubscriptionStatusService {
                 );
             }
 
-            String normalize = TextNormalizer.normalizeCode(dto.getCode());
+            String normalizedCode = TextNormalizer.normalizeCode(dto.getCode());
 
-            if (!normalize.equals(existing.getCode())
-                    && repository.existsByCode(normalize)) {
+            if (!normalizedCode.equals(existing.getCode())
+                    && repository.existsByCode(normalizedCode)) {
 
                 throw new DuplicateResourceException(
-                        "El estado de suscripción ya existe: " + normalize
+                        "El estado de suscripción ya existe: " + normalizedCode
                 );
             }
 
-            existing.setCode(normalize);
+            existing.setCode(normalizedCode);
         }
+
 
         if (dto.getName() != null) {
 
-            if (dto.getName().isBlank()) {
+            String name = dto.getName().trim();
+
+            if (name.isBlank()) {
                 throw new IllegalArgumentException(
                         "El nombre del estado de suscripción no puede estar vacío"
                 );
             }
 
-            if (!dto.getName().equalsIgnoreCase(existing.getName())
-                    && repository.existsByNameIgnoreCase(dto.getName())) {
-
-                throw new DuplicateResourceException(
-                        "El nombre de estado de suscripción ya existe: "
-                                + dto.getName()
+            if (dto.getLanguageId() == null) {
+                throw new IllegalArgumentException(
+                        "El idioma es obligatorio"
                 );
             }
 
-            existing.setName(dto.getName());
-        }
+            if (translationService.existsByNameAndLanguageAndStatusNot(
+                    name,
+                    dto.getLanguageId(),
+                    id
+            )) {
 
-        if (dto.getDescription() != null) {
-            existing.setDescription(dto.getDescription());
-        }
+                throw new DuplicateResourceException(
+                        "El nombre ya existe en este idioma: " + name
+                );
+            }
+            SubscriptionStatusTranslationRequestDto translationDto =
+                new SubscriptionStatusTranslationRequestDto();
 
+            translationDto.setLanguageId(dto.getLanguageId());
+            translationDto.setName(name);
+            translationDto.setDescription(dto.getDescription());
+
+            translationService.save(
+                    existing.getSubscriptionStatusId(),
+                    translationDto
+            );
+
+        }
         return repository.save(existing);
+
     }
 
     public void delete(Integer id) {

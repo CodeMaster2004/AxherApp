@@ -15,6 +15,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 
 export default function EditPageSectionPage() {
 
@@ -24,27 +25,14 @@ export default function EditPageSectionPage() {
     const id = params?.id
         ? Number(params.id)
         : null;
-
-
-    const [loading, setLoading] =
-        useState(true);
-
-
-    const [page, setPage] =
-        useState<PageType | undefined>();
-
-    const [type, setType] =
-        useState<PageSectionType | undefined>();
-
-    const [displayOrder, setDisplayOrder] =
-        useState(1);
-
-    const [active, setActive] =
-        useState(true);
-
-    const [contentShelfId, setContentShelfId] =
-        useState<number | undefined>();
-
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState<PageType | undefined>();
+    const [type, setType] = useState<PageSectionType | undefined>();
+    const [displayOrder, setDisplayOrder] = useState<number | null>(null);
+    const [active, setActive] = useState(true);
+    const [contentShelfId, setContentShelfId] = useState<number | undefined>();
+    const common = useTranslations("common");
+    const t = useTranslations("pageSections");
 
     const {
         editSection,
@@ -137,7 +125,7 @@ export default function EditPageSectionPage() {
 
         return (
             <div className={layoutStyles.loading}>
-                Cargando sección...
+                {t("loading")}
             </div>
         );
 
@@ -149,7 +137,7 @@ export default function EditPageSectionPage() {
         <div className={layoutStyles.pageContainer}>
 
             <h1>
-                Editar Sección
+                {common("edit")}
             </h1>
 
 

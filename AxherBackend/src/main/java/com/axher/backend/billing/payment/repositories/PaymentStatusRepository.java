@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.axher.backend.billing.payment.entities.PaymentStatus;
 
@@ -12,14 +14,20 @@ public interface PaymentStatusRepository extends JpaRepository<PaymentStatus, In
 
     boolean existsByCode(String code);
 
-    boolean existsByNameIgnoreCase(String name);
 
     Optional<PaymentStatus> findByCode(String code);
 
-    Page<PaymentStatus> findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-        String code,
-        String name,
-        String description,
+    @Query("""
+        SELECT DISTINCT ps
+        FROM PaymentStatus ps
+        LEFT JOIN ps.translations t
+        WHERE
+            LOWER(ps.code) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(t.name) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(t.description) LIKE LOWER(CONCAT('%', :search, '%'))
+        """)
+    Page<PaymentStatus> search(
+        @Param("search") String search,
         Pageable pageable
     );
 }

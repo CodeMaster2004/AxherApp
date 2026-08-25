@@ -21,7 +21,17 @@ public interface SeasonsRepository extends JpaRepository<Seasons, Integer> {
 
     List<Seasons> findBySeries_ContentIdAndReleaseDateBetween(Integer contentId, LocalDate start, LocalDate end);
 
-    List<Seasons> findBySeries_ContentIdAndTitleContainingIgnoreCase(Integer contentId, String keyword);
+    @Query("""
+        SELECT DISTINCT s
+        FROM Seasons s
+        JOIN s.translations t
+        WHERE s.series.content.contentId = :seriesId
+        AND LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    """)
+    List<Seasons> searchByTitle(
+        Integer seriesId,
+        String keyword
+    );
 
     Optional<Seasons> findBySeasonIdAndSeries_ContentId(Integer seasonId, Integer seriesId);
 

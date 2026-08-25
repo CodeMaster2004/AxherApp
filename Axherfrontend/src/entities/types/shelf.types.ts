@@ -39,6 +39,7 @@ export interface ContentShelf {
     source: ShelfSource;
     active:boolean;
     createdAt?:string;
+    languageId:number;
 }
 
 
@@ -48,6 +49,7 @@ export interface CreateShelf {
     layout:ShelfLayout;
     source:ShelfSource;
     active:boolean;
+    languageId:number;
 }
 
 
@@ -58,6 +60,7 @@ export interface UpdateShelf {
     layout?:ShelfLayout;
     source?:ShelfSource;
     active?:boolean;
+    languageId?:number;
 }
 
 export interface CreateShelfContent {
@@ -91,4 +94,17 @@ export interface ShelfOption {
     contentShelfId: number;
     name: string;
     slug: string;
+}
+
+export interface ContentShelfTranslationRequest {
+    languageId: number;
+    name: string;
+}
+
+export interface ContentShelfTranslationResponse {
+    contentShelfId: number;
+    languageId: number;
+    languageCode: string;
+    languageName: string;
+    name: string;
 }

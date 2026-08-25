@@ -1,25 +1,21 @@
 "use client";
 
-import { ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
+import { CreateShelf, LanguageResponse, ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
 import BubbleToggle from "@/shared/components/ui/BubbleToggle";
 import Button from "@/shared/components/ui/Button";
 import Input from "@/shared/components/ui/Input";
-import Select from "@/shared/components/ui/Select";
+import Select, { SelectOption } from "@/shared/components/ui/Select";
 import { shelfLayoutOptions, shelfSourceOptions, shelfTargetOptions } from "@/shared/constants/selectOptions";
 import styles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
-    name: string;
-    target: ShelfTarget | undefined;
-    layout: ShelfLayout | undefined;
-    source: ShelfSource | undefined;
-    active: boolean;
+    value: CreateShelf;
 
-    setName: (value: string) => void;
-    setTarget: (value: ShelfTarget) => void;
-    setLayout: (value: ShelfLayout) => void;
-    setSource: (value: ShelfSource) => void;
-    setActive: (value: boolean) => void;
+    onChange: React.Dispatch<
+        React.SetStateAction<CreateShelf>
+    >;
+    languages: LanguageResponse[];
 
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 
@@ -31,17 +27,9 @@ interface Props {
 }
 
 export default function ShelfForm({
-    name,
-    target,
-    layout,
-    source,
-    active,
-
-    setName,
-    setTarget,
-    setLayout,
-    setSource,
-    setActive,
+    value,
+    onChange,
+    languages,
 
     onSubmit,
 
@@ -52,11 +40,17 @@ export default function ShelfForm({
     onCancel
 }: Props) {
 
+    const common = useTranslations("common");
+    const t = useTranslations("shelves");
+
+    const languageOptions: SelectOption[] = languages.map(language => ({
+        value: language.languageId,
+        label: `${language.name} (${language.nativeName})`,
+    }));
+    
     return (
 
         <form className={styles.form} onSubmit={onSubmit}>
-
-            <h2>{isEditing ? 'Editar Carrusuel' : 'Crear Carrusel'}</h2>
 
             {error && (
                 <p className={styles.errorMessage}>
@@ -65,39 +59,67 @@ export default function ShelfForm({
             )}
 
             <Input
-                label="Nombre del Carrusel"
-                value={name}
-                onChange={setName}
-                placeholder="Ej: Carrusel de Películas"
+                label={t("name")}
+                value={value.name}
+                onChange={(name) =>
+                    onChange(prev => ({
+                        ...prev,
+                        name,
+                    }))
+                }
+                placeholder={t("namePlaceholder")}
                 required
                 disabled={saving}
             />
 
             <Select
-                label="Target del Carrusel"
-                value={target}
-                onChange={(value) => 
-                    setTarget(value as ShelfTarget)
+                label={common("language")}
+                options={languageOptions}
+                value={value.languageId ?? ""}
+                onChange={(languageId) =>
+                    onChange(prev => ({
+                        ...prev,
+                        languageId: Number(languageId),
+                    }))
+                }
+                placeholder={common("selectLanguage")}
+                disabled={saving || isEditing}
+            />
+
+            <Select
+                label={t("target")}
+                value={value.target}
+                onChange={(target) =>
+                    onChange(prev => ({
+                        ...prev,
+                        target: target as ShelfTarget,
+                    }))
                 }
                 options={shelfTargetOptions}
                 disabled={saving}
             />
 
             <Select
-                label="Diseño de las tarjetas"
-                value={layout}
-                onChange={(value) =>
-                    setLayout(value as ShelfLayout)
+                label={t("layout")}
+                value={value.layout}
+                onChange={(layout) =>
+                    onChange(prev => ({
+                        ...prev,
+                        layout: layout as ShelfLayout,
+                    }))
                 }
                 options={shelfLayoutOptions}
                 disabled={saving}
             />
 
             <Select
-                label="Fuente del carrusel"
-                value={source}
-                onChange={(value) =>
-                    setSource(value as ShelfSource)
+                label={t("source")}
+                value={value.source}
+                onChange={(source) =>
+                    onChange(prev => ({
+                        ...prev,
+                        source: source as ShelfSource,
+                    }))
                 }
                 options={shelfSourceOptions}
                 disabled={saving}
@@ -106,12 +128,15 @@ export default function ShelfForm({
 
             <div className={styles.switchField}>
 
-                <span>Activo</span>
+                <span>{common("active")}</span>
 
                 <BubbleToggle
-                    checked={active}
+                    checked={value.active}
                     onChange={() =>
-                        setActive(!active)
+                        onChange(prev => ({
+                            ...prev,
+                            active: !prev.active,
+                        }))
                     }
                     disabled={saving}
                 />
@@ -125,10 +150,10 @@ export default function ShelfForm({
                     variant="animated"
                     loading={saving}
                     loadingText={
-                        isEditing ? 'Actualizando...' : 'Creando...'
+                        isEditing ? common("updating") : common("creating")
                     }
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? common("update") : common("create")}
                     
                 </Button>
                 {
@@ -139,7 +164,7 @@ export default function ShelfForm({
                             onClick={onCancel}
                             disabled={saving}
                         >
-                            Cancelar
+                            {common("cancel")}
                         </Button>
                     )
                 }

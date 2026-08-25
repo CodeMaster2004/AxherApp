@@ -5,6 +5,7 @@ import SystemRolesForm from "@/features/systemRoles/components/SystemRolesForm";
 import { useSystemRolesActions } from "@/features/systemRoles/hooks";
 import { systemRolesService } from "@/features/systemRoles/services/SystemRolesService";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { SyntheticEvent, useEffect, useState } from "react";
 
@@ -14,7 +15,7 @@ export default function EditSystemRolesPage(){
     const id = params?.id ? Number(params.id) : null;
     const [roleName, setRoleName] = useState("");
     const [loading, setLoading] = useState(true);
-
+    const t = useTranslations("common");
     const {editSystemRole, saving} = useSystemRolesActions({
         onSuccess: () => router.push("/admin/systemRoles"),
     });
@@ -63,7 +64,7 @@ export default function EditSystemRolesPage(){
     };
 
     if(loading){
-        return <div className={layoutStyles.loading}>Cargando...</div>
+        return <div className={layoutStyles.loading}>{t("loading")}...</div>
     }
 
     return (

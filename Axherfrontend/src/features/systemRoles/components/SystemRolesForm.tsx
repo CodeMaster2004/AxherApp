@@ -4,6 +4,7 @@ import type { SyntheticEvent } from "react";
 import formStyles from "@/shared/styles/shared/Form.module.css";
 import Input from "@/shared/components/ui/Input";
 import Button from "@/shared/components/ui/Button";
+import { useTranslations } from "next-intl";
 
 interface Props {
     roleName: string;
@@ -22,6 +23,9 @@ export default function SystemRolesForm({
     onCancel,
     saving = false,
 }: Props) {
+
+    const t = useTranslations("common");
+
 
     return (
 
@@ -44,7 +48,7 @@ export default function SystemRolesForm({
                     disabled={saving}
                     loadingText={isEditing ? 'Actualizando...' : ' Creando...'}
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? 'Actualizar' : t("create")}
                 </Button>
 
                 {onCancel && (
@@ -54,7 +58,7 @@ export default function SystemRolesForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {t("cancel")}
 
                     </Button>
                 )}

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.axher.backend.users.entities.Users;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -60,13 +62,38 @@ public class JwtService {
     /** VALIDAR TOKEN **/
     public boolean validateToken(String token) {
         try {
-            Claims claims = Jwts.parser()
+            Jwts.parser()
                 .verifyWith(getKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
-            return !claims.getExpiration().before(new Date());
-        } catch (Exception e) {
+                .parseSignedClaims(token);
+
+            return true;
+        } catch (ExpiredJwtException e) {
+            System.out.println("⏰ Token expirado: ");
+            return false;
+        }catch (JwtException | IllegalArgumentException e){
+            System.out.println("❌ Token inválido: " );
+            return false;
+        }
+    }
+
+    /** COMPROBAR SI EL TOKEN ESTÁ EXPIRADO **/
+    public boolean isTokenExpired(String token) {
+        try {
+
+            Jwts.parser()
+                    .verifyWith(getKey())
+                    .build()
+                    .parseSignedClaims(token);
+
+            return false;
+
+        } catch (ExpiredJwtException e) {
+
+            return true;
+
+        } catch (JwtException | IllegalArgumentException e) {
+
             return false;
         }
     }

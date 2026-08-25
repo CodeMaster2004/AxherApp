@@ -9,7 +9,6 @@ export default function SeriesHome() {
     return (
         <section className={styles.container}>
 
-
             <SeriesPageSections/>
 
         </section>

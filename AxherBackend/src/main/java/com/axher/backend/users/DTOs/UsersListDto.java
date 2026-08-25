@@ -10,6 +10,7 @@ public class UsersListDto {
     public Integer userId;
     public String email;
     public String username;
+    public String preferredLanguageCode;
     public Boolean isConfirmed;
     public LocalDateTime createdAt;
     public LocalDateTime lastLogin;

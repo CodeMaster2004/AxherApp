@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.axher.backend.content.core.service.ContentCategoryLocalizationService;
+import com.axher.backend.content.core.service.ContentLocalizationService;
 import com.axher.backend.content.series.DTOs.SeriesDTOs.SeriesDetailResponseDto;
 import com.axher.backend.content.series.entities.Series;
 
@@ -17,6 +19,9 @@ public class SeriesMapper {
     @Value("${app.base-url}")
     private String baseUrl;
 
+    private final ContentLocalizationService contentLocalizationService;
+    private final ContentCategoryLocalizationService contentCategoryLocalizationService;
+
     public SeriesDetailResponseDto toDto(Series series){
         if(series == null || series.getContent() == null) {
             return null;
@@ -24,19 +29,32 @@ public class SeriesMapper {
 
         SeriesDetailResponseDto dto = new SeriesDetailResponseDto();
 
+        var content = series.getContent();
+
+        /*
+         * Resolver título y descripción según
+         * el idioma actual.
+         */
+        var localized =
+                contentLocalizationService.resolve(content);
+
         dto.setContentId(series.getContent().getContentId());
-        dto.setTitle(series.getContent().getTitle());
-        dto.setDescription(series.getContent().getDescription());
+        dto.setTitle(localized.title());
+        dto.setDescription(localized.description());
         dto.setPosterUrl(buildUrl(series.getContent().getPosterUrl()));
         dto.setTrailerUrl(buildUrl(series.getContent().getTrailerUrl()));
         dto.setPrice(series.getContent().getPrice());
 
         //Categorias
         dto.setCategories(
-            series.getContent().getCategories()
+            content.getCategories()
                 .stream()
-                .map(c -> c.getName())
-                .collect(Collectors.toList())
+                .map(category ->
+                    contentCategoryLocalizationService
+                        .resolve(category)
+                        .name()
+                )
+                .toList()
         );
 
         //Status

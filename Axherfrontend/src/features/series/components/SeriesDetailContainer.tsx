@@ -21,9 +21,7 @@ export default function SeriesDetailContainer({
     series
 }: Props) {
 
-    console.log("SERIES DETAIL:", series);
     const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
-
 
 
     return (
@@ -46,8 +44,6 @@ export default function SeriesDetailContainer({
                      />
                 )
             }
-
-
 
             <SeasonsSection
                 seriesId={series.contentId}

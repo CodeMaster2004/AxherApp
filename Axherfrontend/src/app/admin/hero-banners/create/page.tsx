@@ -6,21 +6,28 @@ import { useUploadProgress } from "@/shared/hooks/useUploadProgress";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css"
+import { HeroBannerRequest } from "@/entities/types";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 export default function CreateHeroBannerPage() {
 
     const router = useRouter();
-
-    const [contentId,setContentId] = useState<number | undefined>();
-    const [titleOverride,setTitleOverride] = useState("");
-    const [descriptionOverride,setDescriptionOverride] = useState("");
-    const [priority,setPriority] = useState(1);
-    const [startDate,setStartDate] = useState("");
-    const [endDate,setEndDate] = useState("");
-    const [active,setActive] = useState(true);
+    const t = useTranslations("heroBanner");
+    const [form, setForm] = useState<HeroBannerRequest>({
+        contentId:0,
+        titleOverride:"",
+        descriptionOverride:"",
+        priority:1,
+        startDate:"",
+        endDate:"",
+        active:true,
+        languageId: 0
+    });
     const [backdropFile,setBackdropFile] = useState<File|null>(null);
+    const[error,setError] = useState("");
 
-
+    const {languages, loading: languagesLoading} = useLanguage();
 
     const {
         progress,
@@ -34,7 +41,7 @@ export default function CreateHeroBannerPage() {
         saving
     } = useHeroBannerActions({
         onSuccess(){
-            router.push("/admin/herobanner");
+            router.push("/admin/hero-banners");
         }
     });
 
@@ -44,64 +51,75 @@ export default function CreateHeroBannerPage() {
 
         e.preventDefault();
 
-
-        if(!contentId){
-            alert("Selecciona un contenido");
+        const titleTrim = form.titleOverride?.trim() ?? "";
+        const descriptionTrim = form.descriptionOverride?.trim() ?? "";
+        if (!form.contentId) {
+            setError(t("form.contentRequired"));
             return;
         }
 
-
-        if(!backdropFile){
-            alert("El banner es obligatorio");
+        if (!form.languageId) {
+            setError(t("form.languageRequired"));
             return;
         }
-
 
         const formData = new FormData();
 
 
         formData.append(
             "contentId",
-            contentId.toString()
+            form.contentId.toString()
         );
 
+        formData.append(
+            "languageId",
+            form.languageId.toString()
+        );
 
         formData.append(
             "titleOverride",
-            titleOverride
+            titleTrim
         );
 
 
         formData.append(
             "descriptionOverride",
-            descriptionOverride
+            descriptionTrim
         );
 
 
         formData.append(
             "priority",
-            priority.toString()
+            (form.priority ?? 0).toString()
         );
 
 
         formData.append(
             "active",
-            active.toString()
+            (form.active ?? true).toString()
         );
 
 
-        if(startDate)
-            formData.append("startDate",startDate);
+        if (form.startDate) {
+            formData.append(
+                "startDate",
+                form.startDate
+            );
+        }
 
+        if (form.endDate) {
+            formData.append(
+                "endDate",
+                form.endDate
+            );
+        }
 
-        if(endDate)
-            formData.append("endDate",endDate);
-
-
-        formData.append(
-            "backdropFile",
-            backdropFile
-        );
+        if (backdropFile) {
+            formData.append(
+                "backdropFile",
+                backdropFile
+            );
+        }
 
 
         resetProgress();
@@ -113,28 +131,30 @@ export default function CreateHeroBannerPage() {
 
     };
 
+    const handleCancel = () => {
+        router.push("/admin/hero-banners");
+    };
+
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Banner</h1>
+            <h1>{t("createTitle")}</h1>
             <HeroBannerForm
-                contentId={contentId}
-                setContentId={setContentId}
-                titleOverride={titleOverride}
-                setTitleOverride={setTitleOverride}
-                descriptionOverride={descriptionOverride}
-                setDescriptionOverride={setDescriptionOverride}
-                priority={priority}
-                setPriority={setPriority}
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                active={active}
-                setActive={setActive}
+                value={form}
+                onChange={(value) => {
+                    setForm(value);
+                    
+                    if (error) {
+                        setError("");
+                    }
+                }}
+                languages={languages}
                 backdropFile={backdropFile}
                 setBackdropFile={setBackdropFile}
                 onSubmit={handleSubmit}
-                saving={saving}
+                isEditing={false}
+                saving={saving || languagesLoading}
+                error={error || undefined}
+                onCancel={handleCancel}
                 
             />
         </div>

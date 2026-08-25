@@ -5,6 +5,7 @@ import { useAdminProblemReportActions } from "@/features/reports/hooks/useAdminP
 import { useAdminProblemReports } from "@/features/reports/hooks/useAdminProblemReports";
 import { useReportStatus } from "@/features/reportStatus/hooks/useReportStatus";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 
 export default function AdminProblemReportsView() {
 
@@ -33,11 +34,13 @@ export default function AdminProblemReportsView() {
         onSuccess: refetch,
     });
 
+    const t = useTranslations("problemReport");
+
     return (
         <div className={layoutStyles.pageContainer}>
 
             <div className={layoutStyles.header}>
-                <h1>Reportes de problemas</h1>
+                <h1>{t("title")}</h1>
             </div>
 
             <AdminProblemReportList

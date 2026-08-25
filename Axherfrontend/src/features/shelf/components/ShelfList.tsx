@@ -9,6 +9,7 @@ import { shelfLayoutOptions, shelfSourceOptions, shelfTargetOptions } from "@/sh
 import BubbleToggle from "@/shared/components/ui/BubbleToggle";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import Pagination from "@/shared/components/ui/Pagination";
+import { useTranslations } from "next-intl";
 
 interface Props {
 
@@ -32,6 +33,7 @@ interface Props {
 
     searchTerm: string;
     onSearchChange: (value: string) => void;
+    onTranslations: (shelf: ContentShelf) => void;
 }
 
 export default function ShelfList({
@@ -54,8 +56,12 @@ export default function ShelfList({
     onPrevPage,
 
     searchTerm,
-    onSearchChange
+    onSearchChange,
+    onTranslations
 }: Props) {
+
+    const common = useTranslations("common");
+    const t = useTranslations("shelves");
 
     const [confirmDialog, setConfirmDialog] = useState({
         isOpen: false,
@@ -94,10 +100,10 @@ export default function ShelfList({
 
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Eliminar carrusel"
-                message={`¿Deseas eliminar "${confirmDialog.title}"?`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", { title: confirmDialog.title })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 variant="danger"
                 onConfirm={handleConfirmDelete}
                 onCancel={() =>
@@ -114,7 +120,7 @@ export default function ShelfList({
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar carrusel..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) =>
                         onSearchChange(e.target.value)
@@ -129,8 +135,8 @@ export default function ShelfList({
                     <p>
                         {
                             loading
-                                ? "Cargando carruseles..."
-                                : "No se encontraron carruseles."
+                                ? t("list.loading")
+                                : t("list.empty")
                         }
                     </p>
 
@@ -145,13 +151,13 @@ export default function ShelfList({
                                 <tr>
 
                                     <th className={`${tableStyles.headCell} ${tableStyles.idColum}`}>ID</th>
-                                    <th className={tableStyles.headCell}>Nombre</th>
-                                    <th className={tableStyles.headCell}>Slug</th>
-                                    <th className={tableStyles.headCell}>Target</th>
-                                    <th className={tableStyles.headCell}>Layout</th>
-                                    <th className={tableStyles.headCell}>Source</th>
-                                    <th className={tableStyles.headCell}>Estado</th>
-                                    <th className={tableStyles.actionsColumn}>Acciones</th>
+                                    <th className={tableStyles.headCell}>{common("id")}</th>
+                                    <th className={tableStyles.headCell}>{t("list.slug")}</th>
+                                    <th className={tableStyles.headCell}>{t("list.target")}</th>
+                                    <th className={tableStyles.headCell}>{t("list.layout")}</th>
+                                    <th className={tableStyles.headCell}>{t("list.source")}</th>
+                                    <th className={tableStyles.headCell}>{t("list.status")}</th>
+                                    <th className={tableStyles.actionsColumn}>{common("actions")}</th>
 
                                 </tr>
 
@@ -217,20 +223,25 @@ export default function ShelfList({
                                                 <MoreMenu
                                                     items={[
                                                         {
-                                                            label:"Administrar contenido",
+                                                            label:t("manageContent"),
                                                             onClick:()=>onManageContents(shelf)
                                                         },
                                                         {
-                                                            label: "Editar",
+                                                            label: common("edit"),
                                                             onClick: () =>
                                                                 onEdit(shelf)
                                                         },
+                                                        ...(onTranslations ? [{
+                                                            label: common("translations"),
+                                                            onClick: () =>
+                                                                onTranslations(shelf)
+                                                        }] : []),
                                                         {
                                                             label:
                                                                 deletingId ===
                                                                 shelf.contentShelfId
-                                                                    ? "Eliminando..."
-                                                                    : "Eliminar",
+                                                                    ? common("deleting")
+                                                                    : common("delete"),
 
                                                             variant: "danger",
 

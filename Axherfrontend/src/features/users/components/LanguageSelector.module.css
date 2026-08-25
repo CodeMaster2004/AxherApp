@@ -1,0 +1,229 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1.5rem;
+
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(8px);
+}
+
+.modal {
+    width: min(400px, 100%);
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #1e1e1e 0%,
+            #0a0606 100%
+        );
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.55);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 1.5rem;
+}
+
+.titleWrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+}
+
+.titleWrapper svg {
+    margin-top: 0.2rem;
+    opacity: 0.8;
+}
+
+.titleWrapper h2 {
+    margin: 0;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.titleWrapper p {
+    margin: 0.35rem 0 0;
+
+    color: #8f939c;
+    font-size: 0.85rem;
+}
+
+.closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: transparent;
+    color: #a5a8b0;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.closeButton:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.content {
+    padding: 0 1.5rem 1rem;
+}
+
+.languageList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.languageItem {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0.9rem 1rem;
+
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    background: transparent;
+    color: #fff;
+
+    text-align: left;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.languageItem:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.languageItem.selected {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.languageInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.languageName {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.languageCode {
+    color: #858994;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+}
+
+.radio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+    height: 22px;
+
+    border: 1px solid #555a64;
+    border-radius: 50%;
+
+    color: #fff;
+    font-size: 0.75rem;
+}
+
+.selected .radio {
+    border-color: #fff;
+    background: #fff;
+    color: #111;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+
+    padding: 1rem 1.5rem 1.5rem;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cancelButton,
+.saveButton {
+    padding: 0.65rem 1rem;
+
+    border-radius: 8px;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.cancelButton {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    background: transparent;
+    color: #b4b7bf;
+}
+
+.cancelButton:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.saveButton {
+    border: 1px solid transparent;
+
+    background: #fff;
+    color: #111;
+}
+
+.saveButton:hover:not(:disabled) {
+    background: #e7e7e7;
+}
+
+.saveButton:disabled,
+.cancelButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.message {
+    padding: 2rem 0;
+
+    color: #8f939c;
+    text-align: center;
+}

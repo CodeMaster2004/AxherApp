@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.axher.backend.content.core.mapper.ContentStatusMapper;
 import com.axher.backend.content.series.DTOs.seasonDTOs.SeasonResponseDto;
 import com.axher.backend.content.series.entities.Seasons;
+import com.axher.backend.content.series.service.SeasonLocalizationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class SeasonMapper {
 
     private final ContentStatusMapper contentStatusMapper;
+    private final SeasonLocalizationService seasonLocalizationService;
 
 
     public SeasonResponseDto toDto(Seasons season){
@@ -23,10 +25,13 @@ public class SeasonMapper {
 
         SeasonResponseDto dto = new SeasonResponseDto();
 
+        SeasonLocalizationService.LocalizedSeason localized =
+            seasonLocalizationService.resolve(season);
+
         dto.setSeasonId(season.getSeasonId());
         dto.setSeasonNumber(season.getSeasonNumber());
-        dto.setTitle(season.getTitle());
-        dto.setDescription(season.getDescription());
+        dto.setTitle(localized.title());
+        dto.setDescription(localized.description());
         dto.setReleaseDate(season.getReleaseDate());
         dto.setStatus(
             contentStatusMapper.toDto(season.getContentStatus())

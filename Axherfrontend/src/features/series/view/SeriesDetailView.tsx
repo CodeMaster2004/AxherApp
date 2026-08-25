@@ -8,6 +8,7 @@ import SerieDetailView from "@/features/series/components/SerieDetailView";
 import { useSeries } from "@/features/series/hooks/useSeries";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,7 +16,8 @@ export default function SeriesDetailView() {
     const params = useParams();
     const router = useRouter();
     const contentId = params?.contentId ?  Number(params.contentId) : null;
-
+    const common = useTranslations("common");
+    const t = useTranslations("series");
     const { series, loading: seriesLoading, error: seriesError } = useSeries({
         contentId: contentId || 0,
         autoFetch: !!contentId,
@@ -66,31 +68,35 @@ export default function SeriesDetailView() {
         router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/create`);
     };
 
+    const handleTranslations = (season: SeasonDetail) => {
+            router.push(`/admin/series/${contentId}/seasons/${season.seasonId}/translations`);
+        };
+
     if(seriesLoading){
-        return <div className={layoutStyles.loading}>Cargando serie...</div>;
+        return <div className={layoutStyles.loading}>{t("loading")}</div>;
     }
 
     if(seriesError || !series) {
         return (
             <div className={layoutStyles.pageContainer}>
-                <p style={{color: "red"}}>Error al cargar la serie</p>
-                <Button onClick={() => router.push("/admin/contents")}>Volver</Button>
+                <p style={{color: "red"}}>{t("error")}</p>
+                <Button onClick={() => router.push("/admin/contents")}>{common("back")}</Button>
             </div>
         );
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <Button variant="secondary" onClick={() => router.push("/admin/series")}>
-                ← Volver
+            <Button variant="secondary" onClick={() => router.push("/admin/contents")}>
+                ← {common("back")}
             </Button>
 
             <SerieDetailView series={series} />
 
             <div className={layoutStyles.section} style={{ marginTop: '2rem' }}>
                 <div className={layoutStyles.header}>
-                    <h2>Gestión de Temporadas</h2>
-                    <Button variant="animated" onClick={handleAddSeason}>Nuevo</Button>
+                    <h2>{t("admin.seasonsTitle")}</h2>
+                    <Button variant="animated" onClick={handleAddSeason}>{common("new")}</Button>
                 </div>
 
                 <SeasonsList
@@ -111,6 +117,7 @@ export default function SeriesDetailView() {
                     onPrevPage={prevPage}
                     searchTerm={searchTerm}
                     onSearchChange={setSearchTerm}
+                    onTranslations={handleTranslations}
                 />
             </div>
         </div>

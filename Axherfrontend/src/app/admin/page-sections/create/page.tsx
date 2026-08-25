@@ -6,15 +6,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import PageSectionForm from "@/features/pageSection/components/PageSectionForm";
+import { useTranslations } from "next-intl";
 
 
 export default function CreatePageSectionPage() {
 
     const router = useRouter();
-
+    const common = useTranslations("common");
     const [page, setPage] = useState<PageType>("HOME");
     const [type, setType] = useState<PageSectionType>("SHELF");
-    const [displayOrder, setDisplayOrder] = useState(1);
+    const [displayOrder, setDisplayOrder] = useState<number | null>(null);
 
     const [active, setActive] = useState(true);
 
@@ -45,7 +46,7 @@ export default function CreatePageSectionPage() {
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Seccion</h1>
+            <h1>{common("create")}</h1>
 
             <PageSectionForm
                 page={page}

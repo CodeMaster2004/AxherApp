@@ -7,11 +7,14 @@ import { useRouter } from "next/navigation";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import Button from "@/shared/components/ui/Button";
 import ReportStatusList from "@/features/reportStatus/components/ReportStatusList";
+import { useTranslations } from "next-intl";
 
 
 export default function ReportStatusListView() {
 
     const router = useRouter();
+    const common = useTranslations("common");
+    const t = useTranslations("reportStatus");
     const {
         reportStatus,
         loading,
@@ -36,16 +39,20 @@ export default function ReportStatusListView() {
         router.push(`/admin/report-status/${reportStatus.reportStatusId}/edit`);
     }
 
+    const handleTranslations = (reportStatus: ReportStatusResponse) => {
+        router.push(`/admin/report-status/${reportStatus.reportStatusId}/translations`);
+    }
+
     return (
 
         <div className={layoutStyles.pageContainer}>
             <div className={layoutStyles.header}>
-                <h1>Estados de Reportes</h1>
+                <h1>{t("title")}</h1>
                 <Button
                     variant="animated"
                     onClick={handleCreate}
                 >
-                    Nuevo
+                    {common("new")}
                 </Button>
             </div>
             <ReportStatusList
@@ -60,6 +67,7 @@ export default function ReportStatusListView() {
                 onNextPage={nextPage}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
+                onTranslations={handleTranslations}
             />
         </div>
 

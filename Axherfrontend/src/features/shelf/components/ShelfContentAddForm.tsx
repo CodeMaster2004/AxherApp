@@ -5,6 +5,7 @@ import styles from "@/shared/styles/shared/Form.module.css";
 import Input from "@/shared/components/ui/Input";
 import Button from "@/shared/components/ui/Button";
 import ContentSelector from "@/shared/components/ui/ContentSelector";
+import { useTranslations } from "next-intl";
 
 interface Props {
     onSubmit: (contentId: number, position: number | null) => void;
@@ -19,7 +20,8 @@ export default function ShelfContentAddForm({
 }: Props) {
     const [contentId, setContentId] = useState<number>();
     const [position, setPosition] = useState<number | null>(null);
-
+    const t = useTranslations("shelves");
+    const common = useTranslations("common");
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -36,7 +38,7 @@ export default function ShelfContentAddForm({
 
         <form onSubmit={handleSubmit} className={styles.form}>
 
-            <h3>Agregar contenido</h3>
+            <h3>{t("content.add")}</h3>
             {error && (
                 <p className={styles.errorMessage}>
                     {error}
@@ -49,7 +51,7 @@ export default function ShelfContentAddForm({
             />
 
             <Input
-                label="Posición"
+                label={t("content.position")}
                 type="number"
                 value={position?.toString() ?? ""}
                 onChange={(value) => setPosition(Number(value))}
@@ -63,9 +65,9 @@ export default function ShelfContentAddForm({
                     type="submit"
                     variant="animated"
                     loading={saving}
-                    loadingText="Agregando..."
+                    loadingText={common("adding")}
                 >
-                    Agregar contenido
+                    {t("content.add")}
                 </Button>
 
             </div>

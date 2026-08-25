@@ -4,9 +4,17 @@ import org.springframework.stereotype.Component;
 
 import com.axher.backend.support.tickets.DTOs.SupportTicketResponseDto;
 import com.axher.backend.support.tickets.entities.SupportTicket;
+import com.axher.backend.support.tickets.service.SupportCategoryLocalizationService;
+import com.axher.backend.support.tickets.service.SupportTicketStatusLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class SupportTicketMapper {
+
+    private final SupportCategoryLocalizationService categoryLocalizationService;
+    private final SupportTicketStatusLocalizationService statusLocalizationService;
 
     public SupportTicketResponseDto toDto(SupportTicket ticket) {
 
@@ -27,8 +35,13 @@ public class SupportTicketMapper {
             dto.setSupportCategoryCode(
                 ticket.getSupportCategory().getCode()
             );
+            var localizedCategory =
+                    categoryLocalizationService.resolve(
+                            ticket.getSupportCategory()
+                    );
+
             dto.setSupportCategoryName(
-                ticket.getSupportCategory().getName()
+                localizedCategory.name()
             );
         }
 
@@ -41,8 +54,14 @@ public class SupportTicketMapper {
             dto.setSupportTicketStatusCode(
                 ticket.getSupportTicketStatus().getCode()
             );
+
+            var localizedStatus =
+                    statusLocalizationService.resolve(
+                            ticket.getSupportTicketStatus()
+                    );
+
             dto.setSupportTicketStatusName(
-                ticket.getSupportTicketStatus().getName()
+                localizedStatus.name()
             );
         }
 

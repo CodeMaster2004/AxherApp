@@ -3,14 +3,18 @@
 import formStyles from "@/shared/styles/shared/Form.module.css";
 import Input from '@/shared/components/ui/Input';
 import Button from '@/shared/components/ui/Button';
+import Select, { SelectOption } from "@/shared/components/ui/Select";
+import { ContentStatusRequest } from "@/entities/types/status.types";
+import { LanguageResponse } from "@/entities/types";
+import { useTranslations } from "next-intl";
+
 
 interface Props {
-    code: string;
-    setCode: (value: string) => void;
-    name: string;
-    setName: (value: string) => void;
-    description: string;
-    setDescription: (value: string) => void;
+    value: ContentStatusRequest;
+    onChange: React.Dispatch<
+        React.SetStateAction<ContentStatusRequest>
+    >;
+    languages: LanguageResponse[];
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     isEditing: boolean;
     onCancel?: () => void;
@@ -19,43 +23,72 @@ interface Props {
 }
 
 export default function ContentStatusForm({
-    code,
-    setCode,
-    name,
-    setName,
-    description,
-    setDescription,
+    value,
+    onChange,
     onSubmit,
     isEditing,
     onCancel,
     saving = false,
     error,
+    languages,
 }: Props) {
+
+    const languageOptions: SelectOption[] = languages.map(language => ({
+        value: language.languageId,
+        label: `${language.name} (${language.nativeName})`,
+    }));
+
+    const common = useTranslations("common");
+   const t = useTranslations("contentStatus");
+    
     return (
+        
         <form onSubmit={onSubmit} className={formStyles.form}>
-            <h2>{isEditing ? 'Editar Estado' : 'Crear Estado de Película'}</h2>
-            {/* ERROR */}
             {error && (
                 <p className={formStyles.errorMessage}>
                 {error}
                 </p>
             )}
             <Input 
-                label="Código del Estado"
-                value={code}
-                onChange={setCode}
-                placeholder="Ej: Disponible, No disponible, Próximamente"
+                label={t("form.codeLabel")}
+                value={value.code}
+                onChange={(code) =>
+                    onChange(prev => ({
+                        ...prev,
+                        code,
+                    }))
+                }
+                placeholder={t("form.codePlaceholder")}
                 maxLength={20}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
             />
 
+            <Select
+                label={t("form.languageLabel")}
+                options={languageOptions}
+                value={value.languageId ?? ""}
+                onChange={(languageId) =>
+                    onChange(prev => ({
+                        ...prev,
+                        languageId: Number(languageId),
+                    }))
+                }
+                placeholder={t("form.languagePlaceholder")}
+                disabled={saving || isEditing}
+            />
+
             <Input
-                label="Nombre del Estado"
-                value={name}
-                onChange={setName}
-                placeholder="Ej: Disponible, No disponible, Próximamente"
+                label={t("form.nameLabel")}
+                value={value.name}
+                onChange={(name) =>
+                    onChange(prev => ({
+                        ...prev,
+                        name,
+                    }))
+                }
+                placeholder={t("form.namePlaceholder")}
                 maxLength={50}
                 required
                 disabled={saving}
@@ -63,10 +96,15 @@ export default function ContentStatusForm({
             />
 
             <Input
-                label="Descripción (opcional)"
-                value={description}
-                onChange={setDescription}
-                placeholder="Ej: Película disponible en cartelera"
+                label={t("form.descriptionLabel")}
+                value={value.description}
+                onChange={(description) =>
+                    onChange(prev => ({
+                        ...prev,
+                        description,
+                    }))
+                }
+                placeholder={t("form.descriptionPlaceholder")}
                 required={false} // opcional
                 disabled={saving}
             />
@@ -77,9 +115,9 @@ export default function ContentStatusForm({
                     type="submit" 
                     variant="animated" 
                     loading={saving} 
-                    loadingText={isEditing ? 'Actualizando...' : 'Creando...'}
+                    loadingText={isEditing ? common("updating") : common("creating")}
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
                 
                 {onCancel && (
@@ -89,7 +127,7 @@ export default function ContentStatusForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {common("cancel")}
                     </Button>
                 )}
             </div>

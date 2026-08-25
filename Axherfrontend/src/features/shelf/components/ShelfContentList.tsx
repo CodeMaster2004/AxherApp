@@ -8,6 +8,7 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "./ShelfContentList.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
 
@@ -35,6 +36,8 @@ export default function ShelfContentList({
     loading = false
 }: Props) {
 
+    const common = useTranslations("common");
+    const t = useTranslations("shelves");
     const [items, setItems] = useState(contents);
 
     useEffect(() => {
@@ -48,9 +51,7 @@ export default function ShelfContentList({
     ] = useState({
 
         isOpen: false,
-
         id: 0,
-
         title: ""
 
     });
@@ -64,9 +65,7 @@ export default function ShelfContentList({
         setConfirmDialog({
 
             isOpen: true,
-
             id,
-
             title
 
         });
@@ -82,9 +81,7 @@ export default function ShelfContentList({
         setConfirmDialog({
 
             isOpen: false,
-
             id: 0,
-
             title: ""
 
         });
@@ -100,19 +97,14 @@ export default function ShelfContentList({
                 isOpen={
                     confirmDialog.isOpen
                 }
+                title={t("content.deleteTitle")}
+                message={t("content.deleteMessage", {
+                    title: confirmDialog.title
 
-                title="Eliminar contenido"
-
-                message={
-                    `¿Eliminar "${confirmDialog.title}" del carrusel?`
-                }
-
-                confirmText="Eliminar"
-
-                cancelText="Cancelar"
-
+                })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 variant="danger"
-
                 onConfirm={
                     handleConfirmDelete
                 }
@@ -121,9 +113,7 @@ export default function ShelfContentList({
                     setConfirmDialog({
 
                         isOpen: false,
-
                         id: 0,
-
                         title: ""
 
                     })
@@ -133,7 +123,7 @@ export default function ShelfContentList({
 
 
             <h2>
-                Contenido del Carrusel
+                {t("content.title")}
             </h2>
 
 
@@ -143,8 +133,8 @@ export default function ShelfContentList({
                     <p>
                         {
                             loading
-                                ? "Cargando contenidos..."
-                                : "Este carrusel no tiene contenido."
+                                ? t("content.loading")
+                                : t("content.empty")
                         }
                     </p>
 
@@ -248,7 +238,7 @@ export default function ShelfContentList({
                                         >
 
                                             <span>
-                                                Posición {
+                                                {t("content.position")}: {
                                                     index + 1
                                                 }
                                             </span>
@@ -282,8 +272,8 @@ export default function ShelfContentList({
                                             {
                                                 deletingId ===
                                                 item.shelfContentId
-                                                    ? "Eliminando..."
-                                                    : "Eliminar"
+                                                    ? common("deleting")
+                                                    : common("delete")
                                             }
 
                                         </Button>

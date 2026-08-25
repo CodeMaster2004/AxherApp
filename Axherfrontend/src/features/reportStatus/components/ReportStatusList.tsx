@@ -5,6 +5,7 @@ import tableStyles from "@/shared/styles/shared/Table.module.css";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import Pagination from "@/shared/components/ui/Pagination";
+import { useTranslations } from "next-intl";
 
 interface Props {
     reportStatus: ReportStatusResponse[];
@@ -19,6 +20,7 @@ interface Props {
     onPrevPage: () => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
+    onTranslations?: (reportStatus: ReportStatusResponse) => void;
 }
 
 export default function ReportStatusList({
@@ -33,8 +35,12 @@ export default function ReportStatusList({
     onNextPage,
     onPrevPage,
     searchTerm,
-    onSearchChange
+    onSearchChange,
+    onTranslations,
 }: Props) {
+
+    const common = useTranslations("common");
+    const t = useTranslations("reportStatus");
 
     const [confirmDialog, setConfirmDialog] = useState<{ isOpen: boolean, reportStatusId: number, name: string }>({
         isOpen: false,
@@ -54,26 +60,26 @@ export default function ReportStatusList({
     const handleCancelDelete = () => {
         setConfirmDialog({ isOpen: false, reportStatusId: 0, name: "" });
     }
+    
 
     return (
 
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Confirmar Eliminación"
-                message={`¿Estás seguro de que deseas eliminar el estado de reporte "${confirmDialog.name}"? Esta acción no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", { name: confirmDialog.name })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             />
-            <h2>Lista de Estados de Reporte</h2>
 
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar por nombre o código"
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -81,17 +87,17 @@ export default function ReportStatusList({
             </div>
 
             {reportStatus.length === 0 ? (
-                <p>{loading ? "Cargando..." : "No se encontraron estados de reporte."}</p>
+                <p>{loading ? common("loading") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                   <table className={tableStyles.table}>
                     <thead>
                         <tr className={tableStyles.rowHover}>
-                            <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                            <th className={tableStyles.headCell}>Code</th>
-                            <th className={tableStyles.headCell}>Nombre</th>
-                            <th className={tableStyles.headCell}>Descripción</th>
-                            <th className={tableStyles.headCell}>Acciones</th>
+                            <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>{common("id")}</th>
+                            <th className={tableStyles.headCell}>{t("list.code")}</th>
+                            <th className={tableStyles.headCell}>{common("name")}</th>
+                            <th className={tableStyles.headCell}>{common("description")}</th>
+                            <th className={tableStyles.headCell}>{common("actions")}</th>
                         </tr>
                     </thead>
 
@@ -107,14 +113,18 @@ export default function ReportStatusList({
                                             <MoreMenu
                                                 items={[
                                                     {
-                                                        label: "Editar",
+                                                        label: common("edit"),
                                                         onClick: () => onEdit(reportStatus),
                                                     },
+                                                    ...(onTranslations ? [{
+                                                        label: common("translations"),
+                                                        onClick: () => onTranslations(reportStatus),
+                                                    }]: []),
                                                     {
                                                         label:
                                                             deletingId === reportStatus.reportStatusId
-                                                                ? "Eliminando..."
-                                                                : "Eliminar",
+                                                                ? common("deleting")
+                                                                : common("delete"),
                                                         onClick: () => handleDeleteClick(reportStatus.reportStatusId, reportStatus.code),
                                                         variant: "danger",
                                                     },

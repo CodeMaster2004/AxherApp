@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentCategories, ContentStatus, Discounts } from "@/entities/types";
+import { ContentCategoryResponse, ContentStatusResponse, Discounts, LanguageResponse } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import FileInput from "@/shared/components/ui/FileInput";
 import FilePreviewOrLink from "@/shared/components/ui/FilePreviewOrLink";
@@ -10,6 +10,7 @@ import MultiSelect, { MultiSelectOption } from "@/shared/components/ui/MultiSele
 import Select, { SelectOption } from "@/shared/components/ui/Select";
 import TextArea from "@/shared/components/ui/TextArea";
 import formStyles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     title: string;
@@ -17,15 +18,18 @@ interface Props {
     price: number;
     type: "MOVIE" | "SERIE" | undefined;
 
+    originalLanguageId?: number;
+    availableLanguages: LanguageResponse[];
+
     // solo para Movie
     movieFile?: File | null;
     movieUrl?: string
 
     selectedCategories: number[];
-    availableCategories: ContentCategories[];
+    availableCategories: ContentCategoryResponse[];
 
     selectedStatusId?: number;
-    availableStatuses: ContentStatus[];
+    availableStatuses: ContentStatusResponse[];
 
     selectedDiscountId?: number;
     availableDiscounts: Discounts[];
@@ -44,6 +48,7 @@ interface Props {
     setDescription: (value: string) => void;
     setPrice: (value: number) => void;
     setType: (value: "MOVIE" | "SERIE" | undefined) => void;
+    setOriginalLanguageId: (value: number) => void;
 
     setSelectedCategories: (value: number[]) => void;
     setSelectedStatusId: (value?: number) => void;
@@ -68,6 +73,8 @@ export default function ContentsForm({
     description,
     price,
     type,
+    originalLanguageId,
+    availableLanguages = [],
     movieFile,
     movieUrl,
     selectedCategories = [],
@@ -87,6 +94,7 @@ export default function ContentsForm({
     setDescription,
     setPrice,
     setType,
+    setOriginalLanguageId,
     setSelectedCategories,
     setSelectedStatusId,
     setSelectedDiscountId,
@@ -101,6 +109,9 @@ export default function ContentsForm({
     saving = false,
     onCancel,
 }: Props) {
+
+    const common = useTranslations("common");
+    const t = useTranslations("contents");
     const statusOptions: SelectOption[] = availableStatuses.map((status) => ({
         value: status.contentStatusId,
         label: status.name,
@@ -117,16 +128,20 @@ export default function ContentsForm({
     }));
 
     const typeOptions: SelectOption[] = [
-        {value: "MOVIE", label: "Película"},
-        {value: "SERIE", label: "Serie"},
+        {value: "MOVIE", label: t("form.movie")},
+        {value: "SERIE", label: t("form.series")},
     ];
+
+    const languageOptions: SelectOption[] = availableLanguages.map((language) => ({
+        value: language.languageId,
+        label: `${language.name} (${language.nativeName})`,
+    }))
 
     return (
         <form onSubmit={onSubmit} className={formStyles.form}>
-            <h2>{isEditing ? "Editar Contenido" : "Crear Contenido"}</h2>
 
             <Select
-                label="Tipo de contenido"
+                label={t("form.contentType")}
                 options={typeOptions}
                 value={type}
                 onChange={(val) => setType(val as "MOVIE" | "SERIE" | undefined)}
@@ -135,7 +150,7 @@ export default function ContentsForm({
             />
 
             <Input
-                label="Título"
+                label={common("title")}
                 value={title}
                 onChange={setTitle}
                 required
@@ -144,15 +159,25 @@ export default function ContentsForm({
             />
             
             <TextArea
-                label="Descripción"
+                label={common("description")}
                 value={description || ""}
                 onChange={setDescription}
                 rows={4}
                 disabled={saving}
             />
 
+            <Select
+                label={t("form.originalLanguage")}
+                options={languageOptions}
+                value={originalLanguageId}
+                onChange={(val) => setOriginalLanguageId(Number(val))}
+                placeholder={t("form.originalLanguagePlaceholder")}
+                required
+                disabled={saving || isEditing}
+            />
+
             <Input
-                label="Precio"
+                label={t("list.price")}
                 type="number"
                 value={price.toString()}
                 onChange={(val) => setPrice(Number(val))}
@@ -162,53 +187,53 @@ export default function ContentsForm({
                 step="0.01"
             />
 
-            <FormGroup label="Categorías">
+            <FormGroup label={t("list.categories")}>
                 <MultiSelect
                     options={categoryOptions}
                     selected={selectedCategories}
                     onChange={(arr) => setSelectedCategories(arr.map(Number))} 
-                    placeholder="Agregar categoria"
+                    placeholder={t("form.categoryPlaceholder")}
                     multiple={true}
                     disabled={saving}
                 />
             </FormGroup>
 
             <Select
-                label="Estado"
+                label={common("status")}
                 options={statusOptions}
                 value={selectedStatusId}
                 onChange={(val) => setSelectedStatusId(val as number | undefined)}
-                placeholder="Seleccionar estado"
+                placeholder={t("form.statusPlaceholder")}
                 disabled={saving}
             />
 
             <Select
-                label="Descuento"
+                label={t("list.discount")}
                 options={discountOptions}
                 value={selectedDiscountId}
                 onChange={(val) => setSelectedDiscountId(val as number | undefined)}
-                placeholder="Sin descuento"
+                placeholder={t("form.discountPlaceholder")}
                 disabled={saving}
             />
 
-            <FileInput label="Poster" accept="image/*" onChange={setPosterFile} disabled={saving}/>
-            {!posterFile && <FilePreviewOrLink url={posterUrl} type="image" label="Poster actual" file={null}/>}
+            <FileInput label={t("form.poster")} accept="image/*" onChange={setPosterFile} disabled={saving}/>
+            {!posterFile && <FilePreviewOrLink url={posterUrl} type="image" label={t("form.currentPoster")} file={null}/>}
 
-            <FileInput label="Backdrop" accept="image/*" onChange={setBackdropFile} disabled={saving}/>
-            {!backdropFile && <FilePreviewOrLink url={backdropUrl} type="image" label="Backdrop actual" file={null}/>}
+            <FileInput label={t("form.backdrop")} accept="image/*" onChange={setBackdropFile} disabled={saving}/>
+            {!backdropFile && <FilePreviewOrLink url={backdropUrl} type="image" label={t("form.currentBackdrop")} file={null}/>}
 
-            <FileInput label="Trailer" accept="video/*" onChange={setTrailerFile} disabled={saving}/>
-            {!trailerFile && <FilePreviewOrLink url={trailerUrl} type="video" label="Trailer actual" file={null}/>}
+            <FileInput label={t("form.trailer")} accept="video/*" onChange={setTrailerFile} disabled={saving}/>
+            {!trailerFile && <FilePreviewOrLink url={trailerUrl} type="video" label={t("form.currentTrailer")} file={null}/>}
 
             {type === "MOVIE" && setMovieFile && (
                 <>
-                    <FileInput label="Pelicula" accept="video/*" onChange={setMovieFile} disabled={saving}/>
-                    {!movieFile && <FilePreviewOrLink url={movieUrl} type="video" label="Pelicula actual" file={null}/>}
+                    <FileInput label={t("form.movieFile")} accept="video/*" onChange={setMovieFile} disabled={saving}/>
+                    {!movieFile && <FilePreviewOrLink url={movieUrl} type="video" label={t("form.currentMovie")} file={null}/>}
                 </>
             )}
 
             <Input
-                label="Fecha de estreno"
+                label={t("form.releaseDate")}
                 type="datetime-local"
                 value={releaseDate || ""}
                 onChange={setReleaseDate}
@@ -216,13 +241,13 @@ export default function ContentsForm({
             />
 
             <div className={formStyles.formActions}>
-                <Button type="submit" variant="animated" disabled={saving} loadingText={isEditing ? "Actualizando..." : "Creando..."}>
-                    {isEditing ? "Actualizar" : "Crear"}
+                <Button type="submit" variant="animated" disabled={saving} loadingText={isEditing ? common("updating") : common("creating")}>
+                    {isEditing ? common("update") : common("create")}
                 </Button>
 
                 {onCancel && (
                     <Button type="button" variant="secondary" onClick={onCancel} disabled={saving}>
-                        Cancelar
+                        {common("cancel")}
                     </Button>
                 )}
 

@@ -9,6 +9,7 @@ import Image from "next/image";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import Pagination from "@/shared/components/ui/Pagination";
 import BubbleToggle from "@/shared/components/ui/BubbleToggle";
+import { useTranslations } from "next-intl";
 
 interface Props {
     banners: HeroBanner[];
@@ -29,6 +30,7 @@ interface Props {
 
     searchTerm:string;
     onSearchChange:(value:string)=>void;
+    onTranslations?:(banner: HeroBanner)=>void;
 }
 
 export default function HeroBannerList({
@@ -50,7 +52,8 @@ export default function HeroBannerList({
     onPrevPage,
 
     searchTerm,
-    onSearchChange
+    onSearchChange,
+    onTranslations,
 
 }: Props){
 
@@ -76,6 +79,9 @@ export default function HeroBannerList({
             title: "",
         });
     }
+
+    const common = useTranslations("common");
+    const t = useTranslations("heroBanner");
         
     return (
 
@@ -83,21 +89,19 @@ export default function HeroBannerList({
 
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Confirmar eliminación"
-                message={`¿Estás seguro de que deseas eliminar el banner "${confirmDialog.title}"?`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", { title: confirmDialog.title })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 variant="danger"
                 onConfirm={handleConfirmDelete}
                 onCancel={() => setConfirmDialog({ isOpen: false, id: 0, title: "" })}
             />
 
-            <h2>Lista de Banners</h2>
-
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar banner..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e)=>onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -109,8 +113,8 @@ export default function HeroBannerList({
                     <p>
                         {
                             loading
-                            ? "Cargando banners..."
-                            : "No se encontraron banners."
+                            ? t("list.loading")
+                            : t("list.empty")
                         }
                     </p>
                 ):(
@@ -118,14 +122,14 @@ export default function HeroBannerList({
                         <table className={tableStyles.table}>
                             <thead>
                                 <tr>
-                                    <th className={`${tableStyles.headCell} ${tableStyles.idColum}`}>ID</th>
-                                    <th className={`${tableStyles.headCell} ${tableStyles.backdropColum}`}>Imagen</th>
-                                    <th className={`${tableStyles.headCell} ${tableStyles.contentColum}`}>Contenido</th>
-                                    <th className={`${tableStyles.headCell} ${tableStyles.priorityColum}`}>Prioridad</th>
-                                    <th className={`${tableStyles.headCell} ${tableStyles.iniciColum}`}>Inicio</th>
-                                    <th className={`${tableStyles.headCell} ${tableStyles.finColum}`}>Fin</th>
-                                    <th className={`${tableStyles.headCell} ${tableStyles.estadoColum}`}>Estado</th>
-                                    <th className={tableStyles.actionsColumn}>Acciones</th>
+                                    <th className={`${tableStyles.headCell} ${tableStyles.idColum}`}>{common("id")}</th>
+                                    <th className={`${tableStyles.headCell} ${tableStyles.backdropColum}`}>{t("list.image")}</th>
+                                    <th className={`${tableStyles.headCell} ${tableStyles.contentColum}`}>{t("list.content")}</th>
+                                    <th className={`${tableStyles.headCell} ${tableStyles.priorityColum}`}>{t("list.priority")}</th>
+                                    <th className={`${tableStyles.headCell} ${tableStyles.iniciColum}`}>{t("list.startDate")}</th>
+                                    <th className={`${tableStyles.headCell} ${tableStyles.finColum}`}>{t("list.endDate")}</th>
+                                    <th className={`${tableStyles.headCell} ${tableStyles.estadoColum}`}>{t("list.status")}</th>
+                                    <th className={tableStyles.actionsColumn}>{common("actions")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -139,7 +143,7 @@ export default function HeroBannerList({
                                                     banner.backdropUrl ?
                                                     <Image
                                                         src={banner.backdropUrl}
-                                                        alt={banner.titleOverride || banner.contentTitle || "Hero banner"}
+                                                        alt={banner.titleOverride || banner.contentTitle || t("title")}
                                                         width={180}
                                                         height={100}
                                                         style={{objectFit:"cover"}}
@@ -177,14 +181,18 @@ export default function HeroBannerList({
                                                 <MoreMenu
                                                     items={[
                                                         {
-                                                            label: "Editar",
+                                                            label: common("edit"),
                                                             onClick: () => onEdit(banner),
                                                         },
+                                                        ...(onTranslations ? [{
+                                                            label: t("list.translations"),
+                                                            onClick: () => onTranslations(banner),
+                                                        }] : []),
                                                         {
                                                             label:
                                                             deletingId === banner.heroBannerId
-                                                                ? "Eliminando..."
-                                                                : "Eliminar",
+                                                                ? common("deleting")
+                                                                : common("delete"),
                                                                 variant: "danger",
 
                                                                 onClick:() => handleDeleteClick(
@@ -207,11 +215,8 @@ export default function HeroBannerList({
                 banners.length > 0 && totalPages > 1 && (
                     <Pagination
                         currentPage={currentPage}
-
                         totalPages={totalPages}
-
                         onNextPage={onNextPage}
-
                         onPrevPage={onPrevPage}
                     />
                 )

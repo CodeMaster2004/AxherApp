@@ -12,6 +12,7 @@ export interface HeroBanner {
     endDate?: string;
     active: boolean;
     createdAt?: string;
+    languageId: number;
 }
 
 
@@ -24,6 +25,7 @@ export interface HeroBannerRequest {
     startDate?: string;
     endDate?: string;
     active?: boolean;
+    languageId?: number;
 }
 
 
@@ -37,4 +39,19 @@ export interface HeroBannerResponse {
     startDate?: string;
     endDate?: string;
     active: boolean;
+}
+
+export interface HeroBannerTranslationRequest {
+    languageId: number;
+    titleOverride: string;
+    descriptionOverride: string;
+}
+
+export interface HeroBannerTranslationResponse {
+    heroBannerId: number;
+    languageId: number;
+    languageCode: string;
+    languageName: string;
+    titleOverride: string | null;
+    descriptionOverride: string | null;
 }

@@ -1,9 +1,12 @@
 package com.axher.backend.content.series.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.axher.backend.content.core.entities.ContentStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,11 +39,11 @@ public class Episodes {
     @Column(nullable = false)
     private Integer episodeNumber;
 
-    @Column(length = 150)
+    /*@Column(length = 150)
     private String title;
 
     @Column(length = 1000)
-    private String description;
+    private String description;*/
 
     @Column(name = "duration_seconds")
     private Integer durationSeconds;
@@ -56,5 +60,13 @@ public class Episodes {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_status_id")
     private ContentStatus contentStatus;
+
+    @OneToMany(
+        mappedBy = "episode",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    private List<EpisodeTranslation> translations = new ArrayList<>();
 }
 

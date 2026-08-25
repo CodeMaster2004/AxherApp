@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
-import { HeroBanner, Page, PaginationParams } from "@/entities/types";
+import { HeroBanner, HeroBannerTranslationRequest, HeroBannerTranslationResponse, Page, PaginationParams } from "@/entities/types";
 
 export const adminHeroBannerApi = {
 
@@ -77,6 +77,44 @@ export const adminHeroBannerApi = {
         axiosClient.delete(
             `/admin/hero/${id}`,
             config
-        )
+        ),
+
+    translations: {
+
+        getAll: (
+            heroBannerId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.get<
+                HeroBannerTranslationResponse[]
+            >(
+                `/admin/hero-banners/${heroBannerId}/translations`,
+                config
+            ),
+
+        save: (
+            heroBannerId: number,
+            data: HeroBannerTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<
+                HeroBannerTranslationResponse
+            >(
+                `/admin/hero-banners/${heroBannerId}/translations`,
+                data,
+                config
+            ),
+
+        delete: (
+            heroBannerId: number,
+            languageId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.delete(
+                `/admin/hero-banners/${heroBannerId}/translations/${languageId}`,
+                config
+            ),
+
+    },
 }
     

@@ -10,6 +10,8 @@ import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css"
 import ProgressBar from "@/shared/components/ui/ProgressBar";
 import ContentsForm from "@/features/contents/components/ContentsForm";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 export default function CreateContentPage() {
     const { contentCategories: categories = [] } = useContentCategories();
@@ -19,6 +21,8 @@ export default function CreateContentPage() {
     const searchParams = useSearchParams();
     const isSeriesContext = searchParams.get("type") === "SERIE";
     const initialType: "MOVIE" | "SERIE" | undefined = isSeriesContext ? "SERIE" : undefined;
+    const { languages = [] } = useLanguage();
+    const [originalLanguageId, setOriginalLanguageId] = useState<number | undefined>();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -27,7 +31,7 @@ export default function CreateContentPage() {
 
     const [movieFile, setMovieFile] = useState<File | null>(null);
 
-    const [selectedCategories, SetSelectedCategories] = useState<number[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
     const [selectedStatusId, setSelectedStatusId] = useState<number | undefined>();
     const [selectedDiscountId, setSelectedDiscountId] = useState<number | undefined>();
 
@@ -37,7 +41,8 @@ export default function CreateContentPage() {
     const [releaseDate, setReleaseDate] = useState("");
 
     const [error, setError] = useState("");
-
+    const t = useTranslations("contents");
+    const common = useTranslations("common");
     const{ progress, handleProgress, resetProgress } = useUploadProgress();
 
     const { addContent, saving } = useContentsActions({
@@ -48,33 +53,38 @@ export default function CreateContentPage() {
         e.preventDefault();
 
         if (!title.trim()) {
-            setError("El titulo es obligatorio");
+            setError(t("validation.titleRequired"));
+            return;
+        }
+
+        if (!originalLanguageId) {
+            setError(t("validation.originalLanguageRequired"));
             return;
         }
 
         if (selectedCategories.length === 0) {
-            setError("Selecciona al menos una categoría");
+            setError(t("validation.categoryRequired"));
             return;
         }
 
         if (!posterFile) {
-            setError("El poster es obligatorio");
+            setError(t("validation.posterRequired"));
             return;
         }
         if (!backdropFile){
-            setError("El backdrop es obligatorio");
+            setError(t("validation.backdropRequired"));
             return;
         }
 
         if (!type) {
-            setError("Selecciona el tipo de contenido");
+            setError(t("validation.typeRequired"));
             return;
         }
 
         // Validacion especifica para movies
         if (type === "MOVIE" && !movieFile) {
-            setError("El archivo de la película es obligatorio para tipo MOVIE");
-            return;;
+            setError(t("validation.movieFileRequired"));
+            return;
         }
 
         setError("");
@@ -85,6 +95,7 @@ export default function CreateContentPage() {
         formData.append("description", description.trim());
         formData.append("type", type);
         formData.append("price", price.toString());
+        formData.append("originalLanguageId", originalLanguageId.toString());
 
         //Solo para movies
         if(type === "MOVIE") {
@@ -118,7 +129,7 @@ export default function CreateContentPage() {
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Contenido</h1>
+            <h1>{common("create")}{t("title")}</h1>
             <ProgressBar progress={progress}/>
             <ContentsForm
                 title={title}
@@ -127,6 +138,8 @@ export default function CreateContentPage() {
                 lockType={isSeriesContext}
                 price={price}
                 movieFile={type === "MOVIE" ? movieFile : undefined}
+                originalLanguageId={originalLanguageId}
+                availableLanguages={languages}
                 selectedCategories={selectedCategories}
                 availableCategories={categories}
                 selectedStatusId={selectedStatusId}
@@ -140,8 +153,9 @@ export default function CreateContentPage() {
                 setTitle={setTitle}
                 setDescription={setDescription}
                 setType={setType}
+                setOriginalLanguageId={setOriginalLanguageId}
                 setPrice={setPrice}
-                setSelectedCategories={SetSelectedCategories}
+                setSelectedCategories={setSelectedCategories}
                 setSelectedStatusId={setSelectedStatusId}
                 setSelectedDiscountId={setSelectedDiscountId}
                 setPosterFile={setPosterFile}

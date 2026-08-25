@@ -7,6 +7,7 @@ export interface UserRegisterRequest{
     email: string;
     password: string;
     confirmPassword: string;
+    preferredLanguageCode?: string | null;
 }
  
 export interface UserAuthResponse{
@@ -17,4 +18,5 @@ export interface UserAuthResponse{
     token: string;
     refreshToken: string;
     provider: string;
+    preferredLanguageCode?: string | null;
 }

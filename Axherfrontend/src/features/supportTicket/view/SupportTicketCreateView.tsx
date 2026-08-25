@@ -6,6 +6,7 @@ import { useSupportCategory } from "@/features/supportCategory/hooks/useSupportC
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 
 export default function SupportTicketCreateView() {
 
@@ -15,7 +16,7 @@ export default function SupportTicketCreateView() {
     const [supportCategoryId, setSupportCategoryId] =
         useState<number | "">("");
     const [description, setDescription] = useState("");
-
+    const t = useTranslations("supportTickets");
     const [error, setError] = useState("");
 
     const {
@@ -44,17 +45,17 @@ export default function SupportTicketCreateView() {
         const descriptionTrim = description.trim();
 
         if (!subjectTrim) {
-            setError("Por favor completa el asunto.");
+            setError(t("form.validation.subjectRequired"));
             return;
         }
 
         if (!supportCategoryId) {
-            setError("Por favor selecciona una categoría.");
+            setError(t("form.validation.categoryRequired"));
             return;
         }
 
         if (!descriptionTrim) {
-            setError("Por favor describe el problema.");
+            setError(t("form.validation.descriptionRequired"));
             return;
         }
 
@@ -72,7 +73,7 @@ export default function SupportTicketCreateView() {
     return (
         <div className={layoutStyles.pageContainer}>
 
-            <h1>Contactar con soporte</h1>
+            <h1>{t("form.title")}</h1>
 
             <SupportTicketForm
                 subject={subject}

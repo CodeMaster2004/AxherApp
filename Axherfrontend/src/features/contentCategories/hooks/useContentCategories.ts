@@ -1,16 +1,16 @@
 "use client";
 
-import { ContentCategories, Page } from "@/entities/types";
+import { ContentCategoryResponse, Page } from "@/entities/types";
 import { contentCategoriesService } from "@/features/contentCategories/services/ContentCategoriesService";
 import { usePaginatedData } from "@/shared/hooks/usePaginatedData";
 
 type UseContentCategoriesOptions = {
-  initialData?: Page<ContentCategories>;
+  initialData?: Page<ContentCategoryResponse>;
 };
 
 export const useContentCategories = (options?: UseContentCategoriesOptions) => {
   //hook generico de paginacion: trae data paginada y helpers
-  const pagination = usePaginatedData<ContentCategories>(
+  const pagination = usePaginatedData<ContentCategoryResponse>(
     contentCategoriesService.getAll, //funcion que trae Page<T>
     {
       initialData: options?.initialData,//datos SSR si existen

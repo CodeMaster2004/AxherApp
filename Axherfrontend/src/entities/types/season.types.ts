@@ -43,3 +43,18 @@ export interface UpcomingSeason{
     description?: string;
     releaseDate: string;
 }
+
+export interface SeasonTranslation {
+    seasonId: number;
+    languageId: number;
+    languageCode: string;
+    languageName: string;
+    title: string;
+    description: string;
+}
+
+export interface SeasonTranslationRequest {
+    languageId: number;
+    title: string;
+    description: string;
+}

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.axher.backend.catalog.shelf.DTOs.ContentShelfTranslationRequestDto;
 import com.axher.backend.catalog.shelf.DTOs.CreateShelfDto;
 import com.axher.backend.catalog.shelf.DTOs.ShelfOptionDto;
 import com.axher.backend.catalog.shelf.DTOs.UpdateShelfDto;
@@ -24,7 +25,9 @@ import lombok.RequiredArgsConstructor;
 public class ContentShelfService {
 
     private final ContentShelfRepository repository;
+    private final ContentShelfTranslationService translationService;
     private final SlugGeneratorService slugGenerator;
+    private final ContentShelfLocalizationService localizationService;
 
     public Page<ContentShelf> findAll(ShelfTarget target, Pageable pageable) {
         if (target != null) {
@@ -42,28 +45,54 @@ public class ContentShelfService {
                 .orElseThrow(() -> new ResourceNotFoundException("Carrusuel no encontrado: " + id));
     }
 
-    public List<ShelfOptionDto> getOptions(ShelfTarget target) {
+    public List<ShelfOptionDto> getOptions(
+            ShelfTarget target
+    ) {
 
         return repository
-            .findByTargetAndActiveTrueOrderByNameAsc(target)
-            .stream()
-            .map(shelf -> new ShelfOptionDto(
-                shelf.getContentShelfId(),
-                shelf.getName(),
-                shelf.getSlug()
-            ))
-            .toList();
+                .findByTargetAndActiveTrue(target)
+                .stream()
+                .map(shelf -> {
+
+                    var localized =
+                            localizationService.resolve(shelf);
+
+                    return new ShelfOptionDto(
+                            shelf.getContentShelfId(),
+                            localized.name(),
+                            shelf.getSlug()
+                    );
+                })
+                .toList();
     }
 
     public ContentShelf create(CreateShelfDto dto) {
 
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre no puede estar vacío"
+            );
+        }
+
+        if (dto.getLanguageId() == null) {
+            throw new IllegalArgumentException(
+                    "El idioma es obligatorio"
+            );
+        }
+
         String name = dto.getName().trim();
-        if(repository.existsByTargetAndNameIgnoreCase(dto.getTarget(), name)){
-            throw new DuplicateResourceException("El shelf ya existe: " + dto.getTarget());
+
+        ShelfTarget target = dto.getTarget();
+
+        if (translationService.existsByNameAndLanguage(
+                name,
+                dto.getLanguageId()
+        )) {
+            throw new DuplicateResourceException(
+                    "El nombre ya existe en este idioma: " + name
+            );
         }
         ContentShelf shelf = new ContentShelf();
-        shelf.setName(name);
-        ShelfTarget target = dto.getTarget();
 
         shelf.setSlug(
             slugGenerator.generate(
@@ -77,64 +106,73 @@ public class ContentShelfService {
         //shelf.setDisplayOrder(dto.getDisplayOrder());
         shelf.setActive(Boolean.TRUE.equals(dto.getActive()));
 
-        return repository.save(shelf);
+        ContentShelf saved = repository.save(shelf);
+
+        ContentShelfTranslationRequestDto translationDto =
+                new ContentShelfTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(name);
+
+        translationService.save(
+                saved.getContentShelfId(),
+                translationDto
+        );
+
+        return saved;
     }
 
     @Transactional
     public ContentShelf update(Integer id, UpdateShelfDto dto) {
 
-        ContentShelf shelf = findById(id);
+        ContentShelf existing = findById(id);
 
         if (dto.getName() != null) {
 
-            String name = dto.getName() != null
-                ? dto.getName().trim()
-                : shelf.getName();
+            String name = dto.getName().trim();
 
             if(name.isBlank()){
                 throw new IllegalArgumentException("El nombre no puede estar vacío");
             }
 
-            ShelfTarget target = dto.getTarget() != null
-                    ? dto.getTarget()
-                    : shelf.getTarget();
-
-            if ((!name.equalsIgnoreCase(shelf.getName())
-                    || target != shelf.getTarget())
-                    && repository.existsByTargetAndNameIgnoreCaseAndContentShelfIdNot(
-                            target,
-                            name,
-                            id)) {
-
-                throw new DuplicateResourceException(
-                        "Ya existe el shelf '" + name + "' para " + target
+            if (dto.getLanguageId() == null) {
+                throw new IllegalArgumentException(
+                        "El idioma es obligatorio"
                 );
             }
 
-            shelf.setName(name);
-
-            shelf.setSlug(
-                slugGenerator.generate(
+            if (translationService.existsByNameAndLanguageAndShelfNot(
                     name,
-                    slug -> repository.existsByTargetAndSlugAndContentShelfIdNot(
-                        target,
-                        slug,
-                        id
-                    )
-                )
+                    dto.getLanguageId(),
+                    id
+            )) {
+                throw new DuplicateResourceException(
+                        "El nombre ya existe en este idioma: " + name
+                );
+            }
+
+            ContentShelfTranslationRequestDto translationDto =
+                    new ContentShelfTranslationRequestDto();
+
+            translationDto.setLanguageId(dto.getLanguageId());
+            translationDto.setName(name);
+
+            translationService.save(
+                    existing.getContentShelfId(),
+                    translationDto
             );
         }
 
         if (dto.getTarget() != null) {
-            shelf.setTarget(dto.getTarget());
+            existing.setTarget(dto.getTarget());
         }
 
         if (dto.getSource() != null) {
-            shelf.setSource(dto.getSource());
+            existing.setSource(dto.getSource());
         }
 
         if (dto.getLayout() != null) {
-            shelf.setLayout(dto.getLayout());
+            existing.setLayout(dto.getLayout());
         }
 
         /*if (dto.getDisplayOrder() != null) {
@@ -142,10 +180,10 @@ public class ContentShelfService {
         }*/
 
         if (dto.getActive() != null) {
-            shelf.setActive(dto.getActive());
+            existing.setActive(dto.getActive());
         }
 
-        return repository.save(shelf);
+        return repository.save(existing);
     }
 
     @Transactional

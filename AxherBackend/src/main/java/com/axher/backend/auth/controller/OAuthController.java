@@ -27,7 +27,8 @@ public class OAuthController {
 
         UserAuthResponseDto response = oAuthService.loginWithProvider(
                 request.getProvider(),
-                request.getIdToken()
+                request.getIdToken(),
+                request.getPreferredLanguageCode()
         );
 
         // Crear cookies HttpOnly

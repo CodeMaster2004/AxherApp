@@ -9,6 +9,7 @@ import TrendingSection from "@/features/popularity/components/TrendingSection";
 import ContinueWatchingSection from "@/features/playbackHistory/components/ContinueWatchingSection";
 import TopRatedSection from "@/features/popularity/components/TopRatedSection";
 import HomePageSections from "@/features/pageSection/components/HomePageSections";
+import { serverApiFetch } from "@/core/api/serverApiClient";
 
 
 
@@ -35,17 +36,15 @@ const trendingNow = [
 ];
 
 async function getHero(): Promise<HeroContent[]> {
-
-    const res = await fetch(`${API_URL}/hero`, {
-        next: {
-            revalidate: 60, // Revalidate every 60 seconds
-        },
-    });
-
-    if(!res.ok){
+    try {
+        return await serverApiFetch<HeroContent[]>("/hero", {
+            next: {
+                revalidate: 60,
+            },
+        });
+    } catch {
         return [];
     }
-    return res.json();
 }
 
 export default async function Home() {

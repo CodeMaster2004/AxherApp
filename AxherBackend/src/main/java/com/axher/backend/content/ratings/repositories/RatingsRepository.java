@@ -7,14 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.axher.backend.catalog.banner.DTOs.HeroRatingMetricsDto;
 import com.axher.backend.content.core.DTOs.TopRatedContentDto;
+import com.axher.backend.content.core.DTOs.TopRatedContentResult;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.ratings.entities.Ratings;
 import com.axher.backend.content.ratings.entities.TargetTypeEnum;
 
-import io.lettuce.core.dynamic.annotation.Param;
 
 public interface RatingsRepository extends JpaRepository<Ratings, Integer>{
 
@@ -51,35 +52,19 @@ public interface RatingsRepository extends JpaRepository<Ratings, Integer>{
         Double findGlobalAverage();
 
     @Query("""
-        SELECT new com.axher.backend.content.core.DTOs.TopRatedContentDto(
-
-        c.contentId,
-        c.title,
-        c.posterUrl,
-        c.type,
-        AVG(r.ratingValue),
-        COUNT(r)
-
+        SELECT new com.axher.backend.content.core.DTOs.TopRatedContentResult(
+                c,
+                AVG(r.ratingValue),
+                COUNT(r)
         )
-
         FROM Ratings r
-
         JOIN Content c
-        ON r.targetId = c.contentId
-
+                ON r.targetId = c.contentId
         WHERE r.targetType = 'CONTENT'
         AND (:type IS NULL OR c.type = :type)
-
-        GROUP BY
-        c.contentId,
-        c.title,
-        c.posterUrl,
-        c.type
-
-        HAVING COUNT(r) >= 1
-
+        GROUP BY c
         """)
-        List<TopRatedContentDto> findTopRated(
+        List<TopRatedContentResult> findTopRated(
                 @Param("type") ContentTypeEnum type
         );
 

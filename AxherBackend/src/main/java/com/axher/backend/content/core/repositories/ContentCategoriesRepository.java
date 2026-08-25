@@ -11,16 +11,10 @@ import org.springframework.data.jpa.repository.Query;
 import com.axher.backend.content.core.entities.ContentCategories;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
 
+import io.lettuce.core.dynamic.annotation.Param;
+
 public interface ContentCategoriesRepository extends JpaRepository<ContentCategories, Integer>{
 
-    boolean existsByNameIgnoreCase(String name);
-
-    // Búsqueda por nombre o descripción (case-insensitive) con paginación
-    Page<ContentCategories> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-        String name,
-        String description,
-        Pageable pageable
-    );
 
     boolean existsBySlug(String slug);
 
@@ -34,10 +28,30 @@ public interface ContentCategoriesRepository extends JpaRepository<ContentCatego
         SELECT DISTINCT c
         FROM Content content
         JOIN content.categories c
+        JOIN c.translations t
         WHERE content.contentStatus.code = 'PUBLISHED'
         AND (:type IS NULL OR content.type = :type)
-        ORDER BY c.name
+        AND t.language.languageId = :languageId
+        ORDER BY t.name
     """)
-    List<ContentCategories> findAvailableCategories(ContentTypeEnum type);
+    Page<ContentCategories> findAvailableCategories(
+        @Param("type") ContentTypeEnum type,
+        @Param("languageId") Integer languageId,
+        Pageable pageable
+    );
+
+    @Query("""
+        SELECT DISTINCT c
+        FROM ContentCategories c
+        LEFT JOIN c.translations t
+        WHERE
+            LOWER(c.slug) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(t.name) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(t.description) LIKE LOWER(CONCAT('%', :search, '%'))
+    """)
+    Page<ContentCategories> search(
+        @Param("search") String search,
+        Pageable pageable
+    );
 
 }

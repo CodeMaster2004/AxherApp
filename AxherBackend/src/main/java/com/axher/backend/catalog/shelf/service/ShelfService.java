@@ -30,6 +30,7 @@ public class ShelfService {
     private final ShelfContentRepository shelfContentRepository;
     private final PopularityService popularityService;
     private final ContentCatalogService contentCatalogService;
+    private final ContentShelfLocalizationService localizationService;
 
 
     public List<ShelfDto> getShelves(
@@ -65,8 +66,8 @@ public class ShelfService {
         for(ContentShelf shelf : shelves){
 
             ShelfDto dto = new ShelfDto();
-
-            dto.setName(shelf.getName());
+            var localized = localizationService.resolve(shelf);
+            dto.setName(localized.name());
             dto.setSlug(shelf.getSlug());
             dto.setSource(shelf.getSource());
             dto.setItems(
@@ -100,8 +101,8 @@ public class ShelfService {
         ShelfTarget target
     ){
         ShelfDto dto = new ShelfDto();
-
-        dto.setName(shelf.getName());
+        var localized = localizationService.resolve(shelf);
+        dto.setName(localized.name());
         dto.setSlug(shelf.getSlug());
         dto.setSource(shelf.getSource());
         dto.setItems(

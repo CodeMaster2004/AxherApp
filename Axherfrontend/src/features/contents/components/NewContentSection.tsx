@@ -31,10 +31,6 @@ export default function NewContentSection({ type }: Props) {
                 <h2 className={styles.title}>
                     Nuevos Estrenos
                 </h2>
-
-                <p className={styles.subtitle}>
-                    Descubre los útimos contenidos agregados a nuestra plataforma y mantente al día con las novedades.
-                </p>
             </header>
 
             <HorizontalCarousel>

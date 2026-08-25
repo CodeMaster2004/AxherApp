@@ -7,9 +7,11 @@ import { useContentsActions } from "@/features/contents/hooks/useContentsActions
 import { contentService } from "@/features/contents/services/ContentService";
 import { useContentStatus } from "@/features/contentStatus/hooks";
 import { useDiscounts } from "@/features/discounts/hooks";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
 import ProgressBar from "@/shared/components/ui/ProgressBar";
 import { useUploadProgress } from "@/shared/hooks/useUploadProgress";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -24,8 +26,9 @@ export default function EditContentPage() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [type, setType] = useState<"MOVIE" | "SERIE">("MOVIE");
+    const [originalLanguageId, setOriginalLanguageId] = useState<number | undefined>();
     const [price, setPrice] = useState(0);
-
+    const { languages = [] } = useLanguage();
     //Solo para movies
     const [movieFile, setMovieFile] = useState<File | null>(null);
     const [movieUrl, setMovieUrl] = useState("");
@@ -52,6 +55,9 @@ export default function EditContentPage() {
         onSuccess: () => router.push("/admin/contents"),
     });
 
+    const t = useTranslations("contents");
+    const common = useTranslations("common");
+
     useEffect(() => {
         if (!id) {
             router.push("/admin/contents");
@@ -65,6 +71,7 @@ export default function EditContentPage() {
                 setTitle(content.title);
                 setDescription(content.description || "");
                 setType(content.type);
+                setOriginalLanguageId(content.originalLanguageId);
                 setPrice(content.price);
 
     
@@ -113,12 +120,12 @@ export default function EditContentPage() {
         if (!id) return;
 
         if(!title.trim()){
-            setError("El título es obligatorio");
+            setError(t("validation.titleRequired"));
             return;
         }
 
         if(selectedCategories.length === 0){
-            setError("Selecciona al menos una categoría");
+            setError(t("validation.categoryRequired"));
             return;
         }
 
@@ -130,6 +137,12 @@ export default function EditContentPage() {
         formData.append("description", description.trim());
         formData.append("type", type);
         formData.append("price", price.toString());
+        if (originalLanguageId) {
+            formData.append(
+                "originalLanguageId",
+                originalLanguageId.toString()
+            );
+        }
 
         //Solo para movies
         if(type === "MOVIE") {
@@ -161,12 +174,12 @@ export default function EditContentPage() {
     };
 
     if(loading){
-        return <div className={layoutStyles.loading}>Cargando contenido...</div>
+        return <div className={layoutStyles.loading}>{common("loading")}</div>
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Contenido</h1>
+            <h1>{common("edit")} {t("title")}</h1>
 
             <ProgressBar progress={progress} />
 
@@ -174,6 +187,8 @@ export default function EditContentPage() {
                 title={title}
                 description={description}
                 type={type}
+                originalLanguageId={originalLanguageId}
+                availableLanguages={languages}
                 price={price}
                 movieFile={type === "MOVIE" ? movieFile : undefined}
                 movieUrl={type === "MOVIE" ? movieUrl : undefined}
@@ -194,6 +209,7 @@ export default function EditContentPage() {
                 setType={(value) => {
                     if (value) setType(value);
                 } }
+                setOriginalLanguageId={setOriginalLanguageId}
                 setPrice={setPrice}
                 setSelectedCategories={setSelectedCategories}
                 setSelectedStatusId={setSelectedStatusId}

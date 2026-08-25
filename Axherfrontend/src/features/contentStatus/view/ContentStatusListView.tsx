@@ -1,27 +1,21 @@
 "use client";
 
-import { ContentStatus } from "@/entities/types";
+import { ContentStatusResponse } from "@/entities/types/status.types";
 import ContentStatusList from "@/features/contentStatus/components/ContentStatusList";
 import { useContentStatus, useContentStatusActions } from "@/features/contentStatus/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 
 export default function ContentStatusListView(){
     const router = useRouter();
+    const common = useTranslations("common");
+    const t = useTranslations("contentStatus");
     const {contentStatus, loading, currentPage, totalPages, nextPage, prevPage, searchTerm, setSearchTerm, refetch} = useContentStatus();
-    const fetchData = async () => {
-        try {
-            await refetch();
-        } catch (error) {
-            console.log("Error capturado:", error);
-            if (error instanceof Error && error.message === "FORBIDDEN") {
-            router.replace("/403");
-            }
-        }
-    };
+   
     const {
         deleting,
         removeContentStatus,
@@ -33,21 +27,21 @@ export default function ContentStatusListView(){
         router.push("/admin/contentStatus/create");
     };
 
-    const handleEdit = (status: ContentStatus) => {
+    const handleEdit = (status: ContentStatusResponse) => {
         router.push(`/admin/contentStatus/${status.contentStatusId}/edit`);
     };
 
-useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const handleTranslations = (status: ContentStatusResponse) => {
+        router.push(`/admin/contentStatus/${status.contentStatusId}/translations`);
+    };
+
+
     return(
-        //<ProtectedRoute requiredPermissions={["CONTENT_STATUS:VIEW"]}>
             <div className={layoutStyles.pageContainer}>
                 <div className={layoutStyles.header}>
-                    <h1>Estados de Películas</h1>
+                    <h1>{t("list.title")}</h1>
                     <Button variant="animated" onClick={handleCreate}>
-                        Nuevo
+                        {common("new")}
                     </Button>
                 </div>
 
@@ -63,8 +57,8 @@ useEffect(() => {
                     onPrevPage={prevPage}
                     searchTerm={searchTerm}
                     onSearchChange={setSearchTerm}
+                    onTranslations={handleTranslations}
                 />
             </div>
-        //</ProtectedRoute>
     )
 }

@@ -37,8 +37,16 @@ public interface HeroBannerRepository extends JpaRepository<HeroBanner, Integer>
         """)
     List<Content> findHeroContent(Pageable pageable);
 
-    Page<HeroBanner> findByContent_TitleContainingIgnoreCase(
-        String title,
-        Pageable pageable
+        @Query("""
+        SELECT hb
+        FROM HeroBanner hb
+        JOIN hb.content c
+        JOIN ContentTranslation ct ON ct.content = c
+        WHERE LOWER(ct.title) LIKE LOWER(CONCAT('%', :title, '%'))
+        ORDER BY hb.priority DESC, hb.createdAt DESC
+        """)
+    Page<HeroBanner> searchByTitle(
+            @Param("title") String title,
+            Pageable pageable
     );
 }

@@ -5,38 +5,57 @@ import { useReportStatusActions } from "@/features/reportStatus/hooks/useReportS
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { ReportStatusRequest } from "@/entities/types";
+import { useTranslations } from "next-intl";
 
 
 export default function CreateReportStatusPage() {
 
     const router = useRouter();
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [error, setError] = useState("");
-
+    const t = useTranslations("reportStatus");
     const { addReportStatus, saving } = useReportStatusActions({
         onSuccess: () => router.push("/admin/report-status"),
     });
 
+    const { languages, loading: languagesLoading } = useLanguage();
+
+    const [form, setForm] = useState<ReportStatusRequest>({
+        code: "",
+        name: "",
+        description: "",
+        languageId: 0,
+    })
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const codeTrim = code.trim();
-        const nameTrim = name.trim();
-        const descriptionTrim = description.trim();
+        const codeTrim = form.code.trim();
+        const nameTrim = form.name.trim();
+        const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
-            setError("Por favor completa el campo de código");
+            setError(t("form.validation.codeRequired"));
+            return;
+        }
+
+        if(!form.languageId) {
+            setError(t("form.validation.languageRequired"));
             return;
         }
 
         if (!nameTrim) {
-            setError("Por favor completa el campo de nombre");
+            setError(t("form.validation.nameRequired"));
             return;
         }
 
-        await addReportStatus({ code: codeTrim, name: nameTrim, description: descriptionTrim });
+        await addReportStatus({ 
+            code: codeTrim,
+            name: nameTrim,
+            description: descriptionTrim,
+            languageId: form.languageId
+        });
 
     }
 
@@ -44,26 +63,23 @@ export default function CreateReportStatusPage() {
         router.push("/admin/report-status");
     }
 
-    const handleStatusChange = (value: string) => {
-        setCode(value);
-        if (error) setError("");
-    }
-
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Nuevo Estado de Reporte</h1>
+            <h1>{t("createTitle")}</h1>
             <ReportStatusForm
-                code={code}
-                setCode={handleStatusChange}
-                name={name}
-                setName={setName}
-                description={description}
-                setDescription={setDescription}
+                value={form}
+                onChange={(value) => {
+                    setForm(value);
+                    if (error) {
+                         setError(""); 
+                    } 
+                }}
+                languages={languages}
                 onSubmit={handleSubmit}
                 isEditing={false}
                 onCancel={handleCancel}
-                saving={saving}
-                error={error}
+                saving={saving || languagesLoading}
+                error={error || undefined}
             />
         </div>
     )

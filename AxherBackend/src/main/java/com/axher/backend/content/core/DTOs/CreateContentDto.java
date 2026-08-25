@@ -16,6 +16,7 @@ import lombok.Data;
 public class CreateContentDto {
     private String title;
     private String description;
+    private Integer originalLanguageId;
     private ContentTypeEnum type;
     private MultipartFile posterFile;
     private MultipartFile backdropFile;
@@ -25,6 +26,7 @@ public class CreateContentDto {
     private Integer statusId;
     private Integer discountId;
     private LocalDateTime releaseDate;
+    
 
     private CreateMovieDto movie;
     private CreateSeriesRequestDto series;

@@ -25,5 +25,6 @@ public class ContentShelfDto {
     private ShelfSource source;
     private Boolean active;
     private LocalDateTime createdAt;
+    private Integer languageId;
     
 }

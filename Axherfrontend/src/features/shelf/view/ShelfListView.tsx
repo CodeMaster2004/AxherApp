@@ -9,9 +9,12 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import Button from "@/shared/components/ui/Button";
 import ShelfContentsModal from "@/features/shelf/components/ShelfContentsModal";
 import ShelfList from "@/features/shelf/components/ShelfList";
+import { useTranslations } from "next-intl";
 
 export default function ShelfListView() {
 
+    const t = useTranslations("shelves");
+    const common = useTranslations("common");
     const router = useRouter();
     const [target, setTarget] = useState<ShelfTarget>(ShelfTarget.HOME);
     const {
@@ -69,17 +72,24 @@ export default function ShelfListView() {
 
     };
 
+    const handleTranslations = (shelf: ContentShelf) => {
+        router.push(
+            `/admin/shelves/${shelf.contentShelfId}/translations`
+        );
+
+    }
+
     return (
 
         <div className={layoutStyles.pageContainer}>
             <div className={layoutStyles.header}>
 
-                <h1>Carruseles</h1>
+                <h1>{t("title")}</h1>
                 <Button
                     variant="animated"
                     onClick={handleCreate}
                 >
-                    Crear Carrusel
+                    {common("create")}
                 </Button>
             </div>
             <div className={layoutStyles.pageTabs}>
@@ -88,7 +98,7 @@ export default function ShelfListView() {
                     active={target === ShelfTarget.HOME}
                     onClick={() => setTarget(ShelfTarget.HOME)}
                 >
-                    Home
+                    {t("home")}
                 </Button>
 
                 <Button
@@ -96,7 +106,7 @@ export default function ShelfListView() {
                     active={target === ShelfTarget.MOVIES}
                     onClick={() => setTarget(ShelfTarget.MOVIES)}
                 >
-                    Películas
+                    {t("movies")}
                 </Button>
 
                 <Button
@@ -104,7 +114,7 @@ export default function ShelfListView() {
                     active={target === ShelfTarget.SERIES}
                     onClick={() => setTarget(ShelfTarget.SERIES)}
                 >
-                    Series
+                    {t("series")}
                 </Button>
             </div>
 
@@ -125,6 +135,7 @@ export default function ShelfListView() {
                 onPrevPage={prevPage}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
+                onTranslations={handleTranslations}
 
             />
 

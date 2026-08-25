@@ -1,15 +1,16 @@
-import { ContentStatus } from "@/entities/types";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
+import { ContentStatusResponse } from "@/entities/types/status.types";
+import { useTranslations } from "next-intl";
 
 interface Props {
-    contentStatus: ContentStatus[];
+    contentStatus: ContentStatusResponse[];
     onDelete: (id: number) => void;
-    onEdit: (contentStatus: ContentStatus) => void;
+    onEdit: (contentStatus: ContentStatusResponse) => void;
     deletingId?: number | null;
     loading?: boolean;
 
@@ -19,9 +20,10 @@ interface Props {
     onPrevPage: () => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
+    onTranslations?: (contentStatus: ContentStatusResponse) => void;
 }
 
-export default function ContentStatusList ({contentStatus, onDelete, onEdit, deletingId, loading, currentPage, totalPages, onNextPage, onPrevPage, searchTerm, onSearchChange} : Props){
+export default function ContentStatusList ({contentStatus, onDelete, onEdit, deletingId, loading, currentPage, totalPages, onNextPage, onPrevPage, searchTerm, onSearchChange, onTranslations} : Props){
 
     const [confirmDialog, setConfirmDialog] = useState<{isOpen: boolean; id: number; name: string}>({
         isOpen: false,
@@ -42,26 +44,28 @@ export default function ContentStatusList ({contentStatus, onDelete, onEdit, del
         setConfirmDialog({isOpen: false, id: 0, name: ""});
     };
 
+    const common = useTranslations("common");
+    const t = useTranslations("contentStatus");
+
     return(
         <div className={layoutStyles.section}>
 
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="confirmar Eliminación"
-                message={`¿Estás seguro de que deseas eliminar el etado de peliculas "${confirmDialog.name}"? ESta acción no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", {name: confirmDialog.name})}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             />
 
-            <h2>Lista de Estado de Peliculas</h2>
 
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar estado de peliculas..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -70,7 +74,7 @@ export default function ContentStatusList ({contentStatus, onDelete, onEdit, del
             </div>
 
             {contentStatus.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay estados de peliculas con ese termino"}</p>
+                <p>{loading ? common("searching") : t("list.empty")}</p>
 
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
@@ -78,10 +82,10 @@ export default function ContentStatusList ({contentStatus, onDelete, onEdit, del
                     <thead>
                         <tr className={tableStyles.rowHover}>
                             <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                            <th className={tableStyles.headCell}>Code</th>
-                            <th className={tableStyles.headCell}>Nombre</th>
-                            <th className={tableStyles.headCell}>Descripción</th>
-                            <th className={tableStyles.headCell}>Acciones</th>
+                            <th className={tableStyles.headCell}>{t("list.code")}</th>
+                            <th className={tableStyles.headCell}>{common("name")}</th>
+                            <th className={tableStyles.headCell}>{common("description")}</th>
+                            <th className={tableStyles.headCell}>{common("actions")}</th>
                         </tr>
                     </thead>
 
@@ -97,14 +101,18 @@ export default function ContentStatusList ({contentStatus, onDelete, onEdit, del
                                             <MoreMenu
                                                 items={[
                                                     {
-                                                        label: "Editar",
+                                                        label: common("edit"),
                                                         onClick: () => onEdit(contentStatus),
                                                     },
+                                                    ...(onTranslations ? [{
+                                                        label: t("translations.title"),
+                                                        onClick: () => onTranslations(contentStatus),
+                                                    }]: []),
                                                     {
                                                         label:
                                                             deletingId === contentStatus.contentStatusId
-                                                                ? "Eliminando..."
-                                                                : "Eliminar",
+                                                                ? common("deleting")
+                                                                : common("delete"),
                                                         onClick: () => handleDeleteClick(contentStatus.contentStatusId, contentStatus.code),
                                                         variant: "danger",
                                                     },

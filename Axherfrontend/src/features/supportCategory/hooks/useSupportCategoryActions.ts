@@ -1,11 +1,11 @@
 "use client";
 
-import { SupportCategoryRequest } from "@/entities/types";
+import { SupportCategoryResponse } from "@/entities/types/supportCategory.types";
 import { supportCategoryService } from "@/features/supportCategory/services/SupportCategoryService";
 import { useCrudActions } from "@/shared/hooks/useCrudActions";
 
 type Options = {
-    onSuccess?: (result?: SupportCategoryRequest) => void;
+    onSuccess?: (result?: SupportCategoryResponse) => void;
     onError?: (error: unknown) => void;
 }
 

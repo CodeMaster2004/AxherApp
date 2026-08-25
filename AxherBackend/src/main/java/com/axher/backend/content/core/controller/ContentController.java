@@ -33,7 +33,7 @@ public class ContentController {
     private final ContentCatalogService catalogService;
 
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
-        "contentId", "title", "price", "registeredAt", "type"
+        "contentId", "price", "registeredAt", "type"
     );
 
     /*@GetMapping
@@ -97,7 +97,7 @@ public class ContentController {
         return contents.map(upcomingContentMapper::toDto);
     }
 
-    @RequestMapping("/new")
+    @GetMapping("/new")
     public Page<ContentDetailDto> newContent(
         @RequestParam(required = false) ContentTypeEnum type,
         @RequestParam(defaultValue = "0") int page,
@@ -133,10 +133,11 @@ public class ContentController {
 
     @GetMapping("/filters")
     public ContentFiltersDto getFilters(
-        @RequestParam(required = false) ContentTypeEnum type
+        @RequestParam(required = false) ContentTypeEnum type,
+        @PathVariable(required = false) Integer languageId
     ){
         
-        return catalogService.getFilters(type);
+        return catalogService.getFilters(type, languageId);
     }
     
 }

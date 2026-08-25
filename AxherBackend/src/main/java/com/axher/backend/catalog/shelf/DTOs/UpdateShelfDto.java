@@ -12,6 +12,7 @@ import lombok.Setter;
 public class UpdateShelfDto {
     
     private String name;
+    private Integer languageId;
     private String slug;
     private ShelfTarget target;
     private ShelfSource source;

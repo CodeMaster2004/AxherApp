@@ -42,11 +42,12 @@ public class AdminSupportTicketStatusController {
     public Page<SupportTicketStatusResponseDto> findAll(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) Integer languageId,
         @RequestParam(defaultValue = "supportTicketStatusId,desc") String sort,
         @RequestParam(required = false) String search
     ){
         Sort sortObj = SortUtils.parseSort(sort, ALLOWED_SORT_FIELDS, "supportTicketStatusId");
-        Page<SupportTicketStatus> supportTicketStatusPage = service.findAll(PageRequest.of(page, size, sortObj), search);
+        Page<SupportTicketStatus> supportTicketStatusPage = service.findAll(PageRequest.of(page, size, sortObj), languageId, search);
         return supportTicketStatusPage.map(mapper::toDto);
     }
 

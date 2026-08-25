@@ -9,4 +9,5 @@ public class SubscriptionStatusRequestDto {
     private String code;
     private String name;
     private String description;
+    private Integer languageId;
 }

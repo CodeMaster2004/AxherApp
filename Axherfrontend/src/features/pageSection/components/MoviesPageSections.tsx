@@ -4,6 +4,7 @@ import { ContentType } from "@/entities/types";
 import { useContentFilters } from "@/features/contents/hooks/useContentFilters";
 import PageSectionRenderer from "@/features/pageSection/components/PageSectionRenderer";
 import { usePageSections } from "@/features/pageSection/hooks/usePageSections";
+import { useTranslations } from "next-intl";
 
 export default function MoviesPageSections() {
 
@@ -12,14 +13,16 @@ export default function MoviesPageSections() {
         filters
     } = useContentFilters(ContentType.MOVIE);
 
+    const t = useTranslations("pageSections");
+
 
     if (loading) {
-        return <p>Cargando secciones...</p>;
+        return <p>{t("loading")}</p>;
     }
 
     if (error) {
         console.error("PAGE SECTIONS ERROR:", error);
-        return <p>Error al cargar las secciones.</p>;
+        return <p>{t("error")}</p>;
     }
 
     return (

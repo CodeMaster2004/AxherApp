@@ -1,11 +1,11 @@
 "use client";
 
-import { ContentStatus } from "@/entities/types";
+import { ContentStatusRequest, ContentStatusResponse } from "@/entities/types";
 import { contentStatusService } from "@/features/contentStatus/services/ContentStatusService";
 import { useCrudActions } from "@/shared/hooks/useCrudActions";
 
 type Options = {
-    onSuccess?: (result?: ContentStatus) => void;
+    onSuccess?: (result?: ContentStatusResponse) => void;
     onError?: (error: unknown) => void;
 };
 

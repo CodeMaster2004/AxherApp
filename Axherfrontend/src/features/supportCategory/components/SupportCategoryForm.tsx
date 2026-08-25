@@ -1,17 +1,19 @@
 "use client";
 
+import { LanguageResponse, SupportCategoryRequest } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import Input from "@/shared/components/ui/Input";
+import Select, { SelectOption } from "@/shared/components/ui/Select";
 import TextArea from "@/shared/components/ui/TextArea";
 import styles from "@/shared/styles/shared/Form.module.css"
+import { useTranslations } from "next-intl";
 
 interface Props {
-    code: string;
-    setCode: (value: string) => void;
-    name: string;
-    setName: (value: string) => void;
-    description: string;
-    setDescription: (value: string) => void;
+    value: SupportCategoryRequest;
+    onChange: React.Dispatch<
+        React.SetStateAction<SupportCategoryRequest>
+    >;
+    languages: LanguageResponse[];
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     isEditing: boolean;
     onCancel?: () => void;
@@ -20,21 +22,26 @@ interface Props {
 }
 
 export default function SupportCategoryForm({
-    code,
-    setCode,
-    name,
-    setName,
-    description,
-    setDescription,
+    value,
+    onChange,
+    languages,
     onSubmit,
     isEditing,
     onCancel,
     saving = false,
     error,
 }: Props) {
+
+    const common = useTranslations("common");
+    const t = useTranslations("supportCategories");
+
+    const languageOptions: SelectOption[] = languages.map(language => ({
+        value: language.languageId,
+        label: `${language.name} (${language.nativeName})`,
+    }));
+    
     return (
         <form onSubmit={onSubmit} className={styles.form}>
-            <h2>{isEditing ? 'Editar Categoria de Soporte' : 'Crear Categoria de Soporte'}</h2>
 
             {error && (
                 <p className={styles.errorMessage}>
@@ -43,21 +50,45 @@ export default function SupportCategoryForm({
             )}
 
             <Input
-                label="Código del la Categoria"
-                value={code}
-                onChange={setCode}
-                placeholder="Ej: PAYMENT, REFUND, CLAIM"
+                label={t("form.code")}
+                value={value.code}
+                onChange={(code) =>
+                    onChange(prev => ({
+                        ...prev,
+                        code,
+                    }))
+                }
+                placeholder={t("form.codePlaceholder")}
                 maxLength={20}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
             />
 
+            <Select
+                label={common("language")}
+                options={languageOptions}
+                value={value.languageId ?? ""}
+                onChange={(languageId) =>
+                    onChange(prev => ({
+                        ...prev,
+                        languageId: Number(languageId),
+                    }))
+                }
+                placeholder={common("languagePlaceholder")}
+                disabled={saving || isEditing}
+            />
+
             <Input
-                label="Nombre de la categoria de soporte"
-                value={name}
-                onChange={setName}
-                placeholder="Ej: Pago, Devolución, Reclamo"
+                label={t("form.name")}
+                value={value.name}
+                onChange={(name) =>
+                    onChange(prev => ({
+                        ...prev,
+                        name,
+                    }))
+                }
+                placeholder={t("form.namePlaceholder")}
                 maxLength={50}
                 required
                 disabled={saving}
@@ -65,10 +96,15 @@ export default function SupportCategoryForm({
             />
 
             <TextArea
-                label="Descripción de la categoria de soporte"
-                value={description}
-                onChange={setDescription}
-                placeholder="Descripción de la categoria de soporte"
+                label={t("form.description")}
+                value={value.description}
+                onChange={(description) =>
+                    onChange(prev => ({
+                        ...prev,
+                        description,
+                    }))
+                }
+                placeholder={t("form.descriptionPlaceholder")}
                 rows={4}
                 disabled={saving}
             />
@@ -79,9 +115,9 @@ export default function SupportCategoryForm({
                     type="submit"
                     variant="animated"
                     loading={saving}
-                    loadingText={isEditing ? 'Actualizando...' : 'Creando...'}
+                    loadingText={isEditing ? common("updating") : common("creating")}
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
                 {onCancel && (
                     <Button
@@ -90,7 +126,7 @@ export default function SupportCategoryForm({
                     onClick={onCancel}
                     disabled={saving}
                     >
-                    Cancelar
+                    {common("cancel")}
                     </Button>
                 )}
 

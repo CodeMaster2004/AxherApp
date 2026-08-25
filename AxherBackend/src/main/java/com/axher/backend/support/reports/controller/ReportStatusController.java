@@ -43,10 +43,11 @@ public class ReportStatusController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "reportStatusId,desc") String sort,
-        @RequestParam(required = false) String search
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) Integer languageId
     ){
         Sort sortObj = SortUtils.parseSort(sort, ALLOWED_SORT_FIELDS, "reportStatusId");
-        Page<ReportStatus> reportStatusPage = service.findAll(PageRequest.of(page, size, sortObj), search);
+        Page<ReportStatus> reportStatusPage = service.findAll(PageRequest.of(page, size, sortObj), languageId, search);
         return reportStatusPage.map(mapper::toDto);
     }
 

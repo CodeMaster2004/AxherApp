@@ -18,9 +18,11 @@ import com.axher.backend.support.reports.DTOS.ProblemReportRequestDto;
 import com.axher.backend.support.reports.DTOS.ProblemReportStatusRequestDto;
 import com.axher.backend.support.reports.entities.ProblemReport;
 import com.axher.backend.support.reports.entities.ProblemReportCategory;
+import com.axher.backend.support.reports.entities.ReportCategory;
 import com.axher.backend.support.reports.entities.ReportStatus;
 import com.axher.backend.support.reports.entities.ReportStatusCode;
 import com.axher.backend.support.reports.repositories.ProblemReportRepository;
+import com.axher.backend.support.reports.repositories.ReportCategoryRepository;
 import com.axher.backend.support.reports.repositories.ReportStatusRepository;
 import com.axher.backend.users.entities.Users;
 
@@ -36,6 +38,7 @@ public class ProblemReportService {
     private final ReportStatusRepository reportStatusRepository;
     private final ContentRepository contentRepository;
     private final EpisodesRepository episodesRepository;
+    private final ReportCategoryRepository reportCategoryRepository;
 
     // ==============================
     // LISTAR REPORTES DEL USUARIO
@@ -78,7 +81,16 @@ public class ProblemReportService {
         ProblemReport report = new ProblemReport();
 
         report.setUser(user);
-        report.setCategory(request.getCategory());
+        ReportCategory category = reportCategoryRepository
+            .findById(request.getReportCategoryId())
+            .orElseThrow(() ->
+                new ResourceNotFoundException(
+                    "Categoría de reporte no encontrada: "
+                    + request.getReportCategoryId()
+                )
+            );
+
+        report.setCategory(category);
         report.setDescription(request.getDescription());
         report.setReportStatus(status);
 

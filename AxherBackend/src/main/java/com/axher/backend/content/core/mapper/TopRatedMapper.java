@@ -4,27 +4,39 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.axher.backend.content.core.DTOs.TopRatedContentDto;
+import com.axher.backend.content.core.DTOs.TopRatedContentResult;
+import com.axher.backend.content.core.entities.Content;
+import com.axher.backend.content.core.service.ContentLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class TopRatedMapper {
 
     @Value("${app.base-url}")
     private String baseUrl;
+
+    private final ContentLocalizationService localizationService;
     
     public TopRatedContentDto toTopRatedDto(
-            TopRatedContentDto dto
+            TopRatedContentResult result
     ){
+        Content content = result.content();
+
+        ContentLocalizationService.LocalizedContent localized =
+            localizationService.resolve(content);
 
         TopRatedContentDto response = new TopRatedContentDto();
 
-        response.setContentId(dto.getContentId());
-        response.setTitle(dto.getTitle());
-        response.setPosterUrl(buildUrl(dto.getPosterUrl()));
-        response.setType(dto.getType());
+        response.setContentId(content.getContentId());
+        response.setTitle(localized.title());
+        response.setPosterUrl(buildUrl(content.getPosterUrl()));
+        response.setType(content.getType());
 
-        response.setAverageRating(dto.getAverageRating());
-        response.setTotalRatings(dto.getTotalRatings());
-        response.setScore(dto.getScore());
+        response.setAverageRating(result.averageRating());
+        response.setTotalRatings(result.totalRatings());
+        response.setScore(result.score());
 
         return response;
     }

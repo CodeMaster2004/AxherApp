@@ -1,5 +1,6 @@
+import { userPreferencesApi } from "@/core/api/endpoints/userPreferencesApi";
 import { usersApi } from "@/core/api/endpoints/UsersApi";
-import { Page, PaginationParams, UserList } from "@/entities/types";
+import { Page, PaginationParams, UpdateUserPreferencesRequest, UserList } from "@/entities/types";
 import { AxiosResponse } from "axios";
 
 export const usersService = {
@@ -16,4 +17,12 @@ export const usersService = {
         const res = await usersApi.checkEmail(email);
         return res.data.exists;
     },
+
+    updatePreferences: (
+        request: UpdateUserPreferencesRequest,
+        signal?: AbortSignal
+    ): Promise<void> =>
+        userPreferencesApi.updatePreferences(request, { signal })
+            .then((res: AxiosResponse<void>) => res.data),
+    
 }

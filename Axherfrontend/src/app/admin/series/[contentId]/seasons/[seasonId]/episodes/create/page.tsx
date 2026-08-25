@@ -6,6 +6,7 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css"
 import EpisodesForm from "@/features/episodes/components/EpisodesForm";
 import { useEpisodesActions } from "@/features/episodes/hooks/useEpisodesActions";
 import { useContentStatus } from "@/features/contentStatus/hooks";
+import { useTranslations } from "next-intl";
 
 export default function CreateEpisodePage() {
   const { contentStatus: statuses = [] } = useContentStatus();
@@ -23,6 +24,7 @@ export default function CreateEpisodePage() {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [episodeFile, setEpisodeFile] = useState<File | null>(null);
   const [error, setError] = useState("");
+  const t = useTranslations("episodes");
 
   const { saving, addEpisode } = useEpisodesActions(seasonId || 0, {
     onSuccess: () => router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes`),
@@ -31,9 +33,9 @@ export default function CreateEpisodePage() {
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!title.trim()) return setError("El título es obligatorio");
-    if (!thumbnailFile) return setError("El archivo de miniatura es obligatorio");
-    if (!episodeFile) return setError("El archivo del episodio es obligatorio");
+    if (!title.trim()) return setError(t("form.validation.titleRequired"));
+    if (!thumbnailFile) return setError(t("form.validation.thumbnailRequired"));
+    if (!episodeFile) return setError(t("form.validation.episodeFileRequired"));
 
     setError("");
     const formData = new FormData();
@@ -50,7 +52,7 @@ export default function CreateEpisodePage() {
     try {
       await addEpisode(formData);
     } catch {
-      setError("Error al crear el episodio");
+      setError(t("errors.create"));
     }
   };
 
@@ -60,7 +62,7 @@ export default function CreateEpisodePage() {
 
   return (
     <div className={layoutStyles.pageContainer}>
-      <h1>Crear Nuevo Episodio</h1>
+      <h1>{t("createTitle")}</h1>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 

@@ -5,6 +5,7 @@ import tableStyles from "@/shared/styles/shared/Table.module.css";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import Pagination from "@/shared/components/ui/Pagination";
+import { useTranslations } from "next-intl";
 
 interface Props {
     supportCategories: SupportCategoryResponse[];
@@ -19,6 +20,7 @@ interface Props {
     onPrevPage: () => void;
     searchTerm: string;
     onSearchChange: (term: string) => void;
+    onTranslations?: (supportCategory: SupportCategoryResponse) => void;
 }
 
 export default function SupportCategoryList({
@@ -33,8 +35,12 @@ export default function SupportCategoryList({
     onNextPage,
     onPrevPage,
     searchTerm,
-    onSearchChange
+    onSearchChange,
+    onTranslations,
 }: Props) {
+
+    const common = useTranslations("common");
+    const t = useTranslations("supportCategory");
 
     const [confirmDialog, setConfirmDialog] = useState<{ isOpen: boolean, supportCategoryId: number, name: string }>({
             isOpen: false,
@@ -60,20 +66,19 @@ export default function SupportCategoryList({
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Confirmar Eliminación"
-                message={`¿Estás seguro de que deseas eliminar la categoria de soporte "${confirmDialog.name}"? Esta acción no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", { name: confirmDialog.name })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             />
-            <h2>Lista de Categorias de Soporte</h2>
 
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar por nombre o código"
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -81,17 +86,17 @@ export default function SupportCategoryList({
             </div>
 
             {supportCategories.length === 0 ? (
-                <p>{loading ? "Cargando..." : "No se encontraron categorias de soporte."}</p>
+                <p>{loading ? common("loading") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                   <table className={tableStyles.table}>
                     <thead>
                         <tr className={tableStyles.rowHover}>
-                            <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                            <th className={tableStyles.headCell}>Code</th>
-                            <th className={tableStyles.headCell}>Nombre</th>
-                            <th className={tableStyles.headCell}>Descripción</th>
-                            <th className={tableStyles.headCell}>Acciones</th>
+                            <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>{common("id")}</th>
+                            <th className={tableStyles.headCell}>{t("list.code")}</th>
+                            <th className={tableStyles.headCell}>{common("name")}</th>
+                            <th className={tableStyles.headCell}>{common("description")}</th>
+                            <th className={tableStyles.headCell}>{common("actions")}</th>
                         </tr>
                     </thead>
 
@@ -107,14 +112,18 @@ export default function SupportCategoryList({
                                             <MoreMenu
                                                 items={[
                                                     {
-                                                        label: "Editar",
+                                                        label: common("edit"),
                                                         onClick: () => onEdit(supportCategory),
                                                     },
+                                                    ...(onTranslations ? [{
+                                                        label: common("translations"),
+                                                        onClick: () => onTranslations(supportCategory),
+                                                    }] : []),
                                                     {
                                                         label:
                                                             deletingId === supportCategory.supportCategoryId
-                                                                ? "Eliminando..."
-                                                                : "Eliminar",
+                                                                ? common("deleting")
+                                                                : common("delete"),
                                                         onClick: () => handleDeleteClick(supportCategory.supportCategoryId, supportCategory.code),
                                                         variant: "danger",
                                                     },

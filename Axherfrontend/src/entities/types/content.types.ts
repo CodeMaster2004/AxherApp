@@ -1,4 +1,4 @@
-import { Category } from "@/entities/types";
+import { ContentCategoryResponse } from "@/entities/types/category.types";
 import { CreateMovie, UpdateMovie } from "@/entities/types/movie.types";
 import { CreateSeries, UpdateSeries } from "@/entities/types/series.types";
 
@@ -11,6 +11,7 @@ export interface ContentDetail{
     contentId: number;
     title: string;
     description: string;
+    originalLanguageId: number;
     type: ContentType;
     posterUrl: string;
     backdropUrl: string;
@@ -31,6 +32,7 @@ export interface ContentDetail{
 export interface CreateContent{
     title: string;
     description: string;
+    originalLanguageId: number;
     type: ContentType;
     posterFile: File;
     bacdropFile: File;
@@ -96,7 +98,7 @@ export interface ContentFilters {
 }
 
 export interface ContentFiltersDto {
-    categories: Category[];
+    categories: ContentCategoryResponse[];
     years: number[];
 }
 
@@ -108,3 +110,17 @@ export interface ContentStatusResponse {
     name: string;
 }
 
+export interface ContentTranslation {
+    contentId: number;
+    languageId: number;
+    languageCode: string;
+    languageName: string;
+    title: string;
+    description: string;
+}
+
+export interface ContentTranslationRequest {
+    languageId: number;
+    title: string;
+    description: string;
+}

@@ -5,14 +5,24 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import SupportCategoryForm from "@/features/supportCategory/components/SupportCategoryForm";
+import { SupportCategoryRequest } from "@/entities/types";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 export default function CreateSupportCategoryPage() {
 
     const router = useRouter();
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
+    const t = useTranslations("supportCategories");
     const [error, setError] = useState("");
+
+    const [form, setForm] = useState<SupportCategoryRequest>({
+        code: "",
+        name: "",
+        description: "",
+        languageId: 0,
+    });
+
+    const {languages, loading: languagesLoading} = useLanguage();
 
     const { addSupportCategory, saving } = useSupportCategoryActions({
         onSuccess: () => router.push("/admin/support/ticket-category"),
@@ -21,21 +31,31 @@ export default function CreateSupportCategoryPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const codeTrim = code.trim();
-        const nameTrim = name.trim();
-        const descriptionTrim = description.trim();
+        const codeTrim = form.code.trim();
+        const nameTrim = form.name.trim();
+        const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
-            setError("Por favor completa el campo de código");
+            setError(t("form.validation.codeRequired"));
+            return;
+        }
+
+        if (!form.languageId) {
+            setError(t("form.validation.languageRequired"));
             return;
         }
 
         if (!nameTrim) {
-            setError("Por favor completa el campo de nombre");
+            setError(t("form.validation.nameRequired"));
             return;
         }
 
-        await addSupportCategory({ code: codeTrim, name: nameTrim, description: descriptionTrim });
+        await addSupportCategory({ 
+            code: codeTrim,
+            name: nameTrim,
+            description: descriptionTrim,
+            languageId: form.languageId
+        });
 
     }
 
@@ -43,26 +63,25 @@ export default function CreateSupportCategoryPage() {
         router.push("/admin/support/ticket-category");
     }
 
-    const handleStatusChange = (value: string) => {
-        setCode(value);
-        if (error) setError("");
-    }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Nueva Categoría de Soporte</h1>
+            <h1>{t("create")}</h1>
             <SupportCategoryForm
-                code={code}
-                setCode={handleStatusChange}
-                name={name}
-                setName={setName}
-                description={description}
-                setDescription={setDescription}
+                value={form}
+                onChange={(value) => {
+                    setForm(value);
+                    
+                    if (error) {
+                        setError("");
+                    }
+                }}
+                languages={languages}
                 onSubmit={handleSubmit}
                 isEditing={false}
                 onCancel={handleCancel}
-                saving={saving}
-                error={error}
+                saving={saving || languagesLoading}
+                error={error || undefined}
             />
         </div>
     )

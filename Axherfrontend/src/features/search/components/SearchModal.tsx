@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { useSearchHistoryActions } from "@/features/search/hooks/useSearchHistoryActions";
 import { useSearchHistory } from "@/features/search/hooks/useSearchHistory";
+import { useTranslations } from "next-intl";
 
 interface Props {
     onClose: () => void;
@@ -123,6 +124,9 @@ export default function SearchModal({ onClose }: Props) {
         onClose();
         router.push("/historial-busquedas");
     };
+
+    const t = useTranslations("search");
+    const common = useTranslations("common");
     
     return (
         <div 
@@ -147,20 +151,20 @@ export default function SearchModal({ onClose }: Props) {
                     onChange={e => handleQueryChange(e.target.value)}
                     onKeyDown={handleKeyDown}
                     
-                    placeholder="Buscar peliculas o series..."
+                    placeholder={t("placeholder")}
                 />
                 {
                     query.trim() === "" && (
                         <div className={styles.history}>
 
                             <div className={styles.historyHeader}>
-                                <h3>Búsquedas recientes</h3>
+                                <h3>{t("history.title")}</h3>
                             </div>
 
                             {
                                 historyLoading ? (
                                     <div className={styles.loading}>
-                                        Cargando historial...
+                                        {t("history.loading")}
                                     </div>
                                 ) : searchHistory.length > 0 ? (
 
@@ -188,7 +192,7 @@ export default function SearchModal({ onClose }: Props) {
                                                             onClick={(e) =>
                                                                 handleRemoveHistory(e, item.searchId)
                                                             }
-                                                            aria-label={`Eliminar ${item.term}`}
+                                                            aria-label={`t("delete") ${item.term}`}
                                                         >
                                                             <X size={16} />
                                                         </button>
@@ -203,14 +207,14 @@ export default function SearchModal({ onClose }: Props) {
                                             className={styles.viewAllHistory}
                                             onClick={handleViewAllHistory}
                                         >
-                                            Ver todo el historial
+                                            {t("history.viewAll")}
                                             <span>→</span>
                                         </button>
                                     </>
                                     
                                 ) : (
                                     <div className={styles.empty}>
-                                        No tienes búsquedas recientes
+                                        {t("history.empty")}
                                     </div>
                                 )
                             }
@@ -222,7 +226,7 @@ export default function SearchModal({ onClose }: Props) {
                 {
                     loading && (
                         <div className={styles.loading}>
-                            Buscando...
+                            {common("loading")}
                         </div>
                     )
                 }
@@ -261,8 +265,8 @@ export default function SearchModal({ onClose }: Props) {
 
                                                 <span>
                                                     {item.type === "MOVIE"
-                                                        ? "Película"
-                                                        : "Serie"
+                                                        ? t("movie")
+                                                        : t("serie")
                                                     }
                                                 </span>
 
@@ -286,7 +290,7 @@ export default function SearchModal({ onClose }: Props) {
                     debouncedQuery.trim() !== "" &&
                     results.length === 0 && (
                         <div className={styles.empty}>
-                            No encontramos resultados
+                            {t("results.empty")}
                         </div>
                     )
                 }

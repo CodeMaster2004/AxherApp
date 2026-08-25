@@ -17,11 +17,14 @@ import com.axher.backend.content.core.service.ContentStatusService;
 import com.axher.backend.content.media.service.VideoMetadataService;
 import com.axher.backend.content.series.DTOs.EpisodesDTOs.CreateEpisodeRequestDto;
 import com.axher.backend.content.series.DTOs.EpisodesDTOs.UpdateEpisodeRequestDto;
+import com.axher.backend.content.series.entities.EpisodeTranslation;
 import com.axher.backend.content.series.entities.Episodes;
 import com.axher.backend.content.series.entities.Seasons;
+import com.axher.backend.content.series.repositories.EpisodeTranslationRepository;
 import com.axher.backend.content.series.repositories.EpisodesRepository;
 import com.axher.backend.infrastructure.quartz.EpisodePublicationScheduler;
 import com.axher.backend.infrastructure.storage.FileStorageService;
+import com.axher.backend.language.entities.Language;
 import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 
@@ -39,6 +42,7 @@ public class EpisodesService {
     private final VideoMetadataService videoMetadataService;
     private final EpisodePublicationScheduler episodePublicationScheduler;
     private final ContentStatusService statusService;
+    private final EpisodeTranslationRepository episodeTranslationRepository;
 
     @Transactional(readOnly = true)
     public Episodes findById(Integer id){
@@ -88,7 +92,7 @@ public class EpisodesService {
 
     @Transactional(readOnly = true)
     public List<Episodes> findBySeasonIdAndTitleContaining(Integer seasonId, String keyword){
-        return episodesRepository.findBySeason_SeasonIdAndTitleContainingIgnoreCase(seasonId, keyword);
+        return episodesRepository.searchByTitle(seasonId, keyword);
     }
     @Transactional(readOnly = true)
     public Page<Episodes> findBySeasonId(Integer seasonId, Pageable pageable){
@@ -193,8 +197,6 @@ public class EpisodesService {
         System.out.println("Duración detectada: " + duration);
         Episodes episode = new Episodes();
         episode.setEpisodeNumber(dto.getEpisodeNumber());
-        episode.setTitle(dto.getTitle());
-        episode.setDescription(dto.getDescription());
         episode.setDurationSeconds(duration);
         episode.setThumbnailUrl(thumbnailUrl);
         episode.setEpisodeUrl(url);
@@ -202,16 +204,30 @@ public class EpisodesService {
         episode.setContentStatus(defaultStatus);
         episode.setSeason(season);
 
-        return episodesRepository.save(episode);
+        Episodes saved = episodesRepository.save(episode);
+
+        createOriginalTranslation(
+            saved,
+            season.getSeries()
+                .getContent()
+                .getOriginalLanguage(),
+            dto.getTitle(),
+            dto.getDescription()
+        );
+
+        return saved;
     }
     public Episodes update(Integer seasonId, Integer episodeId, UpdateEpisodeRequestDto dto){
         Episodes episode = findBySeasonIdAndEpisodeId(seasonId, episodeId);
 
-        if(dto.getTitle() != null){
-            episode.setTitle(dto.getTitle());
-        }
-        if(dto.getDescription() != null){
-            episode.setDescription(dto.getDescription());
+        if(dto.getTitle() != null ||
+        dto.getDescription() != null){
+
+            updateOriginalTranslation(
+                episode,
+                dto.getTitle(),
+                dto.getDescription()
+            );
         }
         if(dto.getEpisodeNumber() != null){
             boolean exists = episodesRepository.existsBySeason_SeasonIdAndEpisodeNumberAndEpisodeIdNot(
@@ -318,6 +334,59 @@ public class EpisodesService {
             
             episodePublicationScheduler.cancel(episode.getEpisodeId());
         }
+    }
+
+    private void createOriginalTranslation(
+            Episodes episode,
+            Language language,
+            String title,
+            String description
+    ){
+        EpisodeTranslation translation =
+            new EpisodeTranslation();
+
+        translation.setEpisode(episode);
+        translation.setLanguage(language);
+        translation.setTitle(title);
+        translation.setDescription(description);
+
+        episodeTranslationRepository.save(translation);
+    }
+
+    private void updateOriginalTranslation(
+            Episodes episode,
+            String title,
+            String description
+    ){
+
+        Language originalLanguage =
+            episode.getSeason()
+                .getSeries()
+                .getContent()
+                .getOriginalLanguage();
+
+        EpisodeTranslation translation =
+            episodeTranslationRepository
+                .findByEpisode_EpisodeIdAndLanguage_LanguageId(
+                    episode.getEpisodeId(),
+                    originalLanguage.getLanguageId()
+                )
+                .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                        "Traducción original no encontrada para el episodio: "
+                        + episode.getEpisodeId()
+                    )
+                );
+
+        if(title != null){
+            translation.setTitle(title);
+        }
+
+        if(description != null){
+            translation.setDescription(description);
+        }
+
+        episodeTranslationRepository.save(translation);
     }
 
 }

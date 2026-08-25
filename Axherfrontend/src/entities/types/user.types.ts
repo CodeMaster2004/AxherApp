@@ -46,3 +46,7 @@ export interface UpdateUserProfile {
     profileBannerUrl?: string;
     profileVisibility?: 'PUBLIC' | 'PRIVATE'
 }
+
+export interface UpdateUserPreferencesRequest {
+    preferredLanguageId: number;
+}

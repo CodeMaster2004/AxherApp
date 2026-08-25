@@ -8,7 +8,9 @@ import java.util.Set;
 
 import com.axher.backend.content.movies.entities.Movies;
 import com.axher.backend.content.series.entities.Series;
+import com.axher.backend.language.entities.Language;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,11 +23,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,13 +42,14 @@ public class Content {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer contentId;
 
+    /* 
     @NotBlank
     @Size(max = 100)
     @Column(nullable = false, length = 100)
     private String title;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String description;/* */
 
     @Enumerated(EnumType.STRING)
     private ContentTypeEnum type;
@@ -81,6 +84,10 @@ public class Content {
     @JoinColumn(name = "discount_id")
     private Discounts discount;  
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "original_language_id", nullable = false)
+    private Language originalLanguage;
+
     private LocalDateTime releaseDate;
 
     @Column(name = "registered_at", insertable = false, updatable = false)
@@ -91,4 +98,12 @@ public class Content {
 
     @OneToOne(mappedBy = "content")
     private Series series;
+
+    @OneToMany(
+        mappedBy = "content",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    private Set<ContentTranslation> translations = new HashSet<>();
 }

@@ -1,23 +1,30 @@
 "use client";
 
-import { SupportTicketStatusResponse } from "@/entities/types";
+import { SupportTicketStatusRequest, SupportTicketStatusResponse } from "@/entities/types";
 import { useSupportTicketStatusActions } from "@/features/supportTicketStatus/hooks/useSupportTicketStatusActions";
 import { supportTicketStatusService } from "@/features/supportTicketStatus/service/SupportTicketStatusService";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import SupportTicketStatusForm from "@/features/supportTicketStatus/components/SupportTicketStatusForm";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
 
 export default function EditSupportTicketStatusPage() {
 
     const router = useRouter();
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
-
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const [form, setForm] = useState<SupportTicketStatusRequest>({
+        code: "",
+        name: "",
+        description: "",
+        languageId: 0,
+    })
+
+    const {languages, loading: languagesLoading} = useLanguage();
     
     const { editSupportTicketStatus, saving } = useSupportTicketStatusActions({
         onSuccess: () => router.push("/admin/support/ticket-status"),
@@ -32,12 +39,15 @@ export default function EditSupportTicketStatusPage() {
         const loadStatus = async () => {
             try {
                 const supportTicketStatus: SupportTicketStatusResponse = await supportTicketStatusService.getById(id);
-                setCode(supportTicketStatus.code);
-                setName(supportTicketStatus.name);
-                setDescription(supportTicketStatus.description ?? "");
+                setForm({
+                    code: supportTicketStatus.code,
+                    name: supportTicketStatus.name,
+                    description: supportTicketStatus.description ?? "",
+                    languageId: supportTicketStatus.languageId,
+                });
             } catch (error) {
                 console.error("Error cargando estado:", error);
-                alert("Error al cargar el estado");
+                setError("Error al cargar el estado");
                 router.push("/admin/support/ticket-status");
             } finally {
                 setLoading(false);
@@ -51,21 +61,31 @@ export default function EditSupportTicketStatusPage() {
 
         if (!id) return;
 
-        const codeTrim = code.trim();
-        const nameTrim = name.trim();
-        const descriptionTrim = description.trim();
+        const codeTrim = form.code.trim();
+        const nameTrim = form.name.trim();
+        const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
-            alert("Por favor completa el campo de código");
+            setError("Por favor completa el campo de código");
+            return;
+        }
+
+        if (!form.languageId) {
+            setError("Por favor selecciona un idioma");
             return;
         }
 
         if (!nameTrim) {
-            alert("Por favor completa el campo de nombre");
+            setError("Por favor completa el campo de nombre");
             return;
         }
 
-        await editSupportTicketStatus(id, { code: codeTrim, name: nameTrim, description: descriptionTrim });
+        await editSupportTicketStatus(id, { 
+            code: codeTrim,
+            name: nameTrim,
+            description: descriptionTrim,
+            languageId: form.languageId
+        });
     };
 
     const handleCancel = () => {
@@ -82,16 +102,20 @@ export default function EditSupportTicketStatusPage() {
             <h1>Editar Estado de Ticket</h1>
 
             <SupportTicketStatusForm
-                code={code}
-                setCode={setCode}
-                name={name}
-                setName={setName}
-                description={description}
-                setDescription={setDescription}
+                value={form}
+                onChange={(value) => {
+                    setForm(value);
+
+                    if (error) {
+                        setError("");
+                    }
+                }}
+                languages={languages}
                 onSubmit={handleSubmit}
                 isEditing={true}
                 onCancel={handleCancel}
-                saving={saving}
+                saving={saving || languagesLoading}
+                error={error || undefined}
             />
         </div>
     )

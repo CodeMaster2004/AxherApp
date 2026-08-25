@@ -23,8 +23,17 @@ public interface EpisodesRepository extends JpaRepository<Episodes, Integer> {
     List<Episodes> findBySeason_SeasonIdAndReleaseDateBetween(Integer seasonId, LocalDate start, LocalDate end);
 
     // ✅ Buscar episodios por título (case-insensitive)
-    List<Episodes> findBySeason_SeasonIdAndTitleContainingIgnoreCase(Integer seasonId, String keyword);
-
+    @Query("""
+        SELECT DISTINCT e
+        FROM Episodes e
+        JOIN e.translations t
+        WHERE e.season.seasonId = :seasonId
+        AND LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    """)
+    List<Episodes> searchByTitle(
+        Integer seasonId,
+        String keyword
+    );
     Optional<Episodes> findByEpisodeIdAndSeason_SeasonId(Integer episodeId, Integer seasonId);// Para validar que el episodio pertenece a la temporada al actualizar o eliminar
 
     List<Episodes> findByContentStatus_CodeAndReleaseDateLessThanEqual(

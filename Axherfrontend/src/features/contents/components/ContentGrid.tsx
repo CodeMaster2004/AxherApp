@@ -1,6 +1,7 @@
 import { ContentDetail } from "@/entities/types";
 import ContentCard from "@/features/contents/components/ContentCard";
 import styles from "./ContentGrid.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     contents: ContentDetail[];
@@ -11,6 +12,9 @@ export default function ContentGrid({
     contents,
     loading
 }: Props) {
+
+    const t = useTranslations("common");
+    
     console.log("GRID", {
         loading,
         count: contents.length,
@@ -23,7 +27,7 @@ export default function ContentGrid({
             color: "red",
             fontSize: "2rem"
         }}>
-            CARGANDO...
+            {t("loading")}
         </div>
     );
 }

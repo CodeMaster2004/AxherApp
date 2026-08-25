@@ -14,4 +14,7 @@ public class UserAuthResponseDto {
     
     private String refreshToken;
     private String provider; // GOOGLE, FACEBOOK, LOCAL, etc.
+
+    private Integer preferredLanguageId; // Add this field to store the preferred language ID
+    private String preferredLanguageCode; // Add this field to store the preferred language code
 }

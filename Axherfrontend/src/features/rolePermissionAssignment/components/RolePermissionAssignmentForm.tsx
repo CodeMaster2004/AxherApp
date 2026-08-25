@@ -8,6 +8,7 @@ import { useSystemRoles } from "@/features/systemRoles/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -28,6 +29,8 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
         //error: assignmentError,
     } = useRolePermissionAssignment();
 
+    const common = useTranslations("common");
+    const t = useTranslations("permissions");
     const [baseAssignedIds, setBaseAssignedIds] = useState<number[]>([]);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [statusMsg, setStatusMsg] = useState<string | null>(null);
@@ -52,9 +55,8 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
             setBaseAssignedIds(ids);
             setSelectedIds(ids);
         })
-        .catch((err) => {
-            console.error("Error cargando permisos asignados:", err);
-            setErrorMsg("No se pudieron cargar permisos del rol");
+        .catch ((error) => {
+            setErrorMsg(t("loadError"));
         });
     }, [roleId, getPermissionsByRole, systemPermissions]);
 
@@ -108,23 +110,21 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
                         .filter(Boolean) // eliminar strings vacíos
                 };
                 setAuth(updatedUser);
-                console.log("User actualizado globalmente:", updatedUser);
             }
 
             router.push("/systemRoles");
-            setStatusMsg("Permisos actualizados con éxito");
+            setStatusMsg(t("updatedSuccessfully"));
             onDone?.();
         } catch (error) {
-            console.error("Error actualizando permisos:", error);
-            setErrorMsg("No se pudieron guardar los cambios");
+            setErrorMsg(t("saveError"));
         }
     };
 
     if (!roleId) {
         return (
         <div className={layoutStyles.pageContainer}>
-            <p>Rol inválido</p>
-            <button onClick={() => router.push("/admin/systemRoles")}>Volver</button>
+            <p>{t("invalidRole")}</p>
+            <button onClick={() => router.push("/admin/systemRoles")}>{common("back")}</button>
         </div>
         );
     }
@@ -133,9 +133,9 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
 
     return (
         <div className={layoutStyles.pageContainer}>
-        <h1>Permisos del rol: {role?.roleName ?? roleId}</h1>
+        <h1>{t("title")}: {role?.roleName ?? roleId}</h1>
 
-        {loading && <div className={layoutStyles.loading}>Cargando permisos...</div>}
+        {loading && <div className={layoutStyles.loading}>{t("loading")}</div>}
 
         {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
         {/* {assignmentError && <p style={{ color: "red" }}>{String(assignmentError)}</p>} */}
@@ -145,8 +145,8 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
             <table className={tableStyles.table}>
                 <thead>
                 <tr className={tableStyles.rowHover}>
-                    <th className={tableStyles.headCell}>Módulo</th>
-                    <th className={tableStyles.headCell}>Permisos</th>
+                    <th className={tableStyles.headCell}>{t("module")}</th>
+                    <th className={tableStyles.headCell}>{t("permissions")}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -172,7 +172,7 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
                 {systemPermissions.length === 0 && (
                     <tr>
                     <td className={tableStyles.cell} colSpan={2}>
-                        No hay permisos registrados.
+                        {t("noPermissions")}
                     </td>
                     </tr>
                 )}
@@ -187,9 +187,9 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
             onClick={onSave}
             disabled={!canSave || updating}
             loading={updating}
-            loadingText="Guardando..."
+            loadingText={common("saving")}
             >
-            Guardar cambios
+            {common("saveChanges")}
             </Button>
 
             <Button
@@ -198,7 +198,7 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
             onClick={() => router.push("/admin/systemRoles")}
             disabled={updating}
             >
-            Cancelar
+            {common("cancel")}
             </Button>
         </div>
         </div>

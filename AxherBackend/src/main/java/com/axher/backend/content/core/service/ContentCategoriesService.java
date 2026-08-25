@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.axher.backend.content.core.DTOs.ContentCategoryRequestDto;
+import com.axher.backend.content.core.DTOs.ContentCategoryTranslationRequestDto;
 import com.axher.backend.content.core.entities.ContentCategories;
 import com.axher.backend.content.core.repositories.ContentCategoriesRepository;
 import com.axher.backend.shared.exception.DuplicateResourceException;
@@ -21,6 +23,7 @@ public class ContentCategoriesService {
 
     private final ContentCategoriesRepository repository;
     private final SlugGeneratorService slugGenerator;
+    private final ContentCategoryTranslationService translationService;
 
 
     public Page<ContentCategories> findAll(Pageable pageable, String search){
@@ -28,7 +31,7 @@ public class ContentCategoriesService {
         if(search == null || search.isBlank()){
             return repository.findAll(pageable);
         }
-        return repository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(search, search, pageable);
+        return repository.search( search, pageable);
     }
 
     public ContentCategories findById(Integer id){
@@ -43,38 +46,56 @@ public class ContentCategoriesService {
     }
 
 
-    public ContentCategories create(ContentCategories contentCategory){
+    public ContentCategories create(ContentCategoryRequestDto dto){
 
-        String name = contentCategory.getName().trim();
+        String name = dto.getName().trim();
 
-        if(repository.existsByNameIgnoreCase(name)){
+        if(translationService.existsByNameAndLanguage(name, dto.getLanguageId())) {
             throw new DuplicateResourceException("La categoría ya existe: " + name);
         }
 
         String slug = slugGenerator.generate(name, repository::existsBySlug);
 
-        contentCategory.setName(name);
+        ContentCategories contentCategory = new ContentCategories();
         contentCategory.setSlug(slug);
-        
+        ContentCategories saved = repository.save(contentCategory);
+
+        ContentCategoryTranslationRequestDto translationDto =
+            new ContentCategoryTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(dto.getName());
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+            saved.getContentCategoryId(),
+            translationDto
+        );
+
         return repository.save(contentCategory);
     }
  
-    public ContentCategories update (Integer id, ContentCategories contentCategories){
+    public ContentCategories update (Integer id, ContentCategoryRequestDto dto){
         ContentCategories existing = findById(id);
 
-        if(contentCategories.getName() != null){
+        if(dto.getName() != null){
 
-            String name = contentCategories.getName().trim();
+            String name = dto.getName().trim();
 
             if(name.isBlank()){
                 throw new IllegalArgumentException("El nombre de la categoria no puede estar vacio");
             }
 
 
-            if(!name.equalsIgnoreCase(existing.getName()) && repository.existsByNameIgnoreCase(name)){
-                throw new DuplicateResourceException("La categoria ya existe: " + name);
+            if (translationService.existsByNameAndLanguageAndCategoryNot(
+                    name,
+                    dto.getLanguageId(),
+                    id
+            )) {
+                throw new DuplicateResourceException(
+                    "La categoría ya existe en este idioma: " + name
+                );
             }
-            existing.setName(name);
 
             existing.setSlug(
                 slugGenerator.generate(name, slug -> repository.existsBySlugAndContentCategoryIdNot(slug, id))
@@ -82,9 +103,17 @@ public class ContentCategoriesService {
         }
         
 
-        if(contentCategories.getDescription() != null){
-            existing.setDescription(contentCategories.getDescription());;
-        }
+        ContentCategoryTranslationRequestDto translationDto =
+            new ContentCategoryTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(dto.getName());
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+            existing.getContentCategoryId(),
+            translationDto
+        );
 
         return repository.save(existing);
     }

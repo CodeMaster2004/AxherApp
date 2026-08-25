@@ -6,6 +6,7 @@ import EpisodesForm from "@/features/episodes/components/EpisodesForm";
 import { useEpisodesActions } from "@/features/episodes/hooks/useEpisodesActions";
 import { episodesService } from "@/features/episodes/services/EpisodesService";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -17,7 +18,8 @@ export default function EditEpisodePage() {
   const contentId = params?.contentId ? Number(params.contentId) : null;
   const seasonId = params?.seasonId ? Number(params.seasonId) : null;
   const episodeId = params?.episodeId ? Number(params.episodeId) : null;
-
+  const common = useTranslations("common");
+  const t = useTranslations("episodes");
   const [episodeNumber, setEpisodeNumber] = useState(1);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState<string | undefined>(undefined);
@@ -52,7 +54,7 @@ export default function EditEpisodePage() {
         setThumbnailUrl(data.thumbnailUrl || "")
         setEpisodeUrl(data.episodeUrl || "");
       } catch {
-        setError("No se pudo cargar el episodio");
+        setError(t("errors.load"));
       } finally {
         setLoading(false);
       }
@@ -63,7 +65,7 @@ export default function EditEpisodePage() {
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!title.trim()) return setError("El título es obligatorio");
+    if (!title.trim()) return setError(t("form.validation.titleRequired"));
 
     setError("");
     const formData = new FormData();
@@ -80,7 +82,7 @@ export default function EditEpisodePage() {
     try {
       await editEpisode(episodeId!, formData);
     } catch {
-      setError("Error al actualizar el episodio");
+      setError(t("errors.update"));
     }
   };
 
@@ -88,11 +90,11 @@ export default function EditEpisodePage() {
     router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes`);
   };
 
-  if (loading) return <div className={layoutStyles.loading}>Cargando...</div>;
+  if (loading) return <div className={layoutStyles.loading}>{common("loading")}...</div>;
 
   return (
     <div className={layoutStyles.pageContainer}>
-      <h1>Editar Episodio</h1>
+      <h1>{t("editTitle")}</h1>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 

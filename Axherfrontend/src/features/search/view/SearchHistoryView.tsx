@@ -5,6 +5,7 @@ import { useSearchHistory } from "@/features/search/hooks/useSearchHistory";
 import { useSearchHistoryActions } from "@/features/search/hooks/useSearchHistoryActions";
 import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 
 export default function SearchHistoryView() {
 
@@ -18,7 +19,7 @@ export default function SearchHistoryView() {
         goToPage,
         refetch,
     } = useSearchHistory();
-
+    const t = useTranslations("search");
     const {deleting, remove, clearing, clear } = useSearchHistoryActions({onSuccess: refetch});
 
     const handleSelect = (term: string) => {
@@ -28,7 +29,7 @@ export default function SearchHistoryView() {
     return (
         <div className={layoutStyles.pageContainer}>
             <div className={layoutStyles.header}>
-                <h1>Historial de busqueda</h1>
+                <h1>{t("title")}</h1>
             </div>
 
             <SearchHistoryList

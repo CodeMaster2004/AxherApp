@@ -1,6 +1,6 @@
 "use client";
 
-import { Category, ContentType } from "@/entities/types";
+import { ContentCategoryResponse, ContentType } from "@/entities/types";
 import { PageSection } from "@/entities/types/pageSection.types";
 import NewContentSection from "@/features/contents/components/NewContentSection";
 import GenreBar from "@/features/movies/components/GenreBar";
@@ -13,7 +13,7 @@ import UpcomingCarousel from "@/features/upcoming/components/UpcomingCarousel";
 interface Props {
     section: PageSection;
     contentType?: ContentType;
-    categories?: Category[];
+    categories?: ContentCategoryResponse[];
     basePath?: string;
 }
 export default function PageSectionRnderer({ section, contentType, categories, basePath }: Props){

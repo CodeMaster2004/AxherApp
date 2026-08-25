@@ -5,7 +5,11 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import com.axher.backend.content.core.entities.ContentStatus;
+import com.axher.backend.support.reports.entities.ReportStatus;
 import com.axher.backend.support.tickets.entities.SupportCategory;
 
 public interface SupportCategoryRepository extends JpaRepository<SupportCategory, Integer> {
@@ -13,13 +17,18 @@ public interface SupportCategoryRepository extends JpaRepository<SupportCategory
 
     boolean existsByCode(String code);
 
-    boolean existsByNameIgnoreCase(String name);
 
-    Page<SupportCategory>
-    findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-        String code,
-        String name,
-        String description,
+    @Query("""
+        SELECT DISTINCT sc
+        FROM SupportCategory sc
+        LEFT JOIN sc.translations t
+        WHERE
+            LOWER(sc.code) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(t.name) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(t.description) LIKE LOWER(CONCAT('%', :search, '%'))
+    """)
+    Page<SupportCategory> search(
+        @Param("search") String search,
         Pageable pageable
     );
 }

@@ -1,23 +1,35 @@
 "use client";
 
-import { SupportCategoryResponse } from "@/entities/types";
+import { SupportCategoryRequest, SupportCategoryResponse } from "@/entities/types";
 import SupportCategoryForm from "@/features/supportCategory/components/SupportCategoryForm";
 import { useSupportCategoryActions } from "@/features/supportCategory/hooks/useSupportCategoryActions";
 import { supportCategoryService } from "@/features/supportCategory/services/SupportCategoryService";
 import { useEffect, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import { useParams, useRouter } from "next/navigation";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 export default function EditSupportCategoryPage() {
 
     const router = useRouter();
+    const t = useTranslations("supportCategories");
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
-
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+
+    const [form, setForm] = useState<SupportCategoryRequest>({
+        code: "",
+        name: "",
+        description: "",
+        languageId: 0,
+    });
+
+    const {
+        languages,
+        loading: languagesLoading,
+    } = useLanguage();
     
     const { editSupportCategory, saving } = useSupportCategoryActions({
         onSuccess: () => router.push("/admin/support/ticket-category"),
@@ -32,12 +44,14 @@ export default function EditSupportCategoryPage() {
         const loadStatus = async () => {
             try {
                 const supportCategory: SupportCategoryResponse = await supportCategoryService.getById(id);
-                setCode(supportCategory.code);
-                setName(supportCategory.name);
-                setDescription(supportCategory.description ?? "");
+                setForm({
+                    code: supportCategory.code,
+                    name: supportCategory.name,
+                    description: supportCategory.description ?? "",
+                    languageId: supportCategory.languageId,
+                });
             } catch (error) {
-                console.error("Error cargando estado:", error);
-                alert("Error al cargar el estado");
+                setError(t("errors.load"));
                 router.push("/admin/support/ticket-category");
             } finally {
                 setLoading(false);
@@ -51,21 +65,33 @@ export default function EditSupportCategoryPage() {
 
         if (!id) return;
 
-        const codeTrim = code.trim();
-        const nameTrim = name.trim();
-        const descriptionTrim = description.trim();
+        const codeTrim = form.code.trim();
+        const nameTrim = form.name.trim();
+        const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
-            alert("Por favor completa el campo de código");
+            alert(t("form.validation.codeRequired"));
+            return;
+        }
+
+        if (!form.languageId) {
+            setError(
+                t("form.validation.languageRequired")
+            );
             return;
         }
 
         if (!nameTrim) {
-            alert("Por favor completa el campo de nombre");
+            setError(t("form.validation.nameRequired"));
             return;
         }
 
-        await editSupportCategory(id, { code: codeTrim, name: nameTrim, description: descriptionTrim });
+        await editSupportCategory(id, {
+            code: codeTrim,
+            name: nameTrim,
+            description: descriptionTrim,
+            languageId: form.languageId
+        });
     };
 
     const handleCancel = () => {
@@ -79,19 +105,23 @@ export default function EditSupportCategoryPage() {
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Categoría de Ticket</h1>
+            <h1>{t("edit")}</h1>
 
             <SupportCategoryForm
-                code={code}
-                setCode={setCode}
-                name={name}
-                setName={setName}
-                description={description}
-                setDescription={setDescription}
+                value={form}
+                onChange={(value) => {
+                    setForm(value);
+                    
+                    if (error) {
+                        setError("");
+                    }
+                }}
+                languages={languages}
                 onSubmit={handleSubmit}
                 isEditing={true}
                 onCancel={handleCancel}
-                saving={saving}
+                saving={saving || languagesLoading}
+                error={error || undefined}
             />
         </div>
     )

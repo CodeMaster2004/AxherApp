@@ -2,6 +2,7 @@ import { SearchHistoryResponse } from "@/entities/types";
 import { Search, X } from "lucide-react";
 import styles from "./SearchHistoryItem.module.css"
 import { formatTime } from "@/shared/utils/date";
+import { useTranslations } from "next-intl";
 
 interface Props {
     item: SearchHistoryResponse;
@@ -16,6 +17,8 @@ export default function SearchHistoryItem({
     onRemove,
     deleting,
 }: Props){
+
+    const t = useTranslations("search");
     const isDeleting = deleting === item.searchId;
     
     return (
@@ -43,7 +46,9 @@ export default function SearchHistoryItem({
                     onRemove(item.searchId);
                 }}
                 disabled={isDeleting}
-                aria-label={`Eliminar búsqueda ${item.term}`}
+                aria-label={t("delete", {
+                    term: item.term,
+                })}
             >
                 {isDeleting ? (
                     <span className={styles.loading}>...</span>

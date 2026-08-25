@@ -2,6 +2,7 @@ import { SyntheticEvent } from "react";
 import Input from "@/shared/components/ui/Input";
 import formStyles from "@/shared/styles/shared/Form.module.css";
 import Button from "@/shared/components/ui/Button";
+import { useTranslations } from "next-intl";
 
 interface Props {
     moduleName: string;
@@ -28,6 +29,9 @@ export default function SystemPermissionsForm({
     onCancel,
     saving = false,
 }: Props) {
+
+    const t = useTranslations("common");
+    
     return (
         <form onSubmit={onSubmit} className={formStyles.form}>
             <h2>{isEditing ? 'Editar Permiso del Sistema' : 'Crear Permiso del Sistema'}</h2>
@@ -69,7 +73,7 @@ export default function SystemPermissionsForm({
                     disabled={saving}
                     loadingText={isEditing ? 'Actualizando...' : ' Creando...'}
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? 'Actualizar' : t("create")}
                 </Button>
 
                 {onCancel && (
@@ -79,7 +83,7 @@ export default function SystemPermissionsForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {t("cancel")}
 
                     </Button>
                 )}

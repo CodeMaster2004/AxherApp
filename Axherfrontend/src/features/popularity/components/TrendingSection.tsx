@@ -5,6 +5,7 @@ import { useTrending } from "@/features/popularity/hooks/useTrending";
 import styles from "./TrendingSection.module.css";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
 import { ContentType } from "@/entities/types";
+import { useTranslations } from "next-intl";
 
 interface Props {
     type?: ContentType;
@@ -13,7 +14,7 @@ interface Props {
 export default function TendingSection({type}: Props ){
 
     const {trending, loading} = useTrending({type});
-
+    const t = useTranslations("popularity");
     if(loading) return null;
 
     return (
@@ -21,7 +22,7 @@ export default function TendingSection({type}: Props ){
         <section className={styles.section}>
 
             <h2>
-                En tendencia
+                {t("trending.title")}
             </h2>
             
                 <HorizontalCarousel >

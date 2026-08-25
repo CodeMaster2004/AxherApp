@@ -2,19 +2,30 @@ package com.axher.backend.content.core.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.axher.backend.content.core.DTOs.CategoryDto;
+import com.axher.backend.content.core.DTOs.CategoryResponseDto;
 import com.axher.backend.content.core.entities.ContentCategories;
+import com.axher.backend.content.core.service.ContentCategoryLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class CategoryMapper {
 
-    public CategoryDto toDto(ContentCategories category) {
+    private final ContentCategoryLocalizationService contentCategoryLocalizationService;
 
-        CategoryDto dto = new CategoryDto();
+    public CategoryResponseDto toDto(ContentCategories category) {
 
-        dto.setCategoryId(category.getContentCategoryId());
+        CategoryResponseDto dto = new CategoryResponseDto();
+
+        ContentCategoryLocalizationService.LocalizedCategory localized =
+                contentCategoryLocalizationService.resolve(category);
+
+        dto.setContentCategoryId(category.getContentCategoryId());
         dto.setSlug(category.getSlug());
-        dto.setName(category.getName());
+        dto.setName(localized.name());
+        dto.setDescription(localized.description());
+        dto.setLanguageId(localized.languageId());
 
         return dto;
     }

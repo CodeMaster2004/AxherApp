@@ -4,9 +4,15 @@ import org.springframework.stereotype.Component;
 
 import com.axher.backend.content.core.DTOs.ContentStatusResponseDto;
 import com.axher.backend.content.core.entities.ContentStatus;
+import com.axher.backend.content.core.service.ContentStatusLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class ContentStatusMapper {
+
+    private final ContentStatusLocalizationService localizationService;
     
     public ContentStatusResponseDto toDto(ContentStatus status){
 
@@ -18,8 +24,10 @@ public class ContentStatusMapper {
 
         dto.setContentStatusId(status.getContentStatusId());
         dto.setCode(status.getCode());
-        dto.setName(status.getName());
-
+        var localized = localizationService.resolve(status);
+        dto.setName(localized.name());
+        dto.setDescription(localized.description());
+        dto.setLanguageId(localized.languageId());
         return dto;
     }
 }

@@ -24,4 +24,5 @@ public class CreateShelfDto {
 
 
     private Boolean active = true;
+    private Integer languageId;
 }

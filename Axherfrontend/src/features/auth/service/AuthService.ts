@@ -1,11 +1,26 @@
 import { usersApi } from "@/core/api/endpoints/UsersApi";
 import {  UserAuthResponse, UserLoginRequest, UserRegisterRequest } from "@/entities/types";
+import { getBrowserLanguageCode } from "@/shared/i18n/browserLanguage";
 import { AxiosResponse } from "axios";
 
 export const authService = {
 
-    register: async(resgisterRequest: UserRegisterRequest, signal?: AbortSignal): Promise<UserAuthResponse> => {
-        const res = await usersApi.register(resgisterRequest, { signal });
+    register: async (
+        registerRequest: UserRegisterRequest,
+        signal?: AbortSignal
+    ): Promise<UserAuthResponse> => {
+
+        const request: UserRegisterRequest = {
+            ...registerRequest,
+            preferredLanguageCode:
+                getBrowserLanguageCode()
+        };
+
+        const res = await usersApi.register(
+            request,
+            { signal }
+        );
+
         return res.data;
     },
 

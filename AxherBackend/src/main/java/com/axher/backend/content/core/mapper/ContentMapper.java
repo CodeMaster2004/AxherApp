@@ -9,19 +9,28 @@ import com.axher.backend.content.core.DTOs.ContentDetailDto;
 import com.axher.backend.content.core.DTOs.ContentStatusResponseDto;
 import com.axher.backend.content.core.entities.Content;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
+import com.axher.backend.content.core.service.ContentCategoryLocalizationService;
+import com.axher.backend.content.core.service.ContentLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class ContentMapper {
     @Value("${app.base-url}")
     private String baseUrl;
 
+    private final ContentLocalizationService contentLocalizationService;
+    private final ContentCategoryLocalizationService contentCategoryLocalizationService;
+
     public ContentDetailDto toDto(Content content) {
         
         ContentDetailDto dto = new ContentDetailDto();
-
+        ContentLocalizationService.LocalizedContent localized =
+                contentLocalizationService.resolve(content);
         dto.setContentId(content.getContentId());
-        dto.setTitle(content.getTitle());
-        dto.setDescription(content.getDescription());
+        dto.setTitle(localized.title());
+        dto.setDescription(localized.description());
         dto.setPrice(content.getPrice());
 
         dto.setType(content.getType());
@@ -32,9 +41,9 @@ public class ContentMapper {
         
         dto.setCategories(
             content.getCategories()
-                 .stream()
-                 .map(c -> c.getName())
-                 .collect(Collectors.toList())
+                .stream()
+                .map(category -> contentCategoryLocalizationService.resolve(category).name())
+                .toList()
         );
 
         // Status plano

@@ -6,8 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.axher.backend.billing.subscription.DTOs.SubscriptionPlanRequestDto;
+import com.axher.backend.billing.subscription.DTOs.SubscriptionPlanTranslationRequestDto;
+import com.axher.backend.billing.subscription.entities.SubscriptionPlanTranslation;
 import com.axher.backend.billing.subscription.entities.SubscriptionPlans;
+import com.axher.backend.billing.subscription.repositories.SubscriptionPlanTranslationRepository;
 import com.axher.backend.billing.subscription.repositories.SubscriptionPlansRepository;
+import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class SubscriptionPlansService {
 
     private final SubscriptionPlansRepository repository;
+    private final SubscriptionPlanTranslationService translationService;
+    private final SubscriptionPlanTranslationRepository translationRepository;
 
     public Page<SubscriptionPlans> findAll(Pageable pageable, String search) {
 
@@ -25,7 +31,7 @@ public class SubscriptionPlansService {
             return repository.findAll(pageable);
         }
 
-        return repository.findByNameContainingIgnoreCase(search, pageable);   
+        return repository.search(search, pageable);   
     }
 
     public SubscriptionPlans findById(Integer id) {
@@ -38,20 +44,35 @@ public class SubscriptionPlansService {
             );
     }
 
-    public SubscriptionPlans getPlan(String name) {
-
-        return repository.findByNameIgnoreCase(name)
-            .orElseThrow(() ->
-                new ResourceNotFoundException(
-                    "Plan de suscripción no encontrado: " + name
+    public SubscriptionPlans getPlan(
+        String name,
+        Integer languageId
+    ) {
+        SubscriptionPlanTranslation translation =
+            translationRepository
+                .findByNameIgnoreCaseAndLanguage_LanguageId(
+                    name,
+                    languageId
                 )
-            );
+                .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                        "Plan de suscripción no encontrado: " + name
+                    )
+                );
+
+        return translation.getSubscriptionPlan();
     }
 
     public SubscriptionPlans create(SubscriptionPlanRequestDto dto) {
 
         if(dto.getName() == null || dto.getName().isBlank()){
             throw new IllegalArgumentException("El nombre del plan de suscripción no puede estar vacío");
+        }
+
+        if (dto.getLanguageId() == null) {
+            throw new IllegalArgumentException(
+                "El idioma es obligatorio"
+            );
         }
 
         if(dto.getPrice() == null || dto.getPrice().signum() < 0){
@@ -63,35 +84,43 @@ public class SubscriptionPlansService {
             throw new IllegalArgumentException("La duración del plan de suscripción debe ser mayor a 0 días");
         }
 
-        if(repository.existsByNameIgnoreCase(dto.getName())){
-            throw new IllegalArgumentException("El nombre del plan de suscripción ya existe: " + dto.getName());
+        String name = dto.getName().trim();
+
+        if (translationService.existsByNameAndLanguage(
+            name,
+            dto.getLanguageId()
+        )) {
+
+            throw new DuplicateResourceException(
+                "El nombre ya existe en este idioma: " + name
+            );
         }
+
 
         SubscriptionPlans plan = new SubscriptionPlans();
 
-        plan.setName(dto.getName());
         plan.setPrice(dto.getPrice());
-        plan.setDescription(dto.getDescription());
         plan.setDurationDays(dto.getDurationDays());
 
-        return repository.save(plan);
+        SubscriptionPlans saved = repository.save(plan);
+
+        SubscriptionPlanTranslationRequestDto translationDto = new SubscriptionPlanTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(name);
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+            saved.getSubscriptionPlanId(),
+            translationDto
+        );
+
+        return saved;
     }
 
     public SubscriptionPlans update(Integer id, SubscriptionPlanRequestDto dto) {
         
         SubscriptionPlans existing = findById(id);
-
-        if(dto.getName() != null){
-            if(dto.getName().isBlank()){
-                throw new IllegalArgumentException("El nombre del plan de suscripción no puede estar vacío");
-            }
-
-            if(!dto.getName().equalsIgnoreCase(existing.getName())
-            && repository.existsByNameIgnoreCase(dto.getName())){
-                throw new IllegalArgumentException("El nombre del plan de suscripción ya existe: " + dto.getName());
-            }
-            existing.setName(dto.getName());
-        }
 
         if(dto.getPrice() != null){
 
@@ -101,15 +130,53 @@ public class SubscriptionPlansService {
             existing.setPrice(dto.getPrice());
         }
 
-        if(dto.getDescription() != null){
-            existing.setDescription(dto.getDescription());
-        }
-
         if(dto.getDurationDays() != null){
             if(dto.getDurationDays() <= 0){
                 throw new IllegalArgumentException("La duración del plan de suscripción debe ser mayor a 0 días");
             }
             existing.setDurationDays(dto.getDurationDays());
+        }
+
+        //==========================
+        // TRADUCCIÓN
+        //==========================
+        if(dto.getName() != null){
+
+            String name = dto.getName().trim();
+
+            if (name.isBlank()) {
+                throw new IllegalArgumentException(
+                    "El nombre del plan de suscripción no puede estar vacío"
+                );
+            }
+
+            if (dto.getLanguageId() == null) {
+                throw new IllegalArgumentException(
+                    "El idioma es obligatorio"
+                );
+            }
+
+            if (translationService.existsByNameAndLanguageAndPlanNot(
+                name,
+                dto.getLanguageId(),
+                id
+            )) {
+
+                throw new DuplicateResourceException(
+                    "El nombre ya existe en este idioma: " + name
+                );
+            }
+
+            SubscriptionPlanTranslationRequestDto translationDto = new SubscriptionPlanTranslationRequestDto();
+
+            translationDto.setLanguageId(dto.getLanguageId());
+            translationDto.setName(name);
+            translationDto.setDescription(dto.getDescription());
+
+            translationService.save(
+                existing.getSubscriptionPlanId(),
+                translationDto
+            );
         }
         return repository.save(existing);
     }

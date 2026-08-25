@@ -4,6 +4,7 @@ import tableStyles from "@/shared/styles/shared/Table.module.css";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 
 interface Props{
     systemPermissions: SystemPermissions[];
@@ -36,6 +37,8 @@ export default function SystemPermissionsList ({
     onSearchChange
 }: Props) {
 
+    const t = useTranslations("common");
+    
     const [confirmDialog, setConfirmDialog] = useState<{isOpen: boolean; id: number; systemPermissions: string }>({
         isOpen: false,
         id: 0,
@@ -62,8 +65,8 @@ export default function SystemPermissionsList ({
                 isOpen={confirmDialog.isOpen}
                 title="confirmar Eliminacion"
                 message={`¿Estás seguro de que deseas eliminar el permiso del sistema "${confirmDialog.systemPermissions}"? Esta accion no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                confirmText={t("delete")}
+                cancelText={t("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
@@ -105,14 +108,14 @@ export default function SystemPermissionsList ({
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: "Editar",
+                                                    label: t("edit"),
                                                     onClick: () => onEdit(permission),
                                                 },
                                                 {
                                                     label:
                                                         deletingId === permission.systemPermissionId
                                                             ? "Eliminando..."
-                                                            : "Eliminar",
+                                                            : t("delete"),
                                                     onClick: () => handleDeleteClick(permission.systemPermissionId, permission.permissionName),
                                                     variant: "danger",
                                                 },

@@ -78,7 +78,7 @@ export default function ContentCatalog({
 
         setFilters(prev=>({
             ...prev,
-            categoryId:category.categoryId
+            categoryId:category.contentCategoryId
         }));
 
 

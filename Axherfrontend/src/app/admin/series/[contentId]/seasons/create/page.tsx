@@ -6,6 +6,7 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css"
 import SeasonsForm from "@/features/seasons/components/SeasonsForm";
 import { useSeasonsActions } from "@/features/seasons/hooks";
 import { useContentStatus } from "@/features/contentStatus/hooks";
+import { useTranslations } from "next-intl";
 
 export default function CreateSeasonPage() {
     const { contentStatus: statuse = []} = useContentStatus();
@@ -19,16 +20,22 @@ export default function CreateSeasonPage() {
     const [releaseDate, setReleaseDate] = useState("");
     const [selectedStatusId, setSelectedStatusId] = useState<number | undefined>();
     const [error, setError] = useState("");
+    const t = useTranslations("seasons");
 
     const { saving, addSeason } = useSeasonsActions(contentId || 0, {
-        onSuccess: () => router.push(`/admin/series/${contentId}`),
+        onSuccess: () => router.push(`/admin/series/${contentId}/seasons`),
     });
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!title.trim()) {
-            setError("El título es obligatorio");
+            setError(t("translations.validation.titleRequired"));
+            return;
+        }
+
+        if (!seasonNumber || seasonNumber <= 0) {
+            setError(t("translations.validation.seasonNumberInvalid"));
             return;
         }
 
@@ -43,18 +50,18 @@ export default function CreateSeasonPage() {
         try {
             await addSeason(formData);
         } catch (err) {
-            setError("Error al crear la temporada");
+            setError(t("errors.create"));
             console.error(err);
         }
     };
 
     const handleCancel = () => {
-        router.push(`/admin/series/${contentId}`);
+        router.push(`/admin/series/${contentId}/seasons`);
     };
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Nueva Temporada</h1>
+            <h1>{t("form.createTitle")}</h1>
             
             {error && <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>}
 

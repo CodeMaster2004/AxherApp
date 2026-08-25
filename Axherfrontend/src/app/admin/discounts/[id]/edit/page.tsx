@@ -5,6 +5,7 @@ import DiscountsForm from "@/features/discounts/components/DiscountsForm";
 import { useDiscountsActions } from "@/features/discounts/hooks";
 import { discountsService } from "@/features/discounts/services/DiscountsService";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -12,7 +13,7 @@ export default function EditDisocuntsPage(){
     const router = useRouter();
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
-
+    const t = useTranslations("common");
     const [discountType, setDiscountType] = useState("");
     const [amount, setAmount] = useState<number>(0);
     const [startDate, setStartDate] = useState(""); // "YYYY-MM-DD"
@@ -90,7 +91,7 @@ export default function EditDisocuntsPage(){
     };
 
     if(loading){
-        return <div className={layoutStyles.loading}>Cargando...</div>
+        return <div className={layoutStyles.loading}>{t("loading")}...</div>
     }
 
     return(

@@ -8,6 +8,7 @@ import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import Pagination from "@/shared/components/ui/Pagination";
 import { problemReportCategoryOptions } from "@/shared/constants/selectOptions";
 import { formatDate } from "@/shared/utils/date";
+import { useTranslations } from "next-intl";
 
 interface ProblemReportStatus{
     reportStatusId: number;
@@ -131,30 +132,29 @@ export default function AdminProblemReportList({
         });
     };
 
+    const common = useTranslations("common");
+    const t = useTranslations("problemReport");
+
     return (
 
         <div className={layoutStyles.section}>
 
             <ConfirmDialog
                 isOpen={statusDialog.isOpen}
-                title="Cambiar estado"
-                message={
-                    `¿Seguro que deseas cambiar el reporte #${statusDialog.reportId} a "${statusDialog.statusName}"?`
-                }
-                confirmText="Cambiar"
-                cancelText="Cancelar"
+                title={t("status.changeTitle")}
+                message={t("status.changeMessage", { id: statusDialog.reportId, status: statusDialog.statusName })}
+                confirmText={common("change")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmStatus}
                 onCancel={handleCancelStatus}
                 variant="info"
             />
 
-            <h2>Reportes de problemas</h2>
-
             <div className={tableStyles.searchBox}>
 
                 <input
                     type="text"
-                    placeholder="Buscar reportes..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={filters.search ?? ""}
                     onChange={(e) =>
                         handleFilterChange(
@@ -178,7 +178,7 @@ export default function AdminProblemReportList({
                     }
                 >
                     <option value="">
-                        Todos los estados
+                        {t("list.allStatuses")}
                     </option>
                     {statuses.map((status) => (
                         <option 
@@ -199,7 +199,7 @@ export default function AdminProblemReportList({
                     }
                 >
                     <option value="">
-                        Todas las categorías
+                        {t("list.allCategories")}
                     </option>
 
                     {problemReportCategoryOptions.map((option) => (
@@ -238,8 +238,8 @@ export default function AdminProblemReportList({
             {reports.length === 0 ? (
                 <p>
                     {loading
-                        ? "Cargando reportes..."
-                        : "No hay reportes registrados."
+                        ? t("list.loading")
+                        : t("list.empty")
                     }
                 </p>
             ) : (
@@ -254,14 +254,14 @@ export default function AdminProblemReportList({
 
                         <thead>
                             <tr>
-                                <th className={tableStyles.headCell}>ID</th>
-                                <th className={tableStyles.headCell}>Categoria</th>
-                                <th className={tableStyles.headCell}>Descripción</th>
-                                <th className={tableStyles.headCell}>Contenido</th>
-                                <th className={tableStyles.headCell}>Episodio</th>
-                                <th className={tableStyles.headCell}>Estado</th>
-                                <th className={tableStyles.headCell}>Reportado</th>
-                                <th className={tableStyles.headCell}>Resuelto</th>
+                                <th className={tableStyles.headCell}>{common("id")}</th>
+                                <th className={tableStyles.headCell}>{t("list.category")}</th>
+                                <th className={tableStyles.headCell}>{common("description")}</th>
+                                <th className={tableStyles.headCell}>{t("list.content")}</th>
+                                <th className={tableStyles.headCell}>{t("list.episode")}</th>
+                                <th className={tableStyles.headCell}>{common("status")}</th>
+                                <th className={tableStyles.headCell}>{t("list.reported")}</th>
+                                <th className={tableStyles.headCell}>{t("list.resolved")}</th>
                             </tr>
                         </thead>
                         <tbody>

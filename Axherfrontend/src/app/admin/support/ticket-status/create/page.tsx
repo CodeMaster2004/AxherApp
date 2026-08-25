@@ -5,28 +5,41 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import SupportTicketStatusForm from "@/features/supportTicketStatus/components/SupportTicketStatusForm";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { SupportTicketStatusRequest } from "@/entities/types";
 
 export default function CreateSupportTicketStatusPage() {
 
     const router = useRouter();
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [error, setError] = useState("");
 
     const { addSupportTicketStatus, saving } = useSupportTicketStatusActions({
         onSuccess: () => router.push("/admin/support/ticket-status"),
     });
 
+    const { languages, loading: languagesLoading } = useLanguage();
+
+    const [form, setForm] = useState<SupportTicketStatusRequest>({
+        code: "",
+        name: "",
+        description: "",
+        languageId: 0,
+    })
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const codeTrim = code.trim();
-        const nameTrim = name.trim();
-        const descriptionTrim = description.trim();
+        const codeTrim = form.code.trim();
+        const nameTrim = form.name.trim();
+        const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
             setError("Por favor completa el campo de código");
+            return;
+        }
+
+        if (!form.languageId) {
+            setError("Por favor selecciona un idioma");
             return;
         }
 
@@ -35,7 +48,12 @@ export default function CreateSupportTicketStatusPage() {
             return;
         }
 
-        await addSupportTicketStatus({ code: codeTrim, name: nameTrim, description: descriptionTrim });
+        await addSupportTicketStatus({ 
+            code: codeTrim,
+            name: nameTrim,
+            description: descriptionTrim,
+            languageId: form.languageId
+        });
 
     }
 
@@ -43,26 +61,25 @@ export default function CreateSupportTicketStatusPage() {
         router.push("/admin/support/ticket-status");
     }
 
-    const handleStatusChange = (value: string) => {
-        setCode(value);
-        if (error) setError("");
-    }
 
     return (
         <div className={layoutStyles.pageContainer}>
             <h1>Crear Nuevo Estado de ticket de soporte</h1>
             <SupportTicketStatusForm
-                code={code}
-                setCode={handleStatusChange}
-                name={name}
-                setName={setName}
-                description={description}
-                setDescription={setDescription}
+                value={form}
+                onChange={(value) => {
+                    setForm(value);
+
+                    if (error) {
+                        setError("");
+                    }
+                }}
+                languages={languages}
                 onSubmit={handleSubmit}
                 isEditing={false}
                 onCancel={handleCancel}
-                saving={saving}
-                error={error}
+                saving={saving || languagesLoading}
+                error={error || undefined}
             />
         </div>
     )

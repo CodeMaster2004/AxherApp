@@ -5,6 +5,7 @@ import Button from "@/shared/components/ui/Button";
 import TextArea from "@/shared/components/ui/TextArea";
 import { problemReportCategoryOptions } from "@/shared/constants/selectOptions";
 import styles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props{
     category: ProblemReportCategory | "";
@@ -33,10 +34,13 @@ export default function ProblemReportForm({
     onCancel
 }: Props) {
 
+    const common = useTranslations("common");
+    const t = useTranslations("problemReport");
+
     return (
 
         <form onSubmit={onSubmit} className={styles.form}>
-            <h2>Reportar un problema</h2>
+            <h2>{t("problemReport.report")}</h2>
             {error && (
                 <p className={styles.errorMessage}>
                     {error}
@@ -45,7 +49,7 @@ export default function ProblemReportForm({
 
             <div className={styles.field}>
                 <label htmlFor="problem-report-category">
-                    Categoría
+                    {t("form.category")}
                 </label>
 
                 <select
@@ -61,7 +65,7 @@ export default function ProblemReportForm({
                     required
                 >
                     <option value="">
-                        Selecciona una categoría
+                        {t("form.categoryPlaceholder")}
                     </option>
 
                     {problemReportCategoryOptions.map(
@@ -78,10 +82,10 @@ export default function ProblemReportForm({
             </div>
 
             <TextArea
-                label="Descripción del problema"
+                label={t("form.description")}
                 value={description}
                 onChange={setDescription}
-                placeholder="Describe el problema que estás experimentando..."
+                placeholder={t("form.descriptionPlaceholder")}
                 rows={6}
                 maxLength={1000}
                 disabled={saving}
@@ -92,9 +96,9 @@ export default function ProblemReportForm({
                     type="submit"
                     variant="animated"
                     loading={saving}
-                    loadingText="Enviando..."
+                    loadingText={common("sending")}
                 >
-                    Enviar reporte
+                    {t("form.send")}
                 </Button>
                 {onCancel && (
                     <Button
@@ -103,7 +107,7 @@ export default function ProblemReportForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {common("cancel")}
                     </Button>
                 )}
             </div>

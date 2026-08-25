@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.axher.backend.content.core.DTOs.TopRatedContentDto;
-import com.axher.backend.content.core.DTOs.TrendingContentDto;
+import com.axher.backend.content.core.DTOs.TopRatedContentResult;
+import com.axher.backend.content.core.DTOs.TrendingContentResult;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.playback.repositories.PlaybackHistoryRepository;
 import com.axher.backend.content.ratings.repositories.RatingsRepository;
@@ -24,7 +24,7 @@ public class PopularityService {
     private final RatingsRepository ratingsRepository;
 
 
-    public Page<TrendingContentDto> trending(ContentTypeEnum type, Pageable pageable){
+    public Page<TrendingContentResult> trending(ContentTypeEnum type, Pageable pageable){
 
         LocalDateTime date = LocalDateTime.now().minusDays(7);
 
@@ -32,32 +32,40 @@ public class PopularityService {
     }
 
 
-    public List<TopRatedContentDto> topRated(ContentTypeEnum type) {
+    public List<TopRatedContentResult> topRated(ContentTypeEnum type) {
 
-        List<TopRatedContentDto> list = ratingsRepository.findTopRated(type);
+        List<TopRatedContentResult> list =
+            ratingsRepository.findTopRated(type);
 
-        Double globalAverage = ratingsRepository.findGlobalAverage();
+        Double globalAverage =
+            ratingsRepository.findGlobalAverage();
 
-        double avgGlobal = globalAverage == null ? 0 : globalAverage;
+        double avgGlobal =
+            globalAverage == null ? 0 : globalAverage;
 
         int MIN_VOTES = 1;
 
-        list.forEach(dto -> {
-
-            double v = dto.getTotalRatings();
-            double r = dto.getAverageRating();
-            double score =
-                ((v/(v+MIN_VOTES))*r)
-                +
-                ((MIN_VOTES/(v+MIN_VOTES))*avgGlobal);
-
-            dto.setScore(score);
-        });
-
         return list.stream()
+            .map(result -> {
+
+                double v = result.totalRatings();
+                double r = result.averageRating();
+
+                double score =
+                    ((v / (v + MIN_VOTES)) * r)
+                    +
+                    ((MIN_VOTES / (v + MIN_VOTES)) * avgGlobal);
+
+                return new TopRatedContentResult(
+                    result.content(),
+                    result.averageRating(),
+                    result.totalRatings(),
+                    score
+                );
+            })
             .sorted(
                 Comparator.comparing(
-                    TopRatedContentDto::getScore
+                    TopRatedContentResult::score
                 ).reversed()
             )
             .limit(10)

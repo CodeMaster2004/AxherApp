@@ -1,12 +1,28 @@
-export interface ContentCategories {
-    contentCategoryId: number;
+export interface ContentCategoryRequest {
     name: string;
-    slug?: string;
+    description: string;
+    languageId: number;
+}
+
+export interface ContentCategoryResponse {
+    contentCategoryId: number;
+    slug: string;
+    name: string;
+    description?: string;
+    languageId: number;
+}
+
+export interface ContentCategoryTranslationRequest {
+    languageId: number;
+    name: string;
     description: string;
 }
 
-export interface Category {
+export interface ContentCategoryTranslationResponse {
     categoryId: number;
-    slug: string;
+    languageId: number;
+    languageCode: string;
+    languageName: string;
     name: string;
+    description: string;
 }

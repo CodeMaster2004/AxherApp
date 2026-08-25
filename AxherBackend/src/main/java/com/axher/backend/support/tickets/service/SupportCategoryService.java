@@ -9,6 +9,7 @@ import com.axher.backend.shared.exception.DuplicateResourceException;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
 import com.axher.backend.shared.util.TextNormalizer;
 import com.axher.backend.support.tickets.DTOs.SupportCategoryRequestDto;
+import com.axher.backend.support.tickets.DTOs.SupportCategoryTranslationRequestDto;
 import com.axher.backend.support.tickets.entities.SupportCategory;
 import com.axher.backend.support.tickets.repositories.SupportCategoryRepository;
 
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class SupportCategoryService {
     
     private final SupportCategoryRepository repository;
+    private final SupportCategoryTranslationService translationService;
 
     public Page<SupportCategory> findAll(Pageable pageable, String search) {
 
@@ -28,9 +30,7 @@ public class SupportCategoryService {
         }
 
         return repository
-            .findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-                search,
-                search,
+            .search(
                 search,
                 pageable
             );
@@ -58,6 +58,24 @@ public class SupportCategoryService {
 
     public SupportCategory create(SupportCategoryRequestDto dto) {
 
+        if (dto.getCode() == null || dto.getCode().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El código no puede estar vacío"
+            );
+        }
+
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre no puede estar vacío"
+            );
+        }
+
+        if (dto.getLanguageId() == null) {
+            throw new IllegalArgumentException(
+                    "El idioma es obligatorio"
+            );
+        }
+
         String normalize = TextNormalizer.normalizeCode(dto.getCode());
 
         dto.setCode(normalize);
@@ -68,20 +86,34 @@ public class SupportCategoryService {
             );
         }
 
-        if (repository.existsByNameIgnoreCase(dto.getName())) {
+        if (translationService.existsByNameAndLanguage(
+                dto.getName().trim(),
+                dto.getLanguageId()
+        )) {
             throw new DuplicateResourceException(
-                "El nombre de categoría de soporte ya existe: "
-                + dto.getName()
+                "El nombre ya existe en este idioma: " + dto.getName()
             );
         }
 
         SupportCategory category = new SupportCategory();
 
         category.setCode(normalize);
-        category.setName(dto.getName());
-        category.setDescription(dto.getDescription());
 
-        return repository.save(category);
+        SupportCategory saved = repository.save(category);
+
+         SupportCategoryTranslationRequestDto translationDto =
+                new SupportCategoryTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(dto.getName());
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+                saved.getSupportCategoryId(),
+                translationDto
+        );
+
+        return saved;
     }
 
     public SupportCategory update(
@@ -116,27 +148,45 @@ public class SupportCategoryService {
 
         if (dto.getName() != null) {
 
-            if (dto.getName().isBlank()) {
+            String name = dto.getName().trim();
+
+            if (name.isBlank()) {
                 throw new IllegalArgumentException(
                     "El nombre de categoría de soporte no puede estar vacío"
                 );
             }
 
-            if (
-                !dto.getName().equalsIgnoreCase(existing.getName())
-                && repository.existsByNameIgnoreCase(dto.getName())
-            ) {
-                throw new DuplicateResourceException(
-                    "El nombre de categoría de soporte ya existe: "
-                    + dto.getName()
+            if (dto.getLanguageId() == null) {
+                throw new IllegalArgumentException(
+                        "El idioma es obligatorio"
                 );
             }
 
-            existing.setName(dto.getName());
-        }
+            if (
+                translationService
+                    .existsByNameAndLanguageAndCategoryNot(
+                        name,
+                        dto.getLanguageId(),
+                        id
+                    )
+            ) {
+                throw new DuplicateResourceException(
+                        "El nombre ya existe en este idioma: "
+                        + name
+                );
+            }
 
-        if (dto.getDescription() != null) {
-            existing.setDescription(dto.getDescription());
+            SupportCategoryTranslationRequestDto translationDto =
+                    new SupportCategoryTranslationRequestDto();
+
+            translationDto.setLanguageId(dto.getLanguageId());
+            translationDto.setName(name);
+            translationDto.setDescription(dto.getDescription());
+
+            translationService.save(
+                    existing.getSupportCategoryId(),
+                    translationDto
+            );
         }
 
         return repository.save(existing);

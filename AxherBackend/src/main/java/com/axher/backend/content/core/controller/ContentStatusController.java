@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.content.core.DTOs.ContentStatusRequestDto;
+import com.axher.backend.content.core.DTOs.ContentStatusResponseDto;
 import com.axher.backend.content.core.entities.ContentStatus;
+import com.axher.backend.content.core.mapper.ContentStatusMapper;
 import com.axher.backend.content.core.service.ContentStatusService;
 import com.axher.backend.shared.util.SortUtils;
 
@@ -31,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class ContentStatusController {
 
     private final ContentStatusService service;
+    private final ContentStatusMapper mapper;
 
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
         "contentStatusId", "status", "description"
@@ -38,40 +42,61 @@ public class ContentStatusController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('CONTENT_STATUS:VIEW')")
-    public Page<ContentStatus> findAll(
+    public Page<ContentStatusResponseDto> findAll(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "contentStatusId,desc") String sort,
-        @RequestParam(required = false) String search
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) Integer languageId
     ){
-        Sort sortObj = SortUtils.parseSort(sort, ALLOWED_SORT_FIELDS, "contentStatusId");
-        return service.findAll(
-            PageRequest.of(page, size, sortObj), search
+        Sort sortObj = SortUtils.parseSort(
+            sort,
+            ALLOWED_SORT_FIELDS,
+            "contentStatusId"
         );
+
+        Page<ContentStatus> statusPage = service.findAll(
+            PageRequest.of(page, size, sortObj),
+            languageId,
+            search
+        );
+
+        return statusPage.map(mapper::toDto);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('CONTENT_STATUS:VIEW')")
-    public ResponseEntity<ContentStatus> findById(@PathVariable Integer id){
-        return ResponseEntity.ok(service.findById(id));       
+    public ResponseEntity<ContentStatusResponseDto> findById(@PathVariable Integer id){
+        ContentStatus status = service.findById(id);
+
+        return ResponseEntity.ok(
+            mapper.toDto(status)
+        );    
     }
 
    @PostMapping
     @PreAuthorize("hasAuthority('CONTENT_STATUS:CREATE')")
-    public ResponseEntity<ContentStatus> create(
-        @Valid @RequestBody ContentStatus contentStatus){
+    public ResponseEntity<ContentStatusResponseDto> create(
+        @Valid @RequestBody ContentStatusRequestDto dto){
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(service.create(contentStatus));
+        ContentStatus createdStatus = service.create(dto);
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(mapper.toDto(createdStatus));
 
     }
    
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('CONTENT_STATUS:EDIT')")
-    public ResponseEntity<ContentStatus> update (@PathVariable Integer id,@RequestBody ContentStatus contentStatus){
+    public ResponseEntity<ContentStatusResponseDto> update (@PathVariable Integer id,@RequestBody ContentStatusRequestDto dto){
         
-        return ResponseEntity.ok(service.update(id, contentStatus));
+        ContentStatus updatedStatus = service.update(id, dto);
+
+        return ResponseEntity.ok(
+            mapper.toDto(updatedStatus)
+        );
     }
 
 

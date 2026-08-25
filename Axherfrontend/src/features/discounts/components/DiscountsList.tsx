@@ -5,6 +5,7 @@ import tableStyles from "@/shared/styles/shared/Table.module.css";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 
 interface Props{
     discounts: Discounts[];
@@ -50,14 +51,16 @@ export default function DiscountsList ({discounts, onDelete, onEdit, deletingId,
         setConfirmDialog({isOpen: false, id: 0, discountType: ""})
     };
 
+    const t = useTranslations("common");
+
     return(
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
                 title="confirmar Eliminacion"
                 message={`¿Estás seguro de que deseas eliminar el descuento "${confirmDialog.discountType}"? Esta accion no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                confirmText={t("delete")}
+                cancelText={t("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
@@ -105,14 +108,14 @@ export default function DiscountsList ({discounts, onDelete, onEdit, deletingId,
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: "Editar",
+                                                    label: t("edit"),
                                                     onClick: () => onEdit(discount),
                                                 },
                                                 {
                                                     label:
                                                         deletingId === discount.discountId
                                                             ? "Eliminando..."
-                                                            : "Eliminar",
+                                                            : t("delete"),
                                                     onClick: () => handleDeleteClick(discount.discountId, discount.discountType),
                                                     variant: "danger",
                                                 },

@@ -228,12 +228,12 @@ public class ContentCatalogService {
 
         }
 
-    public ContentFiltersDto getFilters(ContentTypeEnum type){
+    public ContentFiltersDto getFilters(ContentTypeEnum type, Integer languageId) {
         
         ContentFiltersDto dto = new ContentFiltersDto();
 
         dto.setCategories(
-            categoriesRepository.findAvailableCategories(type)
+            categoriesRepository.findAvailableCategories(type, languageId, Pageable.unpaged())
                 .stream()
                 .map(categoryMapper::toDto)
                 .toList()

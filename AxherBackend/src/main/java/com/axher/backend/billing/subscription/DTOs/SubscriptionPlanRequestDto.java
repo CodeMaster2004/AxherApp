@@ -14,6 +14,7 @@ public class SubscriptionPlanRequestDto {
     private BigDecimal price;
     private String description;
     private Integer durationDays;
+    private Integer languageId;
 
     
 }

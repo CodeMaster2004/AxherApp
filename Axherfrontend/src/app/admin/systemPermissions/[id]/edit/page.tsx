@@ -6,6 +6,7 @@ import { SyntheticEvent, useEffect, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import { useSystemPermissionsActions } from "@/features/systemPermissions/hooks";
 import SystemPermissionsForm from "@/features/systemPermissions/components/SystemPermissionsForm";
+import { useTranslations } from "next-intl";
 
 export default function EditSystemPermissionsPage() {
 
@@ -16,7 +17,7 @@ export default function EditSystemPermissionsPage() {
     const [actionName, setActionName] = useState("");
     const [permissionName, setPermissionName] = useState("");
     const [loading, setLoading] = useState(true);
-
+    const t = useTranslations("common");
     const {editSystemPermission, saving} = useSystemPermissionsActions({
         onSuccess: () => router.push("/admin/systemPermissions"),
     });
@@ -70,7 +71,7 @@ export default function EditSystemPermissionsPage() {
     }
 
     if(loading){
-        return <div className={layoutStyles.loading}>Cargando...</div>
+        return <div className={layoutStyles.loading}>{t("loading")}...</div>
     }
 
     return (

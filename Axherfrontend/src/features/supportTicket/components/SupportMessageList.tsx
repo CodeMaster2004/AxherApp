@@ -2,6 +2,7 @@
 
 import SupportMessageItem from "@/features/supportTicket/components/SupportMessageItem";
 import { useSupportMessages } from "@/features/supportTicket/hooks/useSupportMessages";
+import { useTranslations } from "next-intl";
 
 interface Props {
     ticketId: number;
@@ -17,22 +18,23 @@ export default function SupportMessageList({
         error,
         refetch,
     } = useSupportMessages(ticketId);
+    const t = useTranslations("supportTickets");
 
     if (loading) {
-        return <div>Cargando mensajes...</div>;
+        return <div>{t("messages.loading")}</div>;
     }
 
     if (error) {
         return (
             <div>
-                <p>Error al cargar los mensajes.</p>
-                <button onClick={refetch}>Reintentar</button>
+                <p>{t("messages.error")}</p>
+                <button onClick={refetch}>{t("messages.retry")}</button>
             </div>
         )
     }
 
     if(messages.length === 0) {
-        return <p>NO hay mensajes.</p>
+        return <p>{t("messages.empty")}</p>
     }
 
     return (

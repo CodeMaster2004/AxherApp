@@ -5,23 +5,32 @@ import org.springframework.stereotype.Component;
 
 import com.axher.backend.content.series.DTOs.EpisodesDTOs.UpcomingEpisodeDto;
 import com.axher.backend.content.series.entities.Episodes;
+import com.axher.backend.content.series.service.EpisodeLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 
 
 @Component
+@RequiredArgsConstructor
 public class UpcomingEpisodeMapper {
 
     @Value("${app.base-url}")
     private String baseUrl;
 
+    private final EpisodeLocalizationService episodeLocalizationService;
+
     public UpcomingEpisodeDto toDto(Episodes episode) {
         
         UpcomingEpisodeDto dto = new UpcomingEpisodeDto();
 
+        var localized =
+                episodeLocalizationService.resolve(episode);
+
         dto.setEpisodeId(episode.getEpisodeId());
         dto.setEpisodeNumber(episode.getEpisodeNumber());
-        dto.setTitle(episode.getTitle());
-        dto.setDescription(episode.getDescription());
+        dto.setTitle(localized.title());
+        dto.setDescription(localized.description());
         dto.setDurationSeconds(episode.getDurationSeconds());
         dto.setThumbnailUrl(buildUrl(episode.getThumbnailUrl()));
         dto.setReleaseDate(episode.getReleaseDate());

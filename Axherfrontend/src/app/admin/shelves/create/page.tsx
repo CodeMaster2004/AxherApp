@@ -1,30 +1,20 @@
 "use client";
 
-import { ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
+import { CreateShelf, ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
 import ShelfForm from "@/features/shelf/components/ShelfForm";
 import { useShelfActions } from "@/features/shelf/hooks/useShelfActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 export default function CreateShelfPage() {
 
     const router = useRouter();
 
-    const [name,setName] = useState("");
-
-    const [target,setTarget] = useState<ShelfTarget>(
-        ShelfTarget.HOME
-    );
-
-    const [layout,setLayout] = useState<ShelfLayout>(
-        ShelfLayout.POSTER
-    );
-    const [source,setSource] = useState<ShelfSource>(
-        ShelfSource.MANUAL
-    );
-    const [active,setActive] = useState(true);
-
+    const t = useTranslations("shelves");
+    const [error, setError] = useState("");
     const {
         addShelf,
         saving
@@ -32,52 +22,90 @@ export default function CreateShelfPage() {
         onSuccess:()=>router.push("/admin/shelves")
     });
 
+    const {languages, loading: languagesLoading} = useLanguage();
+
+    const [form, setForm] = useState<CreateShelf>({
+        name:"",
+        target:ShelfTarget.HOME,
+        layout:ShelfLayout.POSTER,
+        source:ShelfSource.MANUAL,
+        active:true,
+        languageId:0
+    })
+
     const handleSubmit = async(
         e:React.FormEvent<HTMLFormElement>
     )=>{
 
         e.preventDefault();
 
+        const nameTrim = form.name.trim();
 
-        if(!target || !layout){
+        if (!nameTrim) {
+            setError(t("validation.nameRequired"));
+            return;
+        }
+
+        if (!form.languageId) {
+            setError(t("validation.languageRequired"));
+            return;
+        }
+
+        if (!form.target) {
+            setError(t("validation.targetRequired"));
+            return;
+        }
+
+        if (!form.layout) {
+            setError(t("validation.layoutRequired"));
+            return;
+        }
+
+        if (!form.source) {
+            setError(t("validation.sourceRequired"));
             return;
         }
 
 
         await addShelf({
-            name,
-            target,
-            layout,
-            source,
-            active
+            name: nameTrim,
+            target: form.target,
+            layout: form.layout,
+            source: form.source,
+            active: form.active,
+            languageId: form.languageId
         });
 
     };
+
+    const handleCancel = () => {
+            router.push("/admin/shelves");
+        };
 
     return (
 
         <div className={layoutStyles.pageContainer}>
 
             <h1>
-                Crear Carrusel
+                {t("create")}
             </h1>
 
 
             <ShelfForm
 
-                name={name}
-                target={target}
-                layout={layout}
-                source={source}
-                active={active}
-                setName={setName}
-                setTarget={setTarget}
-                setLayout={setLayout}
-                setSource={setSource}
-                setActive={setActive}
+                value={form}
+                onChange={(value) => {
+                    setForm(value);
+                    if (error) {
+                        setError("");
+                    }
+                }}
+                languages={languages}
                 onSubmit={handleSubmit}
-                saving={saving}
-                onCancel={()=>router.push("/admin/shelves")}
+                isEditing={false}
+                onCancel={handleCancel}
+                saving={saving || languagesLoading}
+                error={error || undefined}
 
             />
 

@@ -1,6 +1,6 @@
 import { UserProfile } from "@/entities/types";
 import styles from "@/shared/styles/shared/UsersProfileCard.module.css";
-import { LifeBuoy, List, LogOut, SettingsIcon, User } from "lucide-react";
+import { Languages, LifeBuoy, List, LogOut, SettingsIcon, User } from "lucide-react";
 import Image from "next/image";
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
     onViewWatchlist?: () => void;
     onViewSupport?: () => void;
     onEditProfile?: () => void;
+    onLanguage?: () => void;
     onLogout?: () => void;
     isOwnProfile?: boolean;
   
@@ -20,6 +21,7 @@ export default function ProfileCard({
     onViewWatchlist,
     onViewSupport,
     onEditProfile,
+    onLanguage,
     onLogout,
     isOwnProfile = false 
 }: Props) {
@@ -84,6 +86,17 @@ export default function ProfileCard({
             <span>Editar perfil</span>
             </div>
         )}
+
+        {isOwnProfile && onLanguage && (
+            <div
+                className={styles.menuItem}
+                onClick={onLanguage}
+            >
+                <Languages size={16} />
+                <span>Idioma</span>
+            </div>
+        )}
+        
 
         {onLogout && (
             <div className={`${styles.menuItem} ${styles.logout}`} onClick={onLogout}>

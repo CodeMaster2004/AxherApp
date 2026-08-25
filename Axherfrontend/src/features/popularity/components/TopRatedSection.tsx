@@ -5,13 +5,14 @@ import { useTopRated } from "@/features/popularity/hooks/useTopRated";
 import styles from "./TopRatedSection.module.css";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
 import { ContentType } from "@/entities/types";
+import { useTranslations } from "next-intl";
 
 interface Props {
     type: ContentType;
 }
 
 export default function TopRatedSection({ type }: Props) {
-
+    const t = useTranslations("popularity");
     const { topRated, loading } = useTopRated(type);
 
     
@@ -22,7 +23,7 @@ export default function TopRatedSection({ type }: Props) {
 
         <section className={styles.section}>
             <h2>
-                ⭐ Mejor valoradas
+                {t("topRated.title")}
             </h2>
             <HorizontalCarousel >
 

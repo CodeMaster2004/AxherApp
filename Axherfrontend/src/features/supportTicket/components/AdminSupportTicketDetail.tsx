@@ -8,6 +8,7 @@ import { useState } from "react";
 import styles from "./AdminSupportTicketDetail.module.css";
 import { useAdminSupportMessages } from "@/features/supportTicket/hooks/useAdminSupportMessages";
 import AdminSupportMessageList from "@/features/supportTicket/components/AdminSupportMessageList";
+import { useTranslations } from "next-intl";
 
 interface Props {
     ticketId: number;
@@ -18,7 +19,7 @@ export default function AdminSupportTicketDetail({
 }: Props) {
 
     const [message, setMessage] = useState("");
-
+    const t = useTranslations("supportTickets");
     const {
         refetch,
     } = useAdminSupportMessages(ticketId);
@@ -57,7 +58,7 @@ export default function AdminSupportTicketDetail({
         <section className={styles.container}>
 
             <h1 className={styles.title}>
-                Ticket #{ticketId}
+                {t("detail.ticket")} #{ticketId}
             </h1>
 
             <AdminSupportMessageList

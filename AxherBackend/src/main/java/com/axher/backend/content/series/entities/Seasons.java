@@ -39,11 +39,11 @@ public class Seasons {
     @Column(nullable = false)
     private Integer seasonNumber;
 
-    @Column(length = 150)
+    /*@Column(length = 150)
     private String title;
 
     @Column(length = 500)
-    private String description;
+    private String description;*/
 
     @Column(name = "release_date")
     private LocalDateTime releaseDate;
@@ -54,4 +54,12 @@ public class Seasons {
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Episodes> episodes = new ArrayList<>();
+
+    @OneToMany(
+        mappedBy = "season",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    private List<SeasonTranslation> translations = new ArrayList<>();
 }

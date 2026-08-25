@@ -4,9 +4,15 @@ import org.springframework.stereotype.Component;
 
 import com.axher.backend.catalog.page.DTOs.PageSectionDto;
 import com.axher.backend.catalog.page.entities.PageSection;
+import com.axher.backend.catalog.shelf.service.ContentShelfLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class PageSectionMapper {
+
+    private final ContentShelfLocalizationService contentShelfLocalizationService;
 
     public PageSectionDto toDto(PageSection section) {
         PageSectionDto dto = new PageSectionDto();
@@ -19,8 +25,9 @@ public class PageSectionMapper {
             dto.setContentShelfId(
                 section.getContentShelf().getContentShelfId()
             );
+            var localized = contentShelfLocalizationService.resolve(section.getContentShelf());
             dto.setContentShelfName(
-                section.getContentShelf().getName()
+                localized.name()
             );
         }
         return dto;

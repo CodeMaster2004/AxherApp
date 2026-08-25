@@ -3,6 +3,7 @@
 import { SupportTicketResponse } from "@/entities/types";
 import { formatDate } from "@/shared/utils/date";
 import styles from "./SupportTicketCard.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     ticket: SupportTicketResponse;
@@ -13,6 +14,8 @@ export default function SupportTicketCard({
     ticket,
     onClick,
 }: Props) {
+
+    const t = useTranslations("supportTickets");
 
     return (
         <article
@@ -57,12 +60,12 @@ export default function SupportTicketCard({
                 </span>
 
                 <span className={styles.date}>
-                    Creado {formatDate(ticket.createdAt)}
+                    {t("list.created")} {formatDate(ticket.createdAt)}
                 </span>
 
                 {ticket.updatedAt && (
                     <span className={styles.date}>
-                        Actualizado {formatDate(ticket.updatedAt)}
+                        {t("list.updated")} {formatDate(ticket.updatedAt)}
                     </span>
                 )}
 
@@ -71,7 +74,7 @@ export default function SupportTicketCard({
             {onClick && (
                 <div className={styles.footer}>
                     <span>
-                        Ver conversación
+                        {t("list.viewConversation")}
                     </span>
 
                     <span className={styles.arrow}>

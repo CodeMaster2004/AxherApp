@@ -13,6 +13,7 @@ import {
 
 import { UseVideoPlayer } from "@/features/media/hooks/useVideoPlayer";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 
 interface Props {
     player: UseVideoPlayer;
@@ -21,6 +22,7 @@ interface Props {
 
 export default function VideoControls({ player, onReportProblem }: Props) {
 
+    const t = useTranslations("media");
        
     return (
 
@@ -112,10 +114,10 @@ export default function VideoControls({ player, onReportProblem }: Props) {
                     {onReportProblem && (
                         <MoreMenu
                             placement="top"
-                            ariaLabel="Opciones del reproductor"
+                            ariaLabel={t("player.options")}
                             items={[
                                 {
-                                    label: "Reportar problema",
+                                    label: t("player.reportProblem"),
                                     onClick: onReportProblem,
                                 },
                             ]}

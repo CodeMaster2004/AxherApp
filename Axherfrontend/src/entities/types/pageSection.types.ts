@@ -34,5 +34,5 @@ export interface PageSectionUpdate {
     type?: PageSectionType;
     active?: boolean;
     contentShelfId?: number;
-    displayOrder?: number;
+    displayOrder?: number | null;
 }

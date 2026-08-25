@@ -1,6 +1,5 @@
 package com.axher.backend.support.reports.DTOS;
 
-import com.axher.backend.support.reports.entities.ProblemReportCategory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class ProblemReportRequestDto {
 
-    private ProblemReportCategory category;
+    private Integer reportCategoryId;
     private String description;
     private Integer contentId;
     private Integer episodeId; 

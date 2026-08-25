@@ -3,12 +3,15 @@
 import { ProblemReportResponse } from "@/entities/types/problemReport.types";
 import styles from "./ProblemReportCard.module.css";
 import { formatDate } from "@/shared/utils/date";
+import { useTranslations } from "next-intl";
 
 interface Props {
     report: ProblemReportResponse;
 }
 
 export default function ProblemReportCard({ report }: Props) {
+
+    const t = useTranslations("problemReport");
 
     return (
         <article className={styles.card}>
@@ -21,7 +24,7 @@ export default function ProblemReportCard({ report }: Props) {
                     </span>
 
                     <span className={styles.reportId}>
-                        Reporte #{report.reportId}
+                        {t("report")} #{report.reportId}
                     </span>
                 </div>
 
@@ -41,7 +44,7 @@ export default function ProblemReportCard({ report }: Props) {
 
                 <div className={styles.date}>
                     <span className={styles.dateLabel}>
-                        Reportado
+                        {t("list.reported")}
                     </span>
 
                     <span>
@@ -52,7 +55,7 @@ export default function ProblemReportCard({ report }: Props) {
                 {report.resolvedAt && (
                     <div className={styles.date}>
                         <span className={styles.dateLabel}>
-                            Resuelto
+                            {t("list.resolved")}
                         </span>
 
                         <span>

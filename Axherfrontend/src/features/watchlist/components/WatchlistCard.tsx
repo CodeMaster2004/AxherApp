@@ -9,6 +9,7 @@ import styles from "./WatchlistCard.module.css";
 import { useState } from "react";
 import { useWatchlistActions } from "@/features/watchlist/hooks/useWatchlistActions";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
+import { useTranslations } from "next-intl";
 
 interface Props {
     item: WatchlistResponse;
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export default function WatchlistCard({ item, onRemoved }: Props) {
+
+    const t = useTranslations("common");
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const {
@@ -65,7 +68,7 @@ export default function WatchlistCard({ item, onRemoved }: Props) {
                         ? "Quitando..."
                         : "Quitar"
                 }
-                cancelText="Cancelar"
+                cancelText={t("cancel")}
                 onConfirm={handleConfirmRemove}
                 onCancel={handleCancelRemove}
                 variant="danger"

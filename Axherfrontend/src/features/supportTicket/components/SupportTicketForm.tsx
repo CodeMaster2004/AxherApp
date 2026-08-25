@@ -3,6 +3,7 @@
 import Button from "@/shared/components/ui/Button";
 import TextArea from "@/shared/components/ui/TextArea";
 import styles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 interface SupportCategoryOption {
     supportCategoryId: number;
     name: string;
@@ -41,9 +42,12 @@ export default function SupportTicketForm({
     onCancel
 }: Props) {
 
+    const common = useTranslations("common");
+    const t = useTranslations("supportTickets");
+
     return (
         <form onSubmit={onSubmit} className={styles.form}>
-            <h2>Contactar con soporte</h2>
+            <h2>{t("form.title")}</h2>
 
             {error && (
                 <p className={styles.errorMessage}>
@@ -53,7 +57,7 @@ export default function SupportTicketForm({
 
             <div className={styles.field}>
                 <label htmlFor="support-ticket-subject">
-                    Asunto
+                    {t("form.subjectLabel")}
                 </label>
 
                 <input
@@ -62,7 +66,7 @@ export default function SupportTicketForm({
                     type="text"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    placeholder="¿En que necesitas ayuda?"
+                    placeholder={t("form.subjectPlaceholder")}
                     maxLength={150}
                     disabled={saving}
                     required
@@ -71,7 +75,7 @@ export default function SupportTicketForm({
             </div>
             <div className={styles.field}>
                 <label htmlFor="support-ticket-category">
-                    Categoria
+                    {t("form.categoryLabel")}
                 </label>
 
                 <select
@@ -89,7 +93,7 @@ export default function SupportTicketForm({
                     required
                 >
                     <option value="">
-                        Selecciona una categoria
+                        {t("form.categoryPlaceholder")}
                     </option>
                     {categories.map((category) => (
 
@@ -106,10 +110,10 @@ export default function SupportTicketForm({
             </div>
 
             <TextArea
-                label="Describe tu problema"
+                label={t("form.descriptionLabel")}
                 value={description}
                 onChange={setDescription}
-                placeholder="Cuéntanos que ocurrio y cómo podemos ayudarte..."
+                placeholder={t("form.descriptionPlaceholder")}
                 rows={6}
                 maxLength={2000}
                 disabled={saving}
@@ -121,9 +125,9 @@ export default function SupportTicketForm({
                     type="submit"
                     variant="animated"
                     loading={saving}
-                    loadingText="Creando ticket..."
+                    loadingText={t("form.creating")}
                 >
-                    Crear ticket
+                    {t("form.create")}
                 </Button>
                 {onCancel && (
                     <Button
@@ -132,7 +136,7 @@ export default function SupportTicketForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        Cancelar
+                        {common("cancel")}
                     </Button>
                 )}
             </div>

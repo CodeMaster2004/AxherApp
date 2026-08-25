@@ -5,6 +5,7 @@ import ShelfContentList from "@/features/shelf/components/ShelfContentList";
 import { useShelfContentActions } from "@/features/shelf/hooks/useShelfContentActions";
 import { useShelfContents } from "@/features/shelf/hooks/useShelfContents";
 import Modal from "@/shared/components/ui/Modal";
+import { useTranslations } from "next-intl";
 
 interface Porps {
     shelfId: number;
@@ -17,6 +18,8 @@ export default function ShelfContentsModal({
     open,
     onClose
 }: Porps) {
+
+    const t = useTranslations("shelves");
 
     const {
         contents,
@@ -45,7 +48,7 @@ export default function ShelfContentsModal({
 
         <Modal
             open={open}
-            title="Administrar contenido"
+            title={t("manageContent")}
             onClose={onClose}
             size="xl"
         >
@@ -54,7 +57,7 @@ export default function ShelfContentsModal({
                 saving={saving}
                 error={
                     error
-                    ? "Error al guardar contenido"
+                    ? t("content.error")
                     : undefined
                 }
                 onSubmit={(contentId,position)=>{
@@ -62,7 +65,7 @@ export default function ShelfContentsModal({
                         shelfId,
                         {
                             contentId,
-                            position
+                            position: position || undefined
                         }
                     );
                 }}

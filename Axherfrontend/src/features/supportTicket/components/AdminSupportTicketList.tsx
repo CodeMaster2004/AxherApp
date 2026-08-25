@@ -8,6 +8,7 @@ import { useState } from "react";
 import tableStyles from "@/shared/styles/shared/Table.module.css"
 import layoutStyles from "@/shared/styles/layout/Layout.module.css"
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
+import { useTranslations } from "next-intl";
 
 interface SupportTicketStatus {
     supportTicketStatusId: number;
@@ -63,7 +64,8 @@ export default function AdminSupportTicketList({
 }: Props){
 
     const router = useRouter();
-
+    const common = useTranslations("common");
+    const t = useTranslations("supportTickets");
     const [pendingStatus, setPendingStatus] = useState<
         Record<number, number | undefined>
     >({});
@@ -168,24 +170,25 @@ export default function AdminSupportTicketList({
 
             <ConfirmDialog
                 isOpen={statusDialog.isOpen}
-                title="Cambiar estado"
-                message={
-                    `¿Seguro que deseas cambiar el ticket #${statusDialog.ticketId} a "${statusDialog.statusName}"?`
-                }
-                confirmText="Cambiar"
-                cancelText="Cancelar"
+                title={t("status.change")}
+                message={t("status.confirmMessage", {
+                    ticketId: statusDialog.ticketId,
+                    statusName: statusDialog.statusName,
+                })}
+                confirmText={t("status.confirm")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmStatus}
                 onCancel={handleCancelStatus}
                 variant="info"
             />
 
-            <h2>Tickets de soporte</h2>
+            <h2>{t("list.title")}</h2>
 
             <div className={tableStyles.searchBox}>
 
                 <input
                     type="text"
-                    placeholder="Buscar tickets..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={filters.search ?? ""}
                     onChange={(e) =>
                         handleFilterChange(
@@ -210,7 +213,7 @@ export default function AdminSupportTicketList({
                     }
                 >
                     <option value="">
-                        Todos los estados
+                        {t("list.statusPlaceholder")}
                     </option>
 
                     {statuses.map(status => (
@@ -237,7 +240,7 @@ export default function AdminSupportTicketList({
                     }
                 >
                     <option value="">
-                        Todas las categorías
+                        {t("list.categoryPlaceholder")}
                     </option>
 
                     {categories.map(category => (
@@ -256,7 +259,7 @@ export default function AdminSupportTicketList({
 
                 <input
                     type="number"
-                    placeholder="ID de usuario"
+                    placeholder={t("list.userPlaceholder")}
                     value={filters.userId ?? ""}
                     onChange={(e) =>
                         handleFilterChange(
@@ -298,8 +301,8 @@ export default function AdminSupportTicketList({
 
                 <p>
                     {loading
-                        ? "Cargando tickets..."
-                        : "No hay tickets registrados."
+                        ? t("loading")
+                        : t("list.empty")
                     }
                 </p>
 
@@ -319,35 +322,35 @@ export default function AdminSupportTicketList({
                             <tr>
 
                                 <th className={tableStyles.headCell}>
-                                    ID
+                                    {common("id")}
                                 </th>
 
                                 <th className={tableStyles.headCell}>
-                                    Asunto
+                                    {t("list.subject")}
                                 </th>
 
                                 <th className={tableStyles.headCell}>
-                                    Categoría
+                                    {t("list.category")}
                                 </th>
 
                                 <th className={tableStyles.headCell}>
-                                    Usuario
+                                    {t("list.user")}
                                 </th>
 
                                 <th className={tableStyles.headCell}>
-                                    Estado
+                                    {t("list.status")}
                                 </th>
 
                                 <th className={tableStyles.headCell}>
-                                    Creado
+                                    {t("list.created")}
                                 </th>
 
                                 <th className={tableStyles.headCell}>
-                                    Actualizado
+                                    {t("list.updated")}
                                 </th>
 
                                 <th className={tableStyles.headCell}>
-                                    Acción
+                                    {t("list.action")}
                                 </th>
 
                             </tr>
@@ -446,7 +449,7 @@ export default function AdminSupportTicketList({
                                                 )
                                             }
                                         >
-                                            Ver ticket
+                                            {t("list.viewTicket")}
                                         </button>
 
                                     </td>

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.axher.backend.billing.payment.DTOs.PaymentStatusRequestDto;
+import com.axher.backend.billing.payment.DTOs.PaymentStatusTranslationRequestDto;
 import com.axher.backend.billing.payment.entities.PaymentStatus;
 import com.axher.backend.billing.payment.repositories.PaymentStatusRepository;
 import com.axher.backend.shared.exception.DuplicateResourceException;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class PaymentStatusService {
     private final PaymentStatusRepository repository;
+    private final PaymentStatusTranslationService translationService;
 
     public Page<PaymentStatus> findAll(
         Pageable pageable,
@@ -30,9 +32,7 @@ public class PaymentStatusService {
         }
 
         return repository
-            .findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-                search,
-                search,
+            .search(
                 search,
                 pageable
             );
@@ -60,31 +60,69 @@ public class PaymentStatusService {
 
     public PaymentStatus create(PaymentStatusRequestDto dto) {
 
-        String normalize =
-            TextNormalizer.normalizeCode(dto.getCode());
+        if (dto.getCode() == null || dto.getCode().isBlank()) {
 
-        dto.setCode(normalize);
-
-        if (repository.existsByCode(normalize)) {
-            throw new DuplicateResourceException(
-                "El estado de pago ya existe: " + normalize
+            throw new IllegalArgumentException(
+                    "El código no puede estar vacío"
             );
         }
 
-        if (repository.existsByNameIgnoreCase(dto.getName())) {
+        if (dto.getName() == null || dto.getName().isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "El nombre no puede estar vacío"
+            );
+        }
+
+        if (dto.getLanguageId() == null) {
+
+            throw new IllegalArgumentException(
+                    "El idioma es obligatorio"
+            );
+        }
+
+        String normalizedCode =
+            TextNormalizer.normalizeCode(dto.getCode());
+
+
+        if (repository.existsByCode(normalizedCode)) {
             throw new DuplicateResourceException(
-                "El nombre de estado de pago ya existe: "
-                + dto.getName()
+                "El estado de pago ya existe: " + normalizedCode
+            );
+        }
+
+
+        String name = dto.getName().trim();
+
+        if (translationService.existsByNameAndLanguage(
+                name,
+                dto.getLanguageId()
+        )) {
+
+            throw new DuplicateResourceException(
+                    "El nombre ya existe en este idioma: "
+                            + name
             );
         }
 
         PaymentStatus status = new PaymentStatus();
+        status.setCode(normalizedCode);
 
-        status.setCode(normalize);
-        status.setName(dto.getName());
-        status.setDescription(dto.getDescription());
+        PaymentStatus saved = repository.save(status);
 
-        return repository.save(status);
+        PaymentStatusTranslationRequestDto translationDto =
+                new PaymentStatusTranslationRequestDto();
+
+        translationDto.setLanguageId(dto.getLanguageId());
+        translationDto.setName(name);
+        translationDto.setDescription(dto.getDescription());
+
+        translationService.save(
+                saved.getPaymentStatusId(),
+                translationDto
+        );
+
+        return saved;
     }
 
     public PaymentStatus update(
@@ -117,29 +155,48 @@ public class PaymentStatusService {
             existing.setCode(normalize);
         }
 
-        if (dto.getName() != null) {
+        if(dto.getName() != null){
 
-            if (dto.getName().isBlank()) {
+            String name = dto.getName().trim();
+
+            if (name.isBlank()) {
+
                 throw new IllegalArgumentException(
-                    "El nombre de estado de pago no puede estar vacío"
+                        "El nombre del estado de pago "
+                                + "no puede estar vacío"
+                );
+            }
+            if (dto.getLanguageId() == null) {
+
+                throw new IllegalArgumentException(
+                        "El idioma es obligatorio"
                 );
             }
 
-            if (
-                !dto.getName().equalsIgnoreCase(existing.getName())
-                && repository.existsByNameIgnoreCase(dto.getName())
-            ) {
+            if (translationService
+                    .existsByNameAndLanguageAndStatusNot(
+                            name,
+                            dto.getLanguageId(),
+                            id
+                    )) {
+
                 throw new DuplicateResourceException(
-                    "El nombre de estado de pago ya existe: "
-                    + dto.getName()
+                        "El nombre ya existe en este idioma: "
+                                + name
                 );
             }
 
-            existing.setName(dto.getName());
-        }
+            PaymentStatusTranslationRequestDto translationDto =
+                    new PaymentStatusTranslationRequestDto();
+            
+            translationDto.setLanguageId(dto.getLanguageId());
+            translationDto.setName(name);
+            translationDto.setDescription(dto.getDescription());
 
-        if (dto.getDescription() != null) {
-            existing.setDescription(dto.getDescription());
+            translationService.save(
+                    existing.getPaymentStatusId(),
+                    translationDto
+            );
         }
 
         return repository.save(existing);

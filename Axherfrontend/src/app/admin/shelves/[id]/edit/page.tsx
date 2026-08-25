@@ -1,34 +1,41 @@
 "use client";
 
-import { ContentShelf, ShelfLayout, ShelfSource, ShelfTarget } from "@/entities/types";
+import { ContentShelf, CreateShelf, ShelfLayout, ShelfSource, ShelfTarget} from "@/entities/types";
 import { useShelfActions } from "@/features/shelf/hooks/useShelfActions";
 import { shelfService } from "@/features/shelf/services/shelfService";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import ShelfForm from "@/features/shelf/components/ShelfForm";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 export default function EditShelfPage() {
 
     const router = useRouter();
     const params = useParams();
-
     const id = params?.id 
         ? Number(params.id)
         : null;
 
-
     const [loading,setLoading] = useState(true);
+    const [error,setError] = useState("");
+    const t = useTranslations("shelves");
 
+    const {
+        languages,
+        loading: languagesLoading,
+    } = useLanguage();
 
-    const [name,setName] = useState("");
+    const [form, setForm] = useState<CreateShelf>({
+        name:"",
+        target:ShelfTarget.HOME,
+        layout:ShelfLayout.POSTER,
+        source:ShelfSource.MANUAL,
+        active:true,
+        languageId: 0
+    })
 
-    const [target,setTarget] = useState<ShelfTarget | undefined>();
-
-    const [layout,setLayout] = useState<ShelfLayout | undefined>();
-
-    const [source,setSource] = useState<ShelfSource | undefined>();
-    const [active,setActive] = useState(true);
 
     const {
         editShelf,
@@ -49,17 +56,18 @@ export default function EditShelfPage() {
 
                 const shelf:ContentShelf =
                     await shelfService.getById(id);
-                setName(shelf.name);
-                setTarget(shelf.target);
-                setLayout(shelf.layout);
-                setSource(shelf.source);
-              
-                setActive(
-                    shelf.active
-                );
+                setForm({
+                    name:shelf.name,
+                    target:shelf.target,
+                    layout:shelf.layout,
+                    source:shelf.source,
+                    active:shelf.active,
+                    languageId: shelf.languageId,
+                });
             }catch(error){
                 console.error(error);
                 router.push("/admin/shelves");
+                setError(t("error.load"));
             }finally{
                 setLoading(false);
             }
@@ -79,26 +87,58 @@ export default function EditShelfPage() {
 
         if(!id)return;
 
+        const nameTrim = form.name.trim();
+
+        if (!nameTrim) {
+            setError(t("validation.nameRequired"));
+            return;
+        }
+       
+        if (!form.languageId) {
+            setError(t("validation.languageRequired"));
+            return;
+        }
+
+        if (!form.target) {
+            setError(t("validation.targetRequired"));
+            return;
+        }
+
+        if (!form.layout) {
+            setError(t("validation.layoutRequired"));
+            return;
+        }
+
+        if (!form.source) {
+            setError(t("validation.sourceRequired"));
+            return;
+        }
+
+
 
         await editShelf(
             id,
             {
-                name:name.trim(),
-                target,
-                layout,
-                source,
-                active
+                name: nameTrim,
+                target: form.target,
+                layout: form.layout,
+                source: form.source,
+                active: form.active,
+                languageId: form.languageId
             }
         );
 
 
+    };
+    const handleCancel = () => {
+        router.push("/admin/shelves");
     };
 
     if(loading){
 
         return (
             <div className={layoutStyles.loading}>
-                Cargando carrusel...
+                {t("loading")}
             </div>
         )
 
@@ -110,28 +150,24 @@ export default function EditShelfPage() {
 
 
             <h1>
-                Editar Carrusel
+                {t("edit")}
             </h1>
 
 
             <ShelfForm
-                name={name}
-                target={target}
-                layout={layout}
-                source={source}
-                active={active}
-                setName={setName}
-                setTarget={setTarget}
-                setLayout={setLayout}
-                setSource={setSource}
-                setActive={setActive}
+                value={form}
+                onChange={(value)=>{
+                    setForm(value);
+                    if(error){
+                        setError("");
+                    }
+                }}
+                languages={languages}
                 onSubmit={handleSubmit}
-                isEditing
-                saving={saving}
-                onCancel={()=>
-                    router.push("/admin/shelves")
-                }
-
+                isEditing={true}
+                saving={saving || languagesLoading}
+                error={error || undefined}
+                onCancel={handleCancel}
             />
 
 

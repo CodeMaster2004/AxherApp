@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.axher.backend.catalog.banner.DTOs.HeroBannerRequestDto;
+import com.axher.backend.catalog.banner.DTOs.HeroBannerTranslationRequestDto;
 import com.axher.backend.catalog.banner.entities.HeroBanner;
 import com.axher.backend.catalog.banner.repositories.HeroBannerRepository;
 import com.axher.backend.content.core.entities.Content;
@@ -27,6 +28,7 @@ public class HeroBannerService {
     private final HeroBannerRepository repository;
     private final ContentRepository contentRepository;
     private final FileStorageService fileStorageService;
+    private final HeroBannerTranslationService translationService;
 
     public Page<HeroBanner> findAll(
         String search,
@@ -35,7 +37,7 @@ public class HeroBannerService {
 
         if(search != null && !search.isBlank()) {
             return repository
-                .findByContent_TitleContainingIgnoreCase(
+                .searchByTitle(
                     search,
                     pageable
                 );
@@ -50,21 +52,63 @@ public class HeroBannerService {
     }
 
     public HeroBanner create(HeroBannerRequestDto dto) {
+
         DateValidator.validateDateTimeRange(dto.getStartDate(), dto.getEndDate());
+
+        if (dto.getContentId() == null) {
+            throw new IllegalArgumentException(
+                    "El contenido es obligatorio"
+            );
+        }
+        if (dto.getLanguageId() == null) {
+            throw new IllegalArgumentException(
+                    "El idioma es obligatorio"
+            );
+        }
         Content content = contentRepository.findById(dto.getContentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Contenido no encontrado: " + dto.getContentId()));
-        String backdropUrl = fileStorageService.saveFile(dto.getBackdropFile(), "hero-banners");
+
+        String backdropUrl = null;
+
+        if (dto.getBackdropFile() != null && !dto.getBackdropFile().isEmpty()) {
+            backdropUrl = fileStorageService.saveFile(
+                dto.getBackdropFile(),
+                "hero-banners"
+            );
+        }
+
         HeroBanner banner = new HeroBanner();
         banner.setContent(content);
-        banner.setTitleOverride(dto.getTitleOverride());
-        banner.setDescriptionOverride(dto.getDescriptionOverride());
         banner.setBackdropUrl(backdropUrl);
         banner.setPriority(dto.getPriority());
         banner.setStartDate(dto.getStartDate());
         banner.setEndDate(dto.getEndDate());
         banner.setActive(dto.getActive() != null ? dto.getActive() : true);
 
-        return repository.save(banner);
+        HeroBanner saved = repository.save(banner);
+
+        HeroBannerTranslationRequestDto translationDto =
+            new HeroBannerTranslationRequestDto();
+
+        translationDto.setLanguageId(
+                dto.getLanguageId()
+        );
+
+        translationDto.setTitleOverride(
+                dto.getTitleOverride()
+        );
+
+        translationDto.setDescriptionOverride(
+                dto.getDescriptionOverride()
+        );
+
+        translationService.save(
+                saved.getHeroBannerId(),
+                translationDto
+        );
+
+
+        return saved;
     }
 
     public HeroBanner update(Integer id, HeroBannerRequestDto dto) {
@@ -90,12 +134,7 @@ public class HeroBannerService {
                     .orElseThrow(() -> new ResourceNotFoundException("Contenido no encontrado: " + dto.getContentId()));
             banner.setContent(content);
         }
-        if (dto.getTitleOverride() != null) {
-            banner.setTitleOverride(dto.getTitleOverride());
-        }
-        if (dto.getDescriptionOverride() != null) {
-            banner.setDescriptionOverride(dto.getDescriptionOverride());
-        }
+       
         if(dto.getBackdropFile() != null && !dto.getBackdropFile().isEmpty()){
 
             String newBackdrop = fileStorageService.saveFile(
@@ -120,6 +159,29 @@ public class HeroBannerService {
         }
         if (dto.getActive() != null) {
             banner.setActive(dto.getActive());
+        }
+
+        if(dto.getLanguageId() != null) {
+            
+            HeroBannerTranslationRequestDto translationDto =
+                new HeroBannerTranslationRequestDto();
+
+            translationDto.setLanguageId(
+                    dto.getLanguageId()
+            );
+
+            translationDto.setTitleOverride(
+                    dto.getTitleOverride()
+            );
+
+            translationDto.setDescriptionOverride(
+                    dto.getDescriptionOverride()
+            );
+
+            translationService.save(
+                    banner.getHeroBannerId(),
+                    translationDto
+            );
         }
 
         return repository.save(banner);

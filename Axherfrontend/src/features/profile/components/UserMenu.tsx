@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import styles from "./UserMenu.module.css"
 import ProfileCard from "@/features/profile/components/ProfileCard";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useLanguage as useLanguageContext } from "@/features/language/context/LanguageContext";
+import { useUserPreferences } from "@/features/users/hooks/useUserPreferences";
+import LanguageSelector from "@/features/users/components/LanguageSelector";
 
 export default function UserMenu() {
 
@@ -18,6 +22,24 @@ export default function UserMenu() {
     const [showProfileCard, setShowProfileCard] = useState(false);
     const userId = user?.userId;
     const [showLogin,setShowLogin]=useState(false);
+    const [showLanguageSelector,setShowLanguageSelector]=useState(false);
+    const [selectedLanguageId,setSelectedLanguageId]=useState<number | null>(null);
+
+    const {
+        languages,
+        loading: languagesLoading,
+    } = useLanguage();
+    
+    const {
+        languageCode,
+        setLanguage,
+    } = useLanguageContext();
+    
+    const {
+        updatePreferences,
+        loading: savingLanguage,
+    } = useUserPreferences();
+
     const initials = (() => {
         const name =
             profile?.firstName ||
@@ -28,6 +50,52 @@ export default function UserMenu() {
             :"U";
     })();
 
+    const handleOpenLanguageSelector = () => {
+        const currentLanguage = languages.find(
+            language => language.code === languageCode
+        );
+
+        setSelectedLanguageId(
+            currentLanguage?.languageId ?? null
+        );
+
+        setShowLanguageSelector(true);
+    };
+
+    const handleSaveLanguage = async () => {
+
+        if(selectedLanguageId === null) {
+            return ;
+        }
+        const selectedLanguage = languages.find(
+            language => language.languageId === selectedLanguageId
+        );
+
+        if(!selectedLanguage) {
+            return ;
+        }
+
+        try {
+            await updatePreferences({
+                preferredLanguageId: selectedLanguageId
+            });
+            console.log("IDIOMA ANTES:", languageCode);
+        console.log("IDIOMA NUEVO:", selectedLanguage.code);
+
+            setLanguage(selectedLanguage.code);
+             console.log(
+            "COOKIE:",
+            document.cookie
+        );
+            setShowLanguageSelector(false);
+            router.refresh();
+        }catch (error) {
+            console.error("Error al actualizar el idioma:", error);
+        }
+      
+
+    }
+
     const handleLogout = () => {
 
         logout();
@@ -35,7 +103,6 @@ export default function UserMenu() {
     }
 
     const timeout = useRef<NodeJS.Timeout | null>(null);
-
 
     const handleEnter = () => {
         if(timeout.current)
@@ -46,7 +113,6 @@ export default function UserMenu() {
 
 
     const handleLeave = () => {
-
         timeout.current = setTimeout(() => {
             setShowProfileCard(false);
         },200);
@@ -57,21 +123,16 @@ export default function UserMenu() {
 
 
     const handleLoginEnter = () => {
-
         if(loginTimeout.current)
             clearTimeout(loginTimeout.current);
 
         setShowLogin(true);
-
     };
 
-
     const handleLoginLeave = () => {
-
         loginTimeout.current = setTimeout(() => {
             setShowLogin(false);
         },200);
-
     };
 
     return (
@@ -135,6 +196,9 @@ export default function UserMenu() {
                                                 `/userProfile/edit/${profile.profileId}`
                                             )
                                         }}
+                                        onLanguage={() => {
+                                            handleOpenLanguageSelector();
+                                        }}
                                         onLogout={handleLogout}
                                         
                                     />
@@ -190,6 +254,21 @@ export default function UserMenu() {
                     </div>
                 )
             }
+            {showLanguageSelector && (
+
+                <LanguageSelector
+                    languages={languages}
+                    selectedLanguageId={selectedLanguageId}
+                    loading={languagesLoading}
+                    saving={savingLanguage}
+                    onSelect={setSelectedLanguageId}
+                    onSave={handleSaveLanguage}
+                    onClose={() => {
+                        setShowLanguageSelector(false);
+                    }}
+
+                />
+            )}
         </div>
     )
 }

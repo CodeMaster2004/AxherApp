@@ -2,12 +2,19 @@ package com.axher.backend.billing.subscription.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.axher.backend.billing.subscription.DTOs.SubscriptionPlanResponseDto;
 import com.axher.backend.billing.subscription.DTOs.SubscriptionResponseDto;
 import com.axher.backend.billing.subscription.entities.Subscriptions;
+import com.axher.backend.billing.subscription.service.SubscriptionPlanLocalizationService;
+import com.axher.backend.billing.subscription.service.SubscriptionStatusLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class SubscriptionMapper {
+
+    private final SubscriptionPlanLocalizationService subscriptionPlanLocalizationService;
+    private final SubscriptionStatusLocalizationService subscriptionStatusLocalizationService;
 
     public SubscriptionResponseDto toDto(Subscriptions subscription) {
 
@@ -16,8 +23,12 @@ public class SubscriptionMapper {
         dto.setSubscriptionPlanId(
             subscription.getSubscriptionPlan().getSubscriptionPlanId()
         );
+        var localizedPlan =
+                subscriptionPlanLocalizationService.resolve(
+                        subscription.getSubscriptionPlan()
+                );
         dto.setSubscriptionPlanName(
-            subscription.getSubscriptionPlan().getName()
+            localizedPlan.name()
         );
         dto.setSubscriptionPlanPrice(
             subscription.getSubscriptionPlan().getPrice()
@@ -33,8 +44,12 @@ public class SubscriptionMapper {
             dto.setSubscriptionStatusId(
                 subscription.getSubscriptionStatus().getSubscriptionStatusId()
             );
+            var localizedStatus =
+                    subscriptionStatusLocalizationService.resolve(
+                            subscription.getSubscriptionStatus()
+                    );
             dto.setSubscriptionStatus(
-                subscription.getSubscriptionStatus().getName()
+                localizedStatus.name()
             );
         }
 

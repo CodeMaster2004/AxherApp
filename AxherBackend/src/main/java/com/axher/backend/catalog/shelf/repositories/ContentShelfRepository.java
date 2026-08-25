@@ -19,7 +19,6 @@ public interface ContentShelfRepository extends JpaRepository<ContentShelf, Inte
             String slug
     );
 
-        boolean existsByNameIgnoreCase(String name);
     boolean existsByTargetAndSlug(
         ShelfTarget target,
         String slug
@@ -31,21 +30,10 @@ public interface ContentShelfRepository extends JpaRepository<ContentShelf, Inte
         Integer contentShelfId
     );
     
-    boolean existsByTargetAndNameIgnoreCase(
-        ShelfTarget target,
-        String name
-    );
-
-    boolean existsByTargetAndNameIgnoreCaseAndContentShelfIdNot(
-        ShelfTarget target,
-        String name,
-        Integer contentShelfId
-    );
 
     Page<ContentShelf> findByTarget(
             ShelfTarget target,
             Pageable pageable
     );
 
-    List<ContentShelf> findByTargetAndActiveTrueOrderByNameAsc(ShelfTarget target);
 }

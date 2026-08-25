@@ -1,12 +1,12 @@
 "use client";
 
-import { Category, ContentFilters, ContentFiltersDto, ContentQueryParams } from "@/entities/types";
+import { ContentCategoryResponse, ContentFilters, ContentFiltersDto, ContentQueryParams } from "@/entities/types";
 import Dropdown from "@/shared/components/ui/Dropdown";
 import styles from "./ContentFilter.module.css";
 
 interface Props {
     currentGenre: string;
-    genres: Category[];
+    genres: ContentCategoryResponse[];
     filters: ContentQueryParams;
     availableFilters?: ContentFiltersDto;
     onGenreChange: (slug: string) => void;

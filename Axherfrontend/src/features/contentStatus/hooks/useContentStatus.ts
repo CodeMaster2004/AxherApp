@@ -1,16 +1,17 @@
 "use client";
 
-import { ContentStatus, Page } from "@/entities/types";
+import { Page } from "@/entities/types";
+import { ContentStatusResponse } from "@/entities/types/status.types";
 import { contentStatusService } from "@/features/contentStatus/services/ContentStatusService";
 import { usePaginatedData } from "@/shared/hooks/usePaginatedData";
 
 type UseContentStatusOptions = {
-    initialData?: Page<ContentStatus>;
+    initialData?: Page<ContentStatusResponse>;
 }
 
 export const useContentStatus = (options?: UseContentStatusOptions) => {
 
-   const pagination = usePaginatedData<ContentStatus>(
+   const pagination = usePaginatedData<ContentStatusResponse>(
     
         contentStatusService.getAll,
         {

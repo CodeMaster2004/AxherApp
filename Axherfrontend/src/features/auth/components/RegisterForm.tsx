@@ -10,7 +10,7 @@ import Link from "next/link";
 import { SyntheticEvent, useEffect, useState } from "react";
 
 interface Props {
-    onSubmit: (email: string, password: string, confirmPassword: string) => void;
+    onSubmit: (email: string, password: string, confirmPassword: string, ) => void;
     saving?: boolean;
     loading?: boolean;
     error?: string | null;

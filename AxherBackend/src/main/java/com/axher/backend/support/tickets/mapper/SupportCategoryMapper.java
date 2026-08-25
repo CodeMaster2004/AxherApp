@@ -4,16 +4,24 @@ import org.springframework.stereotype.Component;
 
 import com.axher.backend.support.tickets.DTOs.SupportCategoryResponseDto;
 import com.axher.backend.support.tickets.entities.SupportCategory;
+import com.axher.backend.support.tickets.service.SupportCategoryLocalizationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class SupportCategoryMapper {
 
-    public SupportCategoryResponseDto toDto(SupportCategory status) {
+    private final SupportCategoryLocalizationService localizationService;
+
+    public SupportCategoryResponseDto toDto(SupportCategory category) {
         SupportCategoryResponseDto dto = new SupportCategoryResponseDto();
-        dto.setSupportCategoryId(status.getSupportCategoryId());
-        dto.setCode(status.getCode());
-        dto.setName(status.getName());
-        dto.setDescription(status.getDescription());
+        dto.setSupportCategoryId(category.getSupportCategoryId());
+        dto.setCode(category.getCode());
+        var localized = localizationService.resolve(category);
+        dto.setName(localized.name());
+        dto.setDescription(localized.description());
+        dto.setLanguageId(localized.languageId());
         return dto;
     }
     

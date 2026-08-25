@@ -18,5 +18,5 @@ public class HeroBannerDto {
     private LocalDateTime endDate;
     private Boolean active;
     private LocalDateTime createdAt;
-    
+    private Integer languageId;    
 }

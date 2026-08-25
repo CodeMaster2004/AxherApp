@@ -7,11 +7,13 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import Button from "@/shared/components/ui/Button";
 import SupportCategoryList from "@/features/supportCategory/components/SupportCategoryList";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function SupportCategoryListView() {
 
     const router = useRouter();
-
+    const common = useTranslations("common");
+    const t = useTranslations("supportCategory");
     const {
         supportCategory,
         loading,
@@ -36,16 +38,20 @@ export default function SupportCategoryListView() {
         router.push(`/admin/support/ticket-category/${supportCategory.supportCategoryId}/edit`);
     }
 
+    const handleTranslations = (supportCategory: SupportCategoryResponse) => {
+        router.push(`/admin/support/ticket-category/${supportCategory.supportCategoryId}/translations`);
+    }
+
     return (
 
         <div className={layoutStyles.pageContainer}>
             <div className={layoutStyles.header}>
-                <h1>Categorias de Soporte</h1>
+                <h1>{t("title")}</h1>
                 <Button
                     variant="animated"
                     onClick={handleCreate}
                 >
-                    Nuevo
+                    {common("new")}
                 </Button>
             </div>
             <SupportCategoryList
@@ -60,6 +66,7 @@ export default function SupportCategoryListView() {
                 onNextPage={nextPage}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
+                onTranslations={handleTranslations}
             />
         </div>
 

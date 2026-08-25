@@ -5,12 +5,14 @@ import SystemRolesList from "@/features/systemRoles/components/SystemRolesList";
 import { useSystemRoles, useSystemRolesActions } from "@/features/systemRoles/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 
 
 export default function SystemRolesListView(){
     const router = useRouter();
+    const t = useTranslations("common");
     const {
         systemRoles,
         loading,
@@ -43,7 +45,7 @@ export default function SystemRolesListView(){
                 <div className={layoutStyles.header}>
                     <h1>Roles del Sistema</h1>
                     <Button variant="animated" onClick={handleCreate}>
-                        Nuevo
+                        {t("new")}
                     </Button>
 
                 </div>

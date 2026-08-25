@@ -4,6 +4,7 @@ import Button from "@/shared/components/ui/Button";
 import TextArea from "@/shared/components/ui/TextArea";
 import styles from "./SupportMessageForm.module.css";
 import formStyles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     message: string;
@@ -25,12 +26,14 @@ export default function SupportMessageForm({
     error,
 }: Props) {
 
+    const t = useTranslations("supportTickets");
+
     return (
         <form
             className={styles.form}
             onSubmit={onSubmit}
         >
-            <h3 className={styles.title}>Enviar mensaje</h3>
+            <h3 className={styles.title}>{t("message.send")}</h3>
 
             {error && (
                 <p className={styles.errorMessage}>
@@ -39,10 +42,10 @@ export default function SupportMessageForm({
             )}
 
             <TextArea
-                label="Mensaje"
+                label={t("message.label")}
                 value={message}
                 onChange={setMessage}
-                placeholder="Escribe tu mensaje aquí..."
+                placeholder={t("message.messagePlaceholder")}
                 rows={4}
                 maxLength={2000}
                 disabled={saving}
@@ -54,9 +57,9 @@ export default function SupportMessageForm({
                     type="submit"
                     variant="animated"
                     loading={saving}
-                    loadingText="Enviando..."
+                    loadingText={t("message.sending")}
                 >
-                    Enviar mensaje
+                    {t("message.send")}
                 </Button>
             </div>
         </form>

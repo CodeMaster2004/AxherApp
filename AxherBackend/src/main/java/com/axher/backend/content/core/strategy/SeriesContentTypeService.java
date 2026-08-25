@@ -11,10 +11,14 @@ import com.axher.backend.content.series.DTOs.SeriesDTOs.CreateSeriesRequestDto;
 import com.axher.backend.content.series.DTOs.SeriesDTOs.UpdateSeriesRequestDto;
 import com.axher.backend.content.series.DTOs.seasonDTOs.CreateSeasonRequestDto;
 import com.axher.backend.content.series.DTOs.seasonDTOs.UpdateSeasonRequestDto;
+import com.axher.backend.content.series.entities.EpisodeTranslation;
 import com.axher.backend.content.series.entities.Episodes;
+import com.axher.backend.content.series.entities.SeasonTranslation;
 import com.axher.backend.content.series.entities.Seasons;
 import com.axher.backend.content.series.entities.Series;
+import com.axher.backend.content.series.repositories.EpisodeTranslationRepository;
 import com.axher.backend.content.series.repositories.EpisodesRepository;
+import com.axher.backend.content.series.repositories.SeasonTranslationRepository;
 import com.axher.backend.content.series.repositories.SeasonsRepository;
 import com.axher.backend.content.series.repositories.SeriesRepository;
 import com.axher.backend.infrastructure.storage.FileStorageService;
@@ -31,6 +35,8 @@ public class SeriesContentTypeService implements ContentTypeService{
     private final FileStorageService fileStorageService;
     private final EpisodesRepository episodesRepository;
     private final VideoMetadataService videoMetadataService;
+    private final SeasonTranslationRepository seasonTranslationRepository;
+    private final EpisodeTranslationRepository episodeTranslationRepository;
 
 
     public ContentTypeEnum getType() {
@@ -52,18 +58,32 @@ public class SeriesContentTypeService implements ContentTypeService{
                 Seasons season = new Seasons();
                 season.setSeries(series);
                 season.setSeasonNumber(seasonDto.getSeasonNumber());
-                season.setTitle(seasonDto.getTitle());
-                season.setDescription(seasonDto.getDescription());
                 season.setReleaseDate(seasonDto.getReleaseDate());
                 seasonRepository.save(season);
+
+                // Crear traduccion original
+                SeasonTranslation seasonTranslation = new SeasonTranslation();
+                seasonTranslation.setSeason(season);
+                seasonTranslation.setLanguage(
+                        content.getOriginalLanguage()
+                );
+                seasonTranslation.setTitle(
+                        seasonDto.getTitle()
+                );
+                seasonTranslation.setDescription(
+                        seasonDto.getDescription()
+                );
+
+                seasonTranslationRepository.save(
+                        seasonTranslation
+                );
+
 
                 if(seasonDto.getEpisodes() != null){
                     for(CreateEpisodeRequestDto episodeDto : seasonDto.getEpisodes()){
                         Episodes episode = new Episodes();
                         episode.setSeason(season);
                         episode.setEpisodeNumber(episodeDto.getEpisodeNumber());
-                        episode.setTitle(episodeDto.getTitle());
-                        episode.setDescription(episodeDto.getDescription());
                         String thumbnailUrl = fileStorageService.saveFile(episodeDto.getThumbnailFile(), "episodes");
                         episode.setThumbnailUrl(thumbnailUrl);
                         String url = fileStorageService.saveFile(episodeDto.getEpisodeFile(), "episodes");
@@ -73,6 +93,25 @@ public class SeriesContentTypeService implements ContentTypeService{
                         episode.setReleaseDate(episodeDto.getReleaseDate());
                         
                         episodesRepository.save(episode);
+
+                        // Crear traducción original del episodio
+                        EpisodeTranslation episodeTranslation =
+                                new EpisodeTranslation();
+
+                        episodeTranslation.setEpisode(episode);
+                        episodeTranslation.setLanguage(
+                                content.getOriginalLanguage()
+                        );
+                        episodeTranslation.setTitle(
+                                episodeDto.getTitle()
+                        );
+                        episodeTranslation.setDescription(
+                                episodeDto.getDescription()
+                        );
+
+                        episodeTranslationRepository.save(
+                                episodeTranslation
+                        );
                     }
                 }
             }
@@ -101,10 +140,21 @@ public class SeriesContentTypeService implements ContentTypeService{
                     return newSeason;
                 });
             season.setSeries(series);
-            season.setTitle(seasonDto.getTitle());
             season.setSeasonNumber(seasonDto.getSeasonNumber());
-            season.setDescription(seasonDto.getDescription());
             season.setReleaseDate(seasonDto.getReleaseDate());
+            SeasonTranslation seasonTranslation =
+                seasonTranslationRepository
+                    .findBySeason_SeasonIdAndLanguage_LanguageId(
+                        season.getSeasonId(),
+                        content.getOriginalLanguage().getLanguageId()
+                    )
+                    .orElseThrow(() -> new IllegalStateException(
+                        "Traducción original no encontrada para la temporada: "
+                        + season.getSeasonId()
+                    ));
+
+            seasonTranslation.setTitle(seasonDto.getTitle());
+            seasonTranslation.setDescription(seasonDto.getDescription());
 
             // Manejar episodios de la temporada
             for(UpdateEpisodeRequestDto episodeDto : seasonDto.getEpisodes()){
@@ -118,9 +168,20 @@ public class SeriesContentTypeService implements ContentTypeService{
                         return newEpisode;
                     });
                 episode.setSeason(season);
-                episode.setTitle(episodeDto.getTitle());
-                episode.setDescription(episodeDto.getDescription());
                 episode.setEpisodeNumber(episodeDto.getEpisodeNumber());
+                EpisodeTranslation episodeTranslation =
+                    episodeTranslationRepository
+                        .findByEpisode_EpisodeIdAndLanguage_LanguageId(
+                            episode.getEpisodeId(),
+                            content.getOriginalLanguage().getLanguageId()
+                        )
+                        .orElseThrow(() -> new IllegalStateException(
+                            "Traducción original no encontrada para el episodio: "
+                            + episode.getEpisodeId()
+                        ));
+
+                episodeTranslation.setTitle(episodeDto.getTitle());
+                episodeTranslation.setDescription(episodeDto.getDescription());
                 // Guardar archivo si viene nuevo
                 if(episodeDto.getThumbnailFile() != null && !episodeDto.getThumbnailFile().isEmpty()){
                     String newThumbnail = fileStorageService.saveFile(episodeDto.getThumbnailFile(), "episodes");

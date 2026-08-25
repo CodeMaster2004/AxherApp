@@ -22,22 +22,62 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     
 
     const refreshProfile = useCallback(async () => {
+        console.log(
+        "🔵 PROFILE: refreshProfile",
+        {
+            status,
+            userId: user?.userId
+        }
+    );
         if (status !== "authenticated" || !user?.userId) {
+            console.log(
+            "🟡 PROFILE: no autenticado → limpiando"
+        );
             setProfile(null);
             setLoading(false);
             return;
         }
 
         const requestId = ++requestIdRef.current;
+        console.log(
+        "🔵 PROFILE: request iniciada",
+        requestId
+    );
+
         setLoading(true);
 
         try {
 
             const data = await profileService.getByUserId(user.userId);
-            if (requestId !== requestIdRef.current) return;
+            console.log(
+            "🟢 PROFILE: respuesta recibida",
+            requestId,
+            data
+        );
+            if (requestId !== requestIdRef.current) {
+
+            console.log(
+                "🟠 PROFILE: respuesta vieja ignorada",
+                {
+                    requestId,
+                    current: requestIdRef.current
+                }
+            );
+
+            return;
+        }
+
             setProfile(data);
+             console.log(
+            "🟢 PROFILE: profile establecido"
+        );
 
         } catch (err) {
+            console.log(
+            "🔴 PROFILE: error",
+            requestId,
+            err
+        );
 
             if (requestId !== requestIdRef.current) return;
             console.error(err);
@@ -69,9 +109,19 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     };
    
     useEffect(() => {
+        console.log(
+        "🟣 PROFILE EFFECT",
+        {
+            status,
+            userId: user?.userId
+        }
+    );
         if (status === "authenticated"){
             refreshProfile();
         }else{
+            console.log(
+            "🟡 PROFILE: status no autenticado → limpiar"
+        );
             requestIdRef.current++;
             setProfile(null);
             setLoading(false);

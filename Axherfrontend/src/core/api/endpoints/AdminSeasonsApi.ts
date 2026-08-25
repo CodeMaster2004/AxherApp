@@ -1,4 +1,4 @@
-import { Page, PaginationParams, SeasonDetail, StatusUpdate } from "@/entities/types";
+import { Page, PaginationParams, SeasonDetail, SeasonTranslation, SeasonTranslationRequest, StatusUpdate } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 
@@ -45,6 +45,36 @@ export const adminSeasonsApi = {
 
     delete: (seriesId: number, seasonId: number, config?: AxiosRequestConfig) =>
         axiosClient.delete(`/admin/series/${seriesId}/seasons/${seasonId}`, config),
+
+    getTranslations: (
+        seasonId: number,
+        config?: AxiosRequestConfig
+    ) =>
+        axiosClient.get<SeasonTranslation[]>(
+            `/admin/seasons/${seasonId}/translations`,
+            config
+        ),
+
+    saveTranslation: (
+        seasonId: number,
+        data: SeasonTranslationRequest,
+        config?: AxiosRequestConfig
+    ) =>
+        axiosClient.patch<SeasonTranslation>(
+            `/admin/seasons/${seasonId}/translations`,
+            data,
+            config
+        ),
+
+    deleteTranslation: (
+        seasonId: number,
+        languageId: number,
+        config?: AxiosRequestConfig
+    ) =>
+        axiosClient.delete(
+            `/admin/seasons/${seasonId}/translations/${languageId}`,
+            config
+        ),
 
 
 }

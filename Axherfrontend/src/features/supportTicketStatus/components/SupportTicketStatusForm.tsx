@@ -1,17 +1,18 @@
 "use client";
 
+import { LanguageResponse, SupportTicketStatusRequest } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import Input from "@/shared/components/ui/Input";
+import Select, { SelectOption } from "@/shared/components/ui/Select";
 import TextArea from "@/shared/components/ui/TextArea";
 import styles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
-    code: string;
-    setCode: (value: string) => void;
-    name: string;
-    setName: (value: string) => void;
-    description: string;
-    setDescription: (value: string) => void;
+    value: SupportTicketStatusRequest;
+    onChange: React.Dispatch<
+        React.SetStateAction<SupportTicketStatusRequest>>;
+    languages: LanguageResponse[];
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     isEditing: boolean;
     onCancel?: () => void;
@@ -20,12 +21,9 @@ interface Props {
 }
 
 export default function SupportTicketStatusForm({
-    code,
-    setCode,
-    name,
-    setName,
-    description,
-    setDescription,
+    value,
+    onChange,
+    languages,
     onSubmit,
     isEditing,
     onCancel,
@@ -33,6 +31,12 @@ export default function SupportTicketStatusForm({
     error,
 }: Props) {
 
+    const t = useTranslations("common");
+    
+    const languageOptions: SelectOption[] = languages.map(language => ({
+        value: language.languageId,
+        label: `${language.name} (${language.nativeName})`, 
+    }));
     return (
 
         <form onSubmit={onSubmit} className={styles.form}>
@@ -46,20 +50,34 @@ export default function SupportTicketStatusForm({
 
             <Input
                 label="Código del Estado del ticket"
-                value={code}
-                onChange={setCode}
-                placeholder="Ej: PENDIENTE, RESUELTO, RECHAZADO"
+                value={value.code}
+                onChange={(code) => onChange(prev => ({ ...prev, code, })) }
+                placeholder="Ej: PENDING"
                 maxLength={20}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
             />
 
+            <Select
+                label="Idioma"
+                options={languageOptions}
+                value={value.languageId ?? ""}
+                onChange={(languageId) =>
+                    onChange(prev => ({
+                        ...prev,
+                        languageId: Number(languageId),
+                    }))
+                }
+                placeholder="Selecciona un idioma"
+                disabled={saving || isEditing}
+            />
+
             <Input
                 label="Nombre del Estado del ticket"
-                value={name}
-                onChange={setName}
-                placeholder="Ej: Pendiente, Resuelto, Rechazado"
+                value={value.name}
+                onChange={(name) => onChange(prev => ({ ...prev, name, })) }
+                placeholder="Ej: Pendiente"
                 maxLength={50}
                 required
                 disabled={saving}
@@ -67,9 +85,9 @@ export default function SupportTicketStatusForm({
             />
 
             <TextArea
-                label="Descripción del Estado del ticket"
-                value={description}
-                onChange={setDescription}
+                label="Descripción"
+                value={value.description}
+                onChange={(description) => onChange(prev => ({ ...prev, description, }))}
                 placeholder="Descripción del estado de reporte"
                 rows={4}
                 disabled={saving}
@@ -83,7 +101,7 @@ export default function SupportTicketStatusForm({
                     loading={saving}
                     loadingText={isEditing ? 'Actualizando...' : 'Creando...'}
                 >
-                    {isEditing ? 'Actualizar' : 'Crear'}
+                    {isEditing ? 'Actualizar' : t("create")}
                 </Button>
                 {onCancel && (
                     <Button
@@ -92,7 +110,7 @@ export default function SupportTicketStatusForm({
                     onClick={onCancel}
                     disabled={saving}
                     >
-                    Cancelar
+                    {t("cancel")}
                     </Button>
                 )}
 

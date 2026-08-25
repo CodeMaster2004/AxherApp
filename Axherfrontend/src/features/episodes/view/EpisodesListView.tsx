@@ -6,79 +6,88 @@ import EpisodesList from "@/features/episodes/components/EpisodesList";
 import { useEpisodes, useEpisodesActions } from "@/features/episodes/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  contentId: number;
-  seasonId: number;
+    contentId: number;
+    seasonId: number;
 };
 
 export default function EpisodesListView({ contentId, seasonId }: Props) {
-  const router = useRouter();
+    const router = useRouter();
 
-  const {
-    episodes,
-    loading,
-    currentPage,
-    totalPages,
-    nextPage,
-    prevPage,
-    searchTerm,
-    setSearchTerm,
-    refetch,
-  } = useEpisodes({
-    seasonId
-  });
+    const {
+        episodes,
+        loading,
+        currentPage,
+        totalPages,
+        nextPage,
+        prevPage,
+        searchTerm,
+        setSearchTerm,
+        refetch,
+    } = useEpisodes({
+        seasonId
+    });
 
-  const { deleting, removeEpisode, updateEpisodeStatus } = useEpisodesActions(seasonId || 0, {
-    onSuccess: refetch,
-  });
+    const { deleting, removeEpisode, updateEpisodeStatus } = useEpisodesActions(seasonId || 0, {
+        onSuccess: refetch,
+    });
 
-  const {contentStatus} = useContentStatus();
+    const {contentStatus} = useContentStatus();
 
-  const handleCreate = () => {
-    router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/create`);
-  };
+    const handleCreate = () => {
+        router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/create`);
+    };
 
-  const handleEdit = (episode: EpisodeDetail) => {
-    router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/${episode.episodeId}/edit`);
-  };
+    const handleEdit = (episode: EpisodeDetail) => {
+        router.push(`/admin/series/${contentId}/seasons/${seasonId}/episodes/${episode.episodeId}/edit`);
+    };
 
-  return (
-    <div className={layoutStyles.pageContainer}>
-      <Button
-        variant="secondary"
-        onClick={() => router.push(`/admin/series/${contentId}/seasons`)}
-      >
-        ← Volver a temporadas
-      </Button>
+    const handleTranslations = (episode: EpisodeDetail) => {
+        router.push(
+            `/admin/series/${contentId}/seasons/${seasonId}/episodes/${episode.episodeId}/translations`
+        );
+    };
 
-      <div className={layoutStyles.header}>
-        <h1>Episodios</h1>
-        <Button variant="animated" onClick={handleCreate}>
-          Crear Episodio
+    const t = useTranslations("episodes");
+    return (
+        <div className={layoutStyles.pageContainer}>
+        <Button
+            variant="secondary"
+            onClick={() => router.push(`/admin/series/${contentId}/seasons`)}
+        >
+            {t("actions.backToSeasons")}
         </Button>
-      </div>
+
+        <div className={layoutStyles.header}>
+            <h1>{t("title")}</h1>
+            <Button variant="animated" onClick={handleCreate}>
+                {t("actions.createTitle")}
+            </Button>
+        </div>
 
 
 
-      <EpisodesList
-        episodes={episodes}
-        statuses={contentStatus}
-        onDelete={removeEpisode}
-        onEdit={handleEdit}
-        onUpdateStatus={(id, statusId) => {
-          updateEpisodeStatus(id, {statusId});
-        }}
-        deletingId={deleting}
-        loading={loading}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onNextPage={nextPage}
-        onPrevPage={prevPage}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-      />
-    </div>
-  );
+        <EpisodesList
+            episodes={episodes}
+            statuses={contentStatus}
+            onDelete={removeEpisode}
+            onEdit={handleEdit}
+            onUpdateStatus={(id, statusId) => {
+            updateEpisodeStatus(id, {statusId});
+            }}
+            deletingId={deleting}
+            loading={loading}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onNextPage={nextPage}
+            onPrevPage={prevPage}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            onTranslations={handleTranslations}
+        />
+        </div>
+    );
 }

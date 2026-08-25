@@ -4,6 +4,7 @@ import { ProblemReportResponse } from "@/entities/types/problemReport.types";
 import ProblemReportCard from "@/features/reports/components/ProblemReportCard";
 import Pagination from "@/shared/components/ui/Pagination";
 import styles from "./ProblemReportList.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     reports: ProblemReportResponse[];
@@ -26,16 +27,18 @@ export default function ProblemReportList({
     onPrevPage
 }: Props) {
 
+    const t = useTranslations("problemReport");
+
     return (
 
         <section className={styles.section}>
-            <h2>Mis reportes</h2>
+            <h2>{t("myReports")}</h2>
 
             {reports.length === 0 ? (
                 <div className={styles.empty}>
                    {loading 
-                        ? "Cargando reportes..." 
-                        : "No hay reportes registrados." 
+                        ? t("list.loading")
+                        : t("list.empty")
                     } 
                 </div>
             ) : (

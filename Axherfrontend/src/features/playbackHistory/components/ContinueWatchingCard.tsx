@@ -5,13 +5,14 @@ import Image from "next/image";
 import styles from "./ContinueWatchingCard.module.css";
 import Link from "next/link";
 import { Play } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Props {
     content: ContinueWatching;
 }
 
 export default function ContinueWatchingCard({ content }: Props) {
-
+    const t = useTranslations("playbackHistory");
     return (
 
         <article className={styles.card}>
@@ -49,8 +50,13 @@ export default function ContinueWatchingCard({ content }: Props) {
                 {
                     content.contentType === ContentType.SERIE && (
                         <p className={styles.episode}>
-                            T{content.seasonNumber} .
-                            E{content.episodeNumber} - {content.episodeTitle}
+                            <p className={styles.episode}>
+                                {t("episode", {
+                                    season: content.seasonNumber ?? "-",
+                                    episode: content.episodeNumber ?? "-",
+                                    title: content.episodeTitle ?? "",
+                                })}
+                            </p>
                         </p>
                     )
                 }

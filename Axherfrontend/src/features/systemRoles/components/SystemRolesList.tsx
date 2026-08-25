@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 
 interface Props{
     systemRoles: SystemRoles[];
@@ -35,6 +36,10 @@ export default function SystemRolesList ({
     searchTerm,
     onSearchChange
 }: Props) {
+
+    const t = useTranslations("common");
+
+
     const router = useRouter();
     const [confirmDialog , setConfirmDialog] = useState<{isOpen: boolean; id: number; systemRoles: string}>({
         isOpen: false,
@@ -59,8 +64,8 @@ export default function SystemRolesList ({
                 isOpen={confirmDialog.isOpen}
                 title="confirmar Eliminacion"
                 message={`¿Estás seguro de que deseas eliminar el rol del sistema "${confirmDialog.systemRoles}"? Esta accion no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                confirmText={t("delete")}
+                cancelText={t("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
@@ -103,14 +108,14 @@ export default function SystemRolesList ({
                                                     onClick: () => router.push(`/admin/systemRoles/${role.systemRoleId}/permissions`),
                                                 },
                                                 {
-                                                    label: "Editar",
+                                                    label: t("edit"),
                                                     onClick: () => onEdit(role),
                                                 },
                                                 {
                                                     label:
                                                         deletingId === role.systemRoleId
                                                             ? "Eliminando..."
-                                                            : "Eliminar",
+                                                            : t("delete"),
                                                     onClick: () => handleDeleteClick(role.systemRoleId, role.roleName),
                                                     variant: "danger",
                                                 },

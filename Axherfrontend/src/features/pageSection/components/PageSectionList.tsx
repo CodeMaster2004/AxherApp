@@ -8,6 +8,7 @@ import BubbleToggle from "@/shared/components/ui/BubbleToggle";
 import MoreMenu from "@/shared/components/ui/MoreMenu";
 import styles from "@/features/pageSection/components/PageSectionList.module.css";
 import SortableList from "@/shared/components/ui/SortableList";
+import { useTranslations } from "next-intl";
 
 interface Props {
     sections: PageSection[];
@@ -80,16 +81,19 @@ export default function PageSectionList({
 
     };
 
+    const common = useTranslations("common");
+    const t = useTranslations("pageSections");
+
     return (
 
         <div className={layoutStyles.section}>
 
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Eliminar sección"
-                message={`¿Deseas eliminar "${confirmDialog.title}"?`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title={t("delete.title")}
+                message={t("delete.message", { title: confirmDialog.title })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 variant="danger"
                 onConfirm={handleConfirmDelete}
                 onCancel={() =>
@@ -100,14 +104,14 @@ export default function PageSectionList({
                     })
                 }
             />
-            <h2>Secciones de la página</h2>
+            <h2>{t("title")}</h2>
             {
                 items.length === 0 ? (
                     <p>
                         {
                             loading
-                                ? "Cargando secciones..."
-                                : "No hay secciones"
+                                ? t("loading")
+                                : t("empty")
                         }
                     </p>
                 ):(
@@ -136,8 +140,8 @@ export default function PageSectionList({
                                             <span className={styles.order}>#{index + 1}</span>
                                         </div>
                                         <div className={styles.meta}>
-                                            <span>Página: {item.page}</span>
-                                            <span>Shelf: {item.contentShelfName ?? "-"}</span>
+                                            <span>{t("form.page")} {item.page}</span>
+                                            <span>{t("form.shelf")}: {item.contentShelfName ?? "-"}</span>
                                         </div>
                                     </div>
                                     <div className={styles.status}>
@@ -155,7 +159,7 @@ export default function PageSectionList({
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: "Editar",
+                                                    label: common("edit"),
                                                     onClick: () => 
                                                         onEdit(item)
                                                 },
@@ -163,8 +167,8 @@ export default function PageSectionList({
                                                     label: 
                                                         deletingId ===
                                                         item.pageSectionId
-                                                            ? "Eliminando..."
-                                                            : "Eliminar",
+                                                            ? common("deleting")
+                                                            : common("delete"),
                                                     variant: "danger",
                                                     onClick: () =>
                                                         handleDeleteClick(

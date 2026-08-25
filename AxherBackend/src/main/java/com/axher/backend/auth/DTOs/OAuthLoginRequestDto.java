@@ -6,4 +6,5 @@ import lombok.Data;
 public class OAuthLoginRequestDto {
     private String provider;
     private String idToken;
+    private String preferredLanguageCode;
 }

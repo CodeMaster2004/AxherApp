@@ -1,48 +1,56 @@
 import { notFound } from "next/navigation";
 
-import { API_URL } from "@/core/api/axiosClient";
 import { ContentDetail } from "@/entities/types";
-
+import { serverApiFetch } from "@/core/api/serverApiClient";
 
 import MovieDetail from "@/features/movies/components/MovieDetail";
 import styles from "./page.module.css";
 
 export const revalidate = 60;
 
-async function getMovie(contentId: string): Promise<ContentDetail | undefined> {
-  try {
-    const res = await fetch(`${API_URL}/contents/${contentId}`, {
-      next: {
-        tags: ["peliculas", `pelicula-${contentId}`],
-      },
-    });
+async function getMovie(
+    contentId: string
+): Promise<ContentDetail | undefined> {
 
-    if (!res.ok) return undefined;
+    try {
+        return await serverApiFetch<ContentDetail>(
+            `/contents/${contentId}`,
+            {
+                next: {
+                    tags: [
+                        "peliculas",
+                        `pelicula-${contentId}`,
+                    ],
+                },
+            }
+        );
 
-    return await res.json();
-  } catch {
-    return undefined;
-  }
+    } catch {
+        return undefined;
+    }
 }
 
 interface PageProps {
-  params: Promise<{
-    contentId: string;
-  }>;
+    params: Promise<{
+        contentId: string;
+    }>;
 }
 
-export default async function MovieDetailPage({ params }: PageProps) {
-  const { contentId } = await params;
+export default async function MovieDetailPage({
+    params,
+}: PageProps) {
 
-  const movie = await getMovie(contentId);
+    const { contentId } = await params;
 
-  if (!movie || movie.type !== "MOVIE") {
-    notFound();
-  }
+    const movie = await getMovie(contentId);
 
-  return (
-    <main className={styles.page}>
-      <MovieDetail movie={movie} />
-    </main>
-  );
+    if (!movie || movie.type !== "MOVIE") {
+        notFound();
+    }
+
+    return (
+        <main className={styles.page}>
+            <MovieDetail movie={movie} />
+        </main>
+    );
 }

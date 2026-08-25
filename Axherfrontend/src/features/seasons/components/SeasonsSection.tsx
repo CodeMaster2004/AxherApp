@@ -7,6 +7,7 @@ import styles from "./SeasonsSection.module.css";
 import { usePublicSeasons } from "@/features/seasons/hooks/usePublicSeasons";
 import { useUpcomingSeasons } from "@/features/seasons/hooks/useUpcomingSeasons";
 import { Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
 interface Props {
     seriesId: number;
     onSelectEpisode: (episode: EpisodeDetail) => void;
@@ -16,6 +17,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
 
     const [selectedSeason, setSelectedSeason] = useState<number | null>(null);
     const [open, setOpen] = useState(false);
+    const t = useTranslations("seasons");
     const {
         seasons,
         loading
@@ -24,9 +26,9 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
     });
 
     const {
-    upcomingSeasons,
-    loading: upcomingLoading
-} = useUpcomingSeasons(seriesId);
+        upcomingSeasons,
+        loading: upcomingLoading
+    } = useUpcomingSeasons(seriesId);
 
     useEffect(() => {
         if (seasons.length > 0) {
@@ -36,7 +38,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
 
 
     if (seasons.length === 0) {
-        return <p>No hay temporadas.</p>;
+        return <p>{t("loading")}</p>;
     }
 
 
@@ -73,7 +75,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                             }`}
                             onClick={() => setSelectedSeason(season.seasonId)}
                         >
-                            Temporada {season.seasonNumber}
+                            {t("season")} {season.seasonNumber}
                         </button>
                         
 
@@ -82,7 +84,9 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                         <div
                             key={season.seasonId}
                             className={styles.upcomingTab}
-                            title={`Temporada ${season.seasonNumber} · Próximamente`}
+                            title={t("upcoming.title", {
+                                number: season.seasonNumber
+                            })}
                         >
                             <Lock className={styles.upcomingLock}/>
 
@@ -107,7 +111,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                         className={styles.selectButton}
                         onClick={() => setOpen(!open)}
                     >
-                        Temporada {
+                        {t("season")}{" "} {
                             seasons.find(
                                 season => season.seasonId === selectedSeason
                             )?.seasonNumber
@@ -137,7 +141,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                                         setOpen(false);
                                     }}
                                 >
-                                    Temporada {season.seasonNumber}
+                                    {t("season")}{" "} {season.seasonNumber}
                                 </button>
 
                             ))}

@@ -7,6 +7,7 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import Button from "@/shared/components/ui/Button";
 import { useHeroBanners } from "@/features/heroBanner/hooks/useHeroBanners";
 import HeroBannerList from "@/features/heroBanner/components/HeroBannerList";
+import { useTranslations } from "next-intl";
 
 export default function HeroBannerListView() {
     const router = useRouter();
@@ -42,19 +43,26 @@ export default function HeroBannerListView() {
         await toggleHeroBanner(id);
     }
 
+    const handleTranslations = (banner: HeroBanner) => {
+        router.push(`/admin/hero-banners/${banner.heroBannerId}/translations`);
+    }
+
+    const t = useTranslations("heroBanner");
+    const common = useTranslations("common");
+
     return (
 
         <div className={layoutStyles.pageContainer}>
             <div className={layoutStyles.header}>
 
                 <h1>
-                    Hero Banners
+                    {t("title")}
                 </h1>
                 <Button
                     variant="animated"
                     onClick={handleCreate}
                 >
-                    Crear Banner
+                    {common("create")}
                 </Button>
 
             </div>
@@ -73,6 +81,7 @@ export default function HeroBannerListView() {
                 onPrevPage={prevPage}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
+                onTranslations={handleTranslations}
 
             />
 

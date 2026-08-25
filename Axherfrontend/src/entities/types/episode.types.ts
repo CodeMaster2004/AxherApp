@@ -49,3 +49,18 @@ export interface UpcomingEpisode{
     seriesTitle: string;
 
 }
+
+export interface EpisodeTranslation {
+    episodeId: number;
+    languageId: number;
+    languageCode: string;
+    languageName: string;
+    title: string;
+    description: string;
+}
+
+export interface EpisodeTranslationRequest {
+    languageId: number;
+    title: string;
+    description: string;
+}

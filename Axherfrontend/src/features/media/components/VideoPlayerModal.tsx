@@ -7,6 +7,7 @@ import styles from "./VideoPlayerModal.module.css";
 import { useVideoPlayer } from "@/features/media/hooks/useVideoPlayer";
 import { usePlaybackProgress } from "@/features/playbackHistory/hooks/usePlaybackProgress";
 import ProblemReportModal from "@/features/reports/components/ProblemReportModal";
+import { useTranslations } from "next-intl";
 
 interface Props {
     isOpen: boolean;
@@ -28,6 +29,7 @@ export default function VideoPlayerModal({
     onClose,
 }: Props) {
 
+    const t = useTranslations("media");
     const [videoElement, setVideoElement] =
         useState<HTMLVideoElement | null>(null);
 
@@ -219,7 +221,7 @@ export default function VideoPlayerModal({
                     className={styles.back}
                     onClick={handleClose}
                 >
-                    ← Salir
+                    ← {t("player.exit")}
                 </button>
 
                 <h2 className={styles.title}>

@@ -1,23 +1,32 @@
 "use client";
 
-import { ReportStatusResponse } from "@/entities/types";
+import { ReportStatusRequest, ReportStatusResponse } from "@/entities/types";
 import { useReportStatusActions } from "@/features/reportStatus/hooks/useReportStatusActions";
 import { reportStatusService } from "@/features/reportStatus/services/ReportStatusService";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import ReportStatusForm from "@/features/reportStatus/components/ReportStatusForm";
+import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 
 export default function ReportStatusPage() {
     const router = useRouter();
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
-
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+    const t = useTranslations("reportStatus");
+
+    const [form, setForm] = useState<ReportStatusRequest>({
+        code: "",
+        name: "",
+        description: "",
+        languageId: 0,
+    });
+
+    const {languages, loading: languagesLoading} = useLanguage();
     
     const { editReportStatus, saving } = useReportStatusActions({
         onSuccess: () => router.push("/admin/report-status"),
@@ -32,13 +41,16 @@ export default function ReportStatusPage() {
         const loadStatus = async () => {
             try {
                 const reportStatus: ReportStatusResponse = await reportStatusService.getById(id);
-                setCode(reportStatus.code);
-                setName(reportStatus.name);
-                setDescription(reportStatus.description ?? "");
+                setForm({
+                    code: reportStatus.code,
+                    name: reportStatus.name,
+                    description: reportStatus.description ?? "",
+                    languageId: reportStatus.languageId,
+                });
             } catch (error) {
                 console.error("Error cargando estado:", error);
-                alert("Error al cargar el estado");
-                router.push("/report-status");
+                alert(t("error.load"));
+                router.push("/admin/report-status");
             } finally {
                 setLoading(false);
             }
@@ -51,47 +63,55 @@ export default function ReportStatusPage() {
 
         if (!id) return;
 
-        const codeTrim = code.trim();
-        const nameTrim = name.trim();
-        const descriptionTrim = description.trim();
+        const codeTrim = form.code.trim();
+        const nameTrim = form.name.trim();
+        const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
-            alert("Por favor completa el campo de código");
+            setError(t("form.validation.codeRequired"));
+            return;
+        }
+
+        if(!form.languageId) {
+            setError(t("form.validation.languageRequired"));
             return;
         }
 
         if (!nameTrim) {
-            alert("Por favor completa el campo de nombre");
+            setError(t("form.validation.nameRequired"));
             return;
         }
 
-        await editReportStatus(id, { code: codeTrim, name: nameTrim, description: descriptionTrim });
+        await editReportStatus(id, {
+            code: codeTrim,
+            name: nameTrim,
+            description: descriptionTrim,
+            languageId: form.languageId
+        });
     };
 
     const handleCancel = () => {
-        router.push("/report-status");
+        router.push("/admin/report-status");
     };
 
     if(loading) {
-                return <div className={layoutStyles.loading}>Cargando estado...</div>;
+                return <div className={layoutStyles.loading}>{t("loading")}</div>;
 
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Estado de Reporte</h1>
+            <h1>{t("editTitle")}</h1>
 
             <ReportStatusForm
-                code={code}
-                setCode={setCode}
-                name={name}
-                setName={setName}
-                description={description}
-                setDescription={setDescription}
+                value={form}
+                onChange={(value) => { setForm(value); if (error) { setError(""); } }}
+                languages={languages}
                 onSubmit={handleSubmit}
                 isEditing={true}
                 onCancel={handleCancel}
-                saving={saving}
+                saving={saving || languagesLoading}
+                error={error || undefined}
             />
         </div>
     )

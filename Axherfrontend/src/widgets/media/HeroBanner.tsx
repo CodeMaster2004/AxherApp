@@ -4,6 +4,7 @@ import { HeroContent } from "@/entities/types";
 import styles from "@/shared/styles/components/HeroBanner.module.css";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 const contentVariants = {
@@ -44,6 +45,7 @@ interface Props {
 
 export default function HeroBanner({ contents = [] }: Props) {
 
+    const t = useTranslations("heroBanner");
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
@@ -174,11 +176,11 @@ export default function HeroBanner({ contents = [] }: Props) {
                     >
 
                         <button className={styles.btnPrimary}>
-                            ▶ Ver
+                            ▶ {t("watch")}
                         </button>
 
                         <button className={styles.btnSecondary}>
-                            Más info
+                            {t("moreInfo")}
                         </button>
 
                     </motion.div>
@@ -197,7 +199,7 @@ export default function HeroBanner({ contents = [] }: Props) {
                         key={hero.contentId}
                         className={`${styles.dot} ${i === index ? styles.activeDot : ""}`}
                         onClick={() => setIndex(i)}
-                        aria-label={`Hero ${i + 1}`}
+                        aria-label={t("indicator", { number: i + 1 })}
                     />
 
                 ))}
