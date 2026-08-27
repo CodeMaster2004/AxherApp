@@ -15,6 +15,7 @@ import { ChangeEvent, useRef, useState } from "react";
 import { Area } from "react-easy-crop";
 import { getCroppedImg } from "../../../shared/utils/getCroppedImg";
 import ImageCropModal from "../../../shared/components/ui/ImageCropModal";
+import { useTranslations } from "next-intl";
 
 interface Props {
     profile: UserProfile;
@@ -37,7 +38,7 @@ export default function Profile({
     const [selectedBanner, setSelectedBanner] = useState<string | null>(null);
     const [, setRawFile] = useState<File | null>(null);
     const [type, setType] = useState<"profile" | "banner" | null>(null);
-
+    const t = useTranslations("profile");
     const handleFileClick = (type: "profile" | "banner") => {
     setType(type);
 
@@ -99,7 +100,7 @@ export default function Profile({
         <div className={styles.profilePicture}>
             <Image
                 src={profile.profilePicture || "/default/profile.png"}
-                alt="Foto de perfil"
+                alt={t("pictureAlt")}
                 width={120}
                 height={120}
                 loading="eager"
@@ -127,12 +128,12 @@ export default function Profile({
 
             {isOwnProfile && onEditProfile && (
                 <button className={styles.editBtn} onClick={onEditProfile}>
-                <SettingsIcon size={16} /> Editar perfil
+                <SettingsIcon size={16} /> {t("editTitle")}
                 </button>
             )}
             </div>
 
-            <div className={styles.bio}>{profile.bio || "Sin biografía"}</div>
+            <div className={styles.bio}>{profile.bio || t("bioEmpty")}</div>
 
             <div className={styles.profileDetails}>
                 <span>

@@ -4,6 +4,7 @@ import AuthButtons from "@/features/auth/components/AuthButton";
 import AuthCard from "@/features/auth/components/AuthCard";
 import OtpInputs from "@/features/auth/components/OtpCodeInput";
 import formStyles from "@/shared/styles/shared/Form.module.css";
+import { useTranslations } from "next-intl";
 import { SyntheticEvent, useState } from "react";
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 
 export default function UserConfirmEmailForm({onSubmit, onResendOtp, saving = false, loading = false, error}: Props){
     const [otp, setOtp] = useState("");
+    const t = useTranslations("auth");
 
     const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -24,9 +26,9 @@ export default function UserConfirmEmailForm({onSubmit, onResendOtp, saving = fa
 
     return (
 
-        <AuthCard title="Confirmar Email" onSubmit={handleSubmit} >
-            <h2>Confirmar Email</h2>
-            <p>Ingresa el codigo de verificacion que enviamos a su correo</p>
+        <AuthCard title={t("confirmEmail.title")} onSubmit={handleSubmit} >
+            <h2>{t("confirmEmail.heading")}</h2>
+            <p>{t("confirmEmail.description")}</p>
 
             <OtpInputs
                 length={6}
@@ -40,9 +42,9 @@ export default function UserConfirmEmailForm({onSubmit, onResendOtp, saving = fa
                 <AuthButtons
                     type="submit"
                     disabled={saving}
-                    loadingText="Verificando..."
+                    loadingText={t("confirmEmail.loading")}
                 >
-                    Confirmar
+                    {t("confirmEmail.submit")}
                 </AuthButtons>
 
                 {onResendOtp && (
@@ -51,7 +53,7 @@ export default function UserConfirmEmailForm({onSubmit, onResendOtp, saving = fa
                         onClick={onResendOtp}
                         disabled={saving}
                     >
-                        Reenviar Código
+                        {t("confirmEmail.resend")}
                     </AuthButtons>
                 )}
             </div>

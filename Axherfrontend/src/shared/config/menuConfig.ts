@@ -1,31 +1,31 @@
 export interface MenuItem {
     id: string;
-    label: string;
+    labelKey: string;
     href?: string;
     children?: MenuItem[];
     permission?: string;
 }
 
 export const menuConfig: MenuItem[] = [
-    {id: "home", label: "Inicio", href: "/"},
-    {id: "movies", label: "Peliculas", href: "/peliculas"},
-    {id: "series", label: "Series", href: "/serie"},
-    {id: "settings", label: "Configuración", href: "/settings"},
+    {id: "home", labelKey: "home", href: "/"},
+    {id: "movies", labelKey: "movies", href: "/peliculas"},
+    {id: "series", labelKey: "series", href: "/serie"},
+    {id: "settings", labelKey: "settings", href: "/settings"},
 
     {
         id: "administration",
-        label:"Admins",
+        labelKey:"administration",
         children: [
             {
                 id: "content-management",
-                label:"Gestión de Contenido",
+                labelKey:"contentManagement",
                 children: [
-                    {id: "contents", label: "Contents", href: "/admin/contents", permission: "CONTENT:VIEW"},
-                    {id: "content-categories", label: "Categorías", href: "/admin/contentCategories", permission: "CATEGORY:VIEW"},
-                    {id: "content-status", label: "Estado Películas", href: "/admin/contentStatus", permission: "CONTENT:VIEW"},
-                    {id: "shelves", label: "Carruseles", href: "/admin/shelves"},
-                    {id: "page-sections", label: "Secciones de Página", href: "/admin/page-sections"},
-                    {id: "hero-banners", label: "Hero Banners", href: "/admin/hero-banners"},
+                    {id: "contents", labelKey: "contents", href: "/admin/contents", permission: "CONTENT:VIEW"},
+                    {id: "content-categories", labelKey: "contentCategories", href: "/admin/contentCategories", permission: "CATEGORY:VIEW"},
+                    {id: "content-status", labelKey: "contentStatus", href: "/admin/contentStatus", permission: "CONTENT:VIEW"},
+                    {id: "shelves", labelKey: "shelves", href: "/admin/shelves"},
+                    {id: "page-sections", labelKey: "pageSections", href: "/admin/page-sections"},
+                    {id: "hero-banners", labelKey: "heroBanners", href: "/admin/hero-banners"},
 
                 ],
 
@@ -34,14 +34,14 @@ export const menuConfig: MenuItem[] = [
 
             {
                 id: "support",
-                label: "Soporte",
+                labelKey: "support",
                 children: [
-                    {id: "support-tickets", label: "Tickets de Soporte", href: "/admin/support/tickets"},
-                    {id: "support-categories", label: "Categorias de soporte", href: "/admin/support/ticket-category"},
-                    {id: "support-tickets-status", label: "Estados de Tickest", href:"/admin/support/ticket-status"},
-                    {id: "problem-reports", label: "Reportes de Problemas", href: "/admin/reports/problems",},
-                    {id: "problem-status", label: "Estados de Reportes", href: "/admin/report-status",},
-                    {id: "problem-categories", label: "Categorias de Reportes", href: "/admin/report-category",},
+                    {id: "support-tickets", labelKey: "supportTickets", href: "/admin/support/tickets"},
+                    {id: "support-categories", labelKey: "supportCategories", href: "/admin/support/ticket-category"},
+                    {id: "support-tickets-status", labelKey: "supportTicketStatuses", href:"/admin/support/ticket-status"},
+                    {id: "problem-reports", labelKey: "problemReports", href: "/admin/reports/problems",},
+                    {id: "problem-status", labelKey: "problemReportStatuses", href: "/admin/report-status",},
+                    {id: "problem-categories", labelKey: "problemReportCategories", href: "/admin/report-category",},
 
 
                 ]
@@ -49,27 +49,27 @@ export const menuConfig: MenuItem[] = [
 
             {
                 id: "commercial-management",
-                label:"Gestión Comercial",
+                labelKey: "commercialManagement",
                 children: [
-                    {id: "discounts", label: "Descuentos", href: "/admin/discounts", permission: "DISCOUNT:VIEW"},
+                    {id: "discounts", labelKey: "discounts", href: "/admin/discounts", permission: "DISCOUNT:VIEW"},
                 ],
             },
             {
                 id: "users-management",
-                label: "Usuarios y Acceso",
+                labelKey: "usersManagement",
                 children: [
 
-                    {id: "users", label: "Usuarios", href: "/admin/users", permission: "USER:VIEW"},
-                    {id: "system-roles", label: "Roles", href: "/admin/systemRoles", permission: "ROLE:VIEW"},
-                    {id: "system-permissions", label: "Permisos", href: "/admin/systemPermissions", permission: "SYSTEM_PERMISSION:VIEW"},
+                    {id: "users", labelKey: "users", href: "/admin/users", permission: "USER:VIEW"},
+                    {id: "system-roles", labelKey: "systemRoles", href: "/admin/systemRoles", permission: "ROLE:VIEW"},
+                    {id: "system-permissions", labelKey: "systemPermissions", href: "/admin/systemPermissions", permission: "SYSTEM_PERMISSION:VIEW"},
 
                 ]
             },
             {
                 id: "system",
-                label:"Sistema",
+                labelKey: "system",
                 children: [
-                    {id: "languages", label: "Languages", href: "/admin/languages"},
+                    {id: "languages", labelKey: "languages", href: "/admin/languages"},
                 ],
              }
         ]

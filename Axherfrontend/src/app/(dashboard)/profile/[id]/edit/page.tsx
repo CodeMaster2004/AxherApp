@@ -6,6 +6,7 @@ import EditProfileForm from "@/features/profile/components/EditProfileForm";
 import { useProfileContext } from "@/features/profile/context/ProfileContext";
 import { useProfile, useProfileActions } from "@/features/profile/hooks";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,6 +14,7 @@ export default function EditProfilePage() {
     const router = useRouter();
     const { profile, updateProfileField, loading } = useProfileContext();
     const { user } = useAuth();
+    const t = useTranslations("profile");
     const { error: fetchError } = useProfile(
         undefined,
         user?.userId ?? undefined
@@ -78,16 +80,16 @@ export default function EditProfilePage() {
     };
 
     if(loading){
-        return <div className={layoutStyles.loading}><p>Cargando perfil...</p></div>
+        return <div className={layoutStyles.loading}><p>{t("loading")}</p></div>
     }
 
     if(fetchError){ 
-        return <div className={layoutStyles.loading}><p>Error al cargar el perfil.</p></div>
+        return <div className={layoutStyles.loading}><p>{t("error.load")}</p></div>
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Perfil</h1>
+            <h1>{t("editTitle")}</h1>
             <EditProfileForm
                 displayName={displayName}
                 firstName={firstName}

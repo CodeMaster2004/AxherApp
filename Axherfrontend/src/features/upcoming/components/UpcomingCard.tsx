@@ -3,6 +3,7 @@
 import { UpcomingContent } from "@/entities/types";
 import styles from "@/features/upcoming/components/UpcomingCard.module.css"
 import { CalendarDays } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -26,10 +27,12 @@ export default function UpcomingCard({ UpcomingContent }: UpcomingCardProps){
             : `/serie/${UpcomingContent.contentId}`;
 
             console.log({
-    id: UpcomingContent.contentId,
-    type: UpcomingContent.type,
-    href
-});
+                id: UpcomingContent.contentId,
+                type: UpcomingContent.type,
+                href
+            });
+
+    const t = useTranslations("upcoming");
     return (
         <article className={styles.card}>
 
@@ -47,7 +50,7 @@ export default function UpcomingCard({ UpcomingContent }: UpcomingCardProps){
                 />
 
                 <span className={styles.badge}>
-                    Próximamente
+                    {t("badge")}
                 </span>
             </div>
 

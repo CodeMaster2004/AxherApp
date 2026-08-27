@@ -6,9 +6,9 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import Pagination from "@/shared/components/ui/Pagination";
-import { problemReportCategoryOptions } from "@/shared/constants/selectOptions";
 import { formatDate } from "@/shared/utils/date";
 import { useTranslations } from "next-intl";
+import { ReportCategoryResponse } from "@/entities/types";
 
 interface ProblemReportStatus{
     reportStatusId: number;
@@ -19,6 +19,8 @@ interface ProblemReportStatus{
 interface Props {
     reports: ProblemReportResponse[];
     statuses: ProblemReportStatus[];
+
+    categories: ReportCategoryResponse[];
 
     filters: ProblemReportFilters;
     onFiltersChange: (filters: ProblemReportFilters) => void;
@@ -40,6 +42,8 @@ interface Props {
 export default function AdminProblemReportList({
     reports,
     statuses,
+
+    categories,
 
     filters,
     onFiltersChange,
@@ -202,12 +206,12 @@ export default function AdminProblemReportList({
                         {t("list.allCategories")}
                     </option>
 
-                    {problemReportCategoryOptions.map((option) => (
+                    {categories.map((category) => (
                         <option
-                            key={option.value}
-                            value={option.value}
+                            key={category.reportCategoryId}
+                            value={category.code}
                         >
-                            {option.label}
+                            {category.name}
                         </option>
                     ))}
                 </select>
@@ -268,7 +272,7 @@ export default function AdminProblemReportList({
                             {reports.map(report => (
                                 <tr key={report.reportId}>
                                     <td># {report.reportId}</td>
-                                    <td>{report.category}</td>
+                                    <td>{report.reportCategoryName}</td>
                                     <td className={tableStyles.categoriesCell}>{report.description}</td>
                                     <td>{report.contentId ?? "-"}</td>
                                     <td>{report.episodeId ?? "-"}</td>

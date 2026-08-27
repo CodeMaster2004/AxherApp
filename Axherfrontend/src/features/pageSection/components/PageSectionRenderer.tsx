@@ -3,7 +3,7 @@
 import { ContentCategoryResponse, ContentType } from "@/entities/types";
 import { PageSection } from "@/entities/types/pageSection.types";
 import NewContentSection from "@/features/contents/components/NewContentSection";
-import GenreBar from "@/features/movies/components/GenreBar";
+import GenreBar from "@/features/contents/components/GenreBar";
 import ContinueWatchingSection from "@/features/playbackHistory/components/ContinueWatchingSection";
 import TopRatedSection from "@/features/popularity/components/TopRatedSection";
 import TrendingSection from "@/features/popularity/components/TrendingSection";

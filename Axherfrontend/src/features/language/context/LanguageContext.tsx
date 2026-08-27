@@ -11,9 +11,11 @@ import {
 import { useAuth } from "@/features/auth/context/AuthContext";
 import { getBrowserLanguageCode } from "@/shared/i18n/browserLanguage";
 import { languageResolver } from "@/shared/i18n/languageResolver";
+import { Locale } from "next-intl";
+import { resolveSupportedLocale } from "@/i18n/localeResolver";
 
 interface LanguageContextProps {
-    languageCode: string | null;
+    languageCode: Locale | null;
     setLanguage: (language: string) => void;
     languageReady: boolean;
 }
@@ -45,12 +47,14 @@ export function LanguageProvider({
          */
         if (user?.preferredLanguageCode) {
 
-            const language = user.preferredLanguageCode;
+            const language = resolveSupportedLocale(user.preferredLanguageCode);
 
-            setLanguageCodeState(language);
-            languageResolver.set(language);
-            setLanguageReady(true);
-
+            if(language) {
+                setLanguageCodeState(language);
+                languageResolver.set(language);
+                setLanguageReady(true);
+            }
+        
             console.log("🌐 Idioma del usuario:", language);
 
             return;
@@ -61,11 +65,13 @@ export function LanguageProvider({
          * usamos el idioma detectado del navegador.
          */
         const browserLanguage = getBrowserLanguageCode();
+        const supportedBrowserLanguage = 
+            resolveSupportedLocale(browserLanguage);
 
-        if (browserLanguage) {
+        if (supportedBrowserLanguage) {
 
-            setLanguageCodeState(browserLanguage);
-            languageResolver.set(browserLanguage);
+            setLanguageCodeState(supportedBrowserLanguage);
+            languageResolver.set(supportedBrowserLanguage);
             setLanguageReady(true);
 
             console.log("🌐 Idioma del navegador:", browserLanguage);
@@ -89,8 +95,17 @@ export function LanguageProvider({
 
     const setLanguage = (language: string) => {
 
-        setLanguageCodeState(language);
-        languageResolver.set(language);
+        const supportedLanguage = resolveSupportedLocale(language);
+
+        if (!supportedLanguage) {
+            console.warn(
+                `🌐 Idioma no soportado por el frontend: ${language}`
+            );
+            return;
+        }
+
+        setLanguageCodeState(supportedLanguage);
+        languageResolver.set(supportedLanguage);
 
     };
 

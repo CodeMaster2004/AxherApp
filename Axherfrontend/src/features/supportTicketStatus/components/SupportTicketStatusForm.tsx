@@ -31,7 +31,8 @@ export default function SupportTicketStatusForm({
     error,
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("supportTicketStatus");
     
     const languageOptions: SelectOption[] = languages.map(language => ({
         value: language.languageId,
@@ -40,7 +41,6 @@ export default function SupportTicketStatusForm({
     return (
 
         <form onSubmit={onSubmit} className={styles.form}>
-            <h2>{isEditing ? 'Editar Estado del ticket' : 'Crear Estado del ticket'}</h2>
 
             {error && (
                 <p className={styles.errorMessage}>
@@ -49,10 +49,10 @@ export default function SupportTicketStatusForm({
             )}
 
             <Input
-                label="Código del Estado del ticket"
+                label={t("form.codeLabel")}
                 value={value.code}
                 onChange={(code) => onChange(prev => ({ ...prev, code, })) }
-                placeholder="Ej: PENDING"
+                placeholder={t("form.codePlaceholder")}
                 maxLength={20}
                 required
                 disabled={saving}
@@ -60,7 +60,7 @@ export default function SupportTicketStatusForm({
             />
 
             <Select
-                label="Idioma"
+                label={common("language")}
                 options={languageOptions}
                 value={value.languageId ?? ""}
                 onChange={(languageId) =>
@@ -69,15 +69,15 @@ export default function SupportTicketStatusForm({
                         languageId: Number(languageId),
                     }))
                 }
-                placeholder="Selecciona un idioma"
+                placeholder={common("languagePlaceholder")}
                 disabled={saving || isEditing}
             />
 
             <Input
-                label="Nombre del Estado del ticket"
+                label={t("form.nameLabel")}
                 value={value.name}
                 onChange={(name) => onChange(prev => ({ ...prev, name, })) }
-                placeholder="Ej: Pendiente"
+                placeholder={t("form.namePlaceholder")}
                 maxLength={50}
                 required
                 disabled={saving}
@@ -85,10 +85,10 @@ export default function SupportTicketStatusForm({
             />
 
             <TextArea
-                label="Descripción"
+                label={t("form.descriptionLabel")}
                 value={value.description}
                 onChange={(description) => onChange(prev => ({ ...prev, description, }))}
-                placeholder="Descripción del estado de reporte"
+                placeholder={t("form.descriptionPlaceholder")}
                 rows={4}
                 disabled={saving}
             />
@@ -99,9 +99,9 @@ export default function SupportTicketStatusForm({
                     type="submit"
                     variant="animated"
                     loading={saving}
-                    loadingText={isEditing ? 'Actualizando...' : 'Creando...'}
+                    loadingText={isEditing ? common("updating") : common("creating")}
                 >
-                    {isEditing ? 'Actualizar' : t("create")}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
                 {onCancel && (
                     <Button
@@ -110,7 +110,7 @@ export default function SupportTicketStatusForm({
                     onClick={onCancel}
                     disabled={saving}
                     >
-                    {t("cancel")}
+                    {common("cancel")}
                     </Button>
                 )}
 

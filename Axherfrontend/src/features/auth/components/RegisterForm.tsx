@@ -6,6 +6,7 @@ import AuthInput from "@/features/auth/components/AuthInput";
 import { useCheckEmail } from "@/features/users/hooks/useCheckEmail";
 import formStyles from "@/shared/styles/shared/Form.module.css";
 import { validatePassword } from "@/shared/utils/ValidatePassword";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { SyntheticEvent, useEffect, useState } from "react";
 
@@ -23,6 +24,7 @@ export default function UserRegisterForm({ onSubmit, saving = false, loading = f
     const [passwordError, setPasswordError] = useState<string | null>(null);
     const [confirmError, setConfirmError] = useState<string | null>(null);
     const { exists: emailExists, loading: checkingEmail } = useCheckEmail(email);
+    const t = useTranslations("auth");
 
     useEffect(() => {
         if (confirmPassword.length > 0 && password !== confirmPassword) {
@@ -52,8 +54,8 @@ export default function UserRegisterForm({ onSubmit, saving = false, loading = f
 
     return (
 
-        <AuthCard title="Bienvenido a AlexMovie" onSubmit={handleSubmit} >
-            <h2>Registrate</h2>
+        <AuthCard title={t("register.title")} onSubmit={handleSubmit} >
+            <h2>{t("form.heading")}</h2>
 
             {error && (
                 <p className={formStyles.errorMessage}>
@@ -65,13 +67,13 @@ export default function UserRegisterForm({ onSubmit, saving = false, loading = f
                 type="email"
                 value={email}
                 onChange={setEmail}
-                placeholder="Ej. usuario@example.com"
+                placeholder={t("register.emailPlaceholder")}
                 disabled={saving}
                 autoFocus
             />
             {emailExists === true && !checkingEmail &&(
                 <p className={formStyles.errorMessage}>
-                    El correo electrónico ya está registrado, intenta iniciar sesión
+                    {t("register.emailExists")}
                 </p>
             )}
         
@@ -80,7 +82,7 @@ export default function UserRegisterForm({ onSubmit, saving = false, loading = f
                 type="password"
                 value={password}
                 onChange={setPassword}
-                placeholder="Minimo 6 caracteres"
+                placeholder={t("register.passwordPlaceholder")}
                 required
                 disabled={saving}
             />
@@ -90,7 +92,7 @@ export default function UserRegisterForm({ onSubmit, saving = false, loading = f
                 type="password"
                 value={confirmPassword}
                 onChange={setConfirmPassword}
-                placeholder="Repite tu contraseña"
+                placeholder={t("register.confirmPasswordPlaceholder")}
                 required
                 disabled={saving}
             />
@@ -100,14 +102,14 @@ export default function UserRegisterForm({ onSubmit, saving = false, loading = f
                 <AuthButtons
                     type="submit"
                     disabled={saving || checkingEmail || emailExists === true || !!passwordError || !!confirmError}
-                    loadingText="Registrando"
+                    loadingText={t("register.loading")}
                 >
-                    Registrarse
+                    {t("register.submit")}
                 </AuthButtons>
 
             </div>
             <p className={formStyles.switchFormText}>
-                ¿Ya tienes cuenta? <Link href="/login">Inicia sesión</Link>
+                {t("register.alreadyHaveAccount")} <Link href="/login">{t("register.login")}</Link>
             </p>
 
         </AuthCard>

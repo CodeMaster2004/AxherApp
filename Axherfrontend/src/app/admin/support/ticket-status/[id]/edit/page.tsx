@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import SupportTicketStatusForm from "@/features/supportTicketStatus/components/SupportTicketStatusForm";
 import { useLanguage } from "@/features/language/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 
 export default function EditSupportTicketStatusPage() {
 
@@ -16,6 +17,7 @@ export default function EditSupportTicketStatusPage() {
     const id = params?.id ? Number(params.id) : null;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const t = useTranslations("supportTicketStatus");
 
     const [form, setForm] = useState<SupportTicketStatusRequest>({
         code: "",
@@ -46,8 +48,7 @@ export default function EditSupportTicketStatusPage() {
                     languageId: supportTicketStatus.languageId,
                 });
             } catch (error) {
-                console.error("Error cargando estado:", error);
-                setError("Error al cargar el estado");
+                setError(t("errors.load"));
                 router.push("/admin/support/ticket-status");
             } finally {
                 setLoading(false);
@@ -66,17 +67,17 @@ export default function EditSupportTicketStatusPage() {
         const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
-            setError("Por favor completa el campo de código");
+            setError(t("form.validation.codeRequired"));
             return;
         }
 
         if (!form.languageId) {
-            setError("Por favor selecciona un idioma");
+            setError(t("form.validation.languageRequired"));
             return;
         }
 
         if (!nameTrim) {
-            setError("Por favor completa el campo de nombre");
+            setError(t("form.validation.nameRequired"));
             return;
         }
 
@@ -93,13 +94,13 @@ export default function EditSupportTicketStatusPage() {
     };
 
     if(loading) {
-                return <div className={layoutStyles.loading}>Cargando estado...</div>;
+                return <div className={layoutStyles.loading}>{t("loading")}</div>;
 
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Estado de Ticket</h1>
+            <h1>{t("editTitle")}</h1>
 
             <SupportTicketStatusForm
                 value={form}

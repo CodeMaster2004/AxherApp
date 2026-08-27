@@ -3,6 +3,7 @@ import Pagination from "@/shared/components/ui/Pagination";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import tableStyles from "@/shared/styles/shared/Table.module.css";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
+import { useTranslations } from "next-intl";
 
 interface Props {
     users: UserList[];
@@ -20,15 +21,17 @@ export default function UsersList({
     users, loading, currentPage, totalPages, onNextPage, onPrevPage, searchTerm, onSearchChange, onManageRoles
 }: Props) {
 
+    const t = useTranslations("users");
+    const common = useTranslations("common");
+
     return (
 
         <div className={layoutStyles.section}>
-            <h2>Usuarios</h2>
 
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar por email o username..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm} // controlado desde el hook padre
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -36,17 +39,17 @@ export default function UsersList({
 
             </div>
             {users.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay usuarios para mostrar."}</p>
+                <p>{loading ? common("loading") : t("empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
-                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                                <th className={tableStyles.headCell}>Email</th>
-                                <th className={tableStyles.headCell}>Username</th>
-                                <th className={tableStyles.headCell}>Roles</th>
-                                <th className={tableStyles.headCell}>Acciones</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>{common("id")}</th>
+                                <th className={tableStyles.headCell}>{t("list.email")}</th>
+                                <th className={tableStyles.headCell}>{t("list.username")}</th>
+                                <th className={tableStyles.headCell}>{t("list.roles")}</th>
+                                <th className={tableStyles.headCell}>{common("actions")}</th>
 
                             </tr>
                         </thead>
@@ -60,7 +63,7 @@ export default function UsersList({
                                     <td className={`${tableStyles.cell} ${tableStyles.actions}`}>
                                         <MoreMenu
                                             items={[
-                                                {label: "Gestionar Roles", onClick: () => onManageRoles(user)},
+                                                {label: t("list.manageRoles"), onClick: () => onManageRoles(user)},
                                             ]}
                                         />
                                     </td>

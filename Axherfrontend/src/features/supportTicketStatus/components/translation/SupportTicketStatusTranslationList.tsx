@@ -28,7 +28,8 @@ export default function SupportTicketStatusTranslationList({
 
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("supportTicketStatus");
 
     const [confirmDialog, setConfirmDialog] =
 
@@ -90,7 +91,7 @@ export default function SupportTicketStatusTranslationList({
 
         return (
             <p>
-                No hay traducciones registradas.
+                {t("translations.empty")}
             </p>
         );
 
@@ -101,12 +102,10 @@ export default function SupportTicketStatusTranslationList({
         <>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Eliminar traducción"
-                message={
-                    `¿Estás seguro de que deseas eliminar la traducción en "${confirmDialog.languageName}"? Esta acción no se puede deshacer.`
-                }
-                confirmText={t("delete")}
-                cancelText={t("cancel")}
+                title={t("translations.deleteTitle")}
+                message={t("translations.deleteMessage" , { name: confirmDialog.languageName })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
@@ -123,23 +122,23 @@ export default function SupportTicketStatusTranslationList({
                         <tr>
 
                             <th className={tableStyles.headCell}>
-                                Idioma
+                                {common("language")}
                             </th>
 
                             <th className={tableStyles.headCell}>
-                                Código
+                                {t("list.code")}
                             </th>
 
                             <th className={tableStyles.headCell}>
-                                Nombre
+                                {common("name")}
                             </th>
 
                             <th className={tableStyles.headCell}>
-                                Descripción
+                                {common("description")}
                             </th>
 
                             <th className={tableStyles.actionsColumn}>
-                                Acciones
+                                {common("actions")}
                             </th>
 
                         </tr>
@@ -198,7 +197,7 @@ export default function SupportTicketStatusTranslationList({
                                             items={[
 
                                                 {
-                                                    label: t("edit"),
+                                                    label: common("edit"),
 
                                                     onClick: () =>
                                                         onEdit(
@@ -210,8 +209,8 @@ export default function SupportTicketStatusTranslationList({
                                                     label:
                                                         deleting ===
                                                         translation.languageId
-                                                            ? "Eliminando..."
-                                                            : t("delete"),
+                                                            ? common("deleting")
+                                                            : common("delete"),
 
                                                     onClick: () =>
                                                         handleDeleteClick(

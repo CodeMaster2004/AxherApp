@@ -18,7 +18,8 @@ interface Props {
 
 export default function WatchlistCard({ item, onRemoved }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("watchlist");
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const {
@@ -61,14 +62,14 @@ export default function WatchlistCard({ item, onRemoved }: Props) {
         <>
         <ConfirmDialog
                 isOpen={confirmOpen}
-                title="Quitar de Mi lista"
-                message={`¿Estás seguro de que deseas quitar "${item.title}" de tu lista? Esta acción no se puede deshacer.`}
+                title={t("remove.title")}
+                message={t("remove.message", { title: item.title })}
                 confirmText={
                     deleting === item.contentId
-                        ? "Quitando..."
-                        : "Quitar"
+                        ? t("remove.loading")
+                        : t("remove.button")
                 }
-                cancelText={t("cancel")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmRemove}
                 onCancel={handleCancelRemove}
                 variant="danger"

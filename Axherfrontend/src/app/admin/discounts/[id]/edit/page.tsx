@@ -13,7 +13,8 @@ export default function EditDisocuntsPage(){
     const router = useRouter();
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("discounts");
     const [discountType, setDiscountType] = useState("");
     const [amount, setAmount] = useState<number>(0);
     const [startDate, setStartDate] = useState(""); // "YYYY-MM-DD"
@@ -41,8 +42,7 @@ export default function EditDisocuntsPage(){
                 setEndDate(discount.endDate);
                 setDescription(discount.description);
             }catch(error){
-                console.error("Error cargando descuento:", error);
-                alert("Error al cargar el descuento");
+                alert(t("error.load"));
                 router.push("/admin/discounts");
             }finally{
                 setLoading(false);
@@ -62,18 +62,18 @@ export default function EditDisocuntsPage(){
         const descriptionTrim = description.trim();
 
         if(!discountTypeTrim){
-            alert("Por favor completa el campo de tipo de descuento");
+            alert(t("form.validation.discountTypeRequired"));
             return;
         }
 
         if(amount <= 0){
-            alert("Monto invalido")
+            alert(t("form.validation.amountInvalid"));
             return;
         }
 
         if(startDate > endDate){
             // Comparar strings "YYYY-MM-DD" funciona correctamente
-            alert("La fecha de inicio no puede ser mayor que la fecha de fin");
+            alert(t("form.validation.startDateAfterEndDate"));
             return;
         }
 
@@ -91,12 +91,12 @@ export default function EditDisocuntsPage(){
     };
 
     if(loading){
-        return <div className={layoutStyles.loading}>{t("loading")}...</div>
+        return <div className={layoutStyles.loading}>{common("loading")}...</div>
     }
 
     return(
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Descuento</h1>
+            <h1>{t("editTitle")}</h1>
 
             <DiscountsForm
                 discountType={discountType}

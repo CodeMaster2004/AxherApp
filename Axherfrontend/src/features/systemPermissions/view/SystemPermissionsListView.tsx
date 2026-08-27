@@ -12,7 +12,8 @@ import { useRouter } from "next/navigation";
 
 export default function SystemPermissionsListView(){
     const router = useRouter();
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("systemPermissions");
     const {
         systemPermissions,
         loading,
@@ -45,9 +46,9 @@ export default function SystemPermissionsListView(){
         <div className={layoutStyles.pageContainer}>
 
             <div className={layoutStyles.header}>
-                <h1>Permisos del Sistema</h1>
+                <h1>{t("title")}</h1>
                 <Button variant="animated" onClick={handleCreate}>
-                    {t("new")}
+                    {common("new")}
                 </Button>
             </div>
             <SystemPermissionsList

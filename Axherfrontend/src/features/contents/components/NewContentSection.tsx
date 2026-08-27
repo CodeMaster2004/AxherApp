@@ -5,6 +5,7 @@ import { useNewContent } from "@/features/contents/hooks/useNewContent";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
 import styles from "./NewContentSection.module.css";
 import { ContentType } from "@/entities/types";
+import { useTranslations } from "next-intl";
 
 interface Props {
     type?: ContentType;
@@ -17,6 +18,7 @@ export default function NewContentSection({ type }: Props) {
     } = useNewContent({
         type
     });
+    const t = useTranslations("contents");
 
     if(loading || newContent.length === 0) {
         return null;
@@ -29,7 +31,7 @@ export default function NewContentSection({ type }: Props) {
             <header className={styles.header}>
 
                 <h2 className={styles.title}>
-                    Nuevos Estrenos
+                    {t("newReleases")}
                 </h2>
             </header>
 

@@ -33,7 +33,8 @@ export default function SupportTicketStatusTranslationForm({
     onCancel,
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("supportTicketStatus");
 
     const languageOptions: SelectOption[] =
         languages.map(language => ({
@@ -48,7 +49,7 @@ export default function SupportTicketStatusTranslationForm({
         <div className={formStyles.form}>
 
             <Select
-                label="Idioma"
+                label={common("language")}
                 options={languageOptions}
                 value={value.languageId}
 
@@ -59,14 +60,14 @@ export default function SupportTicketStatusTranslationForm({
                     })
                 }
 
-                placeholder="Seleccionar idioma"
+                placeholder={common("languagePlaceholder")}
 
                 disabled={saving || editing}
             />
 
 
             <Input
-                label="Nombre"
+                label={common("name")}
                 value={value.name}
 
                 onChange={(val) =>
@@ -76,14 +77,14 @@ export default function SupportTicketStatusTranslationForm({
                     })
                 }
 
-                placeholder="Ej: Pendiente"
+                placeholder={t("form.namePlaceholder")}
 
                 disabled={saving}
             />
 
 
             <TextArea
-                label="Descripción"
+                label={common("description")}
                 value={value.description}
 
                 onChange={(val) =>
@@ -93,7 +94,7 @@ export default function SupportTicketStatusTranslationForm({
                     })
                 }
 
-                placeholder="Descripción del estado del ticket"
+                placeholder={t("form.descriptionPlaceholder")}
 
                 rows={4}
 
@@ -108,11 +109,11 @@ export default function SupportTicketStatusTranslationForm({
                     variant="animated"
                     onClick={onSubmit}
                     disabled={saving}
-                    loadingText="Guardando..."
+                    loadingText={common("saving")}
                 >
                     {editing
-                        ? "Actualizar"
-                        : t("save")
+                        ? common("update")
+                        : common("save")
                     }
                 </Button>
 
@@ -125,7 +126,7 @@ export default function SupportTicketStatusTranslationForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        {t("cancel")}
+                        {common("cancel")}
                     </Button>
 
                 )}

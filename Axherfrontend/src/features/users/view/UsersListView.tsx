@@ -8,6 +8,7 @@ import UsersList from "@/features/users/components/UsersList";
 import { useUsers } from "@/features/users/hooks";
 import Button from "@/shared/components/ui/Button";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 
@@ -33,6 +34,7 @@ export default function UsersListView (){
     const [selectedUser, setSelectedUser] = useState<UserList | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
     const userId = selectedUser?.userId ; // siempre pasa un número
+    const t = useTranslations("users");
     const { roles: userRoles, loading: loadingRoles } = useUserRoleAssignments(userId);
     const { systemRoles: allRoles, loading: loadingAllRoles } = useSystemRoles(); // <-- agregar esto
     const {
@@ -53,9 +55,9 @@ export default function UsersListView (){
     return (
     <div className={layoutStyles.pageContainer}>
       <div className={layoutStyles.header}>
-        <h1>Usuarios</h1>
-        <Button variant="animated" onClick={() => console.log("Crear usuario")}>
-          Crear Usuario
+        <h1>{t("title")}</h1>
+        <Button variant="animated" onClick={() => console.log(t("create"))}>
+          {t("create")}
         </Button>
       </div>
 
@@ -68,7 +70,6 @@ export default function UsersListView (){
         onNextPage={nextPage}
         onPrevPage={prevPage}
         onSearchChange={(term: string) => {
-            console.log("Buscando:", term);
             setSearchTerm(term);
             goToPage(0);
         }}

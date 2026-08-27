@@ -25,7 +25,8 @@ export default function LanguageSelector({
     onClose,
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("users");
 
 
     return (
@@ -42,9 +43,9 @@ export default function LanguageSelector({
                         <Languages size={20} />
 
                         <div>
-                            <h2>Idioma</h2>
+                            <h2>{t("languageSelector.title")}</h2>
                             <p>
-                                Selecciona el idioma de la aplicación
+                                {t("languageSelector.subtitle")}
                             </p>
                         </div>
                     </div>
@@ -53,7 +54,7 @@ export default function LanguageSelector({
                         type="button"
                         className={styles.closeButton}
                         onClick={onClose}
-                        aria-label="Cerrar"
+                        aria-label={t("languageSelector.close")}
                     >
                         <X size={20} />
                     </button>
@@ -65,13 +66,13 @@ export default function LanguageSelector({
                     {loading ? (
 
                         <p className={styles.message}>
-                            Cargando idiomas...
+                            {t("languageSelector.loading")}
                         </p>
 
                     ) : languages.length === 0 ? (
 
                         <p className={styles.message}>
-                            No hay idiomas disponibles.
+                            {t("languageSelector.empty")}
                         </p>
 
                     ) : (
@@ -129,7 +130,7 @@ export default function LanguageSelector({
                         onClick={onClose}
                         disabled={saving}
                     >
-                        {t("cancel")}
+                        {common("cancel")}
                     </button>
 
                     <button
@@ -141,7 +142,7 @@ export default function LanguageSelector({
                             selectedLanguageId === null
                         }
                     >
-                        {saving ? "Guardando..." : t("save")}
+                        {saving ? common("loading") : common("save")}
                     </button>
 
                 </div>

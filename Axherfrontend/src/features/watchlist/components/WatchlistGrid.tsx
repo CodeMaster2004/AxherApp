@@ -3,6 +3,7 @@
 import { WatchlistResponse } from "@/entities/types";
 import WatchlistCard from "./WatchlistCard";
 import styles from "./WatchlistGrid.module.css";
+import { useTranslations } from "next-intl";
 
 type WatchlistGridProps = {
     items: WatchlistResponse[];
@@ -15,10 +16,13 @@ export default function WatchlistGrid({
     loading,
     onRemoved
 }: WatchlistGridProps) {
+
+    const t = useTranslations("watchlist");
+
     if (loading) {
         return (
             <div className={styles.message}>
-                Cargando tu lista...
+                {t("loading")}
             </div>
         );
     }
@@ -26,10 +30,9 @@ export default function WatchlistGrid({
     if (items.length === 0) {
         return (
             <div className={styles.empty}>
-                <h2>Tu lista está vacía</h2>
+                <h2>{t("empty.title")}</h2>
                 <p>
-                    Agrega películas y series para encontrarlas fácilmente
-                    después.
+                    {t("empty.text")}
                 </p>
             </div>
         );

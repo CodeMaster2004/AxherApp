@@ -77,7 +77,7 @@ export const useAuthActions = (options?: Options) => {
                 await authService.login(loginRequest);
 
                 const me = await authService.me();
-                setAuth({ userId: me.userId, email: me.email, roles: me.roles, permissions: me.permissions ?? [] });
+                setAuth({ userId: me.userId, email: me.email, roles: me.roles, permissions: me.permissions ?? [], preferredLanguageCode: me.preferredLanguageCode ?? null });
                 return me;
             } catch (err) {
                 if (axios.isAxiosError(err)) {

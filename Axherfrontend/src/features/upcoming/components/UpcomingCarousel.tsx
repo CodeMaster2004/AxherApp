@@ -5,6 +5,7 @@ import UpcomingCard from "./UpcomingCard";
 import styles from "./UpcomingCarousel.module.css";
 import HorizontalCarousel from "@/shared/components/HorizontalCarousel";
 import { ContentType } from "@/entities/types";
+import { useTranslations } from "next-intl";
 
 interface Props {
     type?: ContentType;
@@ -17,10 +18,10 @@ export default function UpcomingCarousel({ type }: Props) {
         loading
     } = useUpcomingContents({type});
 
-    
+    const t = useTranslations("upcoming");
 
     if (loading) {
-        return <p>Cargando próximos estrenos...</p>;
+        return <p>{t("loadIng")}</p>;
     }
 
     if (!upcomingContents?.length) {
@@ -29,7 +30,7 @@ export default function UpcomingCarousel({ type }: Props) {
 
     return (
         <section className={styles.section}>
-            <h2>Próximos estrenos</h2>
+            <h2>{t("title")}</h2>
 
             <HorizontalCarousel>
                 {upcomingContents.map(content => (

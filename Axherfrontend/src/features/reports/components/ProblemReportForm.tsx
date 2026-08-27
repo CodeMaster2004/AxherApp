@@ -1,18 +1,15 @@
 "use client";
 
-import { ProblemReportCategory } from "@/entities/types/problemReport.types";
+import { ReportCategoryResponse } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import TextArea from "@/shared/components/ui/TextArea";
-import { problemReportCategoryOptions } from "@/shared/constants/selectOptions";
 import styles from "@/shared/styles/shared/Form.module.css";
 import { useTranslations } from "next-intl";
 
 interface Props{
-    category: ProblemReportCategory | "";
-    setCategory: (
-        value: ProblemReportCategory | ""
-    ) => void;
-
+    reportCategoryId: number | "";
+    setReportCategoryId: (value: number | "") => void;
+    categories: ReportCategoryResponse[];
     description: string;
     setDescription: (value: string) => void;
 
@@ -24,8 +21,9 @@ interface Props{
 }
 
 export default function ProblemReportForm({
-    category,
-    setCategory,
+    reportCategoryId,
+    setReportCategoryId,
+    categories,
     description,
     setDescription,
     onSubmit,
@@ -40,7 +38,7 @@ export default function ProblemReportForm({
     return (
 
         <form onSubmit={onSubmit} className={styles.form}>
-            <h2>{t("problemReport.report")}</h2>
+            <h2>{t("report")}</h2>
             {error && (
                 <p className={styles.errorMessage}>
                     {error}
@@ -55,10 +53,12 @@ export default function ProblemReportForm({
                 <select
                     id="problem-report-category"
                     className={styles.select}
-                    value={category}
+                    value={reportCategoryId}
                     onChange={(e) =>
-                        setCategory(
-                            e.target.value as ProblemReportCategory
+                        setReportCategoryId(
+                            e.target.value === ""
+                                ? ""
+                                : Number(e.target.value)
                         )
                     }
                     disabled={saving}
@@ -68,16 +68,14 @@ export default function ProblemReportForm({
                         {t("form.categoryPlaceholder")}
                     </option>
 
-                    {problemReportCategoryOptions.map(
-                        (option) => (
-                            <option
-                                key={option.value}
-                                value={option.value}
-                            >
-                                {option.label}
-                            </option>
-                        )
-                    )}
+                    {categories.map((category) => (
+                        <option
+                            key={category.reportCategoryId}
+                            value={category.reportCategoryId}
+                        >
+                            {category.name}
+                        </option>
+                    ))}
                 </select>
             </div>
 

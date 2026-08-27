@@ -13,7 +13,8 @@ export default function ContentGrid({
     loading
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("contents");
     
     console.log("GRID", {
         loading,
@@ -27,13 +28,13 @@ export default function ContentGrid({
             color: "red",
             fontSize: "2rem"
         }}>
-            {t("loading")}
+            {common("loading")}
         </div>
     );
 }
 
     if(contents.length === 0) {
-        return <p>No se encontraron contenidos</p>
+        return <p>{t("filters.noResults")}</p>
     }
 
     return (

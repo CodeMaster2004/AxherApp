@@ -14,6 +14,7 @@ import SupportTicketStatusTranslationForm
     from "./SupportTicketStatusTranslationForm";
 import SupportTicketStatusTranslationList
     from "./SupportTicketStatusTranslationList";
+import { useTranslations } from "next-intl";
 
 interface Props {
     statusId: number;
@@ -24,6 +25,8 @@ export default function SupportTicketStatusTranslationsPanel({
     statusId,
     languages,
 }: Props) {
+
+    const t = useTranslations("supportTicketStatus");
 
     const {
         translations,
@@ -88,11 +91,12 @@ export default function SupportTicketStatusTranslationsPanel({
         });
     };
 
+
     return (
         <div className={layoutStyles.pageContainer}>
 
             <div className={layoutStyles.header}>
-                <h1>Traducciones</h1>
+                <h1>{t("translations.title")}</h1>
             </div>
 
             <section className={layoutStyles.section}>
@@ -109,7 +113,7 @@ export default function SupportTicketStatusTranslationsPanel({
 
                 {Boolean(error) && (
                     <p role="alert">
-                        Ocurrió un error al procesar la traducción.
+                        {t("error.translation")}
                     </p>
                 )}
 
@@ -118,12 +122,12 @@ export default function SupportTicketStatusTranslationsPanel({
             <section className={layoutStyles.section}>
 
                 <h2>
-                    Traducciones registradas
+                    {t("translations.registeredTitle")}
                 </h2>
 
                 {loading ? (
                     <p>
-                        Cargando traducciones...
+                        {t("translations.loading")}
                     </p>
                 ) : (
                     <SupportTicketStatusTranslationList

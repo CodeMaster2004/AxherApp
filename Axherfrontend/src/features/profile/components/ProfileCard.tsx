@@ -1,6 +1,7 @@
 import { UserProfile } from "@/entities/types";
 import styles from "@/shared/styles/shared/UsersProfileCard.module.css";
 import { Languages, LifeBuoy, List, LogOut, SettingsIcon, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 interface Props {
@@ -25,6 +26,7 @@ export default function ProfileCard({
     onLogout,
     isOwnProfile = false 
 }: Props) {
+    const t = useTranslations("profile");
     return (
         <div className={styles.profileCard}>
         <div className={styles.banner}>
@@ -57,33 +59,33 @@ export default function ProfileCard({
         <div className={styles.info}>
             <div className={styles.name}>{profile.displayName || profile.username}</div>
             <div className={styles.username}>@{profile.username}</div>
-            <div className={styles.bio}>{profile.bio || "Sin biografía"}</div>
+            <div className={styles.bio}>{profile.bio || t("bioEmpty")}</div>
         </div>
         <div className={styles.menu}>
         {onViewProfile && (
             <div className={styles.menuItem} onClick={onViewProfile}>
             <User size={16} />
-            <span>Mi perfil</span>
+            <span>{t("menu.viewProfile")}</span>
             </div>
         )}
         {isOwnProfile && onViewWatchlist && (
             <div className={styles.menuItem} onClick={onViewWatchlist}>
                 <List size={16} />
-                <span>Mi lista</span>
+                <span>{t("menu.watchlist")}</span>
             </div>
         )}
 
         {isOwnProfile && onViewSupport && (
             <div className={styles.menuItem} onClick={onViewSupport}>
                 <LifeBuoy size={16} />
-                <span>Soporte</span>
+                <span>{t("menu.support")}</span>
             </div>
         )}
 
         {isOwnProfile && onEditProfile && (
             <div className={styles.menuItem} onClick={onEditProfile}>
             <SettingsIcon size={16} />
-            <span>Editar perfil</span>
+            <span>{t("menu.edit")}</span>
             </div>
         )}
 
@@ -93,7 +95,7 @@ export default function ProfileCard({
                 onClick={onLanguage}
             >
                 <Languages size={16} />
-                <span>Idioma</span>
+                <span>{t("menu.language")}</span>
             </div>
         )}
         
@@ -101,7 +103,7 @@ export default function ProfileCard({
         {onLogout && (
             <div className={`${styles.menuItem} ${styles.logout}`} onClick={onLogout}>
             <LogOut size={16} />
-            <span>Cerrar sesión</span>
+            <span>{t("menu.logout")}</span>
             </div>
         )}
         </div>

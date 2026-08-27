@@ -3,6 +3,7 @@
 import { useAuth } from "@/features/auth/context/AuthContext";
 import Profile from "@/features/profile/components/Profile";
 import { useProfileContext } from "@/features/profile/context/ProfileContext";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -14,13 +15,14 @@ export default function ProfileListView({ userId }: Props) {
     const router = useRouter();
     const { user } = useAuth();
     const loggedUserId = user?.userId;
+    const t = useTranslations("profile");
     const isOwnProfile = !userId || userId === loggedUserId;
     const { profile, setProfile, loading, updateProfileField } = useProfileContext();
 
-    if (loading) return <div>Cargando perfil...</div>;
-    if (!profile) return <div>No se encontró perfil</div>;
+    if (loading) return <div>{t("loading")}</div>;
+    if (!profile) return <div>{t("notFound")}</div>;
 
-    // 🔥 Subida inmediata de la foto de perfil
+    //  Subida inmediata de la foto de perfil
     const handleProfilePictureChange = async (file: File) => {
         const original = profile;
         const tempUrl = URL.createObjectURL(file);
@@ -36,14 +38,14 @@ export default function ProfileListView({ userId }: Props) {
         } catch (err) {
             console.error(err);
             setProfile(original); // Revertimos a la original en caso de error
-            alert("Error al subir foto de perfil");
+            alert(t("error.uploadProfilePicture"));
         }finally{
             URL.revokeObjectURL(tempUrl);
         }
     };
   
 
-    // 🔥 Subida inmediata del banner
+    //  Subida inmediata del banner
     const handleBannerChange = async (file: File) => {
         const original = profile;
         const tempUrl = URL.createObjectURL(file);
@@ -57,7 +59,7 @@ export default function ProfileListView({ userId }: Props) {
         } catch (err) {
             console.error(err);
             setProfile(original);
-            alert("Error al subir banner");
+            alert(t("error.uploadBanner"));
         }finally{
             URL.revokeObjectURL(tempUrl);
         }

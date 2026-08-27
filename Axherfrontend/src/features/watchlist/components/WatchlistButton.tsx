@@ -4,6 +4,7 @@ import { useWatchlistActions } from "@/features/watchlist/hooks/useWatchlistActi
 import { Check, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import styles from "./WatchlistButton.module.css";
+import { useTranslations } from "next-intl";
 
 type WatchListButtonProps = {
     contentId: number;
@@ -67,6 +68,8 @@ export default function WatchlistButton({
         }
     };
 
+    const t = useTranslations("watchlist");
+
     const loading =
         checking === contentId ||
         saving ||
@@ -79,8 +82,8 @@ export default function WatchlistButton({
                 className={styles.removeButton}
                 onClick={handleToggle}
                 disabled={loading}
-                aria-label="Quitar de mi lista"
-                title="Quitar de mi lista"
+                aria-label={t("remove.title")}
+                title={t("remove.title")}
             >
                 <Trash2
                     size={17}
@@ -100,13 +103,13 @@ export default function WatchlistButton({
             disabled={loading}
             aria-label={
                 inList
-                    ? "Quitar de mi lista"
-                    : "Agregar a mi lista"
+                    ? t("remove.title")
+                    : t("add.title")
             }
             title={
                 inList
-                    ? "Quitar de mi lista"
-                    : "Agregar a mi lista"
+                    ? t("remove.title")
+                    : t("add.title")
             }
         >
             {inList ? (

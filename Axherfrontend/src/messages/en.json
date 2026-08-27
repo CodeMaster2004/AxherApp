@@ -1,21 +1,1355 @@
 {
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "save": "Save",
-    "cancel": "Cancel",
-    "back": "Back",
-    "edit": "Edit",
-    "delete": "Delete",
-    "create": "Create",
-    "new": "New",
-    "actions": "Actions",
-    "name": "Name",
-    "description": "Description",
-    "status": "Status",
-    "active": "Active",
-    "inactive": "Inactive",
-    "retry": "Retry",
-    "noResults": "No results found"
-  }
+    "common": {
+        "loading": "Loading...",
+        "error": "Error",
+        "save": "Save",
+        "saveChanges": "Save changes",
+        "cancel": "Cancel",
+        "back": "Back",
+        "edit": "Edit",
+        "update": "Update",
+        "delete": "Delete",
+        "create": "Create",
+        "new": "New",
+        "actions": "Actions",
+        "translations": "Translations",
+        "name": "Name",
+        "description": "Description",
+        "title": "Title",
+        "id": "ID",
+        "language": "Language",
+        "languagePlaceholder": "Select a language",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "search": "Search",
+        "searching": "Searching...",
+        "saving": "Saving...",
+        "deleting": "Deleting...",
+        "updating": "Updating...",
+        "creating": "Creating...",
+        "sending": "Sending...",
+        "adding": "Adding...",
+        "confirm": "Confirm",
+        "change": "Change",
+        "clear": "Clear",
+        "clearing": "Clearing...",
+        "created": "Created",
+        "updated": "Updated",
+        "view": "View",
+        "remove": "Remove",
+        "retry": "Retry",
+        "noResults": "No results found"
+    },
+
+    "navigation": {
+        "menu": "Menu",
+        "home": "Home",
+        "movies": "Movies",
+        "series": "Series",
+        "settings": "Settings",
+        "administration": "Administration",
+        "contentManagement": "Content Management",
+        "contents": "Content",
+        "contentCategories": "Categories",
+        "contentStatus": "Movie Status",
+        "shelves": "Carousels",
+        "pageSections": "Page Sections",
+        "heroBanners": "Hero Banners",
+        "support": "Support",
+        "supportTickets": "Support Tickets",
+        "supportCategories": "Support Categories",
+        "supportTicketStatuses": "Ticket Statuses",
+        "problemReports": "Problem Reports",
+        "problemReportStatuses": "Report Statuses",
+        "problemReportCategories": "Report Categories",
+        "commercialManagement": "Commercial Management",
+        "discounts": "Discounts",
+        "usersManagement": "Users & Access",
+        "users": "Users",
+        "systemRoles": "Roles",
+        "systemPermissions": "Permissions",
+        "system": "System",
+        "languages": "Languages",
+        "scrollLeft": "Move menu left",
+        "scrollRight": "Move menu right"
+    },
+
+    "auth": {
+        "login": {
+            "title": "Sign in",
+            "heading": "Sign In",
+            "emailPlaceholder": "E.g. user@example.com",
+            "passwordPlaceholder": "Enter your password",
+            "submit": "Sign In",
+            "loading": "Signing in...",
+            "register": "Sign Up",
+            "forgotPassword": "Forgot your password?",
+            "continueWith": "— or continue with —"
+        },
+        "register": {
+            "title": "Welcome to AXHER",
+            "heading": "Sign Up",
+            "emailPlaceholder": "E.g. user@example.com",
+            "passwordPlaceholder": "Minimum 6 characters",
+            "confirmPasswordPlaceholder": "Repeat your password",
+            "submit": "Sign Up",
+            "loading": "Signing up...",
+            "alreadyHaveAccount": "Already have an account?",
+            "login": "Sign in",
+            "emailExists": "This email address is already registered. Try signing in."
+        },
+        "confirmEmail": {
+            "title": "Confirm Email",
+            "heading": "Confirm Email",
+            "description": "Enter the verification code we sent to your email.",
+            "submit": "Confirm",
+            "loading": "Verifying...",
+            "resend": "Resend Code",
+            "resendSuccess": "Code resent to your email.",
+            "userNotFound": "User not found."
+        },
+        "google": {
+            "error": "Error signing in with Google.",
+            "loginError": "Google Sign-In error.",
+            "tokenMissing": "No Google ID token was received."
+        },
+        "errors": {
+            "confirmEmail": "Error confirming email.",
+            "resendCode": "Error resending the code."
+        },
+        "validation": {
+            "passwordMismatch": "Passwords do not match."
+        }
+    },
+
+    "popularity": {
+        "topRated": {
+            "title": "Top Rated"
+        },
+        "trending": {
+            "title": "Trending",
+            "badge": "Trending"
+        }
+    },
+
+    "playbackHistory": {
+        "continueWatching": "Continue Watching",
+        "episode": "S{season} · E{episode} - {title}"
+    },
+
+    "language": {
+        "title": "Languages",
+        "createPageTitle": "Create New Language",
+        "editPageTitle": "Edit Language",
+        "loading": "Loading language...",
+        "form": {
+            "createTitle": "Create Language",
+            "editTitle": "Edit Language",
+            "code": "Code",
+            "codePlaceholder": "E.g.: es, en, fr",
+            "namePlaceholder": "E.g.: Spanish, English, French",
+            "nativeName": "Native Name",
+            "nativeNamePlaceholder": "E.g.: Español, English, Français",
+            "active": "Active Language"
+        },
+        "list": {
+            "title": "Language List",
+            "searchPlaceholder": "Search by code or name",
+            "empty": "No languages found."
+        },
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the language \"{name}\"? This action cannot be undone."
+        },
+        "validation": {
+            "codeRequired": "Please enter the language code.",
+            "nameRequired": "Please enter the language name.",
+            "nativeNameRequired": "Please enter the native language name."
+        },
+        "errors": {
+            "load": "Error loading the language."
+        }
+    },
+
+    "media": {
+        "player": {
+            "exit": "Exit",
+            "options": "Player Options",
+            "reportProblem": "Report a Problem"
+        }
+    },
+
+    "contentCategories": {
+        "title": "Categories",
+        "loading": "Loading category...",
+        "list": {
+            "category": "Category",
+            "slug": "Slug",
+            "searchPlaceholder": "Search by name or description...",
+            "empty": "No categories found for that term."
+        },
+        "form": {
+            "categoryNamePlaceholder": "E.g.: Action, Drama, Comedy",
+            "languagePlaceholder": "Select a language",
+            "descriptionPlaceholder": "Category description",
+            "validation": {
+                "nameRequired": "Please enter the name.",
+                "languageRequired": "Please select a language.",
+                "descriptionRequired": "Please enter the description."
+            }
+        },
+        "errors": {
+            "load": "Error loading the category."
+        },
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the category \"{name}\"? This action cannot be undone."
+        },
+        "translations": {
+            "title": "Category Translations",
+            "registeredTitle": "Registered Translations",
+            "code": "Code",
+            "languagePlaceholder": "Select a language",
+            "namePlaceholder": "Category name",
+            "descriptionPlaceholder": "Category description",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete Translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidCategory": "Invalid content category.",
+            "loadingLanguages": "Loading languages..."
+        },
+        "actions": {
+            "translations": "Translations"
+        }
+    },
+
+    "contents": {
+        "title": "Content",
+
+        "filters": {
+            "all": "All",
+            "movies": "Movies",
+            "series": "Series",
+            "allGenres": "All genres",
+            "allYears": "All years",
+            "sortRecent": "Most recent",
+            "sortAZ": "A-Z",
+            "sortZA": "Z-A",
+            "noResults": "No content found"
+        },
+
+        "detail": {
+            "backToMovies": "Back to movies",
+            "noDescription": "No description available.",
+            "watchTrailer": "Watch trailer",
+            "comingSoon": "Coming soon",
+            "watchMovie": "Watch movie"
+        },
+
+        "catalog": {
+            "title": "{type} of {category}"
+        },
+
+        "newReleases": "New Releases",
+
+        "list": {
+            "searchPlaceholder": "Search content...",
+            "empty": "No content registered",
+            "poster": "Poster",
+            "type": "Type",
+            "price": "Price",
+            "categories": "Categories",
+            "discount": "Discount",
+            "registeredAt": "Registered",
+            "movie": "Movie",
+            "series": "Series",
+            "noDiscount": "No discount"
+        },
+
+        "form": {
+            "contentType": "Content type",
+            "movie": "Movie",
+            "series": "Series",
+            "originalLanguage": "Original language",
+            "originalLanguagePlaceholder": "Select original language",
+            "categoryPlaceholder": "Add categories",
+            "statusPlaceholder": "Select status",
+            "discountPlaceholder": "No discount",
+            "poster": "Poster",
+            "backdrop": "Backdrop",
+            "trailer": "Trailer",
+            "movieFile": "Movie",
+            "currentPoster": "Current poster",
+            "currentBackdrop": "Current backdrop",
+            "currentTrailer": "Current trailer",
+            "currentMovie": "Current movie",
+            "releaseDate": "Release date",
+
+            "validation": {
+                "titleRequired": "Title is required.",
+                "originalLanguageRequired": "Select the original language.",
+                "categoryRequired": "Select at least one category.",
+                "posterRequired": "Poster is required.",
+                "backdropRequired": "Backdrop is required.",
+                "typeRequired": "Select the content type.",
+                "movieFileRequired": "The movie file is required for MOVIE content."
+            }
+        },
+
+        "actions": {
+            "viewSeries": "View Series",
+            "viewSeasons": "View seasons",
+            "createSeason": "Create season",
+            "translations": "Translations"
+        },
+
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the content \"{title}\"? This action cannot be undone."
+        },
+
+        "status": {
+            "changeTitle": "Change status",
+            "changeMessage": "Are you sure you want to change \"{title}\" to \"{status}\"?"
+        },
+
+        "translations": {
+            "title": "Translations",
+            "registeredTitle": "Registered translations",
+            "code": "Code",
+            "languagePlaceholder": "Select a language",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidContent": "Invalid content.",
+            "loadingLanguages": "Loading languages..."
+        }
+    },
+
+    "contentStatus": {
+        "title": "Movie Statuses",
+        "loading": "Loading status...",
+        "createTitle": "Create New Status",
+        "editTitle": "Edit Status",
+
+        "list": {
+            "title": "Movie Status List",
+            "searchPlaceholder": "Search movie statuses...",
+            "empty": "No movie statuses found for that term",
+            "code": "Code"
+        },
+
+        "form": {
+            "codeLabel": "Status Code",
+            "codePlaceholder": "E.g.: PUBLISHED",
+            "languageLabel": "Language",
+            "languagePlaceholder": "Select a language",
+            "nameLabel": "Status Name",
+            "namePlaceholder": "E.g.: Published",
+            "descriptionLabel": "Description (optional)",
+            "descriptionPlaceholder": "E.g.: Movie available for viewing",
+            "validation": {
+                "codeRequired": "Please enter the code.",
+                "languageRequired": "Please select a language.",
+                "nameRequired": "Please enter the name."
+            }
+        },
+
+        "translations": {
+            "title": "Translations",
+            "registeredTitle": "Registered translations",
+            "code": "Code",
+            "description": "Description",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "languagePlaceholder": "Select a language",
+            "namePlaceholder": "E.g.: Active",
+            "descriptionPlaceholder": "Status description",
+            "invalidStatus": "Invalid content status.",
+            "loadingLanguages": "Loading languages...",
+            "loading": "Loading translations..."
+        },
+
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the movie status \"{name}\"? This action cannot be undone."
+        },
+
+        "errors": {
+            "translation": "An error occurred while processing the translation.",
+            "load": "Error loading the status."
+        }
+    },
+
+    "episodes": {
+        "title": "Episodes",
+        "loading": "Loading episodes...",
+        "createTitle": "Create Episode",
+        "editTitle": "Edit Episode",
+
+        "list": {
+            "title": "Episode List",
+            "searchPlaceholder": "Search episode...",
+            "empty": "No episodes registered",
+            "searching": "Searching...",
+            "episodeNumber": "Episode No.",
+            "duration": "Duration",
+            "releaseDate": "Release date",
+            "status": "Status",
+            "video": "Video",
+            "viewEpisode": "View episode"
+        },
+
+        "form": {
+            "episodeNumber": "Episode number",
+            "releaseDate": "Release date",
+            "status": "Content status",
+            "statusPlaceholder": "Select status...",
+            "thumbnail": "Thumbnail file",
+            "episodeFile": "Episode file",
+            "currentThumbnail": "Current thumbnail",
+            "currentEpisode": "Current episode",
+
+            "validation": {
+                "episodeNumberRequired": "The episode number is required.",
+                "episodeNumberInvalid": "The episode number must be greater than 0.",
+                "titleRequired": "The title is required.",
+                "statusRequired": "Select a status.",
+                "thumbnailRequired": "The thumbnail file is required.",
+                "episodeFileRequired": "The episode file is required."
+            }
+        },
+
+        "actions": {
+            "backToSeasons": "Back to seasons",
+            "translations": "Translations"
+        },
+
+        "delete": {
+            "title": "Delete episode",
+            "message": "Are you sure you want to delete the episode \"{title}\"? This action cannot be undone.",
+            "deleting": "Deleting..."
+        },
+
+        "status": {
+            "changeTitle": "Change status",
+            "changeMessage": "Are you sure you want to change \"{title}\" to \"{status}\"?"
+        },
+
+        "translations": {
+            "title": "Episode translations",
+            "registeredTitle": "Registered translations",
+            "languagePlaceholder": "Select language",
+            "code": "Code",
+            "titlePlaceholder": "Episode title",
+            "descriptionPlaceholder": "Episode description",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidEpisode": "Invalid episode.",
+            "loadingLanguages": "Loading languages..."
+        },
+
+        "errors": {
+            "create": "An error occurred while creating the episode.",
+            "update": "An error occurred while updating the episode.",
+            "load": "Error loading episodes.",
+            "translation": "An error occurred while processing the translation."
+        }
+    },
+
+    "heroBanner": {
+        "title": "Hero Banners",
+        "loading": "Loading banners...",
+        "createTitle": "Create Banner",
+        "editTitle": "Edit Banner",
+        "watch": "Watch",
+        "moreInfo": "More info",
+        "indicator": "Banner {number}",
+
+        "list": {
+            "searchPlaceholder": "Search banner...",
+            "empty": "No banners found.",
+            "loading": "Loading banners...",
+            "image": "Image",
+            "content": "Content",
+            "priority": "Priority",
+            "startDate": "Start",
+            "endDate": "End",
+            "status": "Status",
+            "actions": "Actions",
+            "translations": "Translations"
+        },
+
+        "form": {
+            "content": "Content",
+            "languagePlaceholder": "Select language",
+            "contentRequired": "Select content.",
+            "languageRequired": "Select a language."
+        },
+
+        "titleOverride": "Title (optional)",
+        "titleOverridePlaceholder": "Leave empty to use the original title",
+        "descriptionOverride": "Description (optional)",
+        "descriptionOverridePlaceholder": "Leave empty to use the original description",
+        "priority": "Priority",
+        "backdrop": "Background image",
+        "currentBackdrop": "Current background image",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "active": "Active",
+        "back": "Back",
+
+        "delete": {
+            "title": "Confirm deletion",
+            "message": "Are you sure you want to delete the banner \"{title}\"? This action cannot be undone."
+        },
+
+        "status": {
+            "changeTitle": "Change status",
+            "changeMessage": "Are you sure you want to change \"{title}\" to \"{status}\"?"
+        },
+
+        "translations": {
+            "registeredTitle": "Registered translations",
+            "languagePlaceholder": "Select language",
+            "code": "Code",
+            "titlePlaceholder": "E.g.: Exclusive premiere",
+            "descriptionPlaceholder": "Banner description",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{languageName}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidBanner": "Invalid banner",
+            "loadingLanguages": "Loading languages..."
+        },
+
+        "errors": {
+            "create": "An error occurred while creating the banner.",
+            "update": "An error occurred while updating the banner.",
+            "load": "Error loading banners.",
+            "translation": "An error occurred while processing the translation.",
+            "idRequired": "The banner identifier is required."
+        }
+    },
+
+    "pageSections": {
+        "title": "Page Sections",
+        "loading": "Loading sections...",
+        "error": "Error loading sections.",
+        "empty": "No sections.",
+
+        "form": {
+            "page": "Page",
+            "type": "Section Type",
+            "displayOrder": "Display order",
+            "shelf": "Carousel"
+        },
+
+        "pages": {
+            "home": "Home",
+            "movies": "Movies",
+            "series": "Series"
+        },
+
+        "options": {
+            "sectionType": {
+                "genreBar": "Genre bar",
+                "trending": "Trending",
+                "topRated": "Top rated",
+                "newReleases": "New releases",
+                "continueWatching": "Continue watching",
+                "upcoming": "Coming soon"
+            }
+        },
+
+        "delete": {
+            "title": "Delete section",
+            "message": "Do you want to delete \"{name}\"? This action cannot be undone."
+        }
+    },
+
+    "reportCategories": {
+        "title": "Report Categories",
+        "loading": "Loading report category...",
+        "createTitle": "Create Report Category",
+        "editTitle": "Edit Report Category",
+
+        "list": {
+            "title": "Report Category List",
+            "searchPlaceholder": "Search by name or code",
+            "empty": "No report categories found.",
+            "code": "Code",
+            "category": "Category"
+        },
+
+        "form": {
+            "codeLabel": "Category code",
+            "codePlaceholder": "E.g.: BUG, ABUSE, PAYMENT",
+            "languagePlaceholder": "Select a language",
+            "nameLabel": "Category name",
+            "namePlaceholder": "E.g.: Technical issue, Abuse, Payment",
+            "descriptionLabel": "Description (optional)",
+            "descriptionPlaceholder": "Report category description",
+
+            "validation": {
+                "codeRequired": "Please complete the code field.",
+                "languageRequired": "Please select a language.",
+                "nameRequired": "Please complete the name field."
+            }
+        },
+
+        "delete": {
+            "title": "Confirm deletion",
+            "message": "Are you sure you want to delete the report category \"{name}\"? This action cannot be undone."
+        },
+
+        "translations": {
+            "title": "Translations",
+            "registeredTitle": "Registered translations",
+            "namePlaceholder": "E.g.: Content issues",
+            "descriptionPlaceholder": "Category description",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidCategory": "Invalid report category.",
+            "loadingLanguages": "Loading languages..."
+        },
+
+        "errors": {
+            "create": "An error occurred while creating the report category.",
+            "update": "An error occurred while updating the report category.",
+            "load": "Error loading report categories.",
+            "translation": "An error occurred while processing the translation."
+        }
+    },
+
+    "problemReport": {
+        "title": "Problem Reports",
+        "report": "Report",
+        "myReports": "My Reports",
+
+        "form": {
+            "title": "Report a Problem",
+            "category": "Category",
+            "categoryPlaceholder": "Select a category",
+            "description": "Problem Description",
+            "descriptionPlaceholder": "Describe the problem you are experiencing...",
+            "send": "Submit Report"
+        },
+
+        "list": {
+            "loading": "Loading reports...",
+            "empty": "No reports registered.",
+            "searchPlaceholder": "Search reports...",
+            "allStatuses": "All statuses",
+            "allCategories": "All categories",
+            "category": "Category",
+            "content": "Content",
+            "episode": "Episode",
+            "reported": "Reported",
+            "resolved": "Resolved"
+        },
+
+        "status": {
+            "changeTitle": "Change Status",
+            "changeMessage": "Are you sure you want to change report #{id} to \"{status}\"?"
+        }
+    },
+
+    "reportStatus": {
+        "title": "Report Statuses",
+        "loading": "Loading report statuses...",
+        "createTitle": "Create Report Status",
+        "editTitle": "Edit Report Status",
+
+        "list": {
+            "title": "Report Status List",
+            "searchPlaceholder": "Search by name or code",
+            "empty": "No report statuses found.",
+            "code": "Code"
+        },
+
+        "form": {
+            "codeLabel": "Status code",
+            "codePlaceholder": "E.g.: PENDING",
+            "nameLabel": "Status name",
+            "namePlaceholder": "E.g.: Pending, Resolved, Rejected",
+            "descriptionLabel": "Status description",
+            "descriptionPlaceholder": "Report status description",
+
+            "validation": {
+                "codeRequired": "Please complete the code field.",
+                "languageRequired": "Please select a language.",
+                "nameRequired": "Please complete the name field."
+            }
+        },
+
+        "delete": {
+            "title": "Confirm deletion",
+            "message": "Are you sure you want to delete the report status \"{name}\"? This action cannot be undone."
+        },
+
+        "translations": {
+            "title": "Translations",
+            "registeredTitle": "Registered translations",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "languagePlaceholder": "Select language",
+            "namePlaceholder": "E.g.: Pending",
+            "descriptionPlaceholder": "Report status description",
+            "error": "An error occurred while processing the translation.",
+            "loading": "Loading translations...",
+            "invalidStatus": "Invalid report status."
+        },
+
+        "errors": {
+            "load": "Error loading report statuses."
+        }
+    },
+
+    "permissions": {
+        "title": "Role Permissions: {role}",
+        "loading": "Loading permissions...",
+        "updatedSuccessfully": "Permissions updated successfully.",
+        "loadError": "Could not load the role permissions.",
+        "saveError": "Could not save the changes.",
+        "invalidRole": "Invalid role.",
+        "noPermissions": "No permissions registered.",
+        "module": "Module",
+        "permissions": "Permissions",
+        "saveChanges": "Save changes",
+        "saving": "Saving..."
+    },
+
+    "search": {
+        "placeholder": "Search movies or series...",
+        "close": "Close search",
+        "title": "Search History",
+
+        "history": {
+            "title": "Recent Searches",
+            "subtitle": "All your recent searches",
+            "loading": "Loading history...",
+            "empty": "You have no recent searches",
+            "viewAll": "View all search history",
+            "clear": "Clear history",
+            "clearing": "Clearing...",
+            "delete": "Delete search",
+            "deleteConfirmTitle": "Clear history",
+            "deleteConfirmMessage": "Are you sure you want to delete your entire search history? This action cannot be undone."
+        },
+
+        "results": {
+            "empty": "No results found",
+            "movie": "Movie",
+            "series": "Series"
+        },
+
+        "historyItem": {
+            "delete": "Delete search: {term}"
+        }
+    },
+
+    "series": {
+        "title": "Series",
+        "loading": "Loading series...",
+        "error": "Error loading series.",
+        "notFound": "Series not found.",
+
+        "detail": {
+            "watchTrailer": "Watch trailer",
+            "noDescription": "No description available."
+        },
+
+        "admin": {
+            "seasonsTitle": "Season Management",
+            "newSeason": "New Season",
+            "backToContents": "Back to content"
+        },
+
+        "card": {
+            "type": "Series"
+        },
+
+        "errors": {
+            "load": "Error loading series."
+        }
+    },
+
+    "seasons": {
+        "title": "Seasons",
+        "loading": "Loading seasons...",
+        "noSeasons": "No seasons.",
+        "season": "Season",
+
+        "list": {
+            "title": "Season List",
+            "searchPlaceholder": "Search seasons...",
+            "empty": "No seasons registered",
+            "seasonNumber": "Season No.",
+            "releaseDate": "Release date",
+            "episodes": "Episodes"
+        },
+
+        "form": {
+            "createTitle": "Create Season",
+            "editTitle": "Edit Season",
+            "seasonNumber": "Season number",
+            "releaseDate": "Release date",
+            "statusPlaceholder": "Select status...",
+
+            "validation": {
+                "titleRequired": "The title is required.",
+                "seasonNumberRequired": "The season number is required.",
+                "seasonNumberInvalid": "The season number must be greater than 0.",
+                "releaseDateRequired": "The release date is required.",
+                "statusRequired": "Select a status."
+            }
+        },
+
+        "actions": {
+            "viewEpisodes": "View episodes",
+            "createEpisode": "Create episode"
+        },
+
+        "upcoming": {
+            "label": "Coming Soon",
+            "title": "Season {number} · Coming Soon"
+        },
+
+        "delete": {
+            "title": "Delete season",
+            "message": "Delete season \"{title}\"? This action cannot be undone."
+        },
+
+        "status": {
+            "changeTitle": "Change status",
+            "changeMessage": "Are you sure you want to change \"{title}\" to \"{status}\"?"
+        },
+
+        "translations": {
+            "title": "Season translations",
+            "registeredTitle": "Registered translations",
+            "languagePlaceholder": "Select language",
+            "code": "Code",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidSeason": "Invalid season.",
+            "loadingLanguages": "Loading languages..."
+        },
+
+        "errors": {
+            "create": "An error occurred while creating the season.",
+            "update": "An error occurred while updating the season.",
+            "load": "Error loading seasons."
+        }
+    },
+
+    "shelves": {
+        "title": "Carousels",
+        "create": "Create carousel",
+        "edit": "Edit carousel",
+        "name": "Carousel name",
+        "namePlaceholder": "E.g.: Movie carousel",
+        "target": "Carousel destination",
+        "layout": "Card layout",
+        "source": "Carousel source",
+        "home": "Home",
+        "movies": "Movies",
+        "series": "Series",
+        "options": {
+            "target": {
+                "home": "Home",
+                "movies": "Movies",
+                "series": "Series"
+            },
+            "layout": {
+                "poster": "Poster",
+                "landscape": "Landscape",
+                "wide": "Wide landscape",
+                "featured": "Featured",
+                "square": "Square"
+            },
+            "source": {
+                "manual": "Manual",
+                "trending": "Trending",
+                "topRated": "Top Rated",
+                "newReleases": "New Releases",
+                "mostWatched": "Most Watched"
+            }
+        },
+        "manageContent": "Manage content",
+        "loading": "Loading carousel...",
+        "validation": {
+            "nameRequired": "Please complete the name field.",
+            "languageRequired": "Please select a language.",
+            "targetRequired": "Please select a destination.",
+            "layoutRequired": "Please select a layout.",
+            "sourceRequired": "Please select a source."
+        },
+        "list": {
+            "title": "Carousel list",
+            "searchPlaceholder": "Search carousel...",
+            "loading": "Loading carousels...",
+            "empty": "No carousels found.",
+            "slug": "Slug",
+            "target": "Destination",
+            "layout": "Layout",
+            "source": "Source",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "content": {
+            "title": "Carousel content",
+            "add": "Add content",
+            "position": "Position",
+            "loading": "Loading content...",
+            "error": "Error saving carousel content.",
+            "empty": "This carousel has no content.",
+            "deleteTitle": "Remove content",
+            "deleteMessage": "Remove \"{title}\" from the carousel?"
+        },
+        "translation": {
+            "title": "Translations",
+            "registered": "Registered translations",
+            "loading": "Loading translations...",
+            "code": "Code",
+            "namePlaceholder": "E.g.: Most Popular",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidShelf": "Invalid carousel.",
+            "loadingLanguages": "Loading languages..."
+        },
+        "delete": {
+            "title": "Delete carousel",
+            "message": "Do you want to delete \"{title}\"?"
+        },
+        "errors": {
+            "load": "Error loading carousels.",
+            "translation": "An error occurred while processing the translation."
+        }
+    },
+
+    "supportCategory": {
+        "title": "Support Categories",
+        "loading": "Loading category...",
+        "create": "Create support category",
+        "edit": "Edit support category",
+        "list": {
+            "title": "Support Category List",
+            "searchPlaceholder": "Search by name or code",
+            "empty": "No support categories found.",
+            "code": "Code"
+        },
+        "form": {
+            "code": "Category code",
+            "codePlaceholder": "E.g.: PAYMENT, REFUND, CLAIM",
+            "name": "Support category name",
+            "namePlaceholder": "E.g.: Payment, Refund, Claim",
+            "description": "Description (optional)",
+            "descriptionPlaceholder": "Support category description",
+            "validation": {
+                "codeRequired": "Please complete the code field.",
+                "languageRequired": "Please select a language.",
+                "nameRequired": "Please complete the name field."
+            }
+        },
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the support category \"{name}\"? This action cannot be undone."
+        },
+        "translation": {
+            "title": "Translations",
+            "registeredTitle": "Registered translations",
+            "code": "Code",
+            "namePlaceholder": "E.g.: Technical Support",
+            "descriptionPlaceholder": "Support category description",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "error": "An error occurred while processing the translation.",
+            "invalidCategory": "Invalid support category.",
+            "loadingLanguages": "Loading languages..."
+        },
+        "errors": {
+            "load": "Error loading support categories.",
+            "translation": "An error occurred while processing the translation."
+        }
+    },
+
+    "supportTicketStatus": {
+        "title": "Support Ticket Statuses",
+        "loading": "Loading status...",
+        "createTitle": "Create Ticket Status",
+        "editTitle": "Edit Ticket Status",
+        "list": {
+            "title": "Support Ticket Status List",
+            "searchPlaceholder": "Search by name or code",
+            "empty": "No support ticket statuses found.",
+            "code": "Code"
+        },
+        "form": {
+            "createTitle": "Create Ticket Status",
+            "editTitle": "Edit Ticket Status",
+            "codeLabel": "Ticket Status Code",
+            "codePlaceholder": "E.g.: PENDING",
+            "nameLabel": "Ticket Status Name",
+            "namePlaceholder": "E.g.: Pending",
+            "descriptionLabel": "Description",
+            "descriptionPlaceholder": "Ticket status description",
+            "validation": {
+                "codeRequired": "Please complete the code field.",
+                "languageRequired": "Please select a language.",
+                "nameRequired": "Please complete the name field."
+            }
+        },
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the support ticket status \"{name}\"? This action cannot be undone."
+        },
+        "translations": {
+            "title": "Translations",
+            "registeredTitle": "Registered translations",
+            "languagePlaceholder": "Select language",
+            "namePlaceholder": "E.g.: Pending",
+            "descriptionPlaceholder": "Ticket status description",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "invalidStatus": "Invalid ticket status.",
+            "loadingLanguages": "Loading languages..."
+        },
+        "errors": {
+            "load": "Error loading status.",
+            "translation": "An error occurred while processing the translation."
+        }
+    },
+
+    "supportTickets": {
+        "title": "Support Tickets",
+        "loading": "Loading tickets...",
+        "list": {
+            "title": "Support Tickets",
+            "myTickets": "My Tickets",
+            "description": "View your support requests and conversations.",
+            "searchPlaceholder": "Search tickets...",
+            "statusPlaceholder": "All statuses",
+            "categoryPlaceholder": "All categories",
+            "userIdPlaceholder": "User ID",
+            "createdAtFromPlaceholder": "Date from",
+            "createdAtToPlaceholder": "Date to",
+            "empty": "No tickets registered.",
+            "emptyUser": "You have no support tickets.",
+            "subject": "Subject",
+            "category": "Category",
+            "user": "User",
+            "status": "Status",
+            "created": "Created",
+            "updated": "Updated",
+            "action": "Action",
+            "viewTicket": "View ticket",
+            "viewConversation": "View conversation"
+        },
+        "form": {
+            "title": "Contact Support",
+            "subjectLabel": "Subject",
+            "subjectPlaceholder": "What do you need help with?",
+            "categoryLabel": "Category",
+            "categoryPlaceholder": "Select a category",
+            "descriptionLabel": "Describe your problem",
+            "descriptionPlaceholder": "Tell us what happened and how we can help...",
+            "create": "Create ticket",
+            "creating": "Creating ticket...",
+            "validation": {
+                "subjectRequired": "Please complete the subject.",
+                "categoryRequired": "Please select a category.",
+                "descriptionRequired": "Please describe the problem."
+            }
+        },
+        "messages": {
+            "conversation": "Conversation",
+            "sendTitle": "Send Message",
+            "label": "Message",
+            "messagePlaceholder": "Write your message here...",
+            "send": "Send message",
+            "sending": "Sending...",
+            "loading": "Loading messages...",
+            "error": "Error loading messages.",
+            "retry": "Retry",
+            "empty": "No messages.",
+            "user": "User",
+            "you": "You",
+            "support": "Support"
+        },
+        "detail": {
+            "ticket": "Ticket",
+            "requestReceived": "Request Received",
+            "requestReceivedMessage": "Your request has been received. The support team will review your case and respond when available.",
+            "closed": "Ticket Closed",
+            "closedMessage": "This ticket has been closed and you can no longer send new messages."
+        },
+        "status": {
+            "change": "Change Status",
+            "changeMessage": "Are you sure you want to change ticket #{ticketId} to \"{statusName}\"?",
+            "confirm": "Change"
+        },
+        "errors": {
+            "load": "Error loading support tickets.",
+            "loadMessages": "Error loading messages.",
+            "sendMessage": "Error sending message.",
+            "create": "Error creating ticket.",
+            "updateStatus": "Error updating ticket status."
+        },
+        "actions": {
+            "new": "New ticket",
+            "retry": "Retry",
+            "view": "View ticket"
+        }
+    },
+
+    "systemRoles": {
+        "title": "System Roles",
+        "createTitle": "Create System Role",
+        "editTitle": "Edit System Role",
+        "list": {
+            "searchPlaceholder": "Search roles...",
+            "empty": "No roles found matching that term.",
+            "roleName": "System Role",
+            "permissions": "Permissions"
+        },
+        "form": {
+            "createTitle": "Create Role",
+            "editTitle": "Edit Role",
+            "roleName": "Role Name",
+            "roleNamePlaceholder": "E.g. MODERATOR",
+            "validation": {
+                "roleNameRequired": "Please complete the role name field."
+            }
+        },
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the system role \"{name}\"? This action cannot be undone."
+        },
+        "errors": {
+            "load": "Error loading the system role.",
+            "idInvalid": "Invalid role ID."
+        }
+    },
+
+    "discounts": {
+        "title": "Discounts",
+        "createTitle": "Create New Discount",
+        "editTitle": "Edit Discount",
+        "list": {
+            "title": "Discount List",
+            "searchPlaceholder": "Search discounts...",
+            "empty": "No discounts found matching that term.",
+            "discount": "Discount",
+            "amount": "Amount",
+            "startDate": "Start Date",
+            "endDate": "End Date"
+        },
+        "form": {
+            "createTitle": "Create Discount",
+            "editTitle": "Edit Discount",
+            "discountTypeLabel": "Discount Type",
+            "discountTypePlaceholder": "E.g. Summer Promotion",
+            "amountLabel": "Discount Percentage (%)",
+            "startDateLabel": "Start Date",
+            "endDateLabel": "End Date",
+            "descriptionLabel": "Description",
+            "descriptionPlaceholder": "Discount description",
+            "validation": {
+                "discountTypeRequired": "Please complete the discount type field.",
+                "amountInvalid": "Invalid amount.",
+                "datesRequired": "Please complete both dates.",
+                "startDateAfterEndDate": "The start date cannot be later than the end date."
+            }
+        },
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the discount \"{discountType}\"? This action cannot be undone."
+        },
+        "validation": {
+            "discountTypeRequired": "Please complete the discount type field.",
+            "amountInvalid": "Invalid amount.",
+            "datesRequired": "Please complete both dates.",
+            "startDateAfterEndDate": "The start date cannot be later than the end date."
+        },
+        "errors": {
+            "load": "Error loading the discount."
+        }
+    },
+
+    "systemPermissions": {
+        "title": "System Permissions",
+        "createTitle": "Create System Permission",
+        "editTitle": "Edit System Permission",
+        "list": {
+            "searchPlaceholder": "Search permissions...",
+            "empty": "No permissions found matching that term.",
+            "moduleName": "Module Name",
+            "action": "Action",
+            "permissionName": "Permission Name"
+        },
+        "form": {
+            "createTitle": "Create System Permission",
+            "editTitle": "Edit System Permission",
+            "moduleLabel": "Module Name",
+            "modulePlaceholder": "E.g. contentStatus, movie, etc.",
+            "actionLabel": "Action Name",
+            "actionPlaceholder": "E.g. CREATE, READ, UPDATE, DELETE",
+            "permissionLabel": "Permission Name",
+            "permissionPlaceholder": "E.g. ALLOW_CREATE, ALLOW_READ, etc.",
+            "validation": {
+                "requiredFields": "Please complete all fields."
+            }
+        },
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the system permission \"{name}\"? This action cannot be undone."
+        },
+        "errors": {
+            "load": "Error loading the system permission."
+        }
+    },
+
+    "userRoleAssignment": {
+        "title": "Manage roles for: {email}",
+        "actions": {
+            "assigneRoles": "Manage Roles"
+        },
+        "assign": {
+            "label": "Assign roles",
+            "placeholder": "Add role",
+            "button": "Assign",
+            "loading": "Assigning..."
+        },
+        "removes": {
+            "label": "Remove roles",
+            "placeholder": "Remove role",
+            "button": "Remove",
+            "loading": "Removing..."
+        },
+        "clos": "Close"
+    },
+
+    "users": {
+        "title": "Users",
+        "create": "Create User",
+        "list": {
+            "searchPlaceholder": "Search by email or username...",
+            "empty": "No users to display.",
+            "email": "Email",
+            "username": "Username",
+            "roles": "Roles",
+            "manageRoles": "Manage Roles"
+        },
+        "languageSelector": {
+            "title": "Language",
+            "subtitle": "Select the application language",
+            "close": "Close",
+            "loading": "Loading languages...",
+            "empty": "No languages available."
+        }
+    },
+
+    "profile": {
+        "editTitle": "Edit Profile",
+        "loading": "Loading profile...",
+        "notFound": "Profile not found",
+        "bioEmpty": "No biography",
+        "pictureAlt": "Profile picture",
+        "form": {
+            "displayName": "Display Name",
+            "displayNamePlaceholder": "e.g. John Doe",
+            "firstName": "First Name",
+            "firstNamePlaceholder": "e.g. John",
+            "lastName": "Last Name",
+            "lastNamePlaceholder": "e.g. Doe",
+            "birthDate": "Date of Birth",
+            "gender": "Gender",
+            "bio": "Biography",
+            "bioPlaceholder": "Tell us about yourself...",
+            "location": "Location",
+            "locationPlaceholder": "City, Country",
+            "website": "Website",
+            "websitePlaceholder": "https://example.com",
+            "visibility": "Profile Visibility"
+        },
+        "genders": {
+            "notSpecified": "Not Specified",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other",
+            "preferNotToSay": "Prefer not to say"
+        },
+        "visibility": {
+            "public": "Public",
+            "private": "Private"
+        },
+        "menu": {
+            "viewProfile": "My Profile",
+            "watchlist": "My List",
+            "support": "Support",
+            "edit": "Edit Profile",
+            "language": "Language",
+            "logout": "Log Out"
+        },
+        "errors": {
+            "load": "Error loading profile.",
+            "update": "Error updating profile.",
+            "uploadProfilePicture": "Error uploading profile picture.",
+            "uploadBanner": "Error uploading banner.",
+            "invalidUserId": "Invalid user ID."
+        }
+    },
+
+    "upcoming": {
+        "title": "Upcoming Releases",
+        "badge": "Coming Soon",
+        "loadIng": "Loading upcoming releases..."
+    },
+
+    "watchlist": {
+        "title": "My List",
+        "loading": "Loading your list...",
+        "empty": {
+            "title": "Your list is empty",
+            "text": "Add movies and series to find them easily later."
+        },
+        "types": {
+            "movie": "Movie",
+            "series": "Series"
+        },
+        "add": {
+            "title": "Add to My List"
+        },
+        "remove": {
+            "title": "Remove from My List",
+            "button": "Remove",
+            "loading": "Removing...",
+            "confirmMessage": "Are you sure you want to remove \"{title}\" from your list? This action cannot be undone."
+        }
+    }
 }

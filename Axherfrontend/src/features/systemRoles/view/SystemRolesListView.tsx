@@ -12,7 +12,8 @@ import { useRouter } from "next/navigation";
 
 export default function SystemRolesListView(){
     const router = useRouter();
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("systemRoles");
     const {
         systemRoles,
         loading,
@@ -43,9 +44,9 @@ export default function SystemRolesListView(){
     return(
             <div className={layoutStyles.pageContainer}>
                 <div className={layoutStyles.header}>
-                    <h1>Roles del Sistema</h1>
+                    <h1>{t("title")}</h1>
                     <Button variant="animated" onClick={handleCreate}>
-                        {t("new")}
+                        {common("new")}
                     </Button>
 
                 </div>

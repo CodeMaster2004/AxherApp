@@ -29,6 +29,8 @@
 
 **AxherApp** es una plataforma de streaming completa que permite a los usuarios explorar, reproducir y gestionar contenido multimedia. Cuenta con un **panel administrativo** para la gestión de contenido, usuarios, roles y permisos, así como un sistema de **autenticación seguro** con JWT y soporte para inicio de sesión con Google, además de un **sistema multilingüe (i18n)** para traducir el contenido y la interfaz a distintos idiomas.
 
+El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta un **asistente de soporte inteligente** capaz de clasificar mensajes, generar respuestas contextuales (basadas en el usuario, su suscripción y el contenido consultado) y escalar consultas cuando sea necesario.
+
 > 💡 Este proyecto nace como una solución integral para la gestión y consumo de contenido audiovisual, combinando un backend robusto con un frontend moderno y responsive.
 
 ---
@@ -152,6 +154,17 @@ AxherApp/
 │   │   └── widgets/                     # Componentes reutilizables
 │   └── package.json
 │
+├── 🤖 AxherAI/                         # Microservicio de IA (FastAPI + Gemini)
+│   └── src/axher_ai/
+│       ├── api/                        # Rutas de la API (v1: health, support)
+│       ├── core/                       # Configuración del servicio
+│       └── support/                    # Lógica de la IA de soporte
+│           ├── ai/                     # Proveedores IA (Google Gemini, local)
+│           ├── classifier.py           # Clasificación automática de consultas
+│           ├── context.py              # Contexto del usuario/suscripción
+│           ├── prompt.py               # Construcción de prompts
+│           └── schemas.py              # Modelos de entrada/salida
+│
 └── 📄 README.md
 ```
 
@@ -190,7 +203,14 @@ AxherApp/
 | 🧩 @dnd-kit | 6.3.1 | Drag & drop (ordenamiento) |
 | 🖼️ react-easy-crop | 5.5.7 | Recorte de imágenes |
 | 🔑 @react-oauth/google | 0.13.4 | Google OAuth |
-| 🌐 next-intl | — | Internacionalización (i18n) multiidioma |
+| 🌐 next-intl | 4.13.7 | Internacionalización (i18n) multiidioma |
+
+### Servicio de IA (AxherAI)
+| Tecnología | Versión | Propósito |
+|---|---|---|
+| 🐍 Python | 3.14+ | Lenguaje principal |
+| ⚡ FastAPI | — | Framework del microservicio |
+| 🤖 Google Generative AI (Gemini) | — | Proveedor IA para el asistente de soporte |
 
 ---
 
@@ -199,6 +219,7 @@ AxherApp/
 ### Prerequisitos
 - **Node.js** 18+
 - **Java** 17+ (recomendado 26)
+- **Python** 3.14+ (solo para el microservicio de IA)
 - **Maven** (incluye wrapper en el proyecto)
 - **PostgreSQL** corriendo localmente
 - **Redis** (opcional, para caché)
@@ -238,6 +259,29 @@ npm install
 npm run dev
 ```
 La aplicación abrirá en `http://localhost:3000`.
+
+### 4️⃣ Configurar el microservicio de IA (opcional)
+
+> 🤖 `AxherAI` es el servicio de asistencia con IA. Solo se usa para el asistente de soporte inteligente.
+
+Crea tu entorno virtual e instala las dependencias:
+```bash
+cd AxherAI
+python3 -m venv .venv
+source .venv/bin/activate   # en Windows: .venv\Scripts\activate
+pip install -e .
+```
+
+Configura la API key de Google Gemini:
+```bash
+export GEMINI_API_KEY=tu_api_key
+```
+
+Luego ejecuta el servicio:
+```bash
+uvicorn axher_ai.main:app --reload
+```
+El microservicio iniciará en `http://localhost:8000` (documentación en `http://localhost:8000/docs`).
 
 ---
 
@@ -285,6 +329,7 @@ La aplicación abrirá en `http://localhost:3000`.
 - [x] Gestión de idiomas y traducciones desde el panel admin
 - [ ] 🚧 Sistema de pagos y suscripciones
 - [x] 🎫 Tickets de soporte (frontend)
+- [x] 🤖 Asistente de soporte con IA (microservicio `AxherAI` con Google Gemini)
 - [ ] 📊 Reportes y estadísticas avanzadas
 - [ ] 🌙 Modo oscuro
 - [ ] 🧪 Pruebas unitarias y de integración

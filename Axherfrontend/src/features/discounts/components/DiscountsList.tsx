@@ -51,28 +51,28 @@ export default function DiscountsList ({discounts, onDelete, onEdit, deletingId,
         setConfirmDialog({isOpen: false, id: 0, discountType: ""})
     };
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("discounts");
 
     return(
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="confirmar Eliminacion"
-                message={`¿Estás seguro de que deseas eliminar el descuento "${confirmDialog.discountType}"? Esta accion no se puede deshacer.`}
-                confirmText={t("delete")}
-                cancelText={t("cancel")}
+                title={t("delete.title")}
+                message={t("delete.message", { discountType: confirmDialog.discountType })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             
             />
 
-            <h2>Lista de Descuentos</h2>
 
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar descuentos..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -80,19 +80,19 @@ export default function DiscountsList ({discounts, onDelete, onEdit, deletingId,
             </div>
 
             {discounts.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay descuentos regitrados con ese término"}</p>
+                <p>{loading ? common("searching") : "No hay descuentos regitrados con ese término"}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
-                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>{common("id")}</th>
                                 <th className={tableStyles.headCell}>Descuento</th>
                                 <th className={tableStyles.headCell}>Monto</th>
                                 <th className={tableStyles.headCell}>Fecha de inicio</th>
                                 <th className={tableStyles.headCell}>Fecha de fin</th>
                                 <th className={tableStyles.headCell}>Descripcion</th>
-                                <th className={tableStyles.headCell}>Acciones</th>
+                                <th className={tableStyles.headCell}>{common("actions")}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,14 +108,14 @@ export default function DiscountsList ({discounts, onDelete, onEdit, deletingId,
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: t("edit"),
+                                                    label: common("edit"),
                                                     onClick: () => onEdit(discount),
                                                 },
                                                 {
                                                     label:
                                                         deletingId === discount.discountId
-                                                            ? "Eliminando..."
-                                                            : t("delete"),
+                                                            ? common("deleting")
+                                                            : common("delete"),
                                                     onClick: () => handleDeleteClick(discount.discountId, discount.discountType),
                                                     variant: "danger",
                                                 },

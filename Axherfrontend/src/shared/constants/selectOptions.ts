@@ -1,92 +1,68 @@
 import { ShelfLayout, ShelfTarget } from "@/entities/types";
-import { ProblemReportCategory } from "@/entities/types/problemReport.types";
 
 export const shelfTargetOptions = [
-    { value: ShelfTarget.HOME, label: "Inicio" },
-    { value: ShelfTarget.MOVIES, label: "Películas" },
-    { value: ShelfTarget.SERIES, label: "Series" },
+    { value: ShelfTarget.HOME,  labelKey: "options.target.home" },
+    { value: ShelfTarget.MOVIES, labelKey: "options.target.movies"},
+    { value: ShelfTarget.SERIES, labelKey: "options.target.series" },
 ];
 
 export const shelfLayoutOptions = [
-    { value: ShelfLayout.POSTER, label: "Poster" },
-    { value: ShelfLayout.LANDSCAPE, label: "Horizontal" },
-    { value: ShelfLayout.WIDE, label: "Horizontal Ancho" },
-    { value: ShelfLayout.FEATURED, label: "Destacado" },
-    { value: ShelfLayout.SQUARE, label: "Cuadrado" },
+    { value: ShelfLayout.POSTER, labelKey: "options.layout.poster" },
+    { value: ShelfLayout.LANDSCAPE, labelKey: "options.layout.landscape" },
+    { value: ShelfLayout.WIDE, labelKey: "options.layout.wide" },
+    { value: ShelfLayout.FEATURED, labelKey: "options.layout.featured" },
+    { value: ShelfLayout.SQUARE, labelKey: "options.layout.square" },
 ];
 
 export const pageTypeOptions = [
     {
-        label: "Home",
+        labelKey: "pages.home",
         value: "HOME"
     },
     {
-        label: "Películas",
+        labelKey: "pages.movies",
         value: "MOVIES"
     },
     {
-        label: "Series",
+        labelKey: "pages.series",
         value: "SERIES"
     }
 ];
 
 export const pageSectionTypeOptions = [
     {
-        label: "Carrusel",
+        labelKey: "form.shelf",
         value: "SHELF"
     },
     {
-        label: "Barra de géneros",
+        labelKey: "options.sectionType.genreBar",
         value: "GENRE_BAR"
     },
     {
-        label: "Tendencias",
+        labelKey: "options.sectionType.trending",
         value: "TRENDING"
     },
     {
-        label: "Mejor valoradas",
+        labelKey: "options.sectionType.topRated",
         value: "TOP_RATED"
     },
     {
-        label: "Nuevos lanzamientos",
+        labelKey: "options.sectionType.newReleases",
         value: "NEW_RELEASES"
     },
     {
-        label: "Continuar viendo",
+        labelKey: "options.sectionType.continueWatching",
         value: "CONTINUE_WATCHING"
     },{
-        label: "Próximamente",
+        labelKey: "options.sectionType.upcoming",
         value: "UPCOMING"
     }
 ];
 
 export const shelfSourceOptions = [
-    { value: "MANUAL", label: "Manual" },
-    { value: "TRENDING", label: "Tendencias" },
-    { value: "TOP_RATED", label: "Mejor valoradas" },
-    { value: "NEW_RELEASES", label: "Nuevos lanzamientos" },
-    { value: "MOST_WATCHED", label: "Más vistas" }
-];
-
-export const problemReportCategoryOptions = [
-    {
-        value: ProblemReportCategory.VIDEO,
-        label: "Video",
-    },
-    {
-        value: ProblemReportCategory.AUDIO,
-        label: "Audio",
-    },
-    {
-        value: ProblemReportCategory.SUBTITLES,
-        label: "Subtítulos",
-    },
-    {
-        value: ProblemReportCategory.PLAYBACK,
-        label: "Reproducción",
-    },
-    {
-        value: ProblemReportCategory.OTHER,
-        label: "Otro",
-    },
+    { value: "MANUAL", labelKey: "options.source.manual" },
+    { value: "TRENDING", labelKey: "options.source.trending" },
+    { value: "TOP_RATED", labelKey: "options.source.top_rated" },
+    { value: "NEW_RELEASES", labelKey: "options.source.new_releases" },
+    { value: "MOST_WATCHED", labelKey: "options.source.most_watched" }
 ];

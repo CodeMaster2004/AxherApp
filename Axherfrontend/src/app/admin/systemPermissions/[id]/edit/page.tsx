@@ -36,8 +36,7 @@ export default function EditSystemPermissionsPage() {
                 setPermissionName(res.permissionName);
 
             }catch(error){
-                console.error("Error cargando permiso del sistema:", error);
-                alert("Error al cargar el permiso del sistema");
+                alert(t("errors.load"));
                 router.push("/admin/systemPermissions");
             }finally{
                 setLoading(false);
@@ -55,7 +54,7 @@ export default function EditSystemPermissionsPage() {
         const permissionNameTrim = permissionName.trim();
 
         if(!moduleNameTrim || !actionNameTrim || !permissionNameTrim){
-            alert("Por favor completa todos los campos");
+            alert(t("validation.requiredFields"));
             return;
         }
         
@@ -76,7 +75,7 @@ export default function EditSystemPermissionsPage() {
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Permiso del Sistema</h1>
+            <h1>{t("editTitle")}</h1>
 
             <SystemPermissionsForm
                 moduleName={moduleName}

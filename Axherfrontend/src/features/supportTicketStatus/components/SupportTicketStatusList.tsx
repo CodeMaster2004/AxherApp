@@ -41,7 +41,8 @@ export default function SupportTicketStatusList({
     onTranslations,
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("supportTicketStatus");
     
     const [confirmDialog, setConfirmDialog] = useState<{ isOpen: boolean, supportTicketStatusId: number, name: string }>({
         isOpen: false,
@@ -67,20 +68,19 @@ export default function SupportTicketStatusList({
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="Confirmar Eliminación"
-                message={`¿Estás seguro de que deseas eliminar el estado del ticket de soporte "${confirmDialog.name}"? Esta acción no se puede deshacer.`}
-                confirmText={t("delete")}
-                cancelText={t("cancel")}
+                title={t("delete.title")}
+                message={t("delete.message", { name: confirmDialog.name })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             />
-            <h2>Lista de Estados de Ticket de Soporte</h2>
 
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar por nombre o código"
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -88,17 +88,17 @@ export default function SupportTicketStatusList({
             </div>
 
             {supportTicketStatus.length === 0 ? (
-                <p>{loading ? t("loading") : "No se encontraron estados de ticket de soporte."}</p>
+                <p>{loading ? common("loading") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                   <table className={tableStyles.table}>
                     <thead>
                         <tr className={tableStyles.rowHover}>
-                            <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                            <th className={tableStyles.headCell}>Code</th>
-                            <th className={tableStyles.headCell}>Nombre</th>
-                            <th className={tableStyles.headCell}>Descripción</th>
-                            <th className={tableStyles.headCell}>Acciones</th>
+                            <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>{common("id")}</th>
+                            <th className={tableStyles.headCell}>{t("list.code")}</th>
+                            <th className={tableStyles.headCell}>{common("name")}</th>
+                            <th className={tableStyles.headCell}>{common("description")}</th>
+                            <th className={tableStyles.headCell}>{common("actions")}</th>
                         </tr>
                     </thead>
 
@@ -114,18 +114,18 @@ export default function SupportTicketStatusList({
                                             <MoreMenu
                                                 items={[
                                                     {
-                                                        label: t("edit"),
+                                                        label: common("edit"),
                                                         onClick: () => onEdit(supportTicketStatus),
                                                     },
                                                     ...(onTranslations ? [{
-                                                        label: "Traducciones",
+                                                        label: common("translations"),
                                                         onClick: () => onTranslations(supportTicketStatus),
                                                     }] : []),
                                                     {
                                                         label:
                                                             deletingId === supportTicketStatus.supportTicketStatusId
-                                                                ? "Eliminando..."
-                                                                : t("delete"),
+                                                                ? common("deleting")
+                                                                : common("delete"),
                                                         onClick: () => handleDeleteClick(supportTicketStatus.supportTicketStatusId, supportTicketStatus.code),
                                                         variant: "danger",
                                                     },

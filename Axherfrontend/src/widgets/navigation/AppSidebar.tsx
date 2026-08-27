@@ -7,6 +7,7 @@ import styles from '@/shared/styles/layout/Sidebar.module.css';
 import { filterMenuByPermissions } from '@/shared/utils/filterMenuByRole';
 import React, { useEffect, useRef, useState } from 'react';
 import MenuTree from '../layout/MenuTree';
+import { useTranslations } from 'next-intl';
 
 interface SidebarLeftProps {
     isOpen?: boolean;
@@ -21,6 +22,7 @@ const AppSidebar: React.FC<SidebarLeftProps> = ({isOpen = false, onClose}) => {
         menuConfig,
         user?.permissions
     );
+    const t = useTranslations("navigation");
 
     useEffect(() => {
         if (!isOpen) return;
@@ -64,9 +66,10 @@ const AppSidebar: React.FC<SidebarLeftProps> = ({isOpen = false, onClose}) => {
     
     return (
         <div ref={ref} className={`${styles.sidebar} ${isOpen ? styles.active : ""}`}>
-            <h2>Menú</h2>
+            <h2>{t("menu")}</h2>
             <MenuTree
                 items={filteredMenu}
+                getLabel={(item) => t(item.labelKey)}
                 renderSubMenu={(children) => <div className={styles.subMenu}>{children}</div>}
                 onItemClick={onClose}
             />

@@ -20,6 +20,7 @@ import ContentGrid from "./ContentGrid";
 import { useRouter } from "next/navigation";
 
 import styles from "./ContentCatalog.module.css";
+import { useTranslations } from "next-intl";
 
 
 interface Props {
@@ -37,6 +38,7 @@ export default function ContentCatalog({
 }:Props){
 
 
+    const t = useTranslations("contents");
     const {
         category
     } = useCategory(slug);
@@ -84,7 +86,10 @@ export default function ContentCatalog({
 
     },[category]);
 
-
+    const contentTypeLabel =
+        type === ContentType.MOVIE
+        ? t("filters.movies")
+        : t("filters.series");
 
 
     return (
@@ -93,15 +98,10 @@ export default function ContentCatalog({
 
 
             <h1>
-                {
-                    type === ContentType.MOVIE
-                    ? "Películas"
-                    : "Series"
-                }
-
-                {" de "}
-
-                {category?.name}
+                {t("catalog.title", {
+                    type: contentTypeLabel,
+                    category: category?.name ?? ""
+                })}
 
             </h1>
 

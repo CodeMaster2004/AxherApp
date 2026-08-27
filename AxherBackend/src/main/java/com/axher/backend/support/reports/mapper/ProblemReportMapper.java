@@ -19,11 +19,23 @@ public class ProblemReportMapper {
         ProblemReportResponseDto dto = new ProblemReportResponseDto();
         dto.setReportId(report.getReportId());
         if (report.getCategory() != null) {
+
+            var category = report.getCategory();
+
+            dto.setReportCategoryId(
+                category.getReportCategoryId()
+            );
+
+            dto.setReportCategoryCode(
+                category.getCode()
+            );
+
             var localizedCategory =
                     reportCategoryLocalizationService.resolve(
-                            report.getCategory()
+                        category
                     );
-            dto.setCategory(
+
+            dto.setReportCategoryName(
                 localizedCategory.name()
             );
         }

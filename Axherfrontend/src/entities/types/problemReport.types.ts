@@ -1,13 +1,6 @@
-export enum ProblemReportCategory {
-    VIDEO = "VIDEO",
-    AUDIO = "AUDIO",
-    SUBTITLES = "SUBTITLES",
-    PLAYBACK = "PLAYBACK",
-    OTHER = "OTHER",
-}
 
 export interface ProblemReportRequest {
-    category: ProblemReportCategory;
+    reportCategoryId: number;
     description: string;
     contentId?: number;
     episodeId?: number;
@@ -19,7 +12,11 @@ export interface ProblemReportStatusRequest {
 
 export interface ProblemReportResponse {
     reportId: number;
-    category: ProblemReportCategory;
+
+    reportCategoryId: number;
+    reportCategoryCode: string;
+    reportCategoryName: string;
+    
     description: string;
 
     contentId?: number;

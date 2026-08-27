@@ -48,6 +48,100 @@
         "noResults": "No se encontraron resultados"
     },
 
+    "navigation": {
+        "menu": "Menú",
+
+        "home": "Inicio",
+        "movies": "Películas",
+        "series": "Series",
+        "settings": "Configuración",
+
+        "administration": "Administración",
+
+        "contentManagement": "Gestión de Contenido",
+        "contents": "Contenidos",
+        "contentCategories": "Categorías",
+        "contentStatus": "Estado de Películas",
+        "shelves": "Carruseles",
+        "pageSections": "Secciones de Página",
+        "heroBanners": "Hero Banners",
+
+        "support": "Soporte",
+        "supportTickets": "Tickets de Soporte",
+        "supportCategories": "Categorías de Soporte",
+        "supportTicketStatuses": "Estados de Tickets",
+        "problemReports": "Reportes de Problemas",
+        "problemReportStatuses": "Estados de Reportes",
+        "problemReportCategories": "Categorías de Reportes",
+
+        "commercialManagement": "Gestión Comercial",
+        "discounts": "Descuentos",
+
+        "usersManagement": "Usuarios y Acceso",
+        "users": "Usuarios",
+        "systemRoles": "Roles",
+        "systemPermissions": "Permisos",
+
+        "system": "Sistema",
+        "languages": "Idiomas",
+
+        "scrollLeft": "Mover menú a la izquierda",
+        "scrollRight": "Mover menú a la derecha"
+    },
+
+    "auth": {
+        "login": {
+            "title": "Inicia sesión",
+            "heading": "Iniciar Sesión",
+            "emailPlaceholder": "Ej. usuario@example.com",
+            "passwordPlaceholder": "Ingrese su contraseña",
+            "submit": "Iniciar Sesión",
+            "loading": "Iniciando sesión...",
+            "register": "Registrarse",
+            "forgotPassword": "¿Olvidaste tu contraseña?",
+            "continueWith": "— o continúa con —"
+        },
+
+        "register": {
+            "title": "Bienvenido a AXHER",
+            "heading": "Regístrate",
+            "emailPlaceholder": "Ej. usuario@example.com",
+            "passwordPlaceholder": "Mínimo 6 caracteres",
+            "confirmPasswordPlaceholder": "Repite tu contraseña",
+            "submit": "Registrarse",
+            "loading": "Registrando...",
+            "alreadyHaveAccount": "¿Ya tienes cuenta?",
+            "login": "Inicia sesión",
+            "emailExists": "El correo electrónico ya está registrado, intenta iniciar sesión."
+        },
+
+        "confirmEmail": {
+            "title": "Confirmar Email",
+            "heading": "Confirmar Email",
+            "description": "Ingresa el código de verificación que enviamos a tu correo.",
+            "submit": "Confirmar",
+            "loading": "Verificando...",
+            "resend": "Reenviar Código",
+            "resendSuccess": "Código reenviado al correo.",
+            "userNotFound": "No se ha encontrado el usuario."
+        },
+
+        "google": {
+            "error": "Error al iniciar sesión con Google.",
+            "loginError": "Error en Google Login.",
+            "tokenMissing": "No se recibió el ID token de Google."
+        },
+
+        "errors": {
+            "confirmEmail": "Error al confirmar el email.",
+            "resendCode": "Error al reenviar el código."
+        },
+
+        "validation": {
+            "passwordMismatch": "Las contraseñas no coinciden."
+        }
+    },
+
     "popularity": {
         "topRated": {
             "title": "Mejor valoradas"
@@ -161,11 +255,33 @@
     "contents": {
         "title": "Contenidos",
 
+        
+
         "filters": {
             "all": "Todos",
             "movies": "Películas",
-            "series": "Series"
+            "series": "Series",
+            "allGenres": "Todos los géneros",
+            "allYears": "Todos los años",
+            "sortRecent": "Más recientes",
+            "sortAZ": "A-Z",
+            "sortZA": "Z-A",
+            "noResults": "No se encontraron contenidos"
         },
+
+        "detail": {
+            "backToMovies": "Volver a películas",
+            "noDescription": "Sin descripción disponible.",
+            "watchTrailer": "Ver tráiler",
+            "comingSoon": "Próximamente",
+            "watchMovie": "Ver película"
+        },
+
+        "catalog": {
+            "title": "{type} de {category}"
+        },
+
+        "newReleases": "Nuevos Estrenos",
 
         "list": {
             "searchPlaceholder": "Buscar contenido...",
@@ -470,6 +586,17 @@
             "series": "Series"
         },
 
+        "options": {
+            "sectionType": {
+                "genreBar": "Barra de géneros",
+                "trending": "Tendencias",
+                "topRated": "Mejor valoradas",
+                "newReleases": "Nuevos lanzamientos",
+                "continueWatching": "Continuar viendo",
+                "upcoming": "Próximamente"
+            }
+        },
+
         "delete": {
             "title": "Eliminar sección",
             "message": "¿Deseas eliminar \"{name}\"? Esta acción no se puede deshacer."
@@ -532,7 +659,7 @@
         }
     },
 
-    "problemReports": {
+    "problemReport": {
         "title": "Reportes de problemas",
         "report": "Reporte",
         "myReports": "Mis reportes",
@@ -769,6 +896,29 @@
         "home": "Home",
         "movies": "Películas",
         "series": "Series",
+
+        "options": {
+            "target": {
+                "home": "Inicio",
+                "movies": "Películas",
+                "series": "Series"
+            },
+            "layout": {
+                "poster": "Póster",
+                "landscape": "Horizontal",
+                "wide": "Horizontal ancho",
+                "featured": "Destacado",
+                "square": "Cuadrado"
+            },
+            "source": {
+                "manual": "Manual",
+                "trending": "Tendencias",
+                "topRated": "Mejor valoradas",
+                "newReleases": "Nuevos lanzamientos",
+                "mostWatched": "Más vistas"
+            }
+        },
+
         "manageContent": "Administrar contenido",
         "loading": "Cargando carrusel...",
 
@@ -883,87 +1033,393 @@
         }
     },
 
-    "supportTickets": {
-    "title": "Tickets de soporte",
-    "loading": "Cargando tickets...",
-    "list": {
-        "title": "Tickets de soporte",
-        "myTickets": "Mis tickets",
-        "description": "Consulta tus solicitudes y conversaciones con soporte.",
-        "searchPlaceholder": "Buscar tickets...",
-        "statusPlaceholder": "Todos los estados",
-        "categoryPlaceholder": "Todas las categorías",
-        "userIdPlaceholder": "ID de usuario",
-        "createdAtFromPlaceholder": "Fecha desde",
-        "createdAtToPlaceholder": "Fecha hasta",
-        "empty": "No hay tickets registrados.",
-        "emptyUser": "No tienes tickets de soporte.",
-        "subject": "Asunto",
-        "category": "Categoría",
-        "user": "Usuario",
-        "status": "Estado",
-        "created": "Creado",
-        "updated": "Actualizado",
-        "action": "Acción",
-        "viewTicket": "Ver ticket",
-        "viewConversation": "Ver conversación"
-    },
-    "form": {
-        "title": "Contactar con soporte",
-        "subjectLabel": "Asunto",
-        "subjectPlaceholder": "¿En qué necesitas ayuda?",
-        "categoryLabel": "Categoría",
-        "categoryPlaceholder": "Selecciona una categoría",
-        "descriptionLabel": "Describe tu problema",
-        "descriptionPlaceholder": "Cuéntanos qué ocurrió y cómo podemos ayudarte...",
-        "create": "Crear ticket",
-        "creating": "Creando ticket...",
-        "validation": {
-            "subjectRequired": "Por favor completa el asunto.",
-            "categoryRequired": "Por favor selecciona una categoría.",
-            "descriptionRequired": "Por favor describe el problema."
+    "supportTicketStatus": {
+        "title": "Estados de tickets de soporte",
+        "loading": "Cargando estado...",
+        "createTitle": "Crear Estado de ticket",
+        "editTitle": "Editar Estado de Ticket",
+
+        "list": {
+            "title": "Lista de Estados de Ticket de Soporte",
+            "searchPlaceholder": "Buscar por nombre o código",
+            "empty": "No se encontraron estados de ticket de soporte.",
+            "code": "Código"
+        },
+
+        "form": {
+            "createTitle": "Crear Estado del ticket",
+            "editTitle": "Editar Estado del ticket",
+            "codeLabel": "Código del Estado del ticket",
+            "codePlaceholder": "Ej: PENDING",
+            "nameLabel": "Nombre del Estado del ticket",
+            "namePlaceholder": "Ej: Pendiente",
+            "descriptionLabel": "Descripción",
+            "descriptionPlaceholder": "Descripción del estado del ticket",
+            "validation": {
+                "codeRequired": "Por favor completa el campo de código.",
+                "languageRequired": "Por favor selecciona un idioma.",
+                "nameRequired": "Por favor completa el campo de nombre."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar Eliminación",
+            "message": "¿Estás seguro de que deseas eliminar el estado del ticket de soporte \"{name}\"? Esta acción no se puede deshacer."
+        },
+
+        "translations": {
+            "title": "Traducciones",
+            "registeredTitle": "Traducciones registradas",
+            "languagePlaceholder": "Seleccionar idioma",
+            "namePlaceholder": "Ej: Pendiente",
+            "descriptionPlaceholder": "Descripción del estado del ticket",
+            "loading": "Cargando traducciones...",
+            "empty": "No hay traducciones registradas.",
+            "deleteTitle": "Eliminar traducción",
+            "deleteMessage": "¿Estás seguro de que deseas eliminar la traducción en \"{language}\"? Esta acción no se puede deshacer.",
+            "invalidStatus": "Estado de ticket inválido.",
+            "loadingLanguages": "Cargando idiomas..."
+        },
+
+        "errors": {
+            "load": "Error al cargar el estado.",
+            "translation": "Ocurrió un error al procesar la traducción."
         }
     },
-    "messages": {
-        "conversation": "Conversación",
-        "sendTitle": "Enviar mensaje",
-        "label": "Mensaje",
-        "messagePlaceholder": "Escribe tu mensaje aquí...",
-        "send": "Enviar mensaje",
-        "sending": "Enviando...",
-        "loading": "Cargando mensajes...",
-        "error": "Error al cargar los mensajes.",
-        "retry": "Reintentar",
-        "empty": "No hay mensajes.",
-        "user": "Usuario",
-        "you": "Tú",
-        "support": "Soporte"
+
+    "supportTickets": {
+        "title": "Tickets de soporte",
+        "loading": "Cargando tickets...",
+        "list": {
+            "title": "Tickets de soporte",
+            "myTickets": "Mis tickets",
+            "description": "Consulta tus solicitudes y conversaciones con soporte.",
+            "searchPlaceholder": "Buscar tickets...",
+            "statusPlaceholder": "Todos los estados",
+            "categoryPlaceholder": "Todas las categorías",
+            "userIdPlaceholder": "ID de usuario",
+            "createdAtFromPlaceholder": "Fecha desde",
+            "createdAtToPlaceholder": "Fecha hasta",
+            "empty": "No hay tickets registrados.",
+            "emptyUser": "No tienes tickets de soporte.",
+            "subject": "Asunto",
+            "category": "Categoría",
+            "user": "Usuario",
+            "status": "Estado",
+            "created": "Creado",
+            "updated": "Actualizado",
+            "action": "Acción",
+            "viewTicket": "Ver ticket",
+            "viewConversation": "Ver conversación"
+        },
+        "form": {
+            "title": "Contactar con soporte",
+            "subjectLabel": "Asunto",
+            "subjectPlaceholder": "¿En qué necesitas ayuda?",
+            "categoryLabel": "Categoría",
+            "categoryPlaceholder": "Selecciona una categoría",
+            "descriptionLabel": "Describe tu problema",
+            "descriptionPlaceholder": "Cuéntanos qué ocurrió y cómo podemos ayudarte...",
+            "create": "Crear ticket",
+            "creating": "Creando ticket...",
+            "validation": {
+                "subjectRequired": "Por favor completa el asunto.",
+                "categoryRequired": "Por favor selecciona una categoría.",
+                "descriptionRequired": "Por favor describe el problema."
+            }
+        },
+        "messages": {
+            "conversation": "Conversación",
+            "sendTitle": "Enviar mensaje",
+            "label": "Mensaje",
+            "messagePlaceholder": "Escribe tu mensaje aquí...",
+            "send": "Enviar mensaje",
+            "sending": "Enviando...",
+            "loading": "Cargando mensajes...",
+            "error": "Error al cargar los mensajes.",
+            "retry": "Reintentar",
+            "empty": "No hay mensajes.",
+            "user": "Usuario",
+            "you": "Tú",
+            "support": "Soporte"
+        },
+        "detail": {
+            "ticket": "Ticket",
+            "requestReceived": "Solicitud recibida",
+            "requestReceivedMessage": "Tu solicitud fue recibida. El equipo de soporte revisará tu caso y responderá cuando esté disponible.",
+            "closed": "Ticket cerrado",
+            "closedMessage": "Este ticket ha sido cerrado y ya no puedes enviar nuevos mensajes."
+        },
+        "status": {
+            "change": "Cambiar estado",
+            "changeMessage": "¿Seguro que deseas cambiar el ticket #{ticketId} a \"{statusName}\"?",
+            "confirm": "Cambiar"
+        },
+        "errors": {
+            "load": "Error al cargar los tickets de soporte.",
+            "loadMessages": "Error al cargar los mensajes.",
+            "sendMessage": "Error al enviar el mensaje.",
+            "create": "Error al crear el ticket.",
+            "updateStatus": "Error al actualizar el estado del ticket."
+        },
+        "actions": {
+            "new": "Nuevo ticket",
+            "retry": "Reintentar",
+            "view": "Ver ticket"
+        }
     },
-    "detail": {
-        "ticket": "Ticket",
-        "requestReceived": "Solicitud recibida",
-        "requestReceivedMessage": "Tu solicitud fue recibida. El equipo de soporte revisará tu caso y responderá cuando esté disponible.",
-        "closed": "Ticket cerrado",
-        "closedMessage": "Este ticket ha sido cerrado y ya no puedes enviar nuevos mensajes."
+
+    "systemRoles": {
+        "title": "Roles del Sistema",
+        "createTitle": "Crear Rol del Sistema",
+        "editTitle": "Editar Rol del Sistema",
+
+        "list": {
+            "searchPlaceholder": "Buscar roles...",
+            "empty": "No hay roles con ese término.",
+            "roleName": "Rol del Sistema",
+            "permissions": "Permisos"
+        },
+
+        "form": {
+            "createTitle": "Crear Rol",
+            "editTitle": "Editar Rol",
+            "roleName": "Nombre del Rol",
+            "roleNamePlaceholder": "Ej. MODERADOR",
+            "validation": {
+                "roleNameRequired": "Por favor completa el campo de nombre del rol."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar Eliminación",
+            "message": "¿Estás seguro de que deseas eliminar el rol del sistema \"{name}\"? Esta acción no se puede deshacer."
+        },
+
+        "errors": {
+            "load": "Error al cargar el rol del sistema.",
+            "idInvalid": "ID de rol inválido."
+        }
     },
-    "status": {
-        "change": "Cambiar estado",
-        "changeMessage": "¿Seguro que deseas cambiar el ticket #{ticketId} a \"{statusName}\"?",
-        "confirm": "Cambiar"
+
+    "discounts": {
+        "title": "Descuentos",
+
+        "createTitle": "Crear nuevo descuento",
+        "editTitle": "Editar descuento",
+
+        "list": {
+            "title": "Lista de descuentos",
+            "searchPlaceholder": "Buscar descuentos...",
+            "empty": "No hay descuentos registrados con ese término.",
+            "discount": "Descuento",
+            "amount": "Monto",
+            "startDate": "Fecha de inicio",
+            "endDate": "Fecha de fin"
+        },
+
+        "form": {
+            "createTitle": "Crear descuento",
+            "editTitle": "Editar descuento",
+            "discountTypeLabel": "Tipo de descuento",
+            "discountTypePlaceholder": "Ej: Promoción de verano",
+            "amountLabel": "Porcentaje de descuento (%)",
+            "startDateLabel": "Fecha de inicio",
+            "endDateLabel": "Fecha de fin",
+            "descriptionLabel": "Descripción",
+            "descriptionPlaceholder": "Descripción del descuento",
+            "validation": {
+                "discountTypeRequired": "Por favor completa el campo de tipo de descuento.",
+                "amountInvalid": "Monto inválido.",
+                "datesRequired": "Completa ambas fechas.",
+                "startDateAfterEndDate": "La fecha de inicio no puede ser mayor que la fecha de fin."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar eliminación",
+            "message": "¿Estás seguro de que deseas eliminar el descuento \"{discountType}\"? Esta acción no se puede deshacer."
+        },
+
+        "validation": {
+            "discountTypeRequired": "Por favor completa el campo de tipo de descuento.",
+            "amountInvalid": "Monto inválido.",
+            "datesRequired": "Completa ambas fechas.",
+            "startDateAfterEndDate": "La fecha de inicio no puede ser mayor que la fecha de fin."
+        },
+
+        "errors": {
+            "load": "Error al cargar el descuento."
+        }
     },
-    "errors": {
-        "load": "Error al cargar los tickets de soporte.",
-        "loadMessages": "Error al cargar los mensajes.",
-        "sendMessage": "Error al enviar el mensaje.",
-        "create": "Error al crear el ticket.",
-        "updateStatus": "Error al actualizar el estado del ticket."
+
+    "systemPermissions": {
+        "title": "Permisos del Sistema",
+        "createTitle": "Crear Permiso del Sistema",
+        "editTitle": "Editar Permiso del Sistema",
+
+        "list": {
+            "searchPlaceholder": "Buscar permisos...",
+            "empty": "No hay permisos con ese término.",
+            "moduleName": "Nombre del Módulo",
+            "action": "Acción",
+            "permissionName": "Nombre del Permiso"
+        },
+
+        "form": {
+            "createTitle": "Crear Permiso del Sistema",
+            "editTitle": "Editar Permiso del Sistema",
+            "moduleLabel": "Nombre del Módulo",
+            "modulePlaceholder": "Ej. contentStatus, movie, etc.",
+            "actionLabel": "Nombre de la Acción",
+            "actionPlaceholder": "Ej. CREATE, READ, UPDATE, DELETE",
+            "permissionLabel": "Nombre del Permiso",
+            "permissionPlaceholder": "Ej. PERMITIR_CREAR, PERMITIR_LEER, etc.",
+            "validation": {
+                "requiredFields": "Por favor completa todos los campos."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar Eliminación",
+            "message": "¿Estás seguro de que deseas eliminar el permiso del sistema \"{name}\"? Esta acción no se puede deshacer."
+        },
+
+        "errors": {
+            "load": "Error al cargar el permiso del sistema."
+        }
     },
-    "actions": {
-        "new": "Nuevo ticket",
-        "retry": "Reintentar",
-        "view": "Ver ticket"
+
+    "userRoleAssignment": {
+        "title": "Gestionar roles de: {`{email}`",
+        "actions": {
+            "assigneRoles": "Gestionar Roles"
+        },
+        "assign": {
+            "label": "asignar roles",
+            "placeholder": "Agregar rol",
+            "button": "Asignar",
+            "loading": "Asignando..."
+        },
+        "removes": {
+            "label": "Quitar roles",
+            "placeholder": "Quitar rol",
+            "button": "Quitar",
+            "loading": "Quitando..."
+        },
+        "clos": "Cerrar"
+    },
+
+    "users": {
+        "title": "Usuarios",
+        "create": "Crear Usuario",
+
+        "list": {
+            "searchPlaceholder": "Buscar por email o username...",
+            "empty": "No hay usuarios para mostrar.",
+            "email": "Email",
+            "username": "Username",
+            "roles": "Roles",
+            "manageRoles": "Gestionar Roles"
+        },
+
+        "languageSelector": {
+            "title": "Idioma",
+            "subtitle": "Selecciona el idioma de la aplicación",
+            "close": "Cerrar",
+            "loading": "Cargando idiomas...",
+            "empty": "No hay idiomas disponibles."
+        }
+    },
+
+    "profile": {
+        "editTitle": "Editar Perfil",
+        "loading": "Cargando perfil...",
+        "notFound": "No se encontró perfil",
+        "bioEmpty": "Sin biografía",
+        "pictureAlt": "Foto de perfil",
+
+        "form": {
+            "displayName": "Nombre para mostrar",
+            "displayNamePlaceholder": "ej. Juan Pérez",
+            "firstName": "Nombre",
+            "firstNamePlaceholder": "ej. Juan",
+            "lastName": "Apellido",
+            "lastNamePlaceholder": "ej. Pérez",
+            "birthDate": "Fecha de nacimiento",
+            "gender": "Tipo de género",
+            "bio": "Biografía",
+            "bioPlaceholder": "Cuéntanos sobre ti...",
+            "location": "Ubicación",
+            "locationPlaceholder": "Ciudad, País",
+            "website": "Sitio web",
+            "websitePlaceholder": "https://ejemplo.com",
+            "visibility": "Visibilidad del perfil"
+        },
+
+        "genders": {
+            "notSpecified": "No especificar",
+            "male": "Masculino",
+            "female": "Femenino",
+            "other": "Otro",
+            "preferNotToSay": "Prefiero no decirlo"
+        },
+
+        "visibility": {
+            "public": "Público",
+            "private": "Privado"
+        },
+
+        "menu": {
+            "viewProfile": "Mi perfil",
+            "watchlist": "Mi lista",
+            "support": "Soporte",
+            "edit": "Editar perfil",
+            "language": "Idioma",
+            "logout": "Cerrar sesión"
+        },
+
+        "errors": {
+            "load": "Error al cargar el perfil.",
+            "update": "Error al actualizar el perfil",
+            "uploadProfilePicture": "Error al subir foto de perfil",
+            "uploadBanner": "Error al subir banner",
+            "invalidUserId": "ID de usuario inválido"
+        }
+    },
+
+    "upcoming": {
+        "title": "Próximos estrenos",
+        "badge": "Próximament",
+        "loadIng": "Cargando próximos estrenos..."
+    },
+
+    "watchlist": {
+        "title": "Mi lista",
+        "loading": "Cargando tu lista...",
+
+        "empty": {
+            "title": "Tu lista está vacía",
+            "text": "Agrega películas y series para encontrarlas fácilmente después."
+        },
+
+        "types": {
+            "movie": "Película",
+            "series": "Serie"
+        },
+
+        "add": {
+            "title": "Agregar a mi lista"
+        },
+
+        "remove": {
+            "title": "Quitar de mi lista",
+            "button": "Quitar",
+            "loading": "Quitando...",
+            "confirmMessage": "¿Estás seguro de que deseas quitar \"{title}\" de tu lista? Esta acción no se puede deshacer."
+        }
     }
-    }
+
 }
         
 

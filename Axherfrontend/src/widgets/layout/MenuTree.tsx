@@ -6,20 +6,21 @@ import Link from "next/link";
 interface Props {
     items: MenuItem[];
     renderSubMenu: (children: React.ReactNode) => React.ReactNode;
-    onItemClick?: () => void; // Nueva prop para manejar clics en items
+    onItemClick?: () => void; 
+    getLabel: (item: MenuItem) => string;
 }
 
 
 
-export default function MenuTree({ items, renderSubMenu, onItemClick }: Props) {
+export default function MenuTree({ items, renderSubMenu, onItemClick, getLabel }: Props) {
     
     const renderItems = (menuItems: MenuItem[])  => {
         return menuItems.map((item) => (
             <li key={item.id}>
 
                 {item.href
-                    ? <Link href={item.href} onClick={onItemClick}>{item.label}</Link>
-                    : <span>{item.label}</span>
+                    ? <Link href={item.href} onClick={onItemClick}>{getLabel(item)}</Link>
+                    : <span>{getLabel(item)}</span>
                 }
 
                 {item.children && renderSubMenu (

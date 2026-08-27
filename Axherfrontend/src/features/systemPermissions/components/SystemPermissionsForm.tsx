@@ -30,37 +30,37 @@ export default function SystemPermissionsForm({
     saving = false,
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("systemPermissions");
     
     return (
         <form onSubmit={onSubmit} className={formStyles.form}>
-            <h2>{isEditing ? 'Editar Permiso del Sistema' : 'Crear Permiso del Sistema'}</h2>
 
             <Input
-                label="Nombre del Módulo"
+                label={t("form.moduleLabel")}
                 value={moduleName}
                 onChange={setModuleName}
-                placeholder="Ej. contentStatus, movie, etc."
+                placeholder={t("form.modulePlaceholder")}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
             />
 
             <Input
-                label="Nombre de la Acción"
+                label={t("form.actionLabel")}
                 value={actionName}
                 onChange={setActionName}
-                placeholder="Ej. CREATE, READ, UPDATE, DELETE"
+                placeholder={t("form.actionPlaceholder")}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
             />
 
             <Input
-                label="Nombre del Permiso"
+                label={t("form.permissionLabel")}
                 value={permissionName}
                 onChange={setPermissionName}
-                placeholder="Ej. PERMITIR_CREAR, PERMITIR_LEER, etc."
+                placeholder={t("form.permissionPlaceholder")}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
@@ -71,9 +71,9 @@ export default function SystemPermissionsForm({
                     type="submit"
                     variant="animated"
                     disabled={saving}
-                    loadingText={isEditing ? 'Actualizando...' : ' Creando...'}
+                    loadingText={isEditing ? common("updating") : common("creating")}
                 >
-                    {isEditing ? 'Actualizar' : t("create")}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
 
                 {onCancel && (
@@ -83,7 +83,7 @@ export default function SystemPermissionsForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        {t("cancel")}
+                        {common("cancel")}
 
                     </Button>
                 )}

@@ -15,7 +15,8 @@ export default function EditSystemRolesPage(){
     const id = params?.id ? Number(params.id) : null;
     const [roleName, setRoleName] = useState("");
     const [loading, setLoading] = useState(true);
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("systemRoles");
     const {editSystemRole, saving} = useSystemRolesActions({
         onSuccess: () => router.push("/admin/systemRoles"),
     });
@@ -31,8 +32,7 @@ export default function EditSystemRolesPage(){
                 const role: SystemRoles = await systemRolesService.getById(id);
                 setRoleName(role.roleName);
             }catch(error){
-                console.error("Error cargando rol del sistema:", error);
-                alert("Error al cargar el rol del sistema");
+                alert(t("error.loading"));
                 router.push("/admin/systemRoles");
             }finally{
                 setLoading(false);
@@ -50,7 +50,7 @@ export default function EditSystemRolesPage(){
         const roleNameTrim = roleName.trim();
 
         if(!roleNameTrim){
-            alert("Por favor completa el campo de nombre del rol");
+            alert(t("form.validation.roleNameRequired"));
             return;
         }
 
@@ -64,12 +64,12 @@ export default function EditSystemRolesPage(){
     };
 
     if(loading){
-        return <div className={layoutStyles.loading}>{t("loading")}...</div>
+        return <div className={layoutStyles.loading}>{common("loading")}...</div>
     }
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Editar Rol del Sistema</h1>
+            <h1>{t("editTitle")}</h1>
 
             <SystemRolesForm
                 roleName={roleName}

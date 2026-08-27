@@ -192,7 +192,7 @@ export default function SearchModal({ onClose }: Props) {
                                                             onClick={(e) =>
                                                                 handleRemoveHistory(e, item.searchId)
                                                             }
-                                                            aria-label={`t("delete") ${item.term}`}
+                                                            aria-label={`${t("delete")} ${item.term}`}
                                                         >
                                                             <X size={16} />
                                                         </button>

@@ -24,19 +24,19 @@ export default function SystemRolesForm({
     saving = false,
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("systemRoles");
 
 
     return (
 
         <form onSubmit={onSubmit} className={formStyles.form}>
-            <h2>{isEditing ? 'Editar Rol' : 'Crear Rol'}</h2>
 
             <Input
-                label="Nombre del Rol"
+                label={t("form.roleNameLabel")}
                 value={roleName}
                 onChange={setRoleName}
-                placeholder="Ej. MODERADOR"
+                placeholder={t("form.roleNamePlaceholder")}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
@@ -46,9 +46,9 @@ export default function SystemRolesForm({
                     type="submit"
                     variant="animated"
                     disabled={saving}
-                    loadingText={isEditing ? 'Actualizando...' : ' Creando...'}
+                    loadingText={isEditing ? common("updating") : common("creating")}
                 >
-                    {isEditing ? 'Actualizar' : t("create")}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
 
                 {onCancel && (
@@ -58,7 +58,7 @@ export default function SystemRolesForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        {t("cancel")}
+                        {common("cancel")}
 
                     </Button>
                 )}

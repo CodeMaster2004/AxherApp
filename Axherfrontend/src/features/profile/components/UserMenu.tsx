@@ -11,6 +11,7 @@ import { useLanguage } from "@/features/language/hooks/useLanguage";
 import { useLanguage as useLanguageContext } from "@/features/language/context/LanguageContext";
 import { useUserPreferences } from "@/features/users/hooks/useUserPreferences";
 import LanguageSelector from "@/features/users/components/LanguageSelector";
+import { locales } from "@/i18n/config";
 
 export default function UserMenu() {
 
@@ -34,6 +35,13 @@ export default function UserMenu() {
         languageCode,
         setLanguage,
     } = useLanguageContext();
+
+    const supportedLanguages = languages.filter(
+        (language) =>
+            locales.includes(
+                language.code as (typeof locales)[number]
+            )
+    )
     
     const {
         updatePreferences,
@@ -51,7 +59,7 @@ export default function UserMenu() {
     })();
 
     const handleOpenLanguageSelector = () => {
-        const currentLanguage = languages.find(
+        const currentLanguage = supportedLanguages.find(
             language => language.code === languageCode
         );
 
@@ -67,7 +75,7 @@ export default function UserMenu() {
         if(selectedLanguageId === null) {
             return ;
         }
-        const selectedLanguage = languages.find(
+        const selectedLanguage = supportedLanguages.find(
             language => language.languageId === selectedLanguageId
         );
 
@@ -79,8 +87,6 @@ export default function UserMenu() {
             await updatePreferences({
                 preferredLanguageId: selectedLanguageId
             });
-            console.log("IDIOMA ANTES:", languageCode);
-        console.log("IDIOMA NUEVO:", selectedLanguage.code);
 
             setLanguage(selectedLanguage.code);
              console.log(
@@ -257,7 +263,7 @@ export default function UserMenu() {
             {showLanguageSelector && (
 
                 <LanguageSelector
-                    languages={languages}
+                    languages={supportedLanguages}
                     selectedLanguageId={selectedLanguageId}
                     loading={languagesLoading}
                     saving={savingLanguage}

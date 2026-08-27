@@ -4,6 +4,7 @@ import { SystemRoles, UserList } from "@/entities/types";
 import Button from "@/shared/components/ui/Button";
 import MultiSelect from "@/shared/components/ui/MultiSelect";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
 interface Props {
@@ -35,7 +36,7 @@ export default function UserRoleAssignmentModal({
 } : Props ) {
     const [selectedToAssing, setSelectedToAssing] = useState<Array<string | number>>([]);
     const [selectedToRemove, setSelectedToRemove] = useState<Array<string | number>>([]);
-
+    const t = useTranslations("userRoleAssignment");
     useEffect(() => {
         if(isOpen) {
             setSelectedToAssing([])
@@ -61,45 +62,45 @@ export default function UserRoleAssignmentModal({
 
     return (
         <div className={layoutStyles.section}>
-            <h3>Gestionar roles de: {user.email}</h3>
+            <h3>{t("title", { email: user.email })}</h3>
 
             <MultiSelect
-                label="Asignal roles"
+                label={t("assign.label")}
                 options={assignOptions}
                 selected={selectedToAssing}
                 onChange={setSelectedToAssing}
-                placeholder="Agregar rol"
+                placeholder={t("assign.placeholder")}
             />
 
             <MultiSelect
-                label="Quitar roles"
+                label={t("removes.label")}
                 options={removeOptions}
                 selected={selectedToRemove}
                 onChange={setSelectedToRemove}
-                placeholder="Quitar rol"
+                placeholder={t("removes.placeholder")}
             />
 
             <div style={{ display: "flex", gap: 8 }}>
                 <Button
                     variant="animated"
                     disabled={saving || selectedToAssing.length === 0}
-                    loadingText="Asignando..."
+                    loadingText={t("assign.loading")}
                     onClick={() => onAssignRoles(user.userId, selectedToAssing.map(String))}
                 >
-                    Asignar
+                    {t("assign.button")}
                 </Button>
 
                 <Button
                     variant="secondary"
                     disabled={removing || selectedToRemove.length === 0}
-                    loadingText="Quitando..."
+                    loadingText={t("removes.loading")}
                     onClick={() => onRemoveRoles(user.userId, selectedToRemove.map(String))}
                 >
-                     Quitar
+                     {t("removes.button")}
                 </Button>
 
                 <Button type="button" variant="secondary" onClick={onClose}>
-                    Cerrar
+                    {t("clos")}
                 </Button>
             </div>
                 {error && <p style={{ color: "red", marginTop: 10 }} role="alert">{error}</p>}

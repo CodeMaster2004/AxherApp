@@ -57,14 +57,15 @@ export default function EditProfileForm ({
     saving = false,
 }: Props ){
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("profile");
 
     const typeOptions: SelectOption[] = [
-            { value: "", label: "No especificar" },
-            { value: "MALE", label: "Masculino" },
-            { value: "FEMALE", label: "Femenino" },
-            { value: "OTHER", label: "Otro" },
-            { value: "PREFER_NOT_TO_SAY", label: "Prefiero no decirlo" },   
+            { value: "", label: t("genders.notSpecified") },
+            { value: "MALE", label: t("genders.male") },
+            { value: "FEMALE", label: t("genders.female") },
+            { value: "OTHER", label: t("genders.other") },
+            { value: "PREFER_NOT_TO_SAY", label: t("genders.preferNotToSay") },   
         ];
     return (
 
@@ -72,15 +73,15 @@ export default function EditProfileForm ({
             <h2>Editar Perfil</h2>
 
             <Input
-                label="Nombre para mostrar"
+                label={t("form.displayName")}
                 value={displayName}
                 onChange={setDisplayName}
-                placeholder="ej. Juan Pérez"
+                placeholder={t("form.displayNamePlaceholder")}
                 disabled={saving}
             />
 
             <Input
-                label="Nombre"
+                label={t("form.firstName")}
                 value={firstName}
                 onChange={setFirstName}
                 placeholder="Juan"
@@ -88,22 +89,22 @@ export default function EditProfileForm ({
             />
 
             <Input
-                label="Apellido"
+                label={t("form.lastName")}
                 value={lastName}
                 onChange={setLastName}
-                placeholder="Pérez"
+                placeholder={t("form.lastNamePlaceholder")}
                 disabled={saving}
             />
 
             <Input
-                label="Fecha de nacimiento"
+                label={t("form.birthDate")}
                 type="date"
                 value={birthDate}
                 onChange={setBirthDate}
                 disabled={saving}
             />
             <Select
-                label="Tipo de genero"
+                label={t("form.gender")}
                 options={typeOptions}
                 value={gender ?? ""}
                 onChange={(val) =>
@@ -113,50 +114,50 @@ export default function EditProfileForm ({
             />
 
             <TextArea
-                label="Biografía"
+                label={t("form.bio")}
                 value={bio}
                 onChange={setBio}
-                placeholder="Cuéntanos sobre ti..."
+                placeholder={t("form.bioPlaceholder")}
                 disabled={saving}
                 rows={4}
             />
 
             <Input
-                label="Ubicación"
+                label={t("form.location")}
                 value={location}
                 onChange={setLocation}
-                placeholder="Ciudad, País"
+                placeholder={t("form.locationPlaceholder")}
                 disabled={saving}
             />
 
             <Input
-                label="Sitio web"
+                label={t("form.website")}
                 type="url"
                 value={website}
                 onChange={setWebsite}
-                placeholder="https://ejemplo.com"
+                placeholder={t("form.websitePlaceholder")}
                 disabled={saving}
             />
 
             <Select
-                label="Visibilidad del perfil"
+                label={t("form.visibility")}
                 value={profileVisibility}
                 onChange={(value) => setProfileVisibility((value as "PUBLIC" | "PRIVATE") ?? "PUBLIC")}
                 options={[
-                    { value: "PUBLIC", label: "Público" },
-                    { value: "PRIVATE", label: "Privado" },
+                    { value: "PUBLIC", label: t("form.visibility.public") },
+                    { value: "PRIVATE", label: t("form.visibility.private") },
                 ]}
                 disabled={saving}
             />
 
             <div className={formStyles.formActions}>
-                <Button type="submit" variant="animated" disabled={saving} loadingText="Guardando...">
-                    {t("save")}
+                <Button type="submit" variant="animated" disabled={saving} loadingText={common("saving")}>
+                    {common("save")}
                 </Button>
 
                 {onCancel && (
                     <Button type="button" variant="secondary" onClick={onCancel} disabled={saving}>
-                        {t("cancel")}
+                        {common("cancel")}
                     </Button>
                 )}
             </div>

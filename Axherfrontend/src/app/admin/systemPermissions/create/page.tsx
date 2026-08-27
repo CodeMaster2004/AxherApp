@@ -5,11 +5,13 @@ import { SyntheticEvent, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import SystemPermissionsForm from "@/features/systemPermissions/components/SystemPermissionsForm";
 import { useSystemPermissionsActions } from "@/features/systemPermissions/hooks";
+import { useTranslations } from "next-intl";
 
 export default function CreateSystemPermissionsPage() {
     const router = useRouter();
 
     const [ModuleName, setModuleName] = useState("");
+    const t = useTranslations("systemPermissions");
     const [ActionName, setActionName] = useState("");
     const [PermissionName, setPermissionName] = useState("");
     const {addSystemPermission, saving} = useSystemPermissionsActions({
@@ -24,7 +26,7 @@ export default function CreateSystemPermissionsPage() {
         const permissionNameTrim = PermissionName.trim();
 
         if(!moduleNameTrim || !actionNameTrim || !permissionNameTrim){
-            alert("Por favor completa todos los campos");
+            alert(t("validation.requiredFields"));
             return;
         }
 
@@ -37,6 +39,8 @@ export default function CreateSystemPermissionsPage() {
 
     return (
         <div className={layoutStyles.pageContainer}>
+
+            <h1>{t("createTitle")}</h1>
 
             <SystemPermissionsForm
                 moduleName={ModuleName}

@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 
 export default function DiscountsListView(){
     const router = useRouter();
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("discounts");
     const {discounts, loading, currentPage, totalPages, nextPage, prevPage, searchTerm, setSearchTerm, refetch} = useDiscounts();
 
     const {
@@ -32,9 +33,9 @@ export default function DiscountsListView(){
     return(
         <div className={layoutStyles.pageContainer}>
             <div className={layoutStyles.header}>
-                <h1>Descuentos</h1>
+                <h1>{t("title")}</h1>
                 <Button variant="animated" onClick={handleCreate}>
-                    {t("new")}
+                    {common("new")}
                 </Button>
 
             </div>

@@ -1,5 +1,1355 @@
 {
-  "common": {
-    "save": "Salvar"
-  }
+    "common": {
+        "loading": "Carregando...",
+        "error": "Erro",
+        "save": "Salvar",
+        "saveChanges": "Salvar alterações",
+        "cancel": "Cancelar",
+        "back": "Voltar",
+        "edit": "Editar",
+        "update": "Atualizar",
+        "delete": "Excluir",
+        "create": "Criar",
+        "new": "Novo",
+        "actions": "Ações",
+        "translations": "Traduções",
+        "name": "Nome",
+        "description": "Descrição",
+        "title": "Título",
+        "id": "ID",
+        "language": "Idioma",
+        "languagePlaceholder": "Selecione um idioma",
+        "status": "Status",
+        "active": "Ativo",
+        "inactive": "Inativo",
+        "search": "Pesquisar",
+        "searching": "Pesquisando...",
+        "saving": "Salvando...",
+        "deleting": "Excluindo...",
+        "updating": "Atualizando...",
+        "creating": "Criando...",
+        "sending": "Enviando...",
+        "adding": "Adicionando...",
+        "confirm": "Confirmar",
+        "change": "Alterar",
+        "clear": "Limpar",
+        "clearing": "Limpando...",
+        "created": "Criado",
+        "updated": "Atualizado",
+        "view": "Ver",
+        "remove": "Remover",
+        "retry": "Tentar novamente",
+        "noResults": "Nenhum resultado encontrado"
+    },
+
+    "navigation": {
+        "menu": "Menu",
+        "home": "Início",
+        "movies": "Filmes",
+        "series": "Séries",
+        "settings": "Configurações",
+        "administration": "Administração",
+        "contentManagement": "Gerenciamento de Conteúdo",
+        "contents": "Conteúdos",
+        "contentCategories": "Categorias",
+        "contentStatus": "Status dos Filmes",
+        "shelves": "Carrosséis",
+        "pageSections": "Seções da Página",
+        "heroBanners": "Hero Banners",
+        "support": "Suporte",
+        "supportTickets": "Tickets de Suporte",
+        "supportCategories": "Categorias de Suporte",
+        "supportTicketStatuses": "Status dos Tickets",
+        "problemReports": "Relatórios de Problemas",
+        "problemReportStatuses": "Status dos Relatórios",
+        "problemReportCategories": "Categorias de Relatórios",
+        "commercialManagement": "Gestão Comercial",
+        "discounts": "Descontos",
+        "usersManagement": "Usuários e Acesso",
+        "users": "Usuários",
+        "systemRoles": "Funções",
+        "systemPermissions": "Permissões",
+        "system": "Sistema",
+        "languages": "Idiomas",
+        "scrollLeft": "Mover menu para a esquerda",
+        "scrollRight": "Mover menu para a direita"
+    },
+
+    "auth": {
+        "login": {
+            "title": "Entrar",
+            "heading": "Entrar",
+            "emailPlaceholder": "Ex.: usuario@example.com",
+            "passwordPlaceholder": "Digite sua senha",
+            "submit": "Entrar",
+            "loading": "Entrando...",
+            "register": "Criar conta",
+            "forgotPassword": "Esqueceu sua senha?",
+            "continueWith": "— ou continue com —"
+        },
+        "register": {
+            "title": "Bem-vindo à AXHER",
+            "heading": "Criar conta",
+            "emailPlaceholder": "Ex.: usuario@example.com",
+            "passwordPlaceholder": "Mínimo de 6 caracteres",
+            "confirmPasswordPlaceholder": "Repita sua senha",
+            "submit": "Criar conta",
+            "loading": "Criando conta...",
+            "alreadyHaveAccount": "Já tem uma conta?",
+            "login": "Entrar",
+            "emailExists": "Este endereço de e-mail já está registrado. Tente entrar."
+        },
+        "confirmEmail": {
+            "title": "Confirmar e-mail",
+            "heading": "Confirmar e-mail",
+            "description": "Digite o código de verificação que enviamos para seu e-mail.",
+            "submit": "Confirmar",
+            "loading": "Verificando...",
+            "resend": "Reenviar código",
+            "resendSuccess": "Código reenviado para seu e-mail.",
+            "userNotFound": "Usuário não encontrado."
+        },
+        "google": {
+            "error": "Erro ao entrar com o Google.",
+            "loginError": "Erro no login com o Google.",
+            "tokenMissing": "Nenhum ID token do Google foi recebido."
+        },
+        "errors": {
+            "confirmEmail": "Erro ao confirmar o e-mail.",
+            "resendCode": "Erro ao reenviar o código."
+        },
+        "validation": {
+            "passwordMismatch": "As senhas não coincidem."
+        }
+    },
+
+    "popularity": {
+        "topRated": {
+            "title": "Mais bem avaliados"
+        },
+        "trending": {
+            "title": "Em alta",
+            "badge": "Em alta"
+        }
+    },
+
+    "playbackHistory": {
+        "continueWatching": "Continuar assistindo",
+        "episode": "T{season} · E{episode} - {title}"
+    },
+
+    "language": {
+        "title": "Idiomas",
+        "createPageTitle": "Criar novo idioma",
+        "editPageTitle": "Editar idioma",
+        "loading": "Carregando idioma...",
+        "form": {
+            "createTitle": "Criar idioma",
+            "editTitle": "Editar idioma",
+            "code": "Código",
+            "codePlaceholder": "Ex.: es, en, fr",
+            "namePlaceholder": "Ex.: Espanhol, Inglês, Francês",
+            "nativeName": "Nome nativo",
+            "nativeNamePlaceholder": "Ex.: Español, English, Français",
+            "active": "Idioma ativo"
+        },
+        "list": {
+            "title": "Lista de idiomas",
+            "searchPlaceholder": "Buscar por código ou nome",
+            "empty": "Nenhum idioma encontrado."
+        },
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir o idioma \"{name}\"? Esta ação não pode ser desfeita."
+        },
+        "validation": {
+            "codeRequired": "Preencha o código do idioma.",
+            "nameRequired": "Preencha o nome do idioma.",
+            "nativeNameRequired": "Preencha o nome nativo do idioma."
+        },
+        "errors": {
+            "load": "Erro ao carregar o idioma."
+        }
+    },
+
+    "media": {
+        "player": {
+            "exit": "Sair",
+            "options": "Opções do player",
+            "reportProblem": "Relatar problema"
+        }
+    },
+
+    "contentCategories": {
+        "title": "Categorias",
+        "loading": "Carregando categoria...",
+        "list": {
+            "category": "Categoria",
+            "slug": "Slug",
+            "searchPlaceholder": "Buscar por nome ou descrição...",
+            "empty": "Nenhuma categoria encontrada para esse termo."
+        },
+        "form": {
+            "categoryNamePlaceholder": "Ex.: Ação, Drama, Comédia",
+            "languagePlaceholder": "Selecione um idioma",
+            "descriptionPlaceholder": "Descrição da categoria",
+            "validation": {
+                "nameRequired": "Preencha o campo de nome.",
+                "languageRequired": "Selecione um idioma.",
+                "descriptionRequired": "Preencha o campo de descrição."
+            }
+        },
+        "errors": {
+            "load": "Erro ao carregar a categoria."
+        },
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir a categoria \"{name}\"? Esta ação não pode ser desfeita."
+        },
+        "translations": {
+            "title": "Traduções da categoria",
+            "registeredTitle": "Traduções registradas",
+            "code": "Código",
+            "languagePlaceholder": "Selecionar idioma",
+            "namePlaceholder": "Nome da categoria",
+            "descriptionPlaceholder": "Descrição da categoria",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidCategory": "Categoria de conteúdo inválida.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+        "actions": {
+            "translations": "Traduções"
+        }
+    },
+
+    "contents": {
+        "title": "Conteúdos",
+
+        "filters": {
+            "all": "Todos",
+            "movies": "Filmes",
+            "series": "Séries",
+            "allGenres": "Todos os gêneros",
+            "allYears": "Todos os anos",
+            "sortRecent": "Mais recentes",
+            "sortAZ": "A-Z",
+            "sortZA": "Z-A",
+            "noResults": "Nenhum conteúdo encontrado"
+        },
+
+        "detail": {
+            "backToMovies": "Voltar para filmes",
+            "noDescription": "Nenhuma descrição disponível.",
+            "watchTrailer": "Assistir ao trailer",
+            "comingSoon": "Em breve",
+            "watchMovie": "Assistir ao filme"
+        },
+
+        "catalog": {
+            "title": "{type} de {category}"
+        },
+
+        "newReleases": "Novos lançamentos",
+
+        "list": {
+            "searchPlaceholder": "Buscar conteúdo...",
+            "empty": "Nenhum conteúdo registrado",
+            "poster": "Pôster",
+            "type": "Tipo",
+            "price": "Preço",
+            "categories": "Categorias",
+            "discount": "Desconto",
+            "registeredAt": "Registrado",
+            "movie": "Filme",
+            "series": "Série",
+            "noDiscount": "Sem desconto"
+        },
+
+        "form": {
+            "contentType": "Tipo de conteúdo",
+            "movie": "Filme",
+            "series": "Série",
+            "originalLanguage": "Idioma original",
+            "originalLanguagePlaceholder": "Selecionar idioma original",
+            "categoryPlaceholder": "Adicionar categorias",
+            "statusPlaceholder": "Selecionar status",
+            "discountPlaceholder": "Sem desconto",
+            "poster": "Pôster",
+            "backdrop": "Imagem de fundo",
+            "trailer": "Trailer",
+            "movieFile": "Filme",
+            "currentPoster": "Pôster atual",
+            "currentBackdrop": "Imagem de fundo atual",
+            "currentTrailer": "Trailer atual",
+            "currentMovie": "Filme atual",
+            "releaseDate": "Data de lançamento",
+
+            "validation": {
+                "titleRequired": "O título é obrigatório.",
+                "originalLanguageRequired": "Selecione o idioma original.",
+                "categoryRequired": "Selecione pelo menos uma categoria.",
+                "posterRequired": "O pôster é obrigatório.",
+                "backdropRequired": "A imagem de fundo é obrigatória.",
+                "typeRequired": "Selecione o tipo de conteúdo.",
+                "movieFileRequired": "O arquivo do filme é obrigatório para conteúdos do tipo MOVIE."
+            }
+        },
+
+        "actions": {
+            "viewSeries": "Ver série",
+            "viewSeasons": "Ver temporadas",
+            "createSeason": "Criar temporada",
+            "translations": "Traduções"
+        },
+
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir o conteúdo \"{title}\"? Esta ação não pode ser desfeita."
+        },
+
+        "status": {
+            "changeTitle": "Alterar status",
+            "changeMessage": "Tem certeza de que deseja alterar \"{title}\" para \"{status}\"?"
+        },
+
+        "translations": {
+            "title": "Traduções",
+            "registeredTitle": "Traduções registradas",
+            "code": "Código",
+            "languagePlaceholder": "Selecionar idioma",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidContent": "Conteúdo inválido.",
+            "loadingLanguages": "Carregando idiomas..."
+        }
+    },
+
+    "contentStatus": {
+        "title": "Status dos filmes",
+        "loading": "Carregando status...",
+        "createTitle": "Criar novo status",
+        "editTitle": "Editar status",
+
+        "list": {
+            "title": "Lista de status dos filmes",
+            "searchPlaceholder": "Buscar status dos filmes...",
+            "empty": "Nenhum status de filme encontrado para esse termo",
+            "code": "Código"
+        },
+
+        "form": {
+            "codeLabel": "Código do status",
+            "codePlaceholder": "Ex.: PUBLISHED",
+            "languageLabel": "Idioma",
+            "languagePlaceholder": "Selecionar idioma",
+            "nameLabel": "Nome do status",
+            "namePlaceholder": "Ex.: Publicado",
+            "descriptionLabel": "Descrição (opcional)",
+            "descriptionPlaceholder": "Ex.: Filme disponível para visualização",
+            "validation": {
+                "codeRequired": "Preencha o código.",
+                "languageRequired": "Selecione um idioma.",
+                "nameRequired": "Preencha o nome."
+            }
+        },
+
+        "translations": {
+            "title": "Traduções",
+            "registeredTitle": "Traduções registradas",
+            "code": "Código",
+            "description": "Descrição",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "languagePlaceholder": "Selecionar idioma",
+            "namePlaceholder": "Ex.: Ativo",
+            "descriptionPlaceholder": "Descrição do status",
+            "invalidStatus": "Status de conteúdo inválido.",
+            "loadingLanguages": "Carregando idiomas...",
+            "loading": "Carregando traduções..."
+        },
+
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir o status do filme \"{name}\"? Esta ação não pode ser desfeita."
+        },
+
+        "errors": {
+            "translation": "Ocorreu um erro ao processar a tradução.",
+            "load": "Erro ao carregar o status."
+        }
+    },
+
+    "episodes": {
+        "title": "Episódios",
+        "loading": "Carregando episódios...",
+        "createTitle": "Criar episódio",
+        "editTitle": "Editar episódio",
+
+        "list": {
+            "title": "Lista de episódios",
+            "searchPlaceholder": "Buscar episódio...",
+            "empty": "Nenhum episódio registrado",
+            "searching": "Buscando...",
+            "episodeNumber": "Nº do episódio",
+            "duration": "Duração",
+            "releaseDate": "Data de lançamento",
+            "status": "Status",
+            "video": "Vídeo",
+            "viewEpisode": "Ver episódio"
+        },
+
+        "form": {
+            "episodeNumber": "Número do episódio",
+            "releaseDate": "Data de lançamento",
+            "status": "Status do conteúdo",
+            "statusPlaceholder": "Selecionar status...",
+            "thumbnail": "Arquivo de miniatura",
+            "episodeFile": "Arquivo do episódio",
+            "currentThumbnail": "Miniatura atual",
+            "currentEpisode": "Episódio atual",
+
+            "validation": {
+                "episodeNumberRequired": "O número do episódio é obrigatório.",
+                "episodeNumberInvalid": "O número do episódio deve ser maior que 0.",
+                "titleRequired": "O título é obrigatório.",
+                "statusRequired": "Selecione um status.",
+                "thumbnailRequired": "O arquivo de miniatura é obrigatório.",
+                "episodeFileRequired": "O arquivo do episódio é obrigatório."
+            }
+        },
+
+        "actions": {
+            "backToSeasons": "Voltar para as temporadas",
+            "translations": "Traduções"
+        },
+
+        "delete": {
+            "title": "Excluir episódio",
+            "message": "Tem certeza de que deseja excluir o episódio \"{title}\"? Esta ação não pode ser desfeita.",
+            "deleting": "Excluindo..."
+        },
+
+        "status": {
+            "changeTitle": "Alterar status",
+            "changeMessage": "Tem certeza de que deseja alterar \"{title}\" para \"{status}\"?"
+        },
+
+        "translations": {
+            "title": "Traduções do episódio",
+            "registeredTitle": "Traduções registradas",
+            "languagePlaceholder": "Selecionar idioma",
+            "code": "Código",
+            "titlePlaceholder": "Título do episódio",
+            "descriptionPlaceholder": "Descrição do episódio",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidEpisode": "Episódio inválido.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+
+        "errors": {
+            "create": "Ocorreu um erro ao criar o episódio.",
+            "update": "Ocorreu um erro ao atualizar o episódio.",
+            "load": "Erro ao carregar os episódios.",
+            "translation": "Ocorreu um erro ao processar a tradução."
+        }
+    },
+
+    "heroBanner": {
+        "title": "Banners em destaque",
+        "loading": "Carregando banners...",
+        "createTitle": "Criar banner",
+        "editTitle": "Editar banner",
+        "watch": "Assistir",
+        "moreInfo": "Mais informações",
+        "indicator": "Banner {number}",
+
+        "list": {
+            "searchPlaceholder": "Buscar banner...",
+            "empty": "Nenhum banner encontrado.",
+            "loading": "Carregando banners...",
+            "image": "Imagem",
+            "content": "Conteúdo",
+            "priority": "Prioridade",
+            "startDate": "Início",
+            "endDate": "Fim",
+            "status": "Status",
+            "actions": "Ações",
+            "translations": "Traduções"
+        },
+
+        "form": {
+            "content": "Conteúdo",
+            "languagePlaceholder": "Selecionar idioma",
+            "contentRequired": "Selecione um conteúdo.",
+            "languageRequired": "Selecione um idioma."
+        },
+
+        "titleOverride": "Título (opcional)",
+        "titleOverridePlaceholder": "Deixe vazio para usar o título original",
+        "descriptionOverride": "Descrição (opcional)",
+        "descriptionOverridePlaceholder": "Deixe vazio para usar a descrição original",
+        "priority": "Prioridade",
+        "backdrop": "Imagem de fundo",
+        "currentBackdrop": "Imagem de fundo atual",
+        "startDate": "Data de início",
+        "endDate": "Data de término",
+        "active": "Ativo",
+        "back": "Voltar",
+
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir o banner \"{title}\"? Esta ação não pode ser desfeita."
+        },
+
+        "status": {
+            "changeTitle": "Alterar status",
+            "changeMessage": "Tem certeza de que deseja alterar \"{title}\" para \"{status}\"?"
+        },
+
+        "translations": {
+            "registeredTitle": "Traduções registradas",
+            "languagePlaceholder": "Selecionar idioma",
+            "code": "Código",
+            "titlePlaceholder": "Ex.: Estreia exclusiva",
+            "descriptionPlaceholder": "Descrição do banner",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{languageName}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidBanner": "Banner inválido",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+
+        "errors": {
+            "create": "Ocorreu um erro ao criar o banner.",
+            "update": "Ocorreu um erro ao atualizar o banner.",
+            "load": "Erro ao carregar os banners.",
+            "translation": "Ocorreu um erro ao processar a tradução.",
+            "idRequired": "O identificador do banner é obrigatório."
+        }
+    },
+
+    "pageSections": {
+        "title": "Seções da página",
+        "loading": "Carregando seções...",
+        "error": "Erro ao carregar as seções.",
+        "empty": "Nenhuma seção.",
+
+        "form": {
+            "page": "Página",
+            "type": "Tipo de seção",
+            "displayOrder": "Ordem de exibição",
+            "shelf": "Carrossel"
+        },
+
+        "pages": {
+            "home": "Início",
+            "movies": "Filmes",
+            "series": "Séries"
+        },
+
+        "options": {
+            "sectionType": {
+                "genreBar": "Barra de gêneros",
+                "trending": "Em alta",
+                "topRated": "Mais bem avaliados",
+                "newReleases": "Novos lançamentos",
+                "continueWatching": "Continuar assistindo",
+                "upcoming": "Em breve"
+            }
+        },
+
+        "delete": {
+            "title": "Excluir seção",
+            "message": "Deseja excluir \"{name}\"? Esta ação não pode ser desfeita."
+        }
+    },
+
+    "reportCategories": {
+        "title": "Categorias de relatório",
+        "loading": "Carregando categoria de relatório...",
+        "createTitle": "Criar categoria de relatório",
+        "editTitle": "Editar categoria de relatório",
+
+        "list": {
+            "title": "Lista de categorias de relatório",
+            "searchPlaceholder": "Buscar por nome ou código",
+            "empty": "Nenhuma categoria de relatório encontrada.",
+            "code": "Código",
+            "category": "Categoria"
+        },
+
+        "form": {
+            "codeLabel": "Código da categoria",
+            "codePlaceholder": "Ex.: BUG, ABUSE, PAYMENT",
+            "languagePlaceholder": "Selecionar idioma",
+            "nameLabel": "Nome da categoria",
+            "namePlaceholder": "Ex.: Problema técnico, Abuso, Pagamento",
+            "descriptionLabel": "Descrição (opcional)",
+            "descriptionPlaceholder": "Descrição da categoria de relatório",
+
+            "validation": {
+                "codeRequired": "Preencha o campo de código.",
+                "languageRequired": "Selecione um idioma.",
+                "nameRequired": "Preencha o campo de nome."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir a categoria de relatório \"{name}\"? Esta ação não pode ser desfeita."
+        },
+
+        "translations": {
+            "title": "Traduções",
+            "registeredTitle": "Traduções registradas",
+            "namePlaceholder": "Ex.: Problemas com o conteúdo",
+            "descriptionPlaceholder": "Descrição da categoria",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidCategory": "Categoria de relatório inválida.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+
+        "errors": {
+            "create": "Ocorreu um erro ao criar a categoria de relatório.",
+            "update": "Ocorreu um erro ao atualizar a categoria de relatório.",
+            "load": "Erro ao carregar as categorias de relatório.",
+            "translation": "Ocorreu um erro ao processar a tradução."
+        }
+    },
+
+    "problemReport": {
+        "title": "Relatórios de problemas",
+        "report": "Relatório",
+        "myReports": "Meus relatórios",
+
+        "form": {
+            "title": "Relatar um problema",
+            "category": "Categoria",
+            "categoryPlaceholder": "Selecione uma categoria",
+            "description": "Descrição do problema",
+            "descriptionPlaceholder": "Descreva o problema que você está enfrentando...",
+            "send": "Enviar relatório"
+        },
+
+        "list": {
+            "loading": "Carregando relatórios...",
+            "empty": "Nenhum relatório registrado.",
+            "searchPlaceholder": "Buscar relatórios...",
+            "allStatuses": "Todos os status",
+            "allCategories": "Todas as categorias",
+            "category": "Categoria",
+            "content": "Conteúdo",
+            "episode": "Episódio",
+            "reported": "Relatado",
+            "resolved": "Resolvido"
+        },
+
+        "status": {
+            "changeTitle": "Alterar status",
+            "changeMessage": "Tem certeza de que deseja alterar o relatório #{id} para \"{status}\"?"
+        }
+    },
+
+    "reportStatus": {
+        "title": "Status dos relatórios",
+        "loading": "Carregando status dos relatórios...",
+        "createTitle": "Criar status do relatório",
+        "editTitle": "Editar status do relatório",
+
+        "list": {
+            "title": "Lista de status dos relatórios",
+            "searchPlaceholder": "Buscar por nome ou código",
+            "empty": "Nenhum status de relatório encontrado.",
+            "code": "Código"
+        },
+
+        "form": {
+            "codeLabel": "Código do status",
+            "codePlaceholder": "Ex.: PENDING",
+            "nameLabel": "Nome do status",
+            "namePlaceholder": "Ex.: Pendente, Resolvido, Rejeitado",
+            "descriptionLabel": "Descrição do status",
+            "descriptionPlaceholder": "Descrição do status do relatório",
+
+            "validation": {
+                "codeRequired": "Preencha o campo de código.",
+                "languageRequired": "Selecione um idioma.",
+                "nameRequired": "Preencha o campo de nome."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir o status do relatório \"{name}\"? Esta ação não pode ser desfeita."
+        },
+
+        "translations": {
+            "title": "Traduções",
+            "registeredTitle": "Traduções registradas",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "languagePlaceholder": "Selecionar idioma",
+            "namePlaceholder": "Ex.: Pendente",
+            "descriptionPlaceholder": "Descrição do status do relatório",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "loading": "Carregando traduções...",
+            "invalidStatus": "Status de relatório inválido."
+        },
+
+        "errors": {
+            "load": "Erro ao carregar os status dos relatórios."
+        }
+    },
+
+    "permissions": {
+        "title": "Permissões do cargo: {role}",
+        "loading": "Carregando permissões...",
+        "updatedSuccessfully": "Permissões atualizadas com sucesso.",
+        "loadError": "Não foi possível carregar as permissões do cargo.",
+        "saveError": "Não foi possível salvar as alterações.",
+        "invalidRole": "Cargo inválido.",
+        "noPermissions": "Nenhuma permissão registrada.",
+        "module": "Módulo",
+        "permissions": "Permissões",
+        "saveChanges": "Salvar alterações",
+        "saving": "Salvando..."
+    },
+
+    "search": {
+        "placeholder": "Buscar filmes ou séries...",
+        "close": "Fechar busca",
+        "title": "Histórico de busca",
+
+        "history": {
+            "title": "Buscas recentes",
+            "subtitle": "Todas as suas buscas recentes",
+            "loading": "Carregando histórico...",
+            "empty": "Você não tem buscas recentes",
+            "viewAll": "Ver todo o histórico de buscas",
+            "clear": "Limpar histórico",
+            "clearing": "Limpando...",
+            "delete": "Excluir busca",
+            "deleteConfirmTitle": "Limpar histórico",
+            "deleteConfirmMessage": "Tem certeza de que deseja excluir todo o seu histórico de buscas? Esta ação não pode ser desfeita."
+        },
+
+        "results": {
+            "empty": "Nenhum resultado encontrado",
+            "movie": "Filme",
+            "series": "Série"
+        },
+
+        "historyItem": {
+            "delete": "Excluir busca: {term}"
+        }
+    },
+
+    "series": {
+        "title": "Séries",
+        "loading": "Carregando série...",
+        "error": "Erro ao carregar a série.",
+        "notFound": "Série não encontrada.",
+
+        "detail": {
+            "watchTrailer": "Assistir ao trailer",
+            "noDescription": "Nenhuma descrição disponível."
+        },
+
+        "admin": {
+            "seasonsTitle": "Gerenciamento de temporadas",
+            "newSeason": "Nova temporada",
+            "backToContents": "Voltar para conteúdos"
+        },
+
+        "card": {
+            "type": "Série"
+        },
+
+        "errors": {
+            "load": "Erro ao carregar a série."
+        }
+    },
+
+    "seasons": {
+        "title": "Temporadas",
+        "loading": "Carregando temporadas...",
+        "noSeasons": "Nenhuma temporada.",
+        "season": "Temporada",
+
+        "list": {
+            "title": "Lista de temporadas",
+            "searchPlaceholder": "Buscar temporadas...",
+            "empty": "Nenhuma temporada registrada",
+            "seasonNumber": "Nº da temporada",
+            "releaseDate": "Data de estreia",
+            "episodes": "Episódios"
+        },
+
+        "form": {
+            "createTitle": "Criar temporada",
+            "editTitle": "Editar temporada",
+            "seasonNumber": "Número da temporada",
+            "releaseDate": "Data de estreia",
+            "statusPlaceholder": "Selecionar status...",
+
+            "validation": {
+                "titleRequired": "O título é obrigatório.",
+                "seasonNumberRequired": "O número da temporada é obrigatório.",
+                "seasonNumberInvalid": "O número da temporada deve ser maior que 0.",
+                "releaseDateRequired": "A data de estreia é obrigatória.",
+                "statusRequired": "Selecione um status."
+            }
+        },
+
+        "actions": {
+            "viewEpisodes": "Ver episódios",
+            "createEpisode": "Criar episódio"
+        },
+
+        "upcoming": {
+            "label": "Em breve",
+            "title": "Temporada {number} · Em breve"
+        },
+
+        "delete": {
+            "title": "Excluir temporada",
+            "message": "Excluir a temporada \"{title}\"? Esta ação não pode ser desfeita."
+        },
+
+        "status": {
+            "changeTitle": "Alterar status",
+            "changeMessage": "Tem certeza de que deseja alterar \"{title}\" para \"{status}\"?"
+        },
+
+        "translations": {
+            "title": "Traduções da temporada",
+            "registeredTitle": "Traduções registradas",
+            "languagePlaceholder": "Selecionar idioma",
+            "code": "Código",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidSeason": "Temporada inválida.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+
+        "errors": {
+            "create": "Ocorreu um erro ao criar a temporada.",
+            "update": "Ocorreu um erro ao atualizar a temporada.",
+            "load": "Erro ao carregar as temporadas."
+        }
+    },
+
+    "shelves": {
+        "title": "Carrosséis",
+        "create": "Criar carrossel",
+        "edit": "Editar carrossel",
+        "name": "Nome do carrossel",
+        "namePlaceholder": "Ex.: Carrossel de filmes",
+        "target": "Destino do carrossel",
+        "layout": "Layout dos cards",
+        "source": "Fonte do carrossel",
+        "home": "Início",
+        "movies": "Filmes",
+        "series": "Séries",
+        "options": {
+            "target": {
+                "home": "Início",
+                "movies": "Filmes",
+                "series": "Séries"
+            },
+            "layout": {
+                "poster": "Pôster",
+                "landscape": "Horizontal",
+                "wide": "Horizontal amplo",
+                "featured": "Destaque",
+                "square": "Quadrado"
+            },
+            "source": {
+                "manual": "Manual",
+                "trending": "Em alta",
+                "topRated": "Mais bem avaliados",
+                "newReleases": "Novos lançamentos",
+                "mostWatched": "Mais assistidos"
+            }
+        },
+        "manageContent": "Gerenciar conteúdo",
+        "loading": "Carregando carrossel...",
+        "validation": {
+            "nameRequired": "Por favor, preencha o campo de nome.",
+            "languageRequired": "Por favor, selecione um idioma.",
+            "targetRequired": "Por favor, selecione um destino.",
+            "layoutRequired": "Por favor, selecione um layout.",
+            "sourceRequired": "Por favor, selecione uma fonte."
+        },
+        "list": {
+            "title": "Lista de carrosséis",
+            "searchPlaceholder": "Pesquisar carrossel...",
+            "loading": "Carregando carrosséis...",
+            "empty": "Nenhum carrossel encontrado.",
+            "slug": "Slug",
+            "target": "Destino",
+            "layout": "Layout",
+            "source": "Fonte",
+            "status": "Status",
+            "actions": "Ações"
+        },
+        "content": {
+            "title": "Conteúdo do carrossel",
+            "add": "Adicionar conteúdo",
+            "position": "Posição",
+            "loading": "Carregando conteúdos...",
+            "error": "Erro ao salvar o conteúdo do carrossel.",
+            "empty": "Este carrossel não possui conteúdo.",
+            "deleteTitle": "Remover conteúdo",
+            "deleteMessage": "Remover \"{title}\" do carrossel?"
+        },
+        "translation": {
+            "title": "Traduções",
+            "registered": "Traduções registradas",
+            "loading": "Carregando traduções...",
+            "code": "Código",
+            "namePlaceholder": "Ex.: Mais populares",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidShelf": "Carrossel inválido.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+        "delete": {
+            "title": "Excluir carrossel",
+            "message": "Deseja excluir \"{title}\"?"
+        },
+        "errors": {
+            "load": "Erro ao carregar os carrosséis.",
+            "translation": "Ocorreu um erro ao processar a tradução."
+        }
+    },
+
+    "supportCategory": {
+        "title": "Categorias de Suporte",
+        "loading": "Carregando categoria...",
+        "create": "Criar categoria de suporte",
+        "edit": "Editar categoria de suporte",
+        "list": {
+            "title": "Lista de categorias de suporte",
+            "searchPlaceholder": "Buscar por nome ou código",
+            "empty": "Nenhuma categoria de suporte encontrada.",
+            "code": "Código"
+        },
+        "form": {
+            "code": "Código da categoria",
+            "codePlaceholder": "Ex.: PAYMENT, REFUND, CLAIM",
+            "name": "Nome da categoria de suporte",
+            "namePlaceholder": "Ex.: Pagamento, Reembolso, Reclamação",
+            "description": "Descrição (opcional)",
+            "descriptionPlaceholder": "Descrição da categoria de suporte",
+            "validation": {
+                "codeRequired": "Preencha o campo de código.",
+                "languageRequired": "Selecione um idioma.",
+                "nameRequired": "Preencha o campo de nome."
+            }
+        },
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir a categoria de suporte \"{name}\"? Esta ação não pode ser desfeita."
+        },
+        "translation": {
+            "title": "Traduções",
+            "registeredTitle": "Traduções registradas",
+            "code": "Código",
+            "namePlaceholder": "Ex.: Suporte técnico",
+            "descriptionPlaceholder": "Descrição da categoria de suporte",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "error": "Ocorreu um erro ao processar a tradução.",
+            "invalidCategory": "Categoria de suporte inválida.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+        "errors": {
+            "load": "Erro ao carregar as categorias de suporte.",
+            "translation": "Ocorreu um erro ao processar a tradução."
+        }
+    },
+
+    "supportTicketStatus": {
+        "title": "Status dos tickets de suporte",
+        "loading": "Carregando status...",
+        "createTitle": "Criar status do ticket",
+        "editTitle": "Editar status do ticket",
+        "list": {
+            "title": "Lista de status dos tickets de suporte",
+            "searchPlaceholder": "Buscar por nome ou código",
+            "empty": "Nenhum status de ticket de suporte encontrado.",
+            "code": "Código"
+        },
+        "form": {
+            "createTitle": "Criar status do ticket",
+            "editTitle": "Editar status do ticket",
+            "codeLabel": "Código do status do ticket",
+            "codePlaceholder": "Ex.: PENDING",
+            "nameLabel": "Nome do status do ticket",
+            "namePlaceholder": "Ex.: Pendente",
+            "descriptionLabel": "Descrição",
+            "descriptionPlaceholder": "Descrição do status do ticket",
+            "validation": {
+                "codeRequired": "Preencha o campo de código.",
+                "languageRequired": "Selecione um idioma.",
+                "nameRequired": "Preencha o campo de nome."
+            }
+        },
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir o status do ticket de suporte \"{name}\"? Esta ação não pode ser desfeita."
+        },
+        "translations": {
+            "title": "Traduções",
+            "registeredTitle": "Traduções registradas",
+            "languagePlaceholder": "Selecionar idioma",
+            "namePlaceholder": "Ex.: Pendente",
+            "descriptionPlaceholder": "Descrição do status do ticket",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "invalidStatus": "Status de ticket inválido.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+        "errors": {
+            "load": "Erro ao carregar o status.",
+            "translation": "Ocorreu um erro ao processar a tradução."
+        }
+    },
+
+    "supportTickets": {
+        "title": "Tickets de suporte",
+        "loading": "Carregando tickets...",
+        "list": {
+            "title": "Tickets de suporte",
+            "myTickets": "Meus tickets",
+            "description": "Consulte suas solicitações e conversas com o suporte.",
+            "searchPlaceholder": "Buscar tickets...",
+            "statusPlaceholder": "Todos os status",
+            "categoryPlaceholder": "Todas as categorias",
+            "userIdPlaceholder": "ID do usuário",
+            "createdAtFromPlaceholder": "Data inicial",
+            "createdAtToPlaceholder": "Data final",
+            "empty": "Nenhum ticket registrado.",
+            "emptyUser": "Você não possui tickets de suporte.",
+            "subject": "Assunto",
+            "category": "Categoria",
+            "user": "Usuário",
+            "status": "Status",
+            "created": "Criado",
+            "updated": "Atualizado",
+            "action": "Ação",
+            "viewTicket": "Ver ticket",
+            "viewConversation": "Ver conversa"
+        },
+        "form": {
+            "title": "Entrar em contato com o suporte",
+            "subjectLabel": "Assunto",
+            "subjectPlaceholder": "Com o que você precisa de ajuda?",
+            "categoryLabel": "Categoria",
+            "categoryPlaceholder": "Selecione uma categoria",
+            "descriptionLabel": "Descreva seu problema",
+            "descriptionPlaceholder": "Conte-nos o que aconteceu e como podemos ajudar...",
+            "create": "Criar ticket",
+            "creating": "Criando ticket...",
+            "validation": {
+                "subjectRequired": "Preencha o assunto.",
+                "categoryRequired": "Selecione uma categoria.",
+                "descriptionRequired": "Descreva o problema."
+            }
+        },
+        "messages": {
+            "conversation": "Conversa",
+            "sendTitle": "Enviar mensagem",
+            "label": "Mensagem",
+            "messagePlaceholder": "Escreva sua mensagem aqui...",
+            "send": "Enviar mensagem",
+            "sending": "Enviando...",
+            "loading": "Carregando mensagens...",
+            "error": "Erro ao carregar as mensagens.",
+            "retry": "Tentar novamente",
+            "empty": "Nenhuma mensagem.",
+            "user": "Usuário",
+            "you": "Você",
+            "support": "Suporte"
+        },
+        "detail": {
+            "ticket": "Ticket",
+            "requestReceived": "Solicitação recebida",
+            "requestReceivedMessage": "Sua solicitação foi recebida. A equipe de suporte analisará seu caso e responderá assim que estiver disponível.",
+            "closed": "Ticket fechado",
+            "closedMessage": "Este ticket foi fechado e você não pode mais enviar novas mensagens."
+        },
+        "status": {
+            "change": "Alterar status",
+            "changeMessage": "Tem certeza de que deseja alterar o ticket #{ticketId} para \"{statusName}\"?",
+            "confirm": "Alterar"
+        },
+        "errors": {
+            "load": "Erro ao carregar os tickets de suporte.",
+            "loadMessages": "Erro ao carregar as mensagens.",
+            "sendMessage": "Erro ao enviar a mensagem.",
+            "create": "Erro ao criar o ticket.",
+            "updateStatus": "Erro ao atualizar o status do ticket."
+        },
+        "actions": {
+            "new": "Novo ticket",
+            "retry": "Tentar novamente",
+            "view": "Ver ticket"
+        }
+    },
+
+    "systemRoles": {
+        "title": "Funções do Sistema",
+        "createTitle": "Criar Função do Sistema",
+        "editTitle": "Editar Função do Sistema",
+        "list": {
+            "searchPlaceholder": "Buscar funções...",
+            "empty": "Nenhuma função encontrada com esse termo.",
+            "roleName": "Função do Sistema",
+            "permissions": "Permissões"
+        },
+        "form": {
+            "createTitle": "Criar Função",
+            "editTitle": "Editar Função",
+            "roleName": "Nome da Função",
+            "roleNamePlaceholder": "Ex.: MODERADOR",
+            "validation": {
+                "roleNameRequired": "Preencha o campo de nome da função."
+            }
+        },
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir a função do sistema \"{name}\"? Esta ação não pode ser desfeita."
+        },
+        "errors": {
+            "load": "Erro ao carregar a função do sistema.",
+            "idInvalid": "ID de função inválido."
+        }
+    },
+
+    "discounts": {
+        "title": "Descontos",
+        "createTitle": "Criar novo desconto",
+        "editTitle": "Editar desconto",
+        "list": {
+            "title": "Lista de descontos",
+            "searchPlaceholder": "Buscar descontos...",
+            "empty": "Nenhum desconto encontrado com esse termo.",
+            "discount": "Desconto",
+            "amount": "Valor",
+            "startDate": "Data de início",
+            "endDate": "Data de término"
+        },
+        "form": {
+            "createTitle": "Criar desconto",
+            "editTitle": "Editar desconto",
+            "discountTypeLabel": "Tipo de desconto",
+            "discountTypePlaceholder": "Ex.: Promoção de verão",
+            "amountLabel": "Porcentagem de desconto (%)",
+            "startDateLabel": "Data de início",
+            "endDateLabel": "Data de término",
+            "descriptionLabel": "Descrição",
+            "descriptionPlaceholder": "Descrição do desconto",
+            "validation": {
+                "discountTypeRequired": "Preencha o campo de tipo de desconto.",
+                "amountInvalid": "Valor inválido.",
+                "datesRequired": "Preencha ambas as datas.",
+                "startDateAfterEndDate": "A data de início não pode ser posterior à data de término."
+            }
+        },
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir o desconto \"{discountType}\"? Esta ação não pode ser desfeita."
+        },
+        "validation": {
+            "discountTypeRequired": "Preencha o campo de tipo de desconto.",
+            "amountInvalid": "Valor inválido.",
+            "datesRequired": "Preencha ambas as datas.",
+            "startDateAfterEndDate": "A data de início não pode ser posterior à data de término."
+        },
+        "errors": {
+            "load": "Erro ao carregar o desconto."
+        }
+    },
+
+    "systemPermissions": {
+        "title": "Permissões do Sistema",
+        "createTitle": "Criar Permissão do Sistema",
+        "editTitle": "Editar Permissão do Sistema",
+        "list": {
+            "searchPlaceholder": "Buscar permissões...",
+            "empty": "Nenhuma permissão encontrada com esse termo.",
+            "moduleName": "Nome do Módulo",
+            "action": "Ação",
+            "permissionName": "Nome da Permissão"
+        },
+        "form": {
+            "createTitle": "Criar Permissão do Sistema",
+            "editTitle": "Editar Permissão do Sistema",
+            "moduleLabel": "Nome do Módulo",
+            "modulePlaceholder": "Ex.: contentStatus, movie, etc.",
+            "actionLabel": "Nome da Ação",
+            "actionPlaceholder": "Ex.: CREATE, READ, UPDATE, DELETE",
+            "permissionLabel": "Nome da Permissão",
+            "permissionPlaceholder": "Ex.: PERMITIR_CRIAR, PERMITIR_LER, etc.",
+            "validation": {
+                "requiredFields": "Preencha todos os campos."
+            }
+        },
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir a permissão do sistema \"{name}\"? Esta ação não pode ser desfeita."
+        },
+        "errors": {
+            "load": "Erro ao carregar a permissão do sistema."
+        }
+    },
+
+    "userRoleAssignment": {
+        "title": "Gerenciar funções de: {email}",
+        "actions": {
+            "assigneRoles": "Gerenciar funções"
+        },
+        "assign": {
+            "label": "Atribuir funções",
+            "placeholder": "Adicionar função",
+            "button": "Atribuir",
+            "loading": "Atribuindo..."
+        },
+        "removes": {
+            "label": "Remover funções",
+            "placeholder": "Remover função",
+            "button": "Remover",
+            "loading": "Removendo..."
+        },
+        "clos": "Fechar"
+    },
+
+    "users": {
+        "title": "Usuários",
+        "create": "Criar Usuário",
+        "list": {
+            "searchPlaceholder": "Buscar por e-mail ou nome de usuário...",
+            "empty": "Não há usuários para exibir.",
+            "email": "E-mail",
+            "username": "Nome de usuário",
+            "roles": "Funções",
+            "manageRoles": "Gerenciar Funções"
+        },
+        "languageSelector": {
+            "title": "Idioma",
+            "subtitle": "Selecione o idioma do aplicativo",
+            "close": "Fechar",
+            "loading": "Carregando idiomas...",
+            "empty": "Não há idiomas disponíveis."
+        }
+    },
+
+    "profile": {
+        "editTitle": "Editar Perfil",
+        "loading": "Carregando perfil...",
+        "notFound": "Perfil não encontrado",
+        "bioEmpty": "Sem biografia",
+        "pictureAlt": "Foto de perfil",
+        "form": {
+            "displayName": "Nome de exibição",
+            "displayNamePlaceholder": "ex.: João Silva",
+            "firstName": "Nome",
+            "firstNamePlaceholder": "ex.: João",
+            "lastName": "Sobrenome",
+            "lastNamePlaceholder": "ex.: Silva",
+            "birthDate": "Data de nascimento",
+            "gender": "Gênero",
+            "bio": "Biografia",
+            "bioPlaceholder": "Conte-nos sobre você...",
+            "location": "Localização",
+            "locationPlaceholder": "Cidade, País",
+            "website": "Site",
+            "websitePlaceholder": "https://exemplo.com",
+            "visibility": "Visibilidade do perfil"
+        },
+        "genders": {
+            "notSpecified": "Não especificado",
+            "male": "Masculino",
+            "female": "Feminino",
+            "other": "Outro",
+            "preferNotToSay": "Prefiro não dizer"
+        },
+        "visibility": {
+            "public": "Público",
+            "private": "Privado"
+        },
+        "menu": {
+            "viewProfile": "Meu perfil",
+            "watchlist": "Minha lista",
+            "support": "Suporte",
+            "edit": "Editar perfil",
+            "language": "Idioma",
+            "logout": "Sair"
+        },
+        "errors": {
+            "load": "Erro ao carregar o perfil.",
+            "update": "Erro ao atualizar o perfil.",
+            "uploadProfilePicture": "Erro ao enviar a foto de perfil.",
+            "uploadBanner": "Erro ao enviar o banner.",
+            "invalidUserId": "ID de usuário inválido."
+        }
+    },
+
+    "upcoming": {
+        "title": "Próximos lançamentos",
+        "badge": "Em breve",
+        "loadIng": "Carregando próximos lançamentos..."
+    },
+
+    "watchlist": {
+        "title": "Minha lista",
+        "loading": "Carregando sua lista...",
+        "empty": {
+            "title": "Sua lista está vazia",
+            "text": "Adicione filmes e séries para encontrá-los facilmente depois."
+        },
+        "types": {
+            "movie": "Filme",
+            "series": "Série"
+        },
+        "add": {
+            "title": "Adicionar à minha lista"
+        },
+        "remove": {
+            "title": "Remover da minha lista",
+            "button": "Remover",
+            "loading": "Removendo...",
+            "confirmMessage": "Tem certeza de que deseja remover \"{title}\" da sua lista? Esta ação não pode ser desfeita."
+        }
+    }
 }

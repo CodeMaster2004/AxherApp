@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import SystemRolesForm from "@/features/systemRoles/components/SystemRolesForm";
+import { useTranslations } from "next-intl";
 
 export default function CreateSystemRolesPage(){
     const router = useRouter();
-    
+    const t = useTranslations("systemRoles");
     const [roleName, setRoleName] = useState("");
     
     const {addSystemRole, saving} = useSystemRolesActions({
@@ -21,7 +22,7 @@ export default function CreateSystemRolesPage(){
         const roleNameTrim = roleName.trim();
 
         if(!roleNameTrim){
-            alert("Por favor completa el campo de nombre del rol");
+            alert(t("form.validation.roleNameRequired"));
             return;
         }
 
@@ -36,7 +37,7 @@ export default function CreateSystemRolesPage(){
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Rol del Sistema</h1>
+            <h1>{t("create.title")}</h1>
 
             <SystemRolesForm
                 roleName={roleName}

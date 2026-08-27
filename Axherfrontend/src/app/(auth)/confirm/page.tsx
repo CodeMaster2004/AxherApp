@@ -1,26 +1,28 @@
 "use client";
 
-import { useUsersActions } from "@/features/users/hooks";
 import UserConfirmEmailForm from "@/features/auth/components/EmailForm";
 import { useAuth } from "@/features/auth/context/AuthContext";
 import styles from "@/features/auth/components/AuthCard.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 
 export default function ConfirmPage() {
-    const { confirmEmail, resendOtp, loading, error } = useUsersActions();
+    const { confirmEmail, resendOtp, loading, error } = useAuthActions();
     const { setAuth } = useAuth();
     const searchParams = useSearchParams();
     const router = useRouter();
     const email = searchParams.get("email");
+    const t = useTranslations("auth");
 
     if(email == null){
-        return <div>No se ha encontrado el usuario.</div>;
+        return <div>{t("confirmEmail.userNotFound")}</div>;
     }
 
     const handleConfirm = async (otp: string) => {
         try {
             const me = await confirmEmail(email, otp);
-            setAuth({ userId: me.userId, email: me.email, roles: me.roles, permissions: me.permissions ?? [] });
+            setAuth({ userId: me.userId, email: me.email, roles: me.roles, permissions: me.permissions ?? [], preferredLanguageCode: me.preferredLanguageCode ?? null });
             router.push("/");
             /*const resp = await confirmEmail(email, otp);
             if(resp?.token){
@@ -36,9 +38,9 @@ export default function ConfirmPage() {
     const handleResendOtp = async () => {
         try {
             await resendOtp(email);
-            alert("Codigo reenviado al correo");
+            alert(t("confirmEmail.resendSuccess"));
         }catch (err) {
-            console.error("Error reenviando codigo ", err)
+            console.error(t("errors.resendCode"), err)
         }
     }
     return (

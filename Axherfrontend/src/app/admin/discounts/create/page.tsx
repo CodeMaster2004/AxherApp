@@ -5,11 +5,12 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import DiscountsFrom from "@/features/discounts/components/DiscountsForm";
 import { useRouter } from "next/navigation";
 import { useDiscountsActions } from "@/features/discounts/hooks";
+import { useTranslations } from "next-intl";
 
 export default function CreateDiscountPage(){
     const router = useRouter();
     const today = new Date().toISOString().split('T')[0]; // "2026-02-05"
-    
+    const t = useTranslations("discounts");
     const [discountType, setDisocuntType] = useState("");
      const [amount, setAmount] = useState<number>(0);
     const [startDate, setStartDate] = useState(today);
@@ -29,22 +30,22 @@ export default function CreateDiscountPage(){
         const descriptionTrim = description.trim();
 
         if(!discountTypeTrim){
-            alert("Por favor completa el campo de tipo de descuento");
+            alert(t("form.validation.discountTypeRequired"));
             return;
         }
 
         if (amount <= 0 || Number.isNaN(amount)) {
-            alert("Monto inválido");
+            alert(t("form.validation.amountInvalid"));
             return;
         }
 
         if(!startDateTrim || !endDateTrim){
-            alert("Completa ambas fechas");
+            alert(t("form.validation.datesRequired"));
             return;
         }
 
         if(new Date(startDateTrim) > new Date(endDateTrim)){
-            alert("La fecha de inicio no puede ser mayor que la fecha de fin");
+            alert(t("form.validation.startDateAfterEndDate"));
             return;
         }
 
@@ -63,7 +64,7 @@ export default function CreateDiscountPage(){
 
     return(
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear nuevo descuento</h1>
+            <h1>{t("createTitle")}</h1>
 
             <DiscountsFrom
                 discountType={discountType}

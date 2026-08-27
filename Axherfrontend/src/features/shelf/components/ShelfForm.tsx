@@ -47,6 +47,21 @@ export default function ShelfForm({
         value: language.languageId,
         label: `${language.name} (${language.nativeName})`,
     }));
+
+    const targetOptions = shelfTargetOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey)
+    }));
+
+    const layoutOptions = shelfLayoutOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey)
+    }));
+
+    const sourceOptions = shelfSourceOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey)
+    }));
     
     return (
 
@@ -95,7 +110,7 @@ export default function ShelfForm({
                         target: target as ShelfTarget,
                     }))
                 }
-                options={shelfTargetOptions}
+                options={targetOptions}
                 disabled={saving}
             />
 
@@ -108,7 +123,7 @@ export default function ShelfForm({
                         layout: layout as ShelfLayout,
                     }))
                 }
-                options={shelfLayoutOptions}
+                options={layoutOptions}
                 disabled={saving}
             />
 
@@ -121,7 +136,7 @@ export default function ShelfForm({
                         source: source as ShelfSource,
                     }))
                 }
-                options={shelfSourceOptions}
+                options={sourceOptions}
                 disabled={saving}
             />
 

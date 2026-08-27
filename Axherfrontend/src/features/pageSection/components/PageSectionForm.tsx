@@ -70,7 +70,16 @@ export default function PageSectionForm({
     } = useShelfOptions(
         page as ShelfTarget | undefined
     );
+    
+    const translatedPageTypes = pageTypeOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey),
+    }));
 
+    const translatedSectionTypes = pageSectionTypeOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey),
+    }));
     return (
 
         <form className={styles.form} onSubmit={onSubmit}>
@@ -85,7 +94,7 @@ export default function PageSectionForm({
                 onChange={(value) =>
                     setPage(value as PageType)
                 }
-                options={pageTypeOptions}
+                options={translatedPageTypes}
                 disabled={saving}
             />
 
@@ -95,7 +104,7 @@ export default function PageSectionForm({
                 onChange={(value) =>
                     setType(value as PageSectionType)
                 }
-                options={pageSectionTypeOptions}
+                options={translatedSectionTypes}
                 disabled={saving}
             />
 

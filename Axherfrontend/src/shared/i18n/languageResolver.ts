@@ -1,7 +1,10 @@
+import { resolveSupportedLocale } from "@/i18n/localeResolver";
+import { Locale } from "next-intl";
+
 const LANGUAGE_COOKIE_KEY = "app_language";
 
 export const languageResolver = {
-    get(): string | null {
+    get(): Locale | null {
         if (typeof document === "undefined") {
             return null;
         }
@@ -12,27 +15,33 @@ export const languageResolver = {
             (row) => row.startsWith(`${LANGUAGE_COOKIE_KEY}=`)
         );
 
-        return cookie
-            ? decodeURIComponent(cookie.split("=")[1])
-            : null;
+        if(!cookie) {
+            return null;
+        }
+
+        const value = decodeURIComponent(
+            cookie.split("=")[1]
+        );
+
+        return resolveSupportedLocale(value);
     },
 
-    set(code: string | null) {
+    set(code: Locale | null) {
         if (typeof document === "undefined") {
             return;
         }
 
-        if (code) {
-            document.cookie =
-                `${LANGUAGE_COOKIE_KEY}=${encodeURIComponent(code)}; ` +
-                "path=/; " +
-                "max-age=31536000; " +
-                "SameSite=Lax";
-
+        if (!code) {
+            this.clear();
             return;
         }
 
-        this.clear();
+        document.cookie =
+            `${LANGUAGE_COOKIE_KEY}=${encodeURIComponent(code)}; ` +
+            "path=/; " +
+            "max-age=31536000; " +
+            "SameSite=Lax";
+
     },
 
     clear() {

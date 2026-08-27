@@ -41,23 +41,24 @@ export default function DiscountsForm({
     onCancel,
     saving = false,
 }: Props) {
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("discounts");
+    
     return(
         <form onSubmit={onSubmit} className={formStyles.form}>
-            <h2>{isEditing ? 'Editar Descuento' : 'Crear Descuento'}</h2>
 
             <Input
-                label="Tipo de Descuento"
+                label={t("form.discountTypeLabel")}
                 value={discountType}
                 onChange={setDiscountType}
-                placeholder="Ej: Promocion de verano"
+                placeholder={t("form.discountTypePlaceholder")}
                 required
                 disabled={saving}
                 autoFocus={!isEditing}
             />
 
             <Input
-                label="Porcentaje de Descuento (%)"
+                label={t("form.amountLabel")}
                 type="number"
                 value={String(amount)}
                 onChange={(val) => setAmount(val === "" ? 0 : Math.min(100, Math.max(0, Number(val))))}
@@ -68,7 +69,7 @@ export default function DiscountsForm({
             />
 
             <Input
-                label="Fecha de Inicio"
+                label={t("form.startDateLabel")}
                 type="date"
                 value={startDate}
                 onChange={setStartDate}
@@ -77,7 +78,7 @@ export default function DiscountsForm({
             />
 
             <Input
-                label="Fecha de Fin"
+                label={t("form.endDateLabel")}
                 type="date"
                 value={endDate}
                 onChange={setEndDate}
@@ -86,10 +87,10 @@ export default function DiscountsForm({
             />
 
             <TextArea
-                label="Descripción"
+                label={t("form.descriptionLabel")}
                 value={description}
                 onChange={setDescription}
-                placeholder="Descripcion del descuento"
+                placeholder={t("form.descriptionPlaceholder")}
                 rows={4}
                 required
                 disabled={saving}
@@ -100,9 +101,9 @@ export default function DiscountsForm({
                     type="submit"
                     variant="animated"
                     disabled={saving}
-                    loadingText={isEditing ? 'Actualizando...' : 'creando...'}
+                    loadingText={isEditing ? common("updating") : common("creating")}
                 >
-                    {isEditing ? 'Actualizar' : t("create")}
+                    {isEditing ? common("update") : common("create")}
                 </Button>
 
                 {onCancel && (
@@ -112,7 +113,7 @@ export default function DiscountsForm({
                         onClick={onCancel}
                         disabled={saving}
                     >
-                        {t("cancel")}
+                        {common("cancel")}
 
                     </Button>
                 )}

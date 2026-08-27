@@ -8,9 +8,11 @@ import { filterMenuByPermissions } from '@/shared/utils/filterMenuByRole';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef } from 'react';
 import MenuTree from './MenuTree';
+import { useTranslations } from 'next-intl';
 
 const DesktopMenu = () => {
     const { user } = useAuth();
+    const t = useTranslations("navigation");
     const menuRef = useRef<HTMLDivElement>(null);
     const filteredMenu = filterMenuByPermissions(
         menuConfig,
@@ -32,7 +34,7 @@ const DesktopMenu = () => {
             <button
                 className={`${styles.menuArrow} ${styles.left}`}
                 onClick={() => scrollMenu("left")}
-                aria-label="Mover menú a la izquierda"
+                aria-label={t("scrollLeft")}
                 type="button"
             >
                 <ChevronLeft size={18} />
@@ -42,6 +44,9 @@ const DesktopMenu = () => {
                 <div className={styles.desktopMenu}>
                     <MenuTree
                         items={filteredMenu}
+                        getLabel={(item) =>
+                            t(item.labelKey)
+                        }
                         renderSubMenu={(Children) => (
                             <div className={styles.desktopSubMenu}>
                                 {Children}
@@ -54,7 +59,7 @@ const DesktopMenu = () => {
             <button
                 className={`${styles.menuArrow} ${styles.right}`}
                 onClick={() => scrollMenu("right")}
-                aria-label="Mover menú a la derecha"
+                aria-label={t("scrollRight")}
                 type="button"
             >
                 <ChevronRight size={18} />

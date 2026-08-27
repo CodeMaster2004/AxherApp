@@ -103,7 +103,7 @@ export default function PageSectionListView() {
                     active={page === "HOME"}
                     onClick={() => setPage("HOME")}
                 >
-                    {t("home")}
+                    {t("pages.home")}
                 </Button>
 
                 <Button
@@ -111,7 +111,7 @@ export default function PageSectionListView() {
                     active={page === "MOVIES"}
                     onClick={() => setPage("MOVIES")}
                 >
-                    {t("movies")}
+                    {t("pages.movies")}
                 </Button>
 
                 <Button
@@ -119,7 +119,7 @@ export default function PageSectionListView() {
                     active={page === "SERIES"}
                     onClick={() => setPage("SERIES")}
                 >
-                    {t("series")}
+                    {t("pages.series")}
                 </Button>
 
             </div>

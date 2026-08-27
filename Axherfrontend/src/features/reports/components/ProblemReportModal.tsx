@@ -4,9 +4,10 @@ import { useState } from "react";
 
 import ProblemReportForm from "@/features/reports/components/ProblemReportForm";
 import { useProblemReportActions } from "@/features/reports/hooks/useProblemReportActions";
-import { ProblemReportCategory, ProblemReportRequest } from "@/entities/types/problemReport.types";
+import { ProblemReportRequest } from "@/entities/types/problemReport.types";
 
 import styles from "./ProblemReportModal.module.css";
+import { useReportCategory } from "@/features/ReportCategory/hooks/useReportCategory";
 
 interface Props {
     isOpen: boolean;
@@ -22,15 +23,18 @@ export default function ProblemReportModal({
     onClose,
 }: Props) {
 
-    const [category, setCategory] = useState<
-        ProblemReportCategory | ""
-    >("");
+    const [reportCategoryId, setReportCategoryId] = useState<number | "">("");
     const [description, setDescription] = useState("");
+
+    const {
+        reportCategory: categories,
+        loading: loadingCategories,
+    } = useReportCategory();
 
     const { saving, error, addProblemReport } =
         useProblemReportActions({
             onSuccess: () => {
-                setCategory("");
+                setReportCategoryId("");
                 setDescription("");
                 onClose();
             },
@@ -44,11 +48,11 @@ export default function ProblemReportModal({
         e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault();
-        if (!category) {
+        if (reportCategoryId === "") {
             return;
         }
         const data: ProblemReportRequest = {
-            category,
+            reportCategoryId,
             description,
             contentId,
             ...(episodeId !== undefined && { episodeId }),
@@ -67,8 +71,9 @@ export default function ProblemReportModal({
                 onClick={(e) => e.stopPropagation()}
             >
                 <ProblemReportForm
-                    category={category}
-                    setCategory={setCategory}
+                    reportCategoryId={reportCategoryId}
+                    setReportCategoryId={setReportCategoryId}
+                    categories={categories ?? []}
                     description={description}
                     setDescription={setDescription}
                     onSubmit={handleSubmit}

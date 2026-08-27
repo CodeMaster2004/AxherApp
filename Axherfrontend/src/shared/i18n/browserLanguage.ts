@@ -1,4 +1,7 @@
-export function getBrowserLanguageCode(): string | null {
+import { resolveSupportedLocale } from "@/i18n/localeResolver";
+import { Locale } from "next-intl";
+
+export function getBrowserLanguageCode(): Locale | null {
     if (typeof navigator === "undefined") {
         return null;
     }
@@ -9,5 +12,9 @@ export function getBrowserLanguageCode(): string | null {
         return null;
     }
 
-    return language.split("-")[0].toLowerCase();
+    const languageCode = language
+        .split("-")[0]
+        .toLowerCase();
+
+    return resolveSupportedLocale(languageCode);
 }

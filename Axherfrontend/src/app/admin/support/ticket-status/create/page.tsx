@@ -7,11 +7,13 @@ import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import SupportTicketStatusForm from "@/features/supportTicketStatus/components/SupportTicketStatusForm";
 import { useLanguage } from "@/features/language/hooks/useLanguage";
 import { SupportTicketStatusRequest } from "@/entities/types";
+import { useTranslations } from "next-intl";
 
 export default function CreateSupportTicketStatusPage() {
 
     const router = useRouter();
     const [error, setError] = useState("");
+    const t = useTranslations("supportTicketStatus");
 
     const { addSupportTicketStatus, saving } = useSupportTicketStatusActions({
         onSuccess: () => router.push("/admin/support/ticket-status"),
@@ -34,17 +36,17 @@ export default function CreateSupportTicketStatusPage() {
         const descriptionTrim = form.description.trim();
 
         if (!codeTrim) {
-            setError("Por favor completa el campo de código");
+            setError(t("form.validation.codeRequired"));
             return;
         }
 
         if (!form.languageId) {
-            setError("Por favor selecciona un idioma");
+            setError(t("form.validation.languageRequired"));
             return;
         }
 
         if (!nameTrim) {
-            setError("Por favor completa el campo de nombre");
+            setError(t("form.validation.nameRequired"));
             return;
         }
 
@@ -64,7 +66,7 @@ export default function CreateSupportTicketStatusPage() {
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>Crear Nuevo Estado de ticket de soporte</h1>
+            <h1>{t("createTitle")}</h1>
             <SupportTicketStatusForm
                 value={form}
                 onChange={(value) => {

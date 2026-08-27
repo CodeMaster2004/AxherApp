@@ -3,6 +3,7 @@
 import { ContentCategoryResponse, ContentFilters, ContentFiltersDto, ContentQueryParams } from "@/entities/types";
 import Dropdown from "@/shared/components/ui/Dropdown";
 import styles from "./ContentFilter.module.css";
+import { useTranslations } from "next-intl";
 
 interface Props {
     currentGenre: string;
@@ -24,6 +25,7 @@ export default function ContentFilter({
     onChange
 }: Props){
 
+    const t = useTranslations("contents");
 
     const handleChange = (
         field: keyof ContentFilters,
@@ -40,15 +42,15 @@ export default function ContentFilter({
     const sortOptions = [
         {
             value: "releaseDate,desc",
-            label: "Más recientes"
+            label: t("filters.sortRecent")
         },
         {
             value: "title,asc",
-            label: "A-Z"
+            label: t("filters.sortAZ")
         },
         {
             value: "title,desc",
-            label: "Z-A"
+            label: t("filters.sortZA")
         },
     ];
 
@@ -74,7 +76,7 @@ export default function ContentFilter({
     onGenreChange(genre.slug);
 
 }}
-            placeholder="Todos los géneros"
+            placeholder={t("filters.allGenres")}
         />
         
         <div className={styles.rightFilters}>
@@ -89,7 +91,7 @@ export default function ContentFilter({
                     year?.toString() ?? ""
                 }
                 getLabel={(year) =>
-                    year?.toString() ?? "Todos los años"
+                    year?.toString() ?? t("filters.allYears")
                 }
                 onChange={(year) =>
                     handleChange("year", year?.toString() ?? "")

@@ -37,7 +37,8 @@ export default function SystemPermissionsList ({
     onSearchChange
 }: Props) {
 
-    const t = useTranslations("common");
+    const common = useTranslations("common");
+    const t = useTranslations("systemPermissions");
     
     const [confirmDialog, setConfirmDialog] = useState<{isOpen: boolean; id: number; systemPermissions: string }>({
         isOpen: false,
@@ -63,38 +64,36 @@ export default function SystemPermissionsList ({
         <div>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="confirmar Eliminacion"
-                message={`¿Estás seguro de que deseas eliminar el permiso del sistema "${confirmDialog.systemPermissions}"? Esta accion no se puede deshacer.`}
-                confirmText={t("delete")}
-                cancelText={t("cancel")}
+                title={t("delete.title")}
+                message={t("delete.message", { permissionName: confirmDialog.systemPermissions })}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             />
 
-            <h2>Permisos del Sistema</h2>
-
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar permisos..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
                 />
             </div>
             {systemPermissions.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay permisos con ese término"}</p>
+                <p>{loading ? common("loading") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
                                 <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                                <th className={tableStyles.headCell}>Nombre del modulo</th>
-                                <th className={tableStyles.headCell}>Accion</th>
-                                <th className={tableStyles.headCell}>Nombre del permiso</th>
-                                <th className={tableStyles.headCell}>Acciones</th>
+                                <th className={tableStyles.headCell}>{t("list.moduleHeader")}</th>
+                                <th className={tableStyles.headCell}>{t("list.action")}</th>
+                                <th className={tableStyles.headCell}>{t("list.permissionName")}</th>
+                                <th className={tableStyles.headCell}>{common("actions")}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,14 +107,14 @@ export default function SystemPermissionsList ({
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: t("edit"),
+                                                    label: common("edit"),
                                                     onClick: () => onEdit(permission),
                                                 },
                                                 {
                                                     label:
                                                         deletingId === permission.systemPermissionId
-                                                            ? "Eliminando..."
-                                                            : t("delete"),
+                                                            ? common("deleting")
+                                                            : common("delete"),
                                                     onClick: () => handleDeleteClick(permission.systemPermissionId, permission.permissionName),
                                                     variant: "danger",
                                                 },

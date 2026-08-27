@@ -10,7 +10,9 @@ import lombok.Setter;
 public class ProblemReportResponseDto {
 
     private Integer reportId;
-    private String category;
+    private Integer reportCategoryId;
+    private String reportCategoryCode;
+    private String reportCategoryName;
     private String description;
     private Integer contentId;
     private Integer episodeId;

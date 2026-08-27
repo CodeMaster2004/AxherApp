@@ -7,6 +7,7 @@ import formStyles from "@/shared/styles/shared/Form.module.css";
 import Link from "next/link";
 import { SyntheticEvent, useState } from "react";
 import GoogleLoginButton from "./GoogleLoginButton";
+import { useTranslations } from "next-intl";
 
 interface Props {
     onSubmit: (login: string, password: string) => void;
@@ -18,6 +19,7 @@ interface Props {
 export default function UserLoginForm({ onSubmit, saving = false, loading = false, error }: Props) {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+    const t = useTranslations("auth");
 
     const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -26,9 +28,9 @@ export default function UserLoginForm({ onSubmit, saving = false, loading = fals
 
     return(
 
-        <AuthCard title="Inicia sesion" onSubmit={handleSubmit} >
+        <AuthCard title={t("login.title")} onSubmit={handleSubmit} >
             
-            <h2>Iniciar Sesión</h2>
+            <h2>{t("login.heading")}</h2>
             {error && (
                 <p className={formStyles.errorMessage}>
                 {error}
@@ -38,7 +40,7 @@ export default function UserLoginForm({ onSubmit, saving = false, loading = fals
             <AuthInput
                 value={login}
                 onChange={setLogin}
-                placeholder="Ej. usuario@example.com"
+                placeholder={t("login.emailPlaceholder")}
                 required
                 disabled={saving}
                 autoFocus
@@ -48,7 +50,7 @@ export default function UserLoginForm({ onSubmit, saving = false, loading = fals
                 type="password"
                 value={password}
                 onChange={setPassword}
-                placeholder="Ingrese su contraseña"
+                placeholder={t("login.passwordPlaceholder")}
                 required
                 disabled={saving}
             />
@@ -58,7 +60,7 @@ export default function UserLoginForm({ onSubmit, saving = false, loading = fals
                 <AuthButtons
                     type="submit"
                     disabled={saving}
-                    loadingText="Iniciando sesión..."
+                    loadingText={t("login.loading")}
                 >
                     Iniciar Sesión
 
@@ -66,7 +68,7 @@ export default function UserLoginForm({ onSubmit, saving = false, loading = fals
                 
                 <Link href="/register">
                     <AuthButtons type="button">
-                        registrarse
+                        {t("login.register")}
                     </AuthButtons>
                 </Link>
 
@@ -74,7 +76,7 @@ export default function UserLoginForm({ onSubmit, saving = false, loading = fals
 
             {/* Separador opcional */}
             <div style={{ textAlign: "center", margin: "1em 0", color: "#888" }}>
-            — o continúa con —
+                {t("login.continueWith")}
             </div>
             <GoogleLoginButton />      
 

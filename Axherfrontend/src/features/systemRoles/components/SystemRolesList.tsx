@@ -37,8 +37,8 @@ export default function SystemRolesList ({
     onSearchChange
 }: Props) {
 
-    const t = useTranslations("common");
-
+    const common = useTranslations("common");
+    const t = useTranslations("systemRoles");
 
     const router = useRouter();
     const [confirmDialog , setConfirmDialog] = useState<{isOpen: boolean; id: number; systemRoles: string}>({
@@ -62,21 +62,19 @@ export default function SystemRolesList ({
         <div className={layoutStyles.section}>
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
-                title="confirmar Eliminacion"
-                message={`¿Estás seguro de que deseas eliminar el rol del sistema "${confirmDialog.systemRoles}"? Esta accion no se puede deshacer.`}
-                confirmText={t("delete")}
-                cancelText={t("cancel")}
+                title={t("delete.title")}
+                message={t("delete.message", {roleName: confirmDialog.systemRoles})}
+                confirmText={common("delete")}
+                cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
                 variant="danger"
             />
 
-            <h2>Roles del Sistema</h2>
-
             <div className={tableStyles.searchBox}>
                 <input
                     type="text"
-                    placeholder="Buscar roles..."
+                    placeholder={t("list.searchPlaceholder")}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={tableStyles.searchInput}
@@ -84,7 +82,7 @@ export default function SystemRolesList ({
             </div>
 
             {systemRoles.length === 0 ? (
-                <p>{loading ? "Buscando..." : "No hay roles con ese término"}</p>
+                <p>{loading ? common("loading") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                     <table className={tableStyles.table}>
@@ -104,18 +102,18 @@ export default function SystemRolesList ({
                                         <MoreMenu
                                             items={[
                                                 {
-                                                    label: "Permisos",
+                                                    label: t("list.permissions"),
                                                     onClick: () => router.push(`/admin/systemRoles/${role.systemRoleId}/permissions`),
                                                 },
                                                 {
-                                                    label: t("edit"),
+                                                    label: common("edit"),
                                                     onClick: () => onEdit(role),
                                                 },
                                                 {
                                                     label:
                                                         deletingId === role.systemRoleId
-                                                            ? "Eliminando..."
-                                                            : t("delete"),
+                                                            ? common("deleting")
+                                                            : common("delete"),
                                                     onClick: () => handleDeleteClick(role.systemRoleId, role.roleName),
                                                     variant: "danger",
                                                 },

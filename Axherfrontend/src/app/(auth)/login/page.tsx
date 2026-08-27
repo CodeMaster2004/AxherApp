@@ -35,7 +35,7 @@ export default function LoginPage() {
             const me = await authService.me();
             console.log("Datos de /me:", me);
             // 3️ Guardas la sesión en tu contexto
-            setAuth({ userId: me.userId, email: me.email, roles: me.roles, permissions: me.permissions ?? [] });
+            setAuth({ userId: me.userId, email: me.email, roles: me.roles, permissions: me.permissions ?? [], preferredLanguageCode: me.preferredLanguageCode ?? null });
 
             // 4️ Rediriges al usuario
             router.push("/");
