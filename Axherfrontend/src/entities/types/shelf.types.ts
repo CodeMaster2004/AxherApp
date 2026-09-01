@@ -108,3 +108,14 @@ export interface ContentShelfTranslationResponse {
     languageName: string;
     name: string;
 }
+
+export interface ContentShelfAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface ContentShelfAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceName: string;
+    translatedName: string;
+}

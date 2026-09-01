@@ -26,3 +26,16 @@ export interface ContentCategoryTranslationResponse {
     name: string;
     description: string;
 }
+
+export interface ContentCategoryAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface ContentCategoryAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceName: string;
+    sourceDescription: string;
+    translatedName: string;
+    translatedDescription: string;
+}

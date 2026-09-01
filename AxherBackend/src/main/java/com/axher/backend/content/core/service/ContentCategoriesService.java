@@ -67,7 +67,7 @@ public class ContentCategoriesService {
         translationDto.setName(dto.getName());
         translationDto.setDescription(dto.getDescription());
 
-        translationService.save(
+        translationService.create(
             saved.getContentCategoryId(),
             translationDto
         );
@@ -110,8 +110,9 @@ public class ContentCategoriesService {
         translationDto.setName(dto.getName());
         translationDto.setDescription(dto.getDescription());
 
-        translationService.save(
+        translationService.update(
             existing.getContentCategoryId(),
+            dto.getLanguageId(),
             translationDto
         );
 

@@ -7,6 +7,7 @@ import ContentShelfTranslationForm from "./ContentShelfTranslationForm";
 import ContentShelfTranslationList from "./ContentShelfTranslationList";
 import { useContentShelfTranslations } from "@/features/shelf/hooks/useContentShelfTranslations";
 import { useTranslations } from "next-intl";
+import ContentShelfAiTranslationDialog from "@/features/shelf/components/translations/ContentShelfAiTranslationDialog";
 
 
 interface Props {
@@ -21,13 +22,19 @@ export default function ContentShelfTranslationsPanel({
 }: Props) {
 
     const t = useTranslations("shelves");
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<ContentShelfTranslationResponse | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
     const {
         translations,
         loading,
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useContentShelfTranslations(
         shelfId
@@ -40,6 +47,15 @@ export default function ContentShelfTranslationsPanel({
             name: "",
         });
 
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            name: "",
+        });
+
+        setEditingLanguageId(null);
+    }
+
 
     const [editingLanguageId, setEditingLanguageId] =
         useState<number | null>(null);
@@ -51,14 +67,64 @@ export default function ContentShelfTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
+        resetForm();
+    };
 
-        setForm({
-            languageId: 0,
-            name: "",
-        });
+    const handleTranslate = (
+        translation: ContentShelfTranslationResponse
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                name:
+                    translated.translatedName,
+              
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
     };
 
 
@@ -79,12 +145,7 @@ export default function ContentShelfTranslationsPanel({
 
     const handleCancelEdit = () => {
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            name: "",
-        });
+        resetForm();
     };
 
 
@@ -139,10 +200,25 @@ export default function ContentShelfTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
                 )}
 
             </section>
+            {sourceTranslation && (
+                <ContentShelfAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={
+                        sourceTranslation
+                    }
+                    languages={languages}
+                    onConfirm={
+                        handleAiTranslation
+                    }
+                    onClose={handleCloseAiDialog}
+                    translating={translating}
+                />
+            )}
 
         </div>
     );

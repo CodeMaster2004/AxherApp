@@ -1,5 +1,5 @@
 import { AdminSupportTicketStatusApi } from "@/core/api/endpoints/AdminSupportTicketStatusApi";
-import { SupportTicketStatusTranslationRequest, SupportTicketStatusTranslationResponse } from "@/entities/types";
+import { SupportTicketStatusAiTranslationRequest, SupportTicketStatusAiTranslationResponse, SupportTicketStatusTranslationRequest, SupportTicketStatusTranslationResponse } from "@/entities/types";
 
 export const supportTicketStatusTranslationService = {
 
@@ -18,15 +18,49 @@ export const supportTicketStatusTranslationService = {
     },
 
 
-    save: async (
+    create: async (
         statusId: number,
         data: SupportTicketStatusTranslationRequest,
         signal?: AbortSignal
     ): Promise<SupportTicketStatusTranslationResponse> => {
+        const response =
+            await AdminSupportTicketStatusApi.translations.create(
+                statusId,
+                data,
+                { signal }
+            );
+
+        return response.data;
+    },
+
+    update: async (
+        statusId: number,
+        languageId: number,
+        data: SupportTicketStatusTranslationRequest,
+        signal?: AbortSignal
+    ): Promise<SupportTicketStatusTranslationResponse> => {
+        const response =
+            await AdminSupportTicketStatusApi.translations.update(
+                statusId,
+                languageId,
+                data,
+                { signal }
+            );
+
+        return response.data;
+    },
+
+    translateWithAi: async(
+        statusId: number,
+        sourceLanguageId: number,
+        data: SupportTicketStatusAiTranslationRequest,
+        signal?: AbortSignal
+    ): Promise<SupportTicketStatusAiTranslationResponse> => {
 
         const response =
-            await AdminSupportTicketStatusApi.translations.save(
+            await AdminSupportTicketStatusApi.translations.translateWithAi(
                 statusId,
+                sourceLanguageId,
                 data,
                 { signal }
             );

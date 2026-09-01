@@ -1,6 +1,8 @@
 "use client";
 
 import {
+    ReportStatusAiTranslationRequest,
+    ReportStatusAiTranslationResponse,
     ReportStatusTranslationRequest,
     ReportStatusTranslationResponse,
 } from "@/entities/types/reportStatus.types";
@@ -51,10 +53,12 @@ export const useReportStatusTranslations = (
         fetchTranslations();
     }, [fetchTranslations]);
 
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
+
         async (
             data: ReportStatusTranslationRequest
         ) => {
+
             if (!statusId) {
                 throw new Error(
                     "Report Status ID is required"
@@ -65,42 +69,116 @@ export const useReportStatusTranslations = (
             setError(null);
 
             try {
-                const saved =
-                    await reportStatusTranslationService.save(
+
+                const created =
+                    await reportStatusTranslationService.create(
                         statusId,
                         data
                     );
 
-                setTranslations(prev => {
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    if (index === -1) {
-                        return [
-                            ...prev,
-                            saved,
-                        ];
-                    }
+                return created;
 
-                    const updated = [...prev];
-                    updated[index] = saved;
-
-                    return updated;
-                });
-
-                return saved;
             } catch (err) {
+
                 setError(err);
                 throw err;
+
             } finally {
+
                 setSaving(false);
+
             }
+
         },
+
         [statusId]
+
     );
+
+    const updateTranslation = useCallback(
+
+        async (
+            languageId: number,
+            data: ReportStatusTranslationRequest
+        ) => {
+
+            if (!statusId) {
+                throw new Error(
+                    "Report Status ID is required"
+                );
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+
+                const updated =
+                    await reportStatusTranslationService.update(
+                        statusId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+
+            } catch (err) {
+
+                setError(err);
+                throw err;
+
+            } finally {
+
+                setSaving(false);
+
+            }
+
+        },
+
+        [statusId]
+
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: ReportStatusAiTranslationRequest
+            ): Promise<ReportStatusAiTranslationResponse> => {
+    
+                if(!statusId) {
+                    throw new Error("Report Status ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await reportStatusTranslationService.translateWithAi(
+                        statusId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [statusId]
+        );
+    
 
     const deleteTranslation = useCallback(
         async (languageId: number) => {
@@ -142,7 +220,9 @@ export const useReportStatusTranslations = (
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
     };

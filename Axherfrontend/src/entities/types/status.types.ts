@@ -28,3 +28,16 @@ export interface ContentStatusTranslationResponse {
     name: string;
     description: string;
 }
+
+export interface ContentStatusAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface ContentStatusAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceName: string;
+    sourceDescription: string;
+    translatedName: string;
+    translatedDescription: string;
+}

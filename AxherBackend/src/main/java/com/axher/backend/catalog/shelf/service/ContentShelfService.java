@@ -114,7 +114,7 @@ public class ContentShelfService {
         translationDto.setLanguageId(dto.getLanguageId());
         translationDto.setName(name);
 
-        translationService.save(
+        translationService.create(
                 saved.getContentShelfId(),
                 translationDto
         );
@@ -157,8 +157,9 @@ public class ContentShelfService {
             translationDto.setLanguageId(dto.getLanguageId());
             translationDto.setName(name);
 
-            translationService.save(
+            translationService.update(
                     existing.getContentShelfId(),
+                    dto.getLanguageId(),
                     translationDto
             );
         }

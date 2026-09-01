@@ -1,7 +1,7 @@
 "use client";
 
-import { EpisodeTranslation, EpisodeTranslationRequest } from "@/entities/types";
-import { episodesService } from "@/features/episodes/services/EpisodesService";
+import { EpisodeAiTranslationRequest, EpisodeAiTranslationResponse, EpisodeTranslation, EpisodeTranslationRequest } from "@/entities/types";
+import { episodeTranslationService } from "@/features/episodes/services/EpisodeTranslationService";
 import { useCallback, useEffect, useState } from "react";
 
 export const useEpisodeTranslations = (episodeId?: number) => {
@@ -28,7 +28,7 @@ export const useEpisodeTranslations = (episodeId?: number) => {
         try {
 
             const data =
-                await episodesService.getTranslations(episodeId);
+                await episodeTranslationService.getTranslations(episodeId);
 
             setTranslations(data);
 
@@ -54,12 +54,10 @@ export const useEpisodeTranslations = (episodeId?: number) => {
 
 
     // ==========================================
-    // CREAR / ACTUALIZAR
+    // CREAR 
     // ==========================================
-
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
         async (data: EpisodeTranslationRequest) => {
-
             if (!episodeId) {
                 throw new Error("Episode ID is required");
             }
@@ -68,48 +66,95 @@ export const useEpisodeTranslations = (episodeId?: number) => {
             setError(null);
 
             try {
-
-                const saved =
-                    await episodesService.saveTranslation(
+                const created =
+                    await episodeTranslationService.create(
                         episodeId,
                         data
                     );
 
-                setTranslations(prev => {
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId === saved.languageId
-                    );
-
-                    if (index === -1) {
-                        return [...prev, saved];
-                    }
-
-                    const updated = [...prev];
-
-                    updated[index] = saved;
-
-                    return updated;
-
-                });
-
-                return saved;
-
+                return created;
             } catch (err) {
-
                 setError(err);
                 throw err;
-
             } finally {
-
                 setSaving(false);
-
             }
-
         },
         [episodeId]
     );
+
+    const updateTranslation = useCallback(
+        async (
+            languageId: number,
+            data: EpisodeTranslationRequest
+        ) => {
+            if (!episodeId) {
+                throw new Error("Episode ID is required");
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+                const updated =
+                    await episodeTranslationService.update(
+                        episodeId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+            } catch (err) {
+                setError(err);
+                throw err;
+            } finally {
+                setSaving(false);
+            }
+        },
+        [episodeId]
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: EpisodeAiTranslationRequest
+            ): Promise<EpisodeAiTranslationResponse> => {
+    
+                if(!episodeId) {
+                    throw new Error("Episode ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await episodeTranslationService.translateWithAi(
+                        episodeId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [episodeId]
+        );
+    
+
 
 
     // ==========================================
@@ -128,7 +173,7 @@ export const useEpisodeTranslations = (episodeId?: number) => {
 
             try {
 
-                await episodesService.deleteTranslation(
+                await episodeTranslationService.deleteTranslation(
                     episodeId,
                     languageId
                 );
@@ -161,7 +206,9 @@ export const useEpisodeTranslations = (episodeId?: number) => {
         saving,
         deleting,
         error,
-        saveTranslation,
+        updateTranslation,
+        createTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations
 

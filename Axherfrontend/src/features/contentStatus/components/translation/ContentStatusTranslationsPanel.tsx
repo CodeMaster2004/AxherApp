@@ -9,6 +9,7 @@ import ContentStatusTranslationList from "./ContentStatusTranslationList";
 import { LanguageResponse } from "@/entities/types";
 import { ContentStatusTranslationRequest, ContentStatusTranslationResponse } from "@/entities/types/status.types";
 import { useTranslations } from "next-intl";
+import ContentStatusAiTranslationDialog from "@/features/contentStatus/components/translation/ContentStatusAiTranlationDialog";
 
 interface Props {
     statusId: number;
@@ -20,13 +21,19 @@ export default function ContentStatusTranslationsPanel({
     languages,
 }: Props) {
 
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<ContentStatusTranslationResponse | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
     const {
         translations,
         loading,
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useContentStatusTranslations(statusId);
 
@@ -37,6 +44,16 @@ export default function ContentStatusTranslationsPanel({
             description: "",
         });
 
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            name: "",
+            description: "",
+        });
+
+        setEditingLanguageId(null);
+    }
+
     const [editingLanguageId, setEditingLanguageId] =
         useState<number | null>(null);
 
@@ -46,15 +63,65 @@ export default function ContentStatusTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
+        resetForm();
+    };
 
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+    const handleTranslate = (
+        translation: ContentStatusTranslationResponse
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                name:
+                    translated.translatedName,
+                description:
+                    translated.translatedDescription,
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
     };
 
     const handleEdit = (
@@ -72,13 +139,7 @@ export default function ContentStatusTranslationsPanel({
 
     const handleCancelEdit = () => {
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+        resetForm();
     };
 
     const t = useTranslations("contentStatus");
@@ -122,10 +183,21 @@ export default function ContentStatusTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
                 )}
 
             </section>
+            {sourceTranslation && (
+                <ContentStatusAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={sourceTranslation}
+                    languages={languages}
+                    onConfirm={handleAiTranslation}
+                    onClose={handleCloseAiDialog}
+                    translating={translating}
+                />
+            )}
 
         </div>
     );

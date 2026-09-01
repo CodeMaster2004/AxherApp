@@ -94,6 +94,21 @@ export default function ShelfList({
 
     };
 
+    const targetOptions = shelfTargetOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey)
+    }));
+
+    const layoutOptions = shelfLayoutOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey)
+    }));
+
+    const sourceOptions = shelfSourceOptions.map(option => ({
+        value: option.value,
+        label: t(option.labelKey)
+    }));
+
     return (
 
         <div className={layoutStyles.section}>
@@ -115,7 +130,6 @@ export default function ShelfList({
                 }
             />
 
-            <h2>Lista de Carruseles</h2>
 
             <div className={tableStyles.searchBox}>
                 <input
@@ -178,7 +192,7 @@ export default function ShelfList({
 
                                             <td>
                                                 {
-                                                    shelfTargetOptions.find(
+                                                    targetOptions.find(
                                                         option =>
                                                             option.value === shelf.target
                                                     )?.label
@@ -187,7 +201,7 @@ export default function ShelfList({
 
                                             <td>
                                                 {
-                                                    shelfLayoutOptions.find(
+                                                    layoutOptions.find(
                                                         option =>
                                                             option.value === shelf.layout
                                                     )?.label
@@ -196,7 +210,7 @@ export default function ShelfList({
 
                                             <td>
                                                 {
-                                                    shelfSourceOptions.find(
+                                                    sourceOptions.find(
                                                         option =>
                                                             option.value === shelf.source
                                                     )?.label

@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.catalog.shelf.DTOs.ContentShelfAiTranslationRequestDto;
+import com.axher.backend.catalog.shelf.DTOs.ContentShelfAiTranslationResponseDto;
 import com.axher.backend.catalog.shelf.DTOs.ContentShelfTranslationDto;
 import com.axher.backend.catalog.shelf.DTOs.ContentShelfTranslationRequestDto;
 import com.axher.backend.catalog.shelf.entities.ContentShelfTranslation;
@@ -52,28 +55,65 @@ public class AdminContentShelfTranslationController {
 
 
     // =============================
-    // CREAR / ACTUALIZAR TRADUCCIÓN
+    // CREAR TRADUCCIÓN
     // =============================
-
-    @PatchMapping
-    public ResponseEntity<ContentShelfTranslationDto> save(
+    @PostMapping
+    public ResponseEntity<ContentShelfTranslationDto> create(
             @PathVariable Integer shelfId,
             @RequestBody ContentShelfTranslationRequestDto dto
     ) {
 
         ContentShelfTranslation translation =
-                service.save(shelfId, dto);
+                service.create(shelfId, dto);
 
         return ResponseEntity.ok(
                 mapper.toDto(translation)
         );
     }
 
+    // =============================
+    // ACTUALIZAR TRADUCCIÓN
+    // =============================
+    @PatchMapping("/{languageId}")
+    public ResponseEntity<ContentShelfTranslationDto> update(
+            @PathVariable Integer shelfId,
+            @PathVariable Integer languageId,
+            @RequestBody ContentShelfTranslationRequestDto dto
+    ) {
+
+        ContentShelfTranslation translation =
+                service.update(
+                        shelfId,
+                        languageId,
+                        dto
+                );
+
+        return ResponseEntity.ok(
+                mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // TRADUCIR CON AI
+    // =============================
+    @PostMapping("{sourceLanguageId}/translate")
+    public ResponseEntity<ContentShelfAiTranslationResponseDto> translateWithAi(
+            @PathVariable Integer shelfId,
+            @PathVariable Integer sourceLanguageId,
+            @RequestBody ContentShelfAiTranslationRequestDto dto
+    ) {
+        return ResponseEntity.ok(
+                service.translateWithAi(
+                        shelfId,
+                        sourceLanguageId,
+                        dto
+                )
+        );
+    }
 
     // =============================
     // ELIMINAR TRADUCCIÓN
     // =============================
-
     @DeleteMapping("/{languageId}")
     public ResponseEntity<Void> delete(
             @PathVariable Integer shelfId,

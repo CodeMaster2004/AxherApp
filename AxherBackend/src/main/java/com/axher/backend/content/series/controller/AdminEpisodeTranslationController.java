@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.axher.backend.content.core.mapper.EpisodeTranslationMapper;
+import com.axher.backend.content.series.DTOs.EpisodesDTOs.EpisodeAiTranslationRequestDto;
+import com.axher.backend.content.series.DTOs.EpisodesDTOs.EpisodeAiTranslationResponseDto;
 import com.axher.backend.content.series.DTOs.EpisodesDTOs.EpisodeTranslationDto;
 import com.axher.backend.content.series.DTOs.EpisodesDTOs.EpisodeTranslationRequestDto;
 import com.axher.backend.content.series.entities.EpisodeTranslation;
@@ -46,19 +49,54 @@ public class AdminEpisodeTranslationController {
     }
 
     //=============================
-    // CREAR/ ACTUALIZAR TRADUCCIÓN
+    // CREAR TRADUCCIÓN
     //=============================
-    @PatchMapping
-    public ResponseEntity<EpisodeTranslationDto> save(
+    @PostMapping
+    public ResponseEntity<EpisodeTranslationDto> create(
             @PathVariable Integer episodeId,
             @RequestBody EpisodeTranslationRequestDto dto
     ) {
 
         EpisodeTranslation translation =
-                service.save(episodeId, dto);
+                service.create(episodeId, dto);
 
         return ResponseEntity.ok(
             mapper.toDto(translation)
+        );
+    }
+
+    //=============================
+    // ACTUALIZAR TRADUCCIÓN
+    //=============================
+    @PatchMapping("/{languageId}")
+    public ResponseEntity<EpisodeTranslationDto> update(
+        @PathVariable Integer episodeId,
+        @PathVariable Integer languageId,
+        @RequestBody EpisodeTranslationRequestDto dto
+    ){
+        EpisodeTranslation translation =
+            service.update(episodeId, languageId, dto);
+
+        return ResponseEntity.ok(
+            mapper.toDto(translation)
+        );
+    }
+
+    //=============================
+    // TRADUCIR CON AI
+    //=============================
+    @PostMapping("{sourceLanguageId}/translate")
+    public ResponseEntity<EpisodeAiTranslationResponseDto> translateWithAi(
+        @PathVariable Integer episodeId,
+        @PathVariable Integer sourceLanguageId,
+        @RequestBody EpisodeAiTranslationRequestDto dto
+    ){
+        return ResponseEntity.ok(
+                service.translateWithAi(
+                        episodeId,
+                        sourceLanguageId,
+                        dto
+                )
         );
     }
 

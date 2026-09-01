@@ -1,6 +1,8 @@
 "use client";
 
 import {
+    HeroBannerAiTranslationRequest,
+    HeroBannerAiTranslationResponse,
     HeroBannerTranslationRequest,
     HeroBannerTranslationResponse,
 } from "@/entities/types";
@@ -71,7 +73,8 @@ export const useHeroBannerTranslations = (
     }, [fetchTranslations]);
 
 
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
+
         async (
             data: HeroBannerTranslationRequest
         ) => {
@@ -87,37 +90,18 @@ export const useHeroBannerTranslations = (
 
             try {
 
-                const saved =
-                    await heroBannerTranslationService.save(
+                const created =
+                    await heroBannerTranslationService.create(
                         heroBannerId,
                         data
                     );
 
-                setTranslations(prev => {
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
-
-                    if (index === -1) {
-
-                        return [
-                            ...prev,
-                            saved,
-                        ];
-
-                    }
-
-                    const updated = [...prev];
-
-                    updated[index] = saved;
-
-                    return updated;
-                });
-
-                return saved;
+                return created;
 
             } catch (err) {
 
@@ -131,8 +115,90 @@ export const useHeroBannerTranslations = (
             }
 
         },
+
         [heroBannerId, t]
+
     );
+
+    const updateTranslation = useCallback(
+
+        async (
+            languageId: number,
+            data: HeroBannerTranslationRequest
+        ) => {
+
+            if (!heroBannerId) {
+                throw new Error(
+                    t("errors.idRequired")
+                );
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+
+                const updated =
+                    await heroBannerTranslationService.update(
+                        heroBannerId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+
+            } catch (err) {
+
+                setError(err);
+                throw err;
+
+            } finally {
+
+                setSaving(false);
+
+            }
+
+        },
+
+        [heroBannerId, t]
+
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: HeroBannerAiTranslationRequest
+            ): Promise<HeroBannerAiTranslationResponse> => {
+    
+                if(!heroBannerId) {
+                    throw new Error("Hero Banner ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await heroBannerTranslationService.translateWithAi(
+                        heroBannerId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [heroBannerId]
+        );
+    
 
 
     const deleteTranslation = useCallback(
@@ -184,7 +250,9 @@ export const useHeroBannerTranslations = (
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
     };

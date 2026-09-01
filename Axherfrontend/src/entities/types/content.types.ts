@@ -124,3 +124,16 @@ export interface ContentTranslationRequest {
     title: string;
     description: string;
 }
+
+export interface ContentAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface ContentAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceTitle: string;
+    sourceDescription: string;
+    translatedTitle: string;
+    translatedDescription: string;
+}

@@ -18,6 +18,9 @@ interface Props {
     onEdit: (
         translation: SupportCategoryTranslationResponse
     ) => void;
+    onTranslate: (
+        translation: SupportCategoryTranslationResponse
+    ) => void;
 }
 
 
@@ -26,6 +29,7 @@ export default function SupportCategoryTranslationList({
     deleting,
     onDelete,
     onEdit,
+    onTranslate,
 }: Props) {
 
     const common = useTranslations("common");
@@ -199,7 +203,10 @@ export default function SupportCategoryTranslationList({
                                                             translation
                                                         ),
                                                 },
-
+                                                {
+                                                    label: common("translateWithAi"),
+                                                    onClick: () => onTranslate(translation),
+                                                },
                                                 {
                                                     label:
                                                         deleting ===

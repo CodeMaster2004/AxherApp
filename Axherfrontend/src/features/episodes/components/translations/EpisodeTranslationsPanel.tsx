@@ -5,6 +5,7 @@ import {
     EpisodeTranslationRequest,
     LanguageResponse,
 } from "@/entities/types";
+import EpisodeAiTranslationDialog from "@/features/episodes/components/translations/EpisodeAiTranslationDialog";
 import EpisodeTranslationForm from "@/features/episodes/components/translations/EpisodeTranslationForm";
 import EpisodeTranslationList from "@/features/episodes/components/translations/EpisodeTranslationList";
 import { useEpisodeTranslations } from "@/features/episodes/hooks/useEpisodeTranslations";
@@ -23,13 +24,19 @@ export default function EpisodeTranslationsPanel({
     languages,
 }: Props) {
     const t = useTranslations("episodes");
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<EpisodeTranslation | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
     const {
         translations,
         loading,
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useEpisodeTranslations(episodeId);
 
@@ -40,6 +47,16 @@ export default function EpisodeTranslationsPanel({
             description: "",
         });
 
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            title: "",
+            description: "",
+        });
+
+        setEditingLanguageId(null);
+    }
+
     const [editingLanguageId, setEditingLanguageId] =
         useState<number | null>(null);
 
@@ -48,15 +65,65 @@ export default function EpisodeTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
+        resetForm();
+    };
 
-        setForm({
-            languageId: 0,
-            title: "",
-            description: "",
-        });
+    const handleTranslate = (
+        translation: EpisodeTranslation
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                title:
+                    translated.translatedTitle,
+                description:
+                    translated.translatedDescription,
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
     };
 
     const handleEdit = (translation: EpisodeTranslation) => {
@@ -70,13 +137,7 @@ export default function EpisodeTranslationsPanel({
     };
 
     const handleCancelEdit = () => {
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            title: "",
-            description: "",
-        });
+        resetForm();
     };
 
     return (
@@ -118,10 +179,21 @@ export default function EpisodeTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
                 )}
 
             </section>
+            {sourceTranslation && (
+                <EpisodeAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={sourceTranslation}
+                    languages={languages}
+                    onConfirm={handleAiTranslation}
+                    translating={translating}
+                    onClose={handleCloseAiDialog}
+                />
+            )}
 
         </div>
     );

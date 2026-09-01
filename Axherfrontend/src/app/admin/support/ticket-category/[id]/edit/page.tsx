@@ -13,7 +13,7 @@ import { useTranslations } from "next-intl";
 export default function EditSupportCategoryPage() {
 
     const router = useRouter();
-    const t = useTranslations("supportCategories");
+    const t = useTranslations("supportCategory");
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
     const [error, setError] = useState("");

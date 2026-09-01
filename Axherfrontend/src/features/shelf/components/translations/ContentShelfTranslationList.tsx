@@ -14,6 +14,9 @@ interface Props {
     onEdit: (
         translation: ContentShelfTranslationResponse
     ) => void;
+    onTranslate: (
+        translation: ContentShelfTranslationResponse
+    ) => void;
 }
 
 
@@ -22,6 +25,7 @@ export default function ContentShelfTranslationList({
     deleting,
     onDelete,
     onEdit,
+    onTranslate,
 }: Props) {
 
     const common = useTranslations("common");
@@ -166,6 +170,10 @@ export default function ContentShelfTranslationList({
                                                         onEdit(
                                                             translation
                                                         ),
+                                                },
+                                                {
+                                                    label: common("translateWithAi"),
+                                                    onClick: () => onTranslate(translation),
                                                 },
                                                 {
                                                     label:

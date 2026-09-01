@@ -1,6 +1,8 @@
 "use client";
 
 import {
+    ContentShelfAiTranslationRequest,
+    ContentShelfAiTranslationResponse,
     ContentShelfTranslationRequest,
     ContentShelfTranslationResponse,
 } from "@/entities/types";
@@ -57,7 +59,7 @@ export const useContentShelfTranslations = (
         fetchTranslations();
     }, [fetchTranslations]);
 
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
         async (
             data: ContentShelfTranslationRequest
         ) => {
@@ -71,34 +73,18 @@ export const useContentShelfTranslations = (
             setError(null);
 
             try {
-                const saved =
-                    await contentShelfTranslationService.save(
+                const created =
+                    await contentShelfTranslationService.create(
                         shelfId,
                         data
                     );
 
-                setTranslations(prev => {
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    if (index === -1) {
-                        return [
-                            ...prev,
-                            saved,
-                        ];
-                    }
-
-                    const updated = [...prev];
-
-                    updated[index] = saved;
-
-                    return updated;
-                });
-
-                return saved;
+                return created;
             } catch (err) {
                 setError(err);
                 throw err;
@@ -108,6 +94,75 @@ export const useContentShelfTranslations = (
         },
         [shelfId]
     );
+
+    const updateTranslation = useCallback(
+        async (
+            languageId: number,
+            data: ContentShelfTranslationRequest
+        ) => {
+            if (!shelfId) {
+                throw new Error(
+                    "Content Shelf ID is required"
+                );
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+                const updated =
+                    await contentShelfTranslationService.update(
+                        shelfId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+            } catch (err) {
+                setError(err);
+                throw err;
+            } finally {
+                setSaving(false);
+            }
+        },
+        [shelfId]
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: ContentShelfAiTranslationRequest
+            ): Promise<ContentShelfAiTranslationResponse> => {
+    
+                if(!shelfId) {
+                    throw new Error("Content Shelf ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await contentShelfTranslationService.translateWithAi(
+                        shelfId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [shelfId]
+        );
+    
 
     const deleteTranslation = useCallback(
         async (languageId: number) => {
@@ -149,7 +204,9 @@ export const useContentShelfTranslations = (
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
     };

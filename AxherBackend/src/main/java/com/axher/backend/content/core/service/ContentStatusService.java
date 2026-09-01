@@ -105,7 +105,7 @@ public class ContentStatusService {
         translationDto.setName(dto.getName().trim());
         translationDto.setDescription(dto.getDescription());
     
-        translationService.save(
+        translationService.create(
                 saved.getContentStatusId(),
                 translationDto
         );
@@ -171,8 +171,9 @@ public class ContentStatusService {
             translationDto.setName(name);
             translationDto.setDescription(dto.getDescription());
 
-            translationService.save(
+            translationService.update(
                     existing.getContentStatusId(),
+                    dto.getLanguageId(),
                     translationDto
             );
 

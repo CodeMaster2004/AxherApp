@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.axher.backend.content.core.entities.ContentStatus;
-import com.axher.backend.support.reports.entities.ReportStatus;
 import com.axher.backend.support.tickets.entities.SupportCategory;
 
 public interface SupportCategoryRepository extends JpaRepository<SupportCategory, Integer> {

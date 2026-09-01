@@ -13,6 +13,8 @@
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis">
+  <img src="https://img.shields.io/badge/Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
 </div>
 
 <br>
@@ -29,7 +31,7 @@
 
 **AxherApp** es una plataforma de streaming completa que permite a los usuarios explorar, reproducir y gestionar contenido multimedia. Cuenta con un **panel administrativo** para la gestión de contenido, usuarios, roles y permisos, así como un sistema de **autenticación seguro** con JWT y soporte para inicio de sesión con Google, además de un **sistema multilingüe (i18n)** para traducir el contenido y la interfaz a distintos idiomas.
 
-El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta un **asistente de soporte inteligente** capaz de clasificar mensajes, generar respuestas contextuales (basadas en el usuario, su suscripción y el contenido consultado) y escalar consultas cuando sea necesario.
+El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta un **asistente de soporte inteligente** capaz de clasificar mensajes, generar respuestas contextuales (basadas en el usuario, su suscripción y el contenido consultado) y escalar consultas cuando sea necesario. Además, el backend integra **traducción automática con IA (Google Gemini)** para agilizar la localización del contenido y sus entidades desde el panel administrativo.
 
 > 💡 Este proyecto nace como una solución integral para la gestión y consumo de contenido audiovisual, combinando un backend robusto con un frontend moderno y responsive.
 
@@ -51,6 +53,9 @@ El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta u
 - 🐛 **Reporte de problemas** — los usuarios pueden reportar fallos de video, audio, subtítulos, reproducción o contenido desde el reproductor o la sección de reportes
 - 👤 **Perfil de usuario** con foto y datos personales
 - 🌐 **Soporte multilingüe (i18n)** — interfaz y contenido en español, inglés, portugués, francés y alemán, con **selector de idioma** y preferencia de idioma guardada por usuario
+- 🎫 **Tickets de soporte** — los usuarios pueden abrir tickets con categorías y estados
+- 📖 **Preguntas frecuentes (FAQ)** — sección pública de soporte con FAQs organizadas por categoría
+- 🤖 **Asistente de soporte inteligente** — resuelve consultas con respuestas contextuales generadas por IA
 - 💳 **Sistema de pagos y suscripciones** (en desarrollo)
 
 ### 🛠️ Para administradores
@@ -67,10 +72,12 @@ El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta u
 - ⏰ **Programación de publicaciones** con Quartz (contenido, temporadas y episodios)
 - 🐛 **Gestión de reportes de problemas** — panel admin para revisar, filtrar y cambiar el estado de los reportes de los usuarios
 - 📊 **Estados de reportes** configurables (CRUD completo)
-- 🎫 **Tickets de soporte** (backend) — sistema de tickets con categorías, estados y mensajes
+- 🎫 **Tickets de soporte** — sistema de tickets con categorías, estados y mensajes (usuario + panel admin)
 - 🏷️ **Categorías de reportes** — clasificación de reportes de problemas (CRUD completo)
 - 🌐 **Gestión de idiomas** — CRUD completo de los idiomas disponibles en la plataforma
 - 🈶 **Sistema de traducciones** — contenido, categorías, estados, temporadas, episodios, banners hero, estantes, reportes, tickets de soporte, planes y estados de suscripción, y estados de pago
+- 🧠 **Traducción automática con IA** — genera traducciones del contenido y sus entidades con Google Gemini directamente desde el panel admin
+- 📖 **Gestión de preguntas frecuentes (FAQs)** — CRUD completo con categorías y traducciones
 
 ---
 
@@ -105,13 +112,15 @@ AxherApp/
 │   │   │   ├── email/                   # Servicio de correos
 │   │   │   ├── quartz/                  # Programación de publicaciones
 │   │   │   ├── scheduler/               # Tareas programadas
+│   │   │   ├── ai/                      # Traducción automática con IA (Google Gemini)
 │   │   │   └── seeder/                  # Datos de prueba
 │   │   ├── search/                      # Historial de búsquedas
 │   │   ├── users/                       # Gestión de usuarios (incl. preferencia de idioma)
 │   │   ├── language/                    # Idiomas disponibles y localización (i18n)
 │   │   ├── support/                     # Soporte
 │   │   │   ├── reports/                 # Reportes de problemas (usuario + admin + categorías)
-│   │   │   └── tickets/                 # Tickets de soporte
+│   │   │   ├── tickets/                 # Tickets de soporte
+│   │   │   └── SupportFaq/              # Preguntas frecuentes (FAQ) + traducciones
 │   │   └── shared/                      # Utilidades compartidas
 │   └── pom.xml
 │
@@ -123,6 +132,7 @@ AxherApp/
 │   │   │   ├── admin/                   # Panel administrativo (CRUDs, reportes, roles)
 │   │   │   ├── peliculas/               # Catálogo de películas
 │   │   │   ├── serie/                   # Catálogo de series
+│   │   │   ├── support/                 # Soporte al usuario (FAQs, tickets, asistente IA)
 │   │   │   └── 403/                     # Página de acceso denegado
 │   │   ├── core/                        # Configuración central
 │   │   │   └── api/                     # Cliente Axios, interceptores, endpoints
@@ -141,6 +151,7 @@ AxherApp/
 │   │   │   ├── watchlist/               # Mi Lista
 │   │   │   ├── search/                  # Búsqueda e historial
 │   │   │   ├── language/                # Gestión de idiomas, contexto y selector de idioma
+│   │   │   ├── faqs/                    # Preguntas frecuentes (FAQ) de soporte
 │   │   │   ├── ReportCategory/          # Categorías de reportes de problemas
 │   │   │   ├── media/                   # Reproductor de video
 │   │   │   ├── reports/                 # Reportes de problemas (usuario + admin)
@@ -160,10 +171,13 @@ AxherApp/
 │       ├── core/                       # Configuración del servicio
 │       └── support/                    # Lógica de la IA de soporte
 │           ├── ai/                     # Proveedores IA (Google Gemini, local)
+│           ├── category.py             # Categorías de consultas
 │           ├── classifier.py           # Clasificación automática de consultas
 │           ├── context.py              # Contexto del usuario/suscripción
 │           ├── prompt.py               # Construcción de prompts
-│           └── schemas.py              # Modelos de entrada/salida
+│           ├── responder.py            # Generación de respuestas contextuales
+│           ├── schemas.py              # Modelos de entrada/salida
+│           └── service.py              # Servicio orquestador del asistente
 │
 └── 📄 README.md
 ```
@@ -186,6 +200,7 @@ AxherApp/
 | 🔗 WebSockets | — | Comunicación en tiempo real |
 | ⏰ Quartz | — | Programación de tareas |
 | ☁️ Google API Client | 2.2.0 | OAuth con Google |
+| 🧠 Spring AI (Google Gemini) | 2.0.0 | Traducción automática de contenido con IA |
 | 📦 Lombok | — | Reducción de boilerplate |
 
 ### Frontend
@@ -200,7 +215,10 @@ AxherApp/
 | 🎬 Framer Motion | 12.42.2 | Animaciones |
 | 🎭 Lucide React | 1.7.0 | Iconos |
 | 🔗 STOMP.js | 7.3.0 | WebSockets |
-| 🧩 @dnd-kit | 6.3.1 | Drag & drop (ordenamiento) |
+| 🔌 sockjs-client | 1.6.1 | Cliente WebSocket (STOMP) |
+| 🧩 @dnd-kit/core | 6.3.1 | Drag & drop (núcleo) |
+| 🧩 @dnd-kit/sortable | 10.0.0 | Drag & drop (reordenación) |
+| 🧩 @dnd-kit/utilities | 3.2.2 | Utilidades de drag & drop |
 | 🖼️ react-easy-crop | 5.5.7 | Recorte de imágenes |
 | 🔑 @react-oauth/google | 0.13.4 | Google OAuth |
 | 🌐 next-intl | 4.13.7 | Internacionalización (i18n) multiidioma |
@@ -217,12 +235,13 @@ AxherApp/
 ## 🚀 Cómo empezar
 
 ### Prerequisitos
-- **Node.js** 18+
-- **Java** 17+ (recomendado 26)
+- **Node.js** 20+ (requerido por Next.js 16)
+- **Java** 26 (versión definida en el `pom.xml` del backend)
 - **Python** 3.14+ (solo para el microservicio de IA)
 - **Maven** (incluye wrapper en el proyecto)
 - **PostgreSQL** corriendo localmente
 - **Redis** (opcional, para caché)
+- **GEMINI_API_KEY** — API key de Google Gemini (traducciones con IA y asistente de soporte)
 
 ### 1️⃣ Clonar el repositorio
 ```bash
@@ -236,12 +255,14 @@ Crea tu archivo de configuración local:
 ```bash
 cp AxherBackend/src/main/resources/application.yaml AxherBackend/src/main/resources/application.local.yaml
 ```
-> ⚠️ **Importante:** Edita `application.yaml` con tus propias credenciales (BD, correo, JWT secret, Google Client ID).
+> ⚠️ **Importante:** Edita tu configuración con tus propias credenciales (BD, correo, JWT secret, Google Client ID) y define la variable de entorno `GEMINI_API_KEY` (necesaria para las traducciones automáticas con IA).
+>
+> 💡 Si copiaste tu configuración a `application.local.yaml`, actívala con el profile `local` al ejecutar (si prefieres no usar profiles, edita directamente `application.yaml`).
 
 Luego ejecuta:
 ```bash
 cd AxherBackend
-./mvnw spring-boot:run
+SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run   # Windows: set SPRING_PROFILES_ACTIVE=local && .\mvnw.cmd spring-boot:run
 ```
 El backend iniciará en `http://localhost:8080`.
 
@@ -297,6 +318,8 @@ El microservicio iniciará en `http://localhost:8000` (documentación en `http:/
 | `spring.mail.password` | Contraseña de aplicación de Gmail |
 | `jwt.secret` | Clave secreta para firmar JWT |
 | `google.client-id` | Client ID de Google OAuth |
+| `GEMINI_API_KEY` | API key de Google Gemini — traducciones automáticas con IA y asistente de soporte |
+| `app.upload-dir` | Directorio de almacenamiento de archivos multimedia |
 
 ### Frontend (`.env.local`)
 | Variable | Descripción |
@@ -304,6 +327,9 @@ El microservicio iniciará en `http://localhost:8000` (documentación en `http:/
 | `NEXT_PUBLIC_API_URL` | URL del backend API |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Client ID de Google OAuth |
 | `NEXT_PUBLIC_APP_NAME` | Nombre de la aplicación |
+| `NEXT_PUBLIC_APP_VERSION` | Versión de la aplicación |
+| `NEXT_PUBLIC_ENABLE_ANALYTICS` | Habilita/deshabilita analytics |
+| `NEXT_IMAGE_ALLOW_LOCALHOST` | Permite cargar imágenes desde localhost |
 
 ---
 
@@ -327,8 +353,10 @@ El microservicio iniciará en `http://localhost:8000` (documentación en `http:/
 - [x] Reportes de problemas (usuario + panel admin con estados y categorías configurables)
 - [x] Sistema multilingüe (i18n) — interfaz y contenido en es, en, pt, fr, de
 - [x] Gestión de idiomas y traducciones desde el panel admin
+- [x] 🧠 Traducción automática con IA (Spring AI + Google Gemini)
+- [x] 📖 Preguntas frecuentes (FAQs) — sección pública + CRUD desde el panel admin
 - [ ] 🚧 Sistema de pagos y suscripciones
-- [x] 🎫 Tickets de soporte (frontend)
+- [x] 🎫 Tickets de soporte (usuario + panel admin)
 - [x] 🤖 Asistente de soporte con IA (microservicio `AxherAI` con Google Gemini)
 - [ ] 📊 Reportes y estadísticas avanzadas
 - [ ] 🌙 Modo oscuro

@@ -55,3 +55,16 @@ export interface HeroBannerTranslationResponse {
     titleOverride: string | null;
     descriptionOverride: string | null;
 }
+
+export interface HeroBannerAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface HeroBannerAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceTitleOverride: string;
+    sourceDescriptionOverride: string;
+    translatedTitleOverride: string;
+    translatedDescriptionOverride: string;
+}

@@ -9,12 +9,10 @@ import { useState } from "react";
 
 interface Props {
     translations: SeasonTranslation[];
-
     deleting?: number | null;
-
     onDelete: (languageId: number) => void;
-
     onEdit: (translation: SeasonTranslation) => void;
+    onTranslate: (translation: SeasonTranslation) => void;
 }
 
 export default function SeasonTranslationList({
@@ -22,6 +20,7 @@ export default function SeasonTranslationList({
     deleting,
     onDelete,
     onEdit,
+    onTranslate,
 }: Props) {
 
     const common = useTranslations("common");
@@ -171,6 +170,10 @@ export default function SeasonTranslationList({
                                                         onEdit(
                                                             translation
                                                         ),
+                                                },
+                                                {
+                                                    label: common("translateWithAi"),
+                                                    onClick: () => onTranslate(translation),
                                                 },
                                                 {
                                                     label:

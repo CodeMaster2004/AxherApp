@@ -12,12 +12,14 @@ interface Props {
     deleting?: number | null;
     onDelete: (languageId: number) => void;
     onEdit: (translation: ContentTranslation) => void;
+    onTranslate: (translation: ContentTranslation) => void;
 }
 
 export default function TranslationList({
     translations,
     deleting,
     onDelete,
+    onTranslate,
     onEdit,
 }: Props) {
 
@@ -142,6 +144,10 @@ export default function TranslationList({
                                                 label: common("edit"),
                                                 onClick: () =>
                                                     onEdit(translation),
+                                            },
+                                            {
+                                                label: common("translateWithAi"),
+                                                onClick: () => onTranslate(translation),
                                             },
                                             {
                                                 label:

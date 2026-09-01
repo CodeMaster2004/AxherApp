@@ -14,6 +14,7 @@ import ReportStatusTranslationForm
 import ReportStatusTranslationList
     from "./ReportStatusTranslationList";
 import { useTranslations } from "next-intl";
+import ReportStatusAiTranslationDialog from "@/features/reportStatus/components/translations/ReportStatusAiTranslationDialog";
 
 interface Props {
     statusId: number;
@@ -26,6 +27,9 @@ export default function ReportStatusTranslationsPanel({
 }: Props) {
 
     const t = useTranslations("reportStatus");
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<ReportStatusTranslationResponse | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
 
     const {
         translations,
@@ -33,7 +37,9 @@ export default function ReportStatusTranslationsPanel({
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useReportStatusTranslations(statusId);
 
@@ -44,6 +50,16 @@ export default function ReportStatusTranslationsPanel({
             description: "",
         });
 
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            name: "",
+            description: "",
+        });
+
+        setEditingLanguageId(null);
+    }
+
     const [editingLanguageId, setEditingLanguageId] =
         useState<number | null>(null);
 
@@ -53,15 +69,65 @@ export default function ReportStatusTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
+        resetForm();
+    };
 
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+    const handleTranslate = (
+        translation: ReportStatusTranslationResponse
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                name:
+                    translated.translatedName,
+                description:
+                    translated.translatedDescription,
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
     };
 
     const handleEdit = (
@@ -81,13 +147,7 @@ export default function ReportStatusTranslationsPanel({
 
     const handleCancelEdit = () => {
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+        resetForm();
     };
 
     return (
@@ -133,10 +193,21 @@ export default function ReportStatusTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
                 )}
 
             </section>
+            {sourceTranslation && (
+                <ReportStatusAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={sourceTranslation}
+                    languages={languages}
+                    onConfirm={handleAiTranslation}
+                    onClose={handleCloseAiDialog}
+                    translating={translating}
+                />
+            )}
 
         </div>
     );

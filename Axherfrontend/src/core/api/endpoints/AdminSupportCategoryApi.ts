@@ -1,5 +1,5 @@
 import axiosClient from "@/core/api/axiosClient";
-import { Page, PaginationParams, SupportCategoryRequest, SupportCategoryResponse, SupportCategoryTranslationRequest, SupportCategoryTranslationResponse } from "@/entities/types";
+import { Page, PaginationParams, SupportCategoryAiTranslationRequest, SupportCategoryAiTranslationResponse, SupportCategoryRequest, SupportCategoryResponse, SupportCategoryTranslationRequest, SupportCategoryTranslationResponse } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 
 export const AdminSupportCategoryApi = {
@@ -72,15 +72,37 @@ export const AdminSupportCategoryApi = {
                 config
             ),
 
-        save: (
+        create: (
             categoryId: number,
             data: SupportCategoryTranslationRequest,
             config?: AxiosRequestConfig
         ) =>
-            axiosClient.patch<
-                SupportCategoryTranslationResponse
-            >(
+            axiosClient.post<SupportCategoryTranslationResponse>(
                 `/admin/support-categories/${categoryId}/translations`,
+                data,
+                config
+            ),
+
+        update: (
+            categoryId: number,
+            languageId: number,
+            data: SupportCategoryTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<SupportCategoryTranslationResponse>(
+                `/admin/support-categories/${categoryId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            categoryId: number,
+            sourceLanguageId: number,
+            data: SupportCategoryAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<SupportCategoryAiTranslationResponse>(
+                `/admin/support-categories/${categoryId}/translations/${sourceLanguageId}/translate`,
                 data,
                 config
             ),

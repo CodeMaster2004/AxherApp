@@ -12,6 +12,7 @@ import {
 } from "@/entities/types/category.types";
 import { useContentCategoryTranslations } from "@/features/contentCategories/hooks/useContentCategoryTranslations";
 import { useTranslations } from "next-intl";
+import ContentCategoryAiTranslationDialog from "@/features/contentCategories/components/translations/ContentCategoryAiTranslationDialog";
 
 interface Props {
     categoryId: number;
@@ -23,13 +24,20 @@ export default function ContentCategoryTranslationsPanel({
     languages,
 }: Props) {
 
+    const t = useTranslations("contentCategories");
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<ContentCategoryTranslationResponse | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
     const {
         translations,
         loading,
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useContentCategoryTranslations(categoryId);
 
@@ -40,6 +48,16 @@ export default function ContentCategoryTranslationsPanel({
             description: "",
         });
 
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            name: "",
+            description: "",
+        });
+
+        setEditingLanguageId(null);
+    };
+
     const [editingLanguageId, setEditingLanguageId] =
         useState<number | null>(null);
 
@@ -49,15 +67,65 @@ export default function ContentCategoryTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
+        resetForm();
+    };
 
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+    const handleTranslate = (
+        translation: ContentCategoryTranslationResponse
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                name:
+                    translated.translatedName,
+                description:
+                    translated.translatedDescription,
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
     };
 
     const handleEdit = (
@@ -75,16 +143,9 @@ export default function ContentCategoryTranslationsPanel({
 
     const handleCancelEdit = () => {
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+        resetForm();
     };
 
-    const t = useTranslations("contentCategories");
     
     return (
         <div className={layoutStyles.pageContainer}>
@@ -125,10 +186,21 @@ export default function ContentCategoryTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
                 )}
 
             </section>
+            {sourceTranslation && (
+                <ContentCategoryAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={sourceTranslation}
+                    languages={languages}
+                    onConfirm={handleAiTranslation}
+                    onClose={handleCloseAiDialog}
+                    translating={translating}
+                />
+            )}
 
         </div>
     );

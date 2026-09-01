@@ -1,4 +1,4 @@
-import { ContentDetail, ContentQueryParams, ContentTranslation, ContentTranslationRequest, Page, PaginationParams, StatusUpdate } from "@/entities/types";
+import { ContentAiTranslationRequest, ContentAiTranslationResponse, ContentDetail, ContentQueryParams, ContentTranslation, ContentTranslationRequest, Page, PaginationParams, StatusUpdate } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 
@@ -47,33 +47,60 @@ export const contentApi = {
     delete: (id: number, config?: AxiosRequestConfig) =>
         axiosClient.delete(`/admin/contents/${id}`, config),
 
-    getTranslations: (
+    translations: {
+
+        getTranslations: (
+            contentId: number,
+            contig?: AxiosRequestConfig
+        ) =>
+            axiosClient.get<ContentTranslation[]>(
+                `/admin/contents/${contentId}/translations`,
+                contig
+            ),
+        create: (
+            contentId: number,
+            data: ContentTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<ContentTranslation>(
+                `/admin/contents/${contentId}/translations`,
+                data,
+                config
+            ),
+
+        update: (
+            contentId: number,
+            languageId: number,
+            data: ContentTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<ContentTranslation>(
+                `/admin/contents/${contentId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+    translateWithAi: (
         contentId: number,
-        contig?: AxiosRequestConfig
-    ) =>
-        axiosClient.get<ContentTranslation[]>(
-            `/admin/contents/${contentId}/translations`,
-            contig
-        ),
-    saveTranslation: (
-        contentId: number,
-        data: ContentTranslationRequest,
+        sourceLanguageId: number,
+        data: ContentAiTranslationRequest,
         config?: AxiosRequestConfig
     ) => 
-        axiosClient.patch<ContentTranslation>(
-            `/admin/contents/${contentId}/translations`,
+        axiosClient.post<ContentAiTranslationResponse>(
+            `/admin/contents/${contentId}/translations/${sourceLanguageId}/translate`,
             data,
             config
         ),
 
-    deleteTranslation: (
-        contentId: number,
-        languageId: number,
-        config?: AxiosRequestConfig
-    ) => 
-        axiosClient.delete(
-            `/admin/contents/${contentId}/translations/${languageId}`,
-            config
-        )
+        deleteTranslation: (
+            contentId: number,
+            languageId: number,
+            config?: AxiosRequestConfig
+        ) => 
+            axiosClient.delete(
+                `/admin/contents/${contentId}/translations/${languageId}`,
+                config
+            )
+    }
     
 }

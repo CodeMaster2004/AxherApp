@@ -11,6 +11,7 @@ import { useState } from "react";
 import HeroBannerTranslationForm from "./HeroBannerTranslationForm";
 import HeroBannerTranslationList from "./HeroBannerTranslationList";
 import { useTranslations } from "next-intl";
+import HeroBannerAiTranslationDialog from "@/features/heroBanner/components/translations/HeroBannerAiTranslationDialog";
 
 
 interface Props {
@@ -24,13 +25,19 @@ export default function HeroBannerTranslationsPanel({
     languages,
 }: Props) {
 
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<HeroBannerTranslationResponse | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
     const {
         translations,
         loading,
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useHeroBannerTranslations(
         heroBannerId
@@ -44,6 +51,16 @@ export default function HeroBannerTranslationsPanel({
             descriptionOverride: "",
         });
 
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            titleOverride: "",
+            descriptionOverride: "",
+        });
+
+        setEditingLanguageId(null);
+    }
+
 
     const [editingLanguageId, setEditingLanguageId] =
         useState<number | null>(null);
@@ -55,15 +72,65 @@ export default function HeroBannerTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
+        resetForm();
+    };
 
-        setForm({
-            languageId: 0,
-            titleOverride: "",
-            descriptionOverride: "",
-        });
+    const handleTranslate = (
+        translation: HeroBannerTranslationResponse
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                titleOverride:
+                    translated.translatedTitleOverride,
+                descriptionOverride:
+                    translated.translatedDescriptionOverride,
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
     };
 
     const t = useTranslations("heroBanner");
@@ -89,13 +156,7 @@ export default function HeroBannerTranslationsPanel({
 
     const handleCancelEdit = () => {
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            titleOverride: "",
-            descriptionOverride: "",
-        });
+        resetForm();
     };
 
 
@@ -158,11 +219,22 @@ export default function HeroBannerTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
 
                 )}
 
             </section>
+            {sourceTranslation && (
+                <HeroBannerAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={sourceTranslation}
+                    languages={languages}
+                    onConfirm={handleAiTranslation}
+                    translating={translating}
+                    onClose={handleCloseAiDialog}
+                />
+            )}
 
         </div>
 

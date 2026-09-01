@@ -28,3 +28,16 @@ export interface SupportTicketStatusTranslationRequest {
     name: string;
     description: string;
 }
+
+export interface SupportTicketStatusAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface SupportTicketStatusAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceName: string;
+    sourceDescription: string;
+    translatedName: string;
+    translatedDescription: string;
+}

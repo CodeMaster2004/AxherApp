@@ -16,6 +16,9 @@ interface Props {
     onEdit: (
         translation: SupportTicketStatusTranslationResponse
     ) => void;
+    onTranslate: (
+        translation: SupportTicketStatusTranslationResponse
+    ) => void;
 }
 
 
@@ -25,7 +28,7 @@ export default function SupportTicketStatusTranslationList({
     deleting,
     onDelete,
     onEdit,
-
+    onTranslate,
 }: Props) {
 
     const common = useTranslations("common");
@@ -204,7 +207,10 @@ export default function SupportTicketStatusTranslationList({
                                                             translation
                                                         ),
                                                 },
-
+                                                {
+                                                    label: common("translateWithAi"),
+                                                    onClick: () => onTranslate(translation),
+                                                },
                                                 {
                                                     label:
                                                         deleting ===

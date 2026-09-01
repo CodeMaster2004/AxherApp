@@ -102,7 +102,7 @@ public class HeroBannerService {
                 dto.getDescriptionOverride()
         );
 
-        translationService.save(
+        translationService.create(
                 saved.getHeroBannerId(),
                 translationDto
         );
@@ -178,8 +178,9 @@ public class HeroBannerService {
                     dto.getDescriptionOverride()
             );
 
-            translationService.save(
+            translationService.update(
                     banner.getHeroBannerId(),
+                    dto.getLanguageId(),
                     translationDto
             );
         }

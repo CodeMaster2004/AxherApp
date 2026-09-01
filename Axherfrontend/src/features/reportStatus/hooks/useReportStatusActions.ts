@@ -1,11 +1,11 @@
 "use client";
 
-import { ReportStatusRequest } from "@/entities/types";
+import { ReportStatusResponse } from "@/entities/types";
 import { reportStatusService } from "@/features/reportStatus/services/ReportStatusService";
 import { useCrudActions } from "@/shared/hooks/useCrudActions";
 
 type Options = {
-    onSuccess?: (result?: ReportStatusRequest) => void;
+    onSuccess?: (result?: ReportStatusResponse) => void;
     onError?: (error: unknown) => void;
 }
 

@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
-import { HeroBanner, HeroBannerTranslationRequest, HeroBannerTranslationResponse, Page, PaginationParams } from "@/entities/types";
+import { HeroBanner, HeroBannerAiTranslationRequest, HeroBannerAiTranslationResponse, HeroBannerTranslationRequest, HeroBannerTranslationResponse, Page, PaginationParams } from "@/entities/types";
 
 export const adminHeroBannerApi = {
 
@@ -92,18 +92,41 @@ export const adminHeroBannerApi = {
                 config
             ),
 
-        save: (
+        create: (
             heroBannerId: number,
             data: HeroBannerTranslationRequest,
             config?: AxiosRequestConfig
         ) =>
-            axiosClient.patch<
-                HeroBannerTranslationResponse
-            >(
+            axiosClient.post<HeroBannerTranslationResponse>(
                 `/admin/hero-banners/${heroBannerId}/translations`,
                 data,
                 config
             ),
+
+        update: (
+            heroBannerId: number,
+            languageId: number,
+            data: HeroBannerTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<HeroBannerTranslationResponse>(
+                `/admin/hero-banners/${heroBannerId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            heroBannerId: number,
+            sourceLanguageId: number,
+            data: HeroBannerAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<HeroBannerAiTranslationResponse>(
+                `/admin/hero-banners/${heroBannerId}/translations/${sourceLanguageId}/translate`,
+                data,
+                config
+            ),
+
 
         delete: (
             heroBannerId: number,

@@ -93,7 +93,7 @@ public class ReportStatusService {
         translationDto.setName(dto.getName().trim());
         translationDto.setDescription(dto.getDescription());
 
-        translationService.save(
+        translationService.create(
                 saved.getReportStatusId(),
                 translationDto
         );
@@ -156,8 +156,9 @@ public class ReportStatusService {
             translationDto.setName(name);
             translationDto.setDescription(dto.getDescription());
 
-            translationService.save(
+            translationService.update(
                     existing.getReportStatusId(),
+                    dto.getLanguageId(),
                     translationDto
             );
         }

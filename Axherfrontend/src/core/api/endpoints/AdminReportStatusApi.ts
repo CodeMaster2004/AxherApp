@@ -1,5 +1,5 @@
 import axiosClient from "@/core/api/axiosClient";
-import { Page, PaginationParams, ReportStatusRequest, ReportStatusResponse, ReportStatusTranslationRequest, ReportStatusTranslationResponse } from "@/entities/types";
+import { Page, PaginationParams, ReportStatusAiTranslationRequest, ReportStatusAiTranslationResponse, ReportStatusRequest, ReportStatusResponse, ReportStatusTranslationRequest, ReportStatusTranslationResponse } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 
 export const AdminReportStatusApi = {
@@ -59,35 +59,59 @@ export const AdminReportStatusApi = {
             config
         ),
 
-    translations : {
+    translations: {
         getAll: (
-        statusId: number,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.get<ReportStatusTranslationResponse[]>(
-            `/admin/report-statuses/${statusId}/translations`,
-            config
-        ),
+            statusId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.get<ReportStatusTranslationResponse[]>(
+                `/admin/report-statuses/${statusId}/translations`,
+                config
+            ),
 
-    save: (
-        statusId: number,
-        data: ReportStatusTranslationRequest,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.patch<ReportStatusTranslationResponse>(
-            `/admin/report-statuses/${statusId}/translations`,
-            data,
-            config
-        ),
+        create: (
+            statusId: number,
+            data: ReportStatusTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<ReportStatusTranslationResponse>(
+                `/admin/report-statuses/${statusId}/translations`,
+                data,
+                config
+            ),
 
-    delete: (
-        statusId: number,
-        languageId: number,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.delete(
-            `/admin/report-statuses/${statusId}/translations/${languageId}`,
-            config
-        ),
+        update: (
+            statusId: number,
+            languageId: number,
+            data: ReportStatusTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<ReportStatusTranslationResponse>(
+                `/admin/report-statuses/${statusId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            statusId: number,
+            sourceLanguageId: number,
+            data: ReportStatusAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) => 
+            axiosClient.post<ReportStatusAiTranslationResponse>(
+                `/admin/report-statuses/${statusId}/translations/${sourceLanguageId}/translate`,
+                data,
+                config
+            ),
+
+        delete: (
+            statusId: number,
+            languageId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.delete(
+                `/admin/report-statuses/${statusId}/translations/${languageId}`,
+                config
+            ),
     }
 }

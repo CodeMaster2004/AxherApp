@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.content.core.DTOs.ContentCategoryAiTranslationRequestDto;
+import com.axher.backend.content.core.DTOs.ContentCategoryAiTranslationResponseDto;
 import com.axher.backend.content.core.DTOs.ContentCategoryTranslationDto;
 import com.axher.backend.content.core.DTOs.ContentCategoryTranslationRequestDto;
 import com.axher.backend.content.core.entities.ContentCategoryTranslation;
@@ -49,20 +52,59 @@ public class AdminContentCategoryTranslationController {
     }
 
     // =============================
-    // CREAR / ACTUALIZAR TRADUCCIÓN
+    // CREAR TRADUCCIÓN
     // =============================
-
-    @PatchMapping
-    public ResponseEntity<ContentCategoryTranslationDto> save(
+    @PostMapping
+    public ResponseEntity<ContentCategoryTranslationDto> create(
             @PathVariable Integer categoryId,
             @RequestBody ContentCategoryTranslationRequestDto dto
     ) {
 
         ContentCategoryTranslation translation =
-                service.save(categoryId, dto);
+                service.create(categoryId, dto);
 
         return ResponseEntity.ok(
                 mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // ACTUALIZAR TRADUCCIÓN
+    // =============================
+    @PatchMapping("/{languageId}")
+    public ResponseEntity<ContentCategoryTranslationDto> update(
+            @PathVariable Integer categoryId,
+            @PathVariable Integer languageId,
+            @RequestBody ContentCategoryTranslationRequestDto dto
+    ) {
+
+        ContentCategoryTranslation translation =
+                service.update(
+                        categoryId,
+                        languageId,
+                        dto
+                );
+
+        return ResponseEntity.ok(
+                mapper.toDto(translation)
+        );
+    }
+    
+    // =============================
+    // TRADUCIR CON AI
+    // =============================
+    @PostMapping("{sourceLanguageId}/translate")
+    public ResponseEntity<ContentCategoryAiTranslationResponseDto> translateWithAi(
+            @PathVariable Integer categoryId,
+            @PathVariable Integer sourceLanguageId,
+            @RequestBody ContentCategoryAiTranslationRequestDto dto
+    ) {
+        return ResponseEntity.ok(
+                service.translateWithAi(
+                        categoryId,
+                        sourceLanguageId,
+                        dto
+                )
         );
     }
 

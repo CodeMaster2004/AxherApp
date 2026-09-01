@@ -108,7 +108,7 @@ public class SupportCategoryService {
         translationDto.setName(dto.getName());
         translationDto.setDescription(dto.getDescription());
 
-        translationService.save(
+        translationService.create(
                 saved.getSupportCategoryId(),
                 translationDto
         );
@@ -183,8 +183,9 @@ public class SupportCategoryService {
             translationDto.setName(name);
             translationDto.setDescription(dto.getDescription());
 
-            translationService.save(
+            translationService.update(
                     existing.getSupportCategoryId(),
+                    dto.getLanguageId(),
                     translationDto
             );
         }

@@ -115,7 +115,7 @@ public class SupportTicketStatusService {
         translationDto.setName(dto.getName().trim());
         translationDto.setDescription(dto.getDescription());
 
-        translationService.save(
+        translationService.create(
                 saved.getSupportTicketStatusId(),
                 translationDto
         );
@@ -185,8 +185,9 @@ public class SupportTicketStatusService {
             translationDto.setName(name);
             translationDto.setDescription(dto.getDescription());
 
-            translationService.save(
+            translationService.update(
                     existing.getSupportTicketStatusId(),
+                    dto.getLanguageId(),
                     translationDto
             );
         }

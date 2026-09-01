@@ -1,5 +1,5 @@
 import { contentStatusApi } from "@/core/api/endpoints/ContentStatusApi";
-import { ContentStatusTranslationRequest, ContentStatusTranslationResponse } from "@/entities/types/status.types";
+import { ContentStatusAiTranslationRequest, ContentStatusAiTranslationResponse, ContentStatusTranslationRequest, ContentStatusTranslationResponse } from "@/entities/types/status.types";
 
 export const contentStatusTranslationService = {
 
@@ -17,20 +17,52 @@ export const contentStatusTranslationService = {
         return res.data;
     },
 
-    save: async (
+    create: async (
         statusId: number,
         data: ContentStatusTranslationRequest,
         signal?: AbortSignal
     ): Promise<ContentStatusTranslationResponse> => {
-
-        const res =
-            await contentStatusApi.translations.save(
+        const response =
+            await contentStatusApi.translations.create(
                 statusId,
                 data,
                 { signal }
             );
 
-        return res.data;
+        return response.data;
+    },
+
+    update: async (
+        statusId: number,
+        languageId: number,
+        data: ContentStatusTranslationRequest,
+        signal?: AbortSignal
+    ): Promise<ContentStatusTranslationResponse> => {
+        const response =
+            await contentStatusApi.translations.update(
+                statusId,
+                languageId,
+                data,
+                { signal }
+            );
+
+        return response.data;
+    },
+
+    translateWithAi: async(
+        statusId: number,
+        sourceLanguageId: number,
+        data: ContentStatusAiTranslationRequest,
+        signal?: AbortSignal
+    ): Promise<ContentStatusAiTranslationResponse> => {
+        const response = await contentStatusApi.translations.translateWithAi(
+            statusId,
+            sourceLanguageId,
+            data,
+            { signal }
+        );
+        
+        return response.data;
     },
 
     delete: async (

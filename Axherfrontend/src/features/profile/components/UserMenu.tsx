@@ -195,7 +195,7 @@ export default function UserMenu() {
                                             router.push("/mi-lista");
                                         }}
                                         onViewSupport={() => {
-                                            router.push("/soporte/tickets")
+                                            router.push("/support")
                                         }}
                                         onEditProfile={() => {
                                             router.push(

@@ -27,3 +27,16 @@ export interface ReportCategoryTranslationRequest {
     name: string;
     description: string;
 }
+
+export interface ReportCategoryAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface ReportCategoryAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceName: string;
+    sourceDescription: string;
+    translatedName: string;
+    translatedDescription: string;
+}

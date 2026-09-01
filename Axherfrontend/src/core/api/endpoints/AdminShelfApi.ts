@@ -1,6 +1,6 @@
 import axiosClient from "@/core/api/axiosClient";
 import { Page, PaginationParams } from "@/entities/types";
-import { ContentShelf, ContentShelfTranslationRequest, ContentShelfTranslationResponse, CreateShelf, ShelfOption, UpdateShelf } from "@/entities/types/shelf.types";
+import { ContentShelf, ContentShelfAiTranslationRequest, ContentShelfAiTranslationResponse, ContentShelfTranslationRequest, ContentShelfTranslationResponse, CreateShelf, ShelfOption, UpdateShelf } from "@/entities/types/shelf.types";
 import { AxiosRequestConfig } from "axios";
 
 export const adminShelfApi = {
@@ -92,15 +92,37 @@ export const adminShelfApi = {
             ),
 
 
-        save: (
+        create: (
             shelfId: number,
             data: ContentShelfTranslationRequest,
             config?: AxiosRequestConfig
         ) =>
-            axiosClient.patch<
-                ContentShelfTranslationResponse
-            >(
+            axiosClient.post<ContentShelfTranslationResponse>(
                 `/admin/content-shelves/${shelfId}/translations`,
+                data,
+                config
+            ),
+
+        update: (
+            shelfId: number,
+            languageId: number,
+            data: ContentShelfTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<ContentShelfTranslationResponse>(
+                `/admin/content-shelves/${shelfId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            shelfId: number,
+            sourceLanguageId: number,
+            data: ContentShelfAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<ContentShelfAiTranslationResponse>(
+                `/admin/content-shelves/${shelfId}/translations/${sourceLanguageId}/translate`,
                 data,
                 config
             ),

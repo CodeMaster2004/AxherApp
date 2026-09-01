@@ -141,7 +141,7 @@ public class ReportCategoryService {
                 dto.getDescription()
         );
 
-        translationService.save(
+        translationService.create(
                 saved.getReportCategoryId(),
                 translationDto
         );
@@ -237,8 +237,9 @@ public class ReportCategoryService {
                     dto.getDescription()
             );
 
-            translationService.save(
+            translationService.update(
                     existing.getReportCategoryId(),
+                    dto.getLanguageId(),
                     translationDto
             );
         }

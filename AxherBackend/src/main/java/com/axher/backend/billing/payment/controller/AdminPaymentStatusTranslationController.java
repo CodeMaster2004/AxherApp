@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.billing.payment.DTOs.PaymentStatusAiTranslationRequestDto;
+import com.axher.backend.billing.payment.DTOs.PaymentStatusAiTranslationResponseDto;
 import com.axher.backend.billing.payment.DTOs.PaymentStatusTranslationDto;
 import com.axher.backend.billing.payment.DTOs.PaymentStatusTranslationRequestDto;
 import com.axher.backend.billing.payment.entities.PaymentStatusTranslation;
@@ -49,22 +52,61 @@ public class AdminPaymentStatusTranslationController {
     }
 
     // =============================
-    // CREAR / ACTUALIZAR TRADUCCIÓN
+    // CREAR TRADUCCIÓN
     // =============================
-    @PatchMapping
-    public ResponseEntity<PaymentStatusTranslationDto> save(
+    @PostMapping
+    public ResponseEntity<PaymentStatusTranslationDto> create(
             @PathVariable Integer paymentStatusId,
             @RequestBody PaymentStatusTranslationRequestDto dto
     ) {
 
         PaymentStatusTranslation translation =
-                service.save(
+                service.create(
                         paymentStatusId,
                         dto
                 );
 
         return ResponseEntity.ok(
                 mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // ACTUALIZAR TRADUCCIÓN
+    // =============================
+    @PatchMapping("/{languageId}")
+    public ResponseEntity<PaymentStatusTranslationDto> update(
+            @PathVariable Integer paymentStatusId,
+            @PathVariable Integer languageId,
+            @RequestBody PaymentStatusTranslationRequestDto dto
+    ) {
+        
+        PaymentStatusTranslation translation =
+                service.update(
+                        paymentStatusId,
+                        languageId,
+                        dto
+                );
+
+        return ResponseEntity.ok(
+                mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // TRADUCIR CON AI
+    // =============================
+    public ResponseEntity<PaymentStatusAiTranslationResponseDto> translateWithAi(
+            @PathVariable Integer paymentStatusId,
+            @PathVariable Integer sourceLanguageId,
+            @RequestBody PaymentStatusAiTranslationRequestDto dto
+    ) {
+        return ResponseEntity.ok(
+                service.translateWithAi(
+                        paymentStatusId,
+                        sourceLanguageId,
+                        dto
+                )
         );
     }
 

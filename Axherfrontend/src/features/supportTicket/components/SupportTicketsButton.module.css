@@ -1,0 +1,64 @@
+.button {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+
+    width: 52px;
+    height: 52px;
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+
+    background: rgba(20, 20, 20, 0.9);
+    color: white;
+
+    cursor: pointer;
+    overflow: hidden;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(12px);
+
+    transition:
+        width 0.3s ease,
+        background-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.button:hover {
+    width: 150px;
+
+    background: rgba(30, 30, 30, 0.96);
+
+    transform: translateY(-2px);
+}
+
+.button svg {
+    flex-shrink: 0;
+    margin-left: 14px;
+}
+
+.label {
+    white-space: nowrap;
+
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    opacity: 0;
+    transform: translateX(8px);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.button:hover .label {
+    opacity: 1;
+    transform: translateX(0);
+}

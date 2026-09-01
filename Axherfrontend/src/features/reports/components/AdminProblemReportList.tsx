@@ -193,7 +193,7 @@ export default function AdminProblemReportList({
                         </option>
                     ))}
                 </select>
-                                <select
+                <select
                     value={filters.category ?? ""}
                     onChange={(e) =>
                         handleFilterChange(

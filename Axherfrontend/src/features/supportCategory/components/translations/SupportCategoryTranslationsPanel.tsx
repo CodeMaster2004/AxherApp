@@ -15,6 +15,7 @@ import SupportCategoryTranslationForm
 import SupportCategoryTranslationList
     from "./SupportCategoryTranslationList";
 import { useTranslations } from "next-intl";
+import SupportCategoryAiTranslationDialog from "@/features/supportCategory/components/translations/SupportCategoryAiTranslationDialog";
 
 
 interface Props {
@@ -29,13 +30,19 @@ export default function SupportCategoryTranslationsPanel({
 }: Props) {
 
     const t = useTranslations("supportCategories");
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<SupportCategoryTranslationResponse | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
     const {
         translations,
         loading,
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useSupportCategoryTranslations(categoryId);
 
@@ -46,6 +53,16 @@ export default function SupportCategoryTranslationsPanel({
             name: "",
             description: "",
         });
+
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            name: "",
+            description: "",
+        });
+
+        setEditingLanguageId(null);
+    };
 
 
     const [editingLanguageId, setEditingLanguageId] =
@@ -58,17 +75,66 @@ export default function SupportCategoryTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+        resetForm();
     };
 
+    const handleTranslate = (
+        translation: SupportCategoryTranslationResponse
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                name:
+                    translated.translatedName,
+                description:
+                    translated.translatedDescription,
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
+    };
 
     const handleEdit = (
         translation: SupportCategoryTranslationResponse
@@ -89,13 +155,7 @@ export default function SupportCategoryTranslationsPanel({
 
     const handleCancelEdit = () => {
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+        resetForm();
     };
 
 
@@ -157,11 +217,26 @@ export default function SupportCategoryTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
 
                 )}
 
             </section>
+            {sourceTranslation && (
+                <SupportCategoryAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={
+                        sourceTranslation
+                    }
+                    languages={languages}
+                    onConfirm={
+                        handleAiTranslation
+                    }
+                    onClose={handleCloseAiDialog}
+                    translating={translating}
+                />
+            )}
 
         </div>
     );

@@ -12,11 +12,13 @@ interface Props {
     deleting?: number | null;
     onDelete: (languageId: number) => void;
     onEdit: (translation: ContentStatusTranslationResponse) => void;
+    onTranslate: (translation: ContentStatusTranslationResponse) => void;
 }
 
 export default function ContentStatusTranslationList({
     translations,
     deleting,
+    onTranslate,
     onDelete,
     onEdit,
 }: Props) {
@@ -140,6 +142,11 @@ export default function ContentStatusTranslationList({
                                                 label: common("edit"),
                                                 onClick: () =>
                                                     onEdit(translation),
+                                            },
+
+                                            {
+                                                label: common("translateWithAi"),
+                                                onClick: () => onTranslate(translation),
                                             },
                                             {
                                                 label:

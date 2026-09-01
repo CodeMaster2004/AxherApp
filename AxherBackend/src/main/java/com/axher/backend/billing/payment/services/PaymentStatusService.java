@@ -117,7 +117,7 @@ public class PaymentStatusService {
         translationDto.setName(name);
         translationDto.setDescription(dto.getDescription());
 
-        translationService.save(
+        translationService.create(
                 saved.getPaymentStatusId(),
                 translationDto
         );
@@ -193,8 +193,9 @@ public class PaymentStatusService {
             translationDto.setName(name);
             translationDto.setDescription(dto.getDescription());
 
-            translationService.save(
+            translationService.update(
                     existing.getPaymentStatusId(),
+                    dto.getLanguageId(),
                     translationDto
             );
         }

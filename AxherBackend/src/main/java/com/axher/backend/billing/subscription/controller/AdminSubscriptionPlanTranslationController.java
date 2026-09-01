@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.billing.subscription.DTOs.SubscriptionPlanAiTranslationRequestDto;
+import com.axher.backend.billing.subscription.DTOs.SubscriptionPlanAiTranslationResponseDto;
 import com.axher.backend.billing.subscription.DTOs.SubscriptionPlanTranslationDto;
 import com.axher.backend.billing.subscription.DTOs.SubscriptionPlanTranslationRequestDto;
 import com.axher.backend.billing.subscription.entities.SubscriptionPlanTranslation;
@@ -48,21 +51,58 @@ public class AdminSubscriptionPlanTranslationController {
     }
 
     // =============================
-    // CREAR / ACTUALIZAR
+    // CREAR 
     // =============================
-    @PatchMapping
-    public ResponseEntity<SubscriptionPlanTranslationDto> save(
+    @PostMapping
+    public ResponseEntity<SubscriptionPlanTranslationDto> create(
             @PathVariable Integer planId,
             @RequestBody SubscriptionPlanTranslationRequestDto dto
     ) {
 
         SubscriptionPlanTranslation translation =
-                service.save(planId, dto);
+                service.create(planId, dto);
 
         return ResponseEntity.ok(
                 mapper.toDto(translation)
         );
     }
+
+    // =============================
+    // ACTUALIZAR TRADUCCIÓN
+    // =============================
+    @PatchMapping("/{languageId}")
+    public ResponseEntity<SubscriptionPlanTranslationDto> update(
+            @PathVariable Integer planId,
+            @PathVariable Integer languageId,
+            @RequestBody SubscriptionPlanTranslationRequestDto dto
+    ) {
+
+        SubscriptionPlanTranslation translation =
+                service.update(planId, languageId, dto);
+
+        return ResponseEntity.ok(
+                mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // TRADUCIR CON AI
+    // =============================
+    @PostMapping("{sourceLanguageId}/translate")
+    public ResponseEntity<SubscriptionPlanAiTranslationResponseDto> translateWithAi(
+            @PathVariable Integer planId,
+            @PathVariable Integer sourceLanguageId,
+            @RequestBody SubscriptionPlanAiTranslationRequestDto dto
+    ) {
+            return ResponseEntity.ok(
+                    service.translateWithAi(
+                            planId,
+                            sourceLanguageId,
+                            dto
+                    )
+            );
+    }
+    
 
     // =============================
     // ELIMINAR

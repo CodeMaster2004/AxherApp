@@ -1,5 +1,5 @@
 import axiosClient from "@/core/api/axiosClient";
-import { Page, PaginationParams, SupportTicketStatusRequest, SupportTicketStatusResponse, SupportTicketStatusTranslationRequest, SupportTicketStatusTranslationResponse } from "@/entities/types";
+import { Page, PaginationParams, SupportTicketStatusAiTranslationRequest, SupportTicketStatusAiTranslationResponse, SupportTicketStatusRequest, SupportTicketStatusResponse, SupportTicketStatusTranslationRequest, SupportTicketStatusTranslationResponse } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 
 export const AdminSupportTicketStatusApi = {
@@ -70,13 +70,37 @@ export const AdminSupportTicketStatusApi = {
                 config
             ),
 
-        save: (
+        create: (
             statusId: number,
             data: SupportTicketStatusTranslationRequest,
-            config?: object
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<SupportTicketStatusTranslationResponse>(
+                `/admin/support-ticket-statuses/${statusId}/translations`,
+                data,
+                config
+            ),
+
+        update: (
+            statusId: number,
+            languageId: number,
+            data: SupportTicketStatusTranslationRequest,
+            config?: AxiosRequestConfig
         ) =>
             axiosClient.patch<SupportTicketStatusTranslationResponse>(
-                `/admin/support-ticket-statuses/${statusId}/translations`,
+                `/admin/support-ticket-statuses/${statusId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            statusId: number,
+            sourceLanguageId: number,
+            data: SupportTicketStatusAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<SupportTicketStatusAiTranslationResponse>(
+                `/admin/support-ticket-statuses/${statusId}/translations/${sourceLanguageId}/translate`,
                 data,
                 config
             ),

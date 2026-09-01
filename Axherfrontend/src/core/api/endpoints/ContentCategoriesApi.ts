@@ -1,4 +1,4 @@
-import { ContentCategoryRequest, ContentCategoryResponse, ContentCategoryTranslationRequest, ContentCategoryTranslationResponse, Page, PaginationParams } from "@/entities/types";
+import { ContentCategoryAiTranslationRequest, ContentCategoryAiTranslationResponse, ContentCategoryRequest, ContentCategoryResponse, ContentCategoryTranslationRequest, ContentCategoryTranslationResponse, Page, PaginationParams } from "@/entities/types";
 import type { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 
@@ -61,15 +61,37 @@ export const contentCategoriesApi = {
                 config
             ),
 
-        save: (
+        create: (
             categoryId: number,
             data: ContentCategoryTranslationRequest,
             config?: AxiosRequestConfig
         ) =>
-            axiosClient.patch<
-                ContentCategoryTranslationResponse
-            >(
+            axiosClient.post<ContentCategoryTranslationResponse>(
                 `/admin/content-categories/${categoryId}/translations`,
+                data,
+                config
+            ),
+
+        update: (
+            categoryId: number,
+            languageId: number,
+            data: ContentCategoryTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<ContentCategoryTranslationResponse>(
+                `/admin/content-categories/${categoryId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            categoryId: number,
+            sourceLanguageId: number,
+            data: ContentCategoryAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<ContentCategoryAiTranslationResponse>(
+                `/admin/content-categories/${categoryId}/translations/${sourceLanguageId}/translate`,
                 data,
                 config
             ),

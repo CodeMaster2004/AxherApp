@@ -87,45 +87,4 @@ export const seasonsService = {
         await adminSeasonsApi.delete(seriesId, seasonId, { signal });
     },
 
-    getTranslations: async (
-        seasonId: number,
-        signal?: AbortSignal
-    ): Promise<SeasonTranslation[]> => {
-
-        const res = await adminSeasonsApi.getTranslations(
-            seasonId,
-            { signal }
-        );
-
-        return res.data;
-    },
-
-    saveTranslation: async (
-        seasonId: number,
-        data: SeasonTranslationRequest,
-        signal?: AbortSignal
-    ): Promise<SeasonTranslation> => {
-
-        const res = await adminSeasonsApi.saveTranslation(
-            seasonId,
-            data,
-            { signal }
-        );
-
-        return res.data;
-    },
-
-    deleteTranslation: async (
-        seasonId: number,
-        languageId: number,
-        signal?: AbortSignal
-    ): Promise<void> => {
-
-        await adminSeasonsApi.deleteTranslation(
-            seasonId,
-            languageId,
-            { signal }
-        );
-    },
-    
 }

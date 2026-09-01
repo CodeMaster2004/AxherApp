@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.support.reports.DTOS.ReportStatusAiTranslationRequestDto;
+import com.axher.backend.support.reports.DTOS.ReportStatusAiTranslationResponseDto;
 import com.axher.backend.support.reports.DTOS.ReportStatusTranslationDto;
 import com.axher.backend.support.reports.DTOS.ReportStatusTranslationRequestDto;
 import com.axher.backend.support.reports.entities.ReportStatusTranslation;
@@ -48,21 +51,58 @@ public class AdminReportStatusTranslationController {
     }
 
     // =============================
-    // CREAR / ACTUALIZAR TRADUCCIÓN
+    // CREAR TRADUCCIÓN
     // =============================
-    @PatchMapping
-    public ResponseEntity<ReportStatusTranslationDto> save(
+    @PostMapping
+    public ResponseEntity<ReportStatusTranslationDto> create(
             @PathVariable Integer statusId,
             @RequestBody ReportStatusTranslationRequestDto dto
     ) {
 
         ReportStatusTranslation translation =
-                service.save(statusId, dto);
+                service.create(statusId, dto);
 
         return ResponseEntity.ok(
                 mapper.toDto(translation)
         );
     }
+
+    // =============================
+    // ACTUALIZAR TRADUCCIÓN
+    // =============================
+    @PatchMapping("/{languageId}")
+    public ResponseEntity<ReportStatusTranslationDto> update(
+            @PathVariable Integer statusId,
+            @PathVariable Integer languageId,
+            @RequestBody ReportStatusTranslationRequestDto dto
+    ) {
+
+        ReportStatusTranslation translation =
+                service.update(statusId, languageId, dto);
+
+        return ResponseEntity.ok(
+                mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // TRADUCIR CON AI
+    // =============================
+    @PostMapping("{sourceLanguageId}/translate")
+    public ResponseEntity<ReportStatusAiTranslationResponseDto> translateWithAi(
+            @PathVariable Integer statusId,
+            @PathVariable Integer sourceLanguageId,
+            @RequestBody ReportStatusAiTranslationRequestDto dto
+    ){
+            return ResponseEntity.ok(
+                    service.translateWithAi(
+                            statusId,
+                            sourceLanguageId,
+                            dto
+                    )
+            );
+    }
+    
 
     // =============================
     // ELIMINAR TRADUCCIÓN

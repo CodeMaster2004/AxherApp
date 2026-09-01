@@ -58,3 +58,16 @@ export interface SeasonTranslationRequest {
     title: string;
     description: string;
 }
+
+export interface SeasonAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface SeasonAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceTitle: string;
+    sourceDescription: string;
+    translatedTitle: string;
+    translatedDescription: string;
+}

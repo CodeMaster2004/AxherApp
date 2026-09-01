@@ -45,7 +45,10 @@
         "view": "Ver",
         "remove": "Quitar",
         "retry": "Reintentar",
-        "noResults": "No se encontraron resultados"
+        "noResults": "No se encontraron resultados",
+
+        "translateWithAi": "Traducir con IA",
+        "translating": "Traduciendo..."
     },
 
     "navigation": {
@@ -70,6 +73,7 @@
         "supportTickets": "Tickets de Soporte",
         "supportCategories": "Categorías de Soporte",
         "supportTicketStatuses": "Estados de Tickets",
+        "supportFaqs": "Preguntas frecuentes",
         "problemReports": "Reportes de Problemas",
         "problemReportStatuses": "Estados de Reportes",
         "problemReportCategories": "Categorías de Reportes",
@@ -1089,6 +1093,10 @@
 
     "supportTickets": {
         "title": "Tickets de soporte",
+        "shortcut": {
+            "title": "Mis tickets",
+            "action": "Ver mis tickets"
+        },
         "loading": "Cargando tickets...",
         "list": {
             "title": "Tickets de soporte",
@@ -1418,7 +1426,113 @@
             "loading": "Quitando...",
             "confirmMessage": "¿Estás seguro de que deseas quitar \"{title}\" de tu lista? Esta acción no se puede deshacer."
         }
+    },
+    
+    "supportFaq": {
+        "title": "Preguntas frecuentes",
+        "createTitle": "Crear pregunta frecuente",
+        "editTitle": "Editar pregunta frecuente",
+
+        "search": {
+            "placeholder": "Buscar preguntas frecuentes..."
+        },
+
+        "filters": {
+            "allCategories": "Todas las categorías",
+            "allStatuses": "Todos los estados"
+        },
+
+        "list": {
+            "loading": "Cargando preguntas frecuentes...",
+            "empty": "No se encontraron preguntas frecuentes.",
+            "category": "Categoría",
+            "language": "Idioma",
+            "displayOrder": "Orden",
+            "active": "Activo",
+            "inactive": "Inactivo"
+        },
+
+        "form": {
+            "category": "Categoría",
+            "selectCategory": "Seleccionar categoría",
+            "language": "Idioma",
+            "selectLanguage": "Seleccionar idioma",
+            "question": "Pregunta",
+            "answer": "Respuesta",
+            "displayOrder": "Orden de visualización",
+            "validation": {
+                "categoryRequired": "La categoría es obligatoria.",
+                "languageRequired": "El idioma es obligatorio.",
+                "questionRequired": "La pregunta es obligatoria.",
+                "answerRequired": "La respuesta es obligatoria."
+            }
+        },
+
+        "delete": {
+            "title": "Eliminar pregunta frecuente",
+            "message": "¿Estás seguro de que deseas eliminar la pregunta \"{title}\"?"
+        },
+
+        "translations": {
+            "title": "Traducciones",
+            "description": "Gestiona las traducciones de esta pregunta frecuente.",
+            "createTitle": "Agregar traducción",
+            "editTitle": "Editar traducción",
+
+            "language": "Idioma",
+            "selectLanguage": "Seleccionar idioma",
+
+            "question": "Pregunta",
+            "questionPlaceholder": "Escribe la pregunta...",
+
+            "answer": "Respuesta",
+            "answerPlaceholder": "Escribe la respuesta...",
+
+            "empty": "No hay traducciones disponibles.",
+            "loading": "Cargando traducciones...",
+            "error": "No se pudieron cargar o guardar las traducciones.",
+
+            "registeredTitle": "Traducciones registradas",
+
+            "languageRequired": "El idioma es obligatorio.",
+            "questionRequired": "La pregunta es obligatoria.",
+            "answerRequired": "La respuesta es obligatoria.",
+
+            "delete": {
+                "title": "Eliminar traducción",
+                "message": "¿Estás seguro de que deseas eliminar esta traducción?"
+            },
+
+            "ai": {
+                "title": "Traducir con IA",
+                "source": "Idioma origen",
+                "target": "Idioma destino",
+                "preview": "Vista previa de la traducción",
+                "translatedQuestion": "Pregunta traducida",
+                "translatedAnswer": "Respuesta traducida",
+                "apply": "Aplicar traducción",
+                "close": "Cerrar",
+                "error": "No se pudo generar la traducción."
+            }
+        },
+
+
+        "public": {
+            "eyebrow": "Centro de ayuda",
+            "title": "¿Cómo podemos ayudarte?",
+            "description": "Encuentra respuestas a las preguntas más frecuentes.",
+            "searchPlaceholder": "Buscar preguntas frecuentes...",
+            "searchResults": "Preguntas encontradas",
+            "searching": "Buscando preguntas...",
+            "noResults": "No encontramos preguntas relacionadas con tu búsqueda.",
+            "searchError": "No pudimos cargar las preguntas. Inténtalo nuevamente.",
+            "clearSearch": "Limpiar búsqueda",
+            "categoriesTitle": "¿En qué podemos ayudarte?",
+            "backToHelpCenter": "Volver al centro de ayuda",
+            "categoryDescription": "Encuentra respuestas a las preguntas más frecuentes de esta categoría."
+        }
     }
+    
 
 }
         

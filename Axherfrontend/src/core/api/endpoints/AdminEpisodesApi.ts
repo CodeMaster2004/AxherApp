@@ -1,4 +1,4 @@
-import { EpisodeDetail, EpisodeTranslation, EpisodeTranslationRequest, Page, PaginationParams, StatusUpdate } from "@/entities/types";
+import { EpisodeAiTranslationRequest, EpisodeAiTranslationResponse, EpisodeDetail, EpisodeTranslation, EpisodeTranslationRequest, Page, PaginationParams, StatusUpdate } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 
@@ -36,35 +36,61 @@ export const AdminEpisodesApi ={
     delete: (seasonId: number, episodeId: number, config?: AxiosRequestConfig) =>
         axiosClient.delete(`/admin/seasons/${seasonId}/episodes/${episodeId}`, config),
 
-    getTranslations: (
-        episodeId: number,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.get<EpisodeTranslation[]>(
-            `/admin/episodes/${episodeId}/translations`,
-            config
-        ),
+    translations: {
+        getTranslations: (
+            episodeId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.get<EpisodeTranslation[]>(
+                `/admin/episodes/${episodeId}/translations`,
+                config
+            ),
 
-    saveTranslation: (
-        episodeId: number,
-        data: EpisodeTranslationRequest,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.patch<EpisodeTranslation>(
-            `/admin/episodes/${episodeId}/translations`,
-            data,
-            config
-        ),
+        create: (
+            episodeId: number,
+            data: EpisodeTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<EpisodeTranslation>(
+                `/admin/episodes/${episodeId}/translations`,
+                data,
+                config
+            ),
 
-    deleteTranslation: (
-        episodeId: number,
-        languageId: number,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.delete(
-            `/admin/episodes/${episodeId}/translations/${languageId}`,
-            config
-        ),
+        update: (
+            episodeId: number,
+            languageId: number,
+            data: EpisodeTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<EpisodeTranslation>(
+                `/admin/episodes/${episodeId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            episodeId: number,
+            sourceLanguageId: number,
+            data: EpisodeAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<EpisodeAiTranslationResponse>(
+                `/admin/episodes/${episodeId}/translations/${sourceLanguageId}/translate`,
+                data,
+                config
+            ),
+            
+        deleteTranslation: (
+            episodeId: number,
+            languageId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.delete(
+                `/admin/episodes/${episodeId}/translations/${languageId}`,
+                config
+            ),
+    }
 
     
 }

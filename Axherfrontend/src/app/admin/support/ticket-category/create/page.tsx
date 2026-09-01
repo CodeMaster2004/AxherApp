@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 export default function CreateSupportCategoryPage() {
 
     const router = useRouter();
-    const t = useTranslations("supportCategories");
+    const t = useTranslations("supportCategory");
     const [error, setError] = useState("");
 
     const [form, setForm] = useState<SupportCategoryRequest>({

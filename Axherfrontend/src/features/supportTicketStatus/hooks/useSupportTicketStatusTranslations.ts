@@ -1,5 +1,5 @@
 "use client";
-import { SupportTicketStatusTranslationRequest, SupportTicketStatusTranslationResponse } from "@/entities/types";
+import { SupportTicketStatusAiTranslationRequest, SupportTicketStatusAiTranslationResponse, SupportTicketStatusTranslationRequest, SupportTicketStatusTranslationResponse } from "@/entities/types";
 import { supportTicketStatusTranslationService } from "@/features/supportTicketStatus/service/supportTicketStatusTranslationService";
 import {
     useCallback,
@@ -17,11 +17,8 @@ export const useSupportTicketStatusTranslations = (
     >([]);
 
     const [loading, setLoading] = useState(false);
-
     const [saving, setSaving] = useState(false);
-
     const [deleting, setDeleting] = useState<number | null>(null);
-
     const [error, setError] = useState<unknown | null>(null);
 
 
@@ -69,75 +66,109 @@ export const useSupportTicketStatusTranslations = (
     }, [fetchTranslations]);
 
 
-    const saveTranslation = useCallback(
-
+    const createTranslation = useCallback(
         async (
             data: SupportTicketStatusTranslationRequest
         ) => {
-
             if (!statusId) {
-
                 throw new Error(
                     "Support Ticket Status ID is required"
                 );
-
             }
 
             setSaving(true);
-
             setError(null);
 
             try {
-
-                const saved =
-                    await supportTicketStatusTranslationService.save(
+                const created =
+                    await supportTicketStatusTranslationService.create(
                         statusId,
                         data
                     );
 
-                setTranslations(prev => {
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
-
-                    if (index === -1) {
-
-                        return [
-                            ...prev,
-                            saved,
-                        ];
-
-                    }
-
-                    const updated = [...prev];
-
-                    updated[index] = saved;
-
-                    return updated;
-                });
-
-                return saved;
-
+                return created;
             } catch (err) {
-
                 setError(err);
-
                 throw err;
-
             } finally {
-
                 setSaving(false);
-
             }
-
         },
-
         [statusId]
     );
 
+    const updateTranslation = useCallback(
+        async (
+            languageId: number,
+            data: SupportTicketStatusTranslationRequest
+        ) => {
+            if (!statusId) {
+                throw new Error(
+                    "Support Ticket Status ID is required"
+                );
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+                const updated =
+                    await supportTicketStatusTranslationService.update(
+                        statusId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+            } catch (err) {
+                setError(err);
+                throw err;
+            } finally {
+                setSaving(false);
+            }
+        },
+        [statusId]
+    );
+
+    const translateWithAi = useCallback(
+    
+        async (
+            sourceLanguageId: number,
+            data: SupportTicketStatusAiTranslationRequest
+        ): Promise<SupportTicketStatusAiTranslationResponse> => {
+
+            if(!statusId) {
+                throw new Error("Support Ticket Status ID is required");
+            }
+
+            setError(null);
+
+            try {
+                return await supportTicketStatusTranslationService.translateWithAi(
+                    statusId,
+                    sourceLanguageId,
+                    data
+                )
+            } catch(err) {
+                setError(err);
+                throw err;
+            }
+        },
+        [statusId]
+    );
 
     const deleteTranslation = useCallback(
 
@@ -194,7 +225,9 @@ export const useSupportTicketStatusTranslations = (
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
     };

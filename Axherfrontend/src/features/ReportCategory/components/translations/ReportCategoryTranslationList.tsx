@@ -15,6 +15,7 @@ interface Props {
     onEdit: (
         translation: ReportCategoryTranslationResponse
     ) => void;
+    onTranslate: (translation: ReportCategoryTranslationResponse) => void;
 }
 
 
@@ -24,7 +25,7 @@ export default function ReportCategoryTranslationList({
     deleting,
     onDelete,
     onEdit,
-
+    onTranslate,
 }: Props) {
 
     const common = useTranslations("common");
@@ -165,7 +166,10 @@ export default function ReportCategoryTranslationList({
                                                 onClick: () =>
                                                     onEdit(translation),
                                             },
-
+                                            {
+                                                label: common("translateWithAi"),
+                                                onClick: () => onTranslate(translation),
+                                            },
                                             {
                                                 label:
                                                     deleting ===

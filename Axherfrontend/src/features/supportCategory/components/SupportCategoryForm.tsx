@@ -33,7 +33,7 @@ export default function SupportCategoryForm({
 }: Props) {
 
     const common = useTranslations("common");
-    const t = useTranslations("supportCategories");
+    const t = useTranslations("supportCategory");
 
     const languageOptions: SelectOption[] = languages.map(language => ({
         value: language.languageId,

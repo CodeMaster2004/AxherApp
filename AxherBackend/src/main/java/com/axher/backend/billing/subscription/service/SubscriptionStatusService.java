@@ -108,7 +108,7 @@ public class SubscriptionStatusService {
         translationDto.setName(dto.getName());
         translationDto.setDescription(dto.getDescription());
 
-        translationService.save(
+        translationService.create(
             saved.getSubscriptionStatusId(),
             translationDto
         );
@@ -178,8 +178,9 @@ public class SubscriptionStatusService {
             translationDto.setName(name);
             translationDto.setDescription(dto.getDescription());
 
-            translationService.save(
+            translationService.update(
                     existing.getSubscriptionStatusId(),
+                    dto.getLanguageId(),
                     translationDto
             );
 

@@ -1,15 +1,21 @@
 package com.axher.backend.billing.subscription.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.axher.backend.billing.subscription.DTOs.SubscriptionStatusAiTranslationRequestDto;
+import com.axher.backend.billing.subscription.DTOs.SubscriptionStatusAiTranslationResponseDto;
 import com.axher.backend.billing.subscription.DTOs.SubscriptionStatusTranslationRequestDto;
 import com.axher.backend.billing.subscription.entities.SubscriptionStatus;
 import com.axher.backend.billing.subscription.entities.SubscriptionStatusTranslation;
 import com.axher.backend.billing.subscription.repositories.SubscriptionStatusRepository;
 import com.axher.backend.billing.subscription.repositories.SubscriptionStatusTranslationRepository;
+import com.axher.backend.infrastructure.ai.translation.AiTranslationRequest;
+import com.axher.backend.infrastructure.ai.translation.AiTranslationResult;
+import com.axher.backend.infrastructure.ai.translation.AiTranslationService;
 import com.axher.backend.language.entities.Language;
 import com.axher.backend.language.repositories.LanguageRepository;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
@@ -23,6 +29,7 @@ public class SubscriptionStatusTranslationService {
     private final SubscriptionStatusTranslationRepository translationRepository;
     private final SubscriptionStatusRepository statusRepository;
     private final LanguageRepository languageRepository;
+    private final AiTranslationService aiTranslationService;
 
 
     // ==========================================
@@ -104,9 +111,9 @@ public class SubscriptionStatusTranslationService {
 
 
     // ==========================================
-    // CREAR O ACTUALIZAR UNA TRADUCCIÓN
+    // CREAR TRADUCCIÓN
     // ==========================================
-    public SubscriptionStatusTranslation save(
+    public SubscriptionStatusTranslation create(
             Integer statusId,
             SubscriptionStatusTranslationRequestDto dto
     ) {
@@ -120,7 +127,6 @@ public class SubscriptionStatusTranslationService {
                                 )
                         );
 
-
         Language language =
                 languageRepository.findById(dto.getLanguageId())
                         .orElseThrow(() ->
@@ -130,23 +136,28 @@ public class SubscriptionStatusTranslationService {
                                 )
                         );
 
-
         if (!Boolean.TRUE.equals(language.getActive())) {
             throw new IllegalArgumentException(
-                    "Idioma inactivo: "
-                            + dto.getLanguageId()
+                    "Idioma inactivo: " + language.getCode()
+            );
+        }
+
+        boolean exists =
+                translationRepository
+                        .existsBySubscriptionStatus_SubscriptionStatusIdAndLanguage_LanguageId(
+                                statusId,
+                                language.getLanguageId()
+                        );
+
+        if (exists) {
+            throw new IllegalStateException(
+                    "Ya existe una traducción para el idioma: "
+                            + language.getCode()
             );
         }
 
         SubscriptionStatusTranslation translation =
-                translationRepository
-                        .findBySubscriptionStatus_SubscriptionStatusIdAndLanguage_LanguageId(
-                                statusId,
-                                language.getLanguageId()
-                        )
-                        .orElseGet(
-                                SubscriptionStatusTranslation::new
-                        );
+                new SubscriptionStatusTranslation();
 
         translation.setSubscriptionStatus(status);
         translation.setLanguage(language);
@@ -154,6 +165,202 @@ public class SubscriptionStatusTranslationService {
         translation.setDescription(dto.getDescription());
 
         return translationRepository.save(translation);
+    }
+
+    // ==========================================
+    // ACTUALIZAR TRADUCCIÓN
+    // ==========================================
+    public SubscriptionStatusTranslation update(
+            Integer statusId,
+            Integer languageId,
+            SubscriptionStatusTranslationRequestDto dto
+    ) {
+
+        SubscriptionStatusTranslation translation =
+                translationRepository
+                        .findBySubscriptionStatus_SubscriptionStatusIdAndLanguage_LanguageId(
+                                statusId,
+                                languageId
+                        )
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "La traducción no existe"
+                                )
+                        );
+
+        translation.setName(dto.getName());
+        translation.setDescription(dto.getDescription());
+
+        return translationRepository.save(translation);
+    }
+
+    // ==========================================
+    // TRADUCIR CON AI
+    // ==========================================
+
+    public SubscriptionStatusAiTranslationResponseDto translateWithAi(
+            Integer statusId,
+            Integer sourceLanguageId,
+            SubscriptionStatusAiTranslationRequestDto dto
+    ) {
+
+        // ==========================================
+        // VALIDAR ESTADO
+        // ==========================================
+
+        statusRepository.findById(statusId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Estado de suscripción no encontrado: "
+                                        + statusId
+                        )
+                );
+
+
+        // ==========================================
+        // VALIDAR IDIOMA ORIGEN
+        // ==========================================
+
+        Language sourceLanguage =
+                languageRepository.findById(sourceLanguageId)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Idioma origen no encontrado: "
+                                                + sourceLanguageId
+                                )
+                        );
+
+
+        // ==========================================
+        // VALIDAR IDIOMA DESTINO
+        // ==========================================
+
+        Language targetLanguage =
+                languageRepository.findById(
+                        dto.getTargetLanguageId()
+                )
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Idioma de destino no encontrado: "
+                                                + dto.getTargetLanguageId()
+                                )
+                        );
+
+
+        // ==========================================
+        // VALIDAR IDIOMA ORIGEN ACTIVO
+        // ==========================================
+
+        if (!Boolean.TRUE.equals(sourceLanguage.getActive())) {
+
+            throw new IllegalArgumentException(
+                    "Idioma origen esta inactivo: "
+                            + sourceLanguage.getCode()
+            );
+        }
+
+
+        // ==========================================
+        // VALIDAR IDIOMA DESTINO ACTIVO
+        // ==========================================
+
+        if (!Boolean.TRUE.equals(targetLanguage.getActive())) {
+
+            throw new IllegalArgumentException(
+                    "Idioma destino esta inactivo: "
+                            + targetLanguage.getCode()
+            );
+        }
+
+
+        // ==========================================
+        // VALIDAR IDIOMAS DIFERENTES
+        // ==========================================
+
+        if (sourceLanguage.getLanguageId()
+                .equals(targetLanguage.getLanguageId())) {
+
+            throw new IllegalArgumentException(
+                    "El idioma origen y destino no pueden ser iguales"
+            );
+        }
+
+
+        // ==========================================
+        // OBTENER TRADUCCIÓN ORIGEN
+        // ==========================================
+
+        SubscriptionStatusTranslation sourceTranslation =
+                translationRepository
+                        .findBySubscriptionStatus_SubscriptionStatusIdAndLanguage_LanguageId(
+                                statusId,
+                                sourceLanguageId
+                        )
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "No existe una traducción en el idioma origen"
+                                )
+                        );
+
+
+        // ==========================================
+        // PREPARAR SOLICITUD PARA AI
+        // ==========================================
+
+        AiTranslationRequest request =
+                new AiTranslationRequest(
+                        sourceLanguage.getCode(),
+                        targetLanguage.getCode(),
+                        Map.of(
+                                "name",
+                                sourceTranslation.getName(),
+
+                                "description",
+                                sourceTranslation.getDescription()
+                        )
+                );
+
+
+        // ==========================================
+        // EJECUTAR TRADUCCIÓN
+        // ==========================================
+
+        AiTranslationResult result =
+                aiTranslationService.translate(request);
+
+
+        // ==========================================
+        // CONSTRUIR RESPUESTA
+        // ==========================================
+
+        SubscriptionStatusAiTranslationResponseDto response =
+                new SubscriptionStatusAiTranslationResponseDto();
+
+        response.setSourceLanguageId(
+                sourceLanguageId
+        );
+
+        response.setTargetLanguageId(
+                targetLanguage.getLanguageId()
+        );
+
+        response.setSourceName(
+                sourceTranslation.getName()
+        );
+
+        response.setSourceDescription(
+                sourceTranslation.getDescription()
+        );
+
+        response.setTranslatedName(
+                result.fields().get("name")
+        );
+
+        response.setTranslatedDescription(
+                result.fields().get("description")
+        );
+
+        return response;
     }
 
     // ==========================================

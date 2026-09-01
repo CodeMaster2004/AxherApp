@@ -64,3 +64,16 @@ export interface EpisodeTranslationRequest {
     title: string;
     description: string;
 }
+
+export interface EpisodeAiTranslationRequest {
+    targetLanguageId: number;
+}
+
+export interface EpisodeAiTranslationResponse {
+    sourceLanguageId: number;
+    targetLanguageId: number;
+    sourceTitle: string;
+    sourceDescription: string;
+    translatedTitle: string;
+    translatedDescription: string;
+}

@@ -87,44 +87,4 @@ export const episodesService = {
         await AdminEpisodesApi.delete(seasonId, episodeId, { signal });
     },
 
-    getTranslations: async (
-        episodeId: number,
-        signal?: AbortSignal
-    ): Promise<EpisodeTranslation[]> => {
-
-        const res = await AdminEpisodesApi.getTranslations(
-            episodeId,
-            { signal }
-        );
-
-        return res.data;
-    },
-
-    saveTranslation: async (
-        episodeId: number,
-        data: EpisodeTranslationRequest,
-        signal?: AbortSignal
-    ): Promise<EpisodeTranslation> => {
-
-        const res = await AdminEpisodesApi.saveTranslation(
-            episodeId,
-            data,
-            { signal }
-        );
-
-        return res.data;
-    },
-
-    deleteTranslation: async (
-        episodeId: number,
-        languageId: number,
-        signal?: AbortSignal
-    ): Promise<void> => {
-
-        await AdminEpisodesApi.deleteTranslation(
-            episodeId,
-            languageId,
-            { signal }
-        );
-    },
 }

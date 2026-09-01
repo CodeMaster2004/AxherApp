@@ -39,6 +39,7 @@ export const menuConfig: MenuItem[] = [
                     {id: "support-tickets", labelKey: "supportTickets", href: "/admin/support/tickets"},
                     {id: "support-categories", labelKey: "supportCategories", href: "/admin/support/ticket-category"},
                     {id: "support-tickets-status", labelKey: "supportTicketStatuses", href:"/admin/support/ticket-status"},
+                    {id: "support-faqs", labelKey: "supportFaqs", href: "/admin/faqs"},
                     {id: "problem-reports", labelKey: "problemReports", href: "/admin/reports/problems",},
                     {id: "problem-status", labelKey: "problemReportStatuses", href: "/admin/report-status",},
                     {id: "problem-categories", labelKey: "problemReportCategories", href: "/admin/report-category",},

@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axher.backend.catalog.banner.DTOs.HeroBannerAiTranslationRequestDto;
+import com.axher.backend.catalog.banner.DTOs.HeroBannerAiTranslationResponseDto;
 import com.axher.backend.catalog.banner.DTOs.HeroBannerTranslationDto;
 import com.axher.backend.catalog.banner.DTOs.HeroBannerTranslationRequestDto;
 import com.axher.backend.catalog.banner.entities.HeroBannerTranslation;
@@ -48,17 +51,58 @@ public class AdminHeroBannerTranslationController {
     // =============================
     // CREAR / ACTUALIZAR TRADUCCIÓN
     // =============================
-    @PatchMapping
-    public ResponseEntity<HeroBannerTranslationDto> save(
+    @PostMapping
+    public ResponseEntity<HeroBannerTranslationDto> create(
             @PathVariable Integer heroBannerId,
             @RequestBody HeroBannerTranslationRequestDto dto
     ) {
 
         HeroBannerTranslation translation =
-                service.save(heroBannerId, dto);
+                service.create(heroBannerId, dto);
 
         return ResponseEntity.ok(
                 mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // ACTUALIZAR TRADUCCIÓN
+    // =============================
+    @PatchMapping("/{languageId}")
+    public ResponseEntity<HeroBannerTranslationDto> update(
+            @PathVariable Integer heroBannerId,
+            @PathVariable Integer languageId,
+            @RequestBody HeroBannerTranslationRequestDto dto
+
+    ) {
+
+        HeroBannerTranslation translation =
+                service.update(
+                        heroBannerId,
+                        languageId,
+                        dto
+                );
+
+        return ResponseEntity.ok(
+                mapper.toDto(translation)
+        );
+    }
+
+    // =============================
+    // TRADUCIR CON AI
+    // =============================
+    @PostMapping("{sourceLanguageId}/translate")
+    public ResponseEntity<HeroBannerAiTranslationResponseDto> translateWithAi(
+        @PathVariable Integer heroBannerId,
+        @PathVariable Integer sourceLanguageId,
+        @RequestBody HeroBannerAiTranslationRequestDto dto
+    ){
+        return ResponseEntity.ok(
+                service.translateWithAi(
+                        heroBannerId,
+                        sourceLanguageId,
+                        dto
+                )
         );
     }
 

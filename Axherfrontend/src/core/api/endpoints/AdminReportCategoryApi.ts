@@ -1,5 +1,5 @@
 import axiosClient from "@/core/api/axiosClient";
-import { Page, PaginationParams, ReportCategoryRequest, ReportCategoryResponse, ReportCategoryTranslationRequest, ReportCategoryTranslationResponse } from "@/entities/types";
+import { Page, PaginationParams, ReportCategoryAiTranslationRequest, ReportCategoryAiTranslationResponse, ReportCategoryRequest, ReportCategoryResponse, ReportCategoryTranslationRequest, ReportCategoryTranslationResponse } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 
 export const AdminReportCategoryApi = {
@@ -69,13 +69,37 @@ export const AdminReportCategoryApi = {
                 config
             ),
 
-        save: (
+        create: (
             categoryId: number,
             data: ReportCategoryTranslationRequest,
             config?: AxiosRequestConfig
         ) =>
-            axiosClient.patch<ReportCategoryTranslationResponse>(
+            axiosClient.post<ReportCategoryTranslationResponse>(
                 `/admin/report-categories/${categoryId}/translations`,
+                data,
+                config
+            ),
+
+        update: (
+            categoryId: number,
+            languageId: number,
+            data: ReportCategoryTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<ReportCategoryTranslationResponse>(
+                `/admin/report-categories/${categoryId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            categoryId: number,
+            sourceLanguageId: number,
+            data: ReportCategoryAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<ReportCategoryAiTranslationResponse>(
+                `/admin/report-categories/${categoryId}/translations/${sourceLanguageId}/translate`,
                 data,
                 config
             ),

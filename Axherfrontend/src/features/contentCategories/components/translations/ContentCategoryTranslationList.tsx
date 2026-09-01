@@ -12,6 +12,7 @@ interface Props {
     deleting?: number | null;
     onDelete: (languageId: number) => void;
     onEdit: (translation: ContentCategoryTranslationResponse) => void;
+    onTranslate: (translation: ContentCategoryTranslationResponse) => void;
 }
 
 export default function ContentCategoryTranslationList({
@@ -19,6 +20,7 @@ export default function ContentCategoryTranslationList({
     deleting,
     onDelete,
     onEdit,
+    onTranslate,
 }: Props) {
 
     const t = useTranslations("contentCategories");
@@ -142,6 +144,10 @@ export default function ContentCategoryTranslationList({
                                                 label: common("edit"),
                                                 onClick: () =>
                                                     onEdit(translation),
+                                            },
+                                            {
+                                                label: common("translateWithAi"),
+                                                onClick: () => onTranslate(translation),
                                             },
                                             {
                                                 label:

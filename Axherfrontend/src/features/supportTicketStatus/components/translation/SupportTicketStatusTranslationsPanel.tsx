@@ -15,6 +15,7 @@ import SupportTicketStatusTranslationForm
 import SupportTicketStatusTranslationList
     from "./SupportTicketStatusTranslationList";
 import { useTranslations } from "next-intl";
+import SupportTicketStatusAiTranslationDialog from "@/features/supportTicketStatus/components/translation/SupportTicketStatusAiTranslationDialog";
 
 interface Props {
     statusId: number;
@@ -27,6 +28,9 @@ export default function SupportTicketStatusTranslationsPanel({
 }: Props) {
 
     const t = useTranslations("supportTicketStatus");
+    const [translating, setTranslating] = useState(false);
+    const [sourceTranslation, setSourceTranslation] = useState<SupportTicketStatusTranslationResponse | null>(null);
+    const [aiDialogOpen, setAiDialogOpen] = useState(false);
 
     const {
         translations,
@@ -34,7 +38,9 @@ export default function SupportTicketStatusTranslationsPanel({
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
     } = useSupportTicketStatusTranslations(statusId);
 
@@ -45,6 +51,16 @@ export default function SupportTicketStatusTranslationsPanel({
             description: "",
         });
 
+    const resetForm = () => {
+        setForm({
+            languageId: 0,
+            name: "",
+            description: "",
+        });
+
+        setEditingLanguageId(null);
+    }
+
     const [editingLanguageId, setEditingLanguageId] =
         useState<number | null>(null);
 
@@ -54,15 +70,65 @@ export default function SupportTicketStatusTranslationsPanel({
             return;
         }
 
-        await saveTranslation(form);
+        if(editingLanguageId !== null) {
+            await updateTranslation(
+                editingLanguageId,
+                form
+            );
+        }else {
+            await createTranslation(form);
+        }
 
-        setEditingLanguageId(null);
+        resetForm();
+    };
 
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+    const handleTranslate = (
+        translation: SupportTicketStatusTranslationResponse
+    ) => {
+        setSourceTranslation(translation);
+        setAiDialogOpen(true);
+    };
+
+    const handleCloseAiDialog = () => {
+        if (translating) {
+            return;
+        }
+
+        setAiDialogOpen(false);
+        setSourceTranslation(null);
+    };
+
+    const handleAiTranslation = async (
+        targetLanguageId: number
+    ) => {
+        if (!sourceTranslation) {
+            return;
+        }
+
+        setTranslating(true);
+
+        try {
+            const translated = await translateWithAi(
+                sourceTranslation.languageId,
+                {
+                    targetLanguageId,
+                }
+            );
+
+            setForm({
+                languageId:
+                    translated.targetLanguageId,
+                name:
+                    translated.translatedName,
+                description:
+                    translated.translatedDescription,
+            });
+
+            setAiDialogOpen(false);
+            setSourceTranslation(null);
+        } finally {
+            setTranslating(false);
+        }
     };
 
     const handleEdit = (
@@ -82,13 +148,7 @@ export default function SupportTicketStatusTranslationsPanel({
 
     const handleCancelEdit = () => {
 
-        setEditingLanguageId(null);
-
-        setForm({
-            languageId: 0,
-            name: "",
-            description: "",
-        });
+        resetForm();
     };
 
 
@@ -135,10 +195,21 @@ export default function SupportTicketStatusTranslationsPanel({
                         deleting={deleting}
                         onDelete={deleteTranslation}
                         onEdit={handleEdit}
+                        onTranslate={handleTranslate}
                     />
                 )}
 
             </section>
+            {sourceTranslation && (
+                <SupportTicketStatusAiTranslationDialog
+                    open={aiDialogOpen}
+                    sourceTranslation={sourceTranslation}
+                    languages={languages}
+                    onConfirm={handleAiTranslation}
+                    onClose={handleCloseAiDialog}
+                    translating={translating}
+                />
+            )}
 
         </div>
     );

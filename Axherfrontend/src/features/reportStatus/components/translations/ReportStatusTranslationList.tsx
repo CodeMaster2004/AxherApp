@@ -12,6 +12,7 @@ interface Props {
     deleting?: number | null;
     onDelete: (languageId: number) => void;
     onEdit: (translation: ReportStatusTranslationResponse) => void;
+    onTranslate: (translation: ReportStatusTranslationResponse) => void;
 }
 
 export default function ReportStatusTranslationList({
@@ -19,6 +20,7 @@ export default function ReportStatusTranslationList({
     deleting,
     onDelete,
     onEdit,
+    onTranslate,
 }: Props) {
 
     const common = useTranslations("common");
@@ -134,6 +136,10 @@ export default function ReportStatusTranslationList({
                                                 label: common("edit"),
                                                 onClick: () =>
                                                     onEdit(translation),
+                                            },
+                                            {
+                                                label: common("translateWithAi"),
+                                                onClick: () => onTranslate(translation),
                                             },
                                             {
                                                 label:

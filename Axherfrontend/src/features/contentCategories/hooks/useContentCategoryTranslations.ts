@@ -1,6 +1,8 @@
 "use client";
 
 import {
+    ContentCategoryAiTranslationRequest,
+    ContentCategoryAiTranslationResponse,
     ContentCategoryTranslationRequest,
     ContentCategoryTranslationResponse,
 } from "@/entities/types";
@@ -65,13 +67,12 @@ export const useContentCategoryTranslations = (
     }, [fetchTranslations]);
 
     // =============================
-    // GUARDAR / ACTUALIZAR
+    // GUARDAR 
     // =============================
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
         async (
             data: ContentCategoryTranslationRequest
         ) => {
-
             if (!categoryId) {
                 throw new Error(
                     "Content Category ID is required"
@@ -82,48 +83,92 @@ export const useContentCategoryTranslations = (
             setError(null);
 
             try {
-
-                const saved =
-                    await contentCategoryTranslationService.save(
+                const created =
+                    await contentCategoryTranslationService.create(
                         categoryId,
                         data
                     );
 
-                setTranslations(prev => {
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
-
-                    if (index === -1) {
-
-                        return [
-                            ...prev,
-                            saved,
-                        ];
-
-                    }
-                    const updated = [...prev];
-                    updated[index] = saved;
-                    return updated;
-
-                });
-
-                return saved;
-
+                return created;
             } catch (err) {
-
                 setError(err);
                 throw err;
-
             } finally {
-
                 setSaving(false);
+            }
+        },
+        [categoryId]
+    );
 
+    const updateTranslation = useCallback(
+        async (
+            languageId: number,
+            data: ContentCategoryTranslationRequest
+        ) => {
+            if (!categoryId) {
+                throw new Error(
+                    "Content Category ID is required"
+                );
             }
 
+            setSaving(true);
+            setError(null);
+
+            try {
+                const updated =
+                    await contentCategoryTranslationService.update(
+                        categoryId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+            } catch (err) {
+                setError(err);
+                throw err;
+            } finally {
+                setSaving(false);
+            }
+        },
+        [categoryId]
+    );
+
+    const translateWithAi = useCallback(
+        async (
+            sourceLanguageId: number,
+            data: ContentCategoryAiTranslationRequest
+        ): Promise<ContentCategoryAiTranslationResponse> => {
+            if (!categoryId) {
+                throw new Error(
+                    "Content Category ID is required"
+                );
+            }
+
+            setError(null);
+
+            try {
+                return await contentCategoryTranslationService.translateWithAi(
+                    categoryId,
+                    sourceLanguageId,
+                    data
+                );
+            } catch (error) {
+                setError(error);
+                throw error;
+            }
         },
         [categoryId]
     );
@@ -177,7 +222,9 @@ export const useContentCategoryTranslations = (
         deleting,
         error,
 
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
 

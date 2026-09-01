@@ -95,31 +95,6 @@ export const contentService = {
         const res = await publicContentApi.getNewContent(params, { signal });
         return res.data;
     },
-
-    getTranslations: async(
-        contentId: number,
-        signal?: AbortSignal
-    ): Promise<ContentTranslation[]> => {
-        const res = await contentApi.getTranslations(contentId, { signal });
-        return res.data;
-    },
-
-    saveTranslation: async(
-        contentId: number,
-        data: ContentTranslationRequest,
-        signal?: AbortSignal
-    ): Promise<ContentTranslation> => {
-        const res = await contentApi.saveTranslation(contentId, data, { signal });
-        return res.data;
-    },
-    
-    deleteTranslation: async(
-        contentId: number,
-        languageId: number,
-        signal?: AbortSignal
-    ): Promise<void> => {
-        await contentApi.deleteTranslation(contentId, languageId, { signal });
-    }
      
 }
 

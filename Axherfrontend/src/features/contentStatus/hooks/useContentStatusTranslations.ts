@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentStatusTranslationRequest, ContentStatusTranslationResponse } from "@/entities/types/status.types";
+import { ContentStatusAiTranslationRequest, ContentStatusAiTranslationResponse, ContentStatusTranslationRequest, ContentStatusTranslationResponse } from "@/entities/types/status.types";
 import { contentStatusTranslationService } from "@/features/contentStatus/services/contentStatusTranslationService";
 import {
     useCallback,
@@ -63,7 +63,7 @@ export const useContentStatusTranslations = (
     }, [fetchTranslations]);
 
 
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
         async (
             data: ContentStatusTranslationRequest
         ) => {
@@ -80,39 +80,21 @@ export const useContentStatusTranslations = (
 
             try {
 
-                const saved =
-                    await contentStatusTranslationService.save(
+                const created =
+                    await contentStatusTranslationService.create(
                         statusId,
                         data
                     );
-
-                setTranslations(prev => {
-
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
-
-                    if (index === -1) {
-
-                        return [
-                            ...prev,
-                            saved
-                        ];
-                    }
-
-                    const updated = [...prev];
-                    updated[index] = saved;
-                    return updated;
-                });
-
-                return saved;
+                    
+                setTranslations(prev => [
+                    ...prev,
+                    created
+                ]);
+                return created;
 
             } catch (err) {
 
                 setError(err);
-
                 throw err;
 
             } finally {
@@ -123,6 +105,83 @@ export const useContentStatusTranslations = (
         },
         [statusId]
     );
+
+    const updateTranslation = useCallback(
+        async (
+            languageId: number,
+            data: ContentStatusTranslationRequest
+        ) => {
+
+            if( !statusId) {
+
+                throw new Error(
+                    "Content Status ID is required"
+                );
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+
+                const updated =
+                    await contentStatusTranslationService.update(
+                        statusId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId ===
+                        languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+
+            } catch (err) {
+
+                setError(err);
+                throw err;
+
+            } finally {
+
+                setSaving(false);
+            }
+        },
+        [statusId]
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: ContentStatusAiTranslationRequest
+            ): Promise<ContentStatusAiTranslationResponse> => {
+    
+                if(!statusId) {
+                    throw new Error("Content Status ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await contentStatusTranslationService.translateWithAi(
+                        statusId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [statusId]
+        );
+    
 
 
     const deleteTranslation = useCallback(
@@ -175,7 +234,9 @@ export const useContentStatusTranslations = (
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
     };

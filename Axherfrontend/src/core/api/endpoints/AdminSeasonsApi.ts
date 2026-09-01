@@ -1,4 +1,4 @@
-import { Page, PaginationParams, SeasonDetail, SeasonTranslation, SeasonTranslationRequest, StatusUpdate } from "@/entities/types";
+import { Page, PaginationParams, SeasonAiTranslationRequest, SeasonAiTranslationResponse, SeasonDetail, SeasonTranslation, SeasonTranslationRequest, StatusUpdate } from "@/entities/types";
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 
@@ -46,35 +46,61 @@ export const adminSeasonsApi = {
     delete: (seriesId: number, seasonId: number, config?: AxiosRequestConfig) =>
         axiosClient.delete(`/admin/series/${seriesId}/seasons/${seasonId}`, config),
 
-    getTranslations: (
-        seasonId: number,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.get<SeasonTranslation[]>(
-            `/admin/seasons/${seasonId}/translations`,
-            config
-        ),
+    translations: {
+        getTranslations: (
+            seasonId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.get<SeasonTranslation[]>(
+                `/admin/seasons/${seasonId}/translations`,
+                config
+            ),
 
-    saveTranslation: (
-        seasonId: number,
-        data: SeasonTranslationRequest,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.patch<SeasonTranslation>(
-            `/admin/seasons/${seasonId}/translations`,
-            data,
-            config
-        ),
+        create: (
+            seasonId: number,
+            data: SeasonTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.post<SeasonTranslation>(
+                `/admin/seasons/${seasonId}/translations`,
+                data,
+                config
+            ),
 
-    deleteTranslation: (
-        seasonId: number,
-        languageId: number,
-        config?: AxiosRequestConfig
-    ) =>
-        axiosClient.delete(
-            `/admin/seasons/${seasonId}/translations/${languageId}`,
-            config
-        ),
+        update: (
+            seasonId: number,
+            languageId: number,
+            data: SeasonTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<SeasonTranslation>(
+                `/admin/seasons/${seasonId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            seasonId: number,
+            sourceLanguageId: number,
+            data: SeasonAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) => 
+            axiosClient.post<SeasonAiTranslationResponse>(
+                `/admin/seasons/${seasonId}/translations/${sourceLanguageId}/translate`,
+                data,
+                config
+            ),
+
+        deleteTranslation: (
+            seasonId: number,
+            languageId: number,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.delete(
+                `/admin/seasons/${seasonId}/translations/${languageId}`,
+                config
+            ),
+    }
 
 
 }

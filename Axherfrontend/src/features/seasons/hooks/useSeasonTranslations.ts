@@ -1,7 +1,7 @@
 "use client";
 
-import { SeasonTranslation, SeasonTranslationRequest } from "@/entities/types";
-import { seasonsService } from "@/features/seasons/services/SeasonsService";
+import { SeasonAiTranslationRequest, SeasonAiTranslationResponse, SeasonTranslation, SeasonTranslationRequest } from "@/entities/types";
+import { seasonTranslationService } from "@/features/seasons/services/SeasonTranslationService";
 import { useCallback, useEffect, useState } from "react";
 
 export const useSeasonTranslations = (seasonId?: number) => {
@@ -30,7 +30,7 @@ export const useSeasonTranslations = (seasonId?: number) => {
         try {
 
             const data =
-                await seasonsService.getTranslations(seasonId);
+                await seasonTranslationService.getTranslations(seasonId);
 
             setTranslations(data);
 
@@ -59,9 +59,8 @@ export const useSeasonTranslations = (seasonId?: number) => {
     // CREAR / ACTUALIZAR TRADUCCIÓN
     // ==========================================
 
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
         async (data: SeasonTranslationRequest) => {
-
             if (!seasonId) {
                 throw new Error("Season ID is required");
             }
@@ -70,51 +69,94 @@ export const useSeasonTranslations = (seasonId?: number) => {
             setError(null);
 
             try {
-
-                const saved =
-                    await seasonsService.saveTranslation(
+                const created =
+                    await seasonTranslationService.createTranslation(
                         seasonId,
                         data
                     );
 
-                setTranslations(prev => {
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId === saved.languageId
-                    );
-
-                    // Nueva traducción
-                    if (index === -1) {
-                        return [...prev, saved];
-                    }
-
-                    // Actualizar traducción existente
-                    const updated = [...prev];
-
-                    updated[index] = saved;
-
-                    return updated;
-
-                });
-
-                return saved;
-
+                return created;
             } catch (err) {
-
                 setError(err);
                 throw err;
-
             } finally {
-
                 setSaving(false);
-
             }
-
         },
         [seasonId]
     );
 
+    const updateTranslation = useCallback(
+        async (
+            languageId: number,
+            data: SeasonTranslationRequest
+        ) => {
+            if (!seasonId) {
+                throw new Error("Season ID is required");
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+                const updated =
+                    await seasonTranslationService.updateTranslation(
+                        seasonId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+            } catch (err) {
+                setError(err);
+                throw err;
+            } finally {
+                setSaving(false);
+            }
+        },
+        [seasonId]
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: SeasonAiTranslationRequest
+            ): Promise<SeasonAiTranslationResponse> => {
+    
+                if(!seasonId) {
+                    throw new Error("Season ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await seasonTranslationService.translateWithAi(
+                        seasonId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [seasonId]
+        );
+    
 
     // ==========================================
     // ELIMINAR TRADUCCIÓN
@@ -132,7 +174,7 @@ export const useSeasonTranslations = (seasonId?: number) => {
 
             try {
 
-                await seasonsService.deleteTranslation(
+                await seasonTranslationService.deleteTranslation(
                     seasonId,
                     languageId
                 );
@@ -163,7 +205,9 @@ export const useSeasonTranslations = (seasonId?: number) => {
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations
 

@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import axiosClient from "../axiosClient";
 import { Page, PaginationParams } from "@/entities/types";
-import { ContentStatusRequest, ContentStatusResponse, ContentStatusTranslationRequest, ContentStatusTranslationResponse } from "@/entities/types/status.types";
+import { ContentStatusAiTranslationRequest, ContentStatusAiTranslationResponse, ContentStatusRequest, ContentStatusResponse, ContentStatusTranslationRequest, ContentStatusTranslationResponse } from "@/entities/types/status.types";
 
 export const contentStatusApi = {
    getAll: (params: PaginationParams, search?: string, config?: AxiosRequestConfig) =>
@@ -47,13 +47,37 @@ export const contentStatusApi = {
                 config
             ),
 
-        save: (
+        create: (
             statusId: number,
             data: ContentStatusTranslationRequest,
             config?: AxiosRequestConfig
         ) =>
-            axiosClient.patch<ContentStatusTranslationResponse>(
+            axiosClient.post<ContentStatusTranslationResponse>(
                 `/admin/content-statuses/${statusId}/translations`,
+                data,
+                config
+            ),
+
+        update: (
+            statusId: number,
+            languageId: number,
+            data: ContentStatusTranslationRequest,
+            config?: AxiosRequestConfig
+        ) =>
+            axiosClient.patch<ContentStatusTranslationResponse>(
+                `/admin/content-statuses/${statusId}/translations/${languageId}`,
+                data,
+                config
+            ),
+
+        translateWithAi: (
+            statusId: number,
+            sourceLanguageId: number,
+            data: ContentStatusAiTranslationRequest,
+            config?: AxiosRequestConfig
+        ) => 
+              axiosClient.post<ContentStatusAiTranslationResponse>(
+                `/admin/content-statuses/${statusId}/translations/${sourceLanguageId}/translate`,
                 data,
                 config
             ),

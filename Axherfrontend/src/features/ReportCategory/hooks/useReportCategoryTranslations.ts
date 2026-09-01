@@ -1,6 +1,8 @@
 "use client";
 
 import {
+    ReportCategoryAiTranslationRequest,
+    ReportCategoryAiTranslationResponse,
     ReportCategoryTranslationRequest,
     ReportCategoryTranslationResponse,
 } from "@/entities/types";
@@ -63,7 +65,8 @@ export const useReportCategoryTranslations = (
     }, [fetchTranslations]);
 
 
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
+
         async (
             data: ReportCategoryTranslationRequest
         ) => {
@@ -79,38 +82,18 @@ export const useReportCategoryTranslations = (
 
             try {
 
-                const saved =
-                    await reportCategoryTranslationService.save(
+                const created =
+                    await reportCategoryTranslationService.create(
                         categoryId,
                         data
                     );
 
-                setTranslations(prev => {
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
-
-                    if (index === -1) {
-
-                        return [
-                            ...prev,
-                            saved,
-                        ];
-
-                    }
-
-                    const updated = [...prev];
-
-                    updated[index] = saved;
-
-                    return updated;
-
-                });
-
-                return saved;
+                return created;
 
             } catch (err) {
 
@@ -124,9 +107,90 @@ export const useReportCategoryTranslations = (
             }
 
         },
+
         [categoryId]
+
     );
 
+    const updateTranslation = useCallback(
+
+        async (
+            languageId: number,
+            data: ReportCategoryTranslationRequest
+        ) => {
+
+            if (!categoryId) {
+                throw new Error(
+                    "Report Category ID is required"
+                );
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+
+                const updated =
+                    await reportCategoryTranslationService.update(
+                        categoryId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+
+            } catch (err) {
+
+                setError(err);
+                throw err;
+
+            } finally {
+
+                setSaving(false);
+
+            }
+
+        },
+
+        [categoryId]
+
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: ReportCategoryAiTranslationRequest
+            ): Promise<ReportCategoryAiTranslationResponse> => {
+    
+                if(!categoryId) {
+                    throw new Error("Report Category ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await reportCategoryTranslationService.translateWithAi(
+                        categoryId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [categoryId]
+        );
+    
 
     const deleteTranslation = useCallback(
         async (languageId: number) => {
@@ -177,7 +241,9 @@ export const useReportCategoryTranslations = (
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
     };

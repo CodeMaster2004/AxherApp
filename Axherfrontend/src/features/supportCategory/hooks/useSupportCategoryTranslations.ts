@@ -1,6 +1,8 @@
 "use client";
 
 import {
+    SupportCategoryAiTranslationRequest,
+    SupportCategoryAiTranslationResponse,
     SupportCategoryTranslationRequest,
     SupportCategoryTranslationResponse,
 } from "@/entities/types";
@@ -64,11 +66,10 @@ export const useSupportCategoryTranslations = (
     }, [fetchTranslations]);
 
 
-    const saveTranslation = useCallback(
+    const createTranslation = useCallback(
         async (
             data: SupportCategoryTranslationRequest
         ) => {
-
             if (!categoryId) {
                 throw new Error(
                     "Support Category ID is required"
@@ -79,54 +80,96 @@ export const useSupportCategoryTranslations = (
             setError(null);
 
             try {
-
-                const saved =
-                    await supportCategoryTranslationService.save(
+                const created =
+                    await supportCategoryTranslationService.create(
                         categoryId,
                         data
                     );
 
-                setTranslations(prev => {
+                setTranslations(prev => [
+                    ...prev,
+                    created,
+                ]);
 
-                    const index = prev.findIndex(
-                        translation =>
-                            translation.languageId ===
-                            saved.languageId
-                    );
-
-                    if (index === -1) {
-
-                        return [
-                            ...prev,
-                            saved,
-                        ];
-
-                    }
-
-                    const updated = [...prev];
-
-                    updated[index] = saved;
-
-                    return updated;
-                });
-
-                return saved;
-
+                return created;
             } catch (err) {
-
                 setError(err);
                 throw err;
-
             } finally {
-
                 setSaving(false);
-
             }
-
         },
         [categoryId]
     );
 
+    const updateTranslation = useCallback(
+        async (
+            languageId: number,
+            data: SupportCategoryTranslationRequest
+        ) => {
+            if (!categoryId) {
+                throw new Error(
+                    "Support Category ID is required"
+                );
+            }
+
+            setSaving(true);
+            setError(null);
+
+            try {
+                const updated =
+                    await supportCategoryTranslationService.update(
+                        categoryId,
+                        languageId,
+                        data
+                    );
+
+                setTranslations(prev =>
+                    prev.map(translation =>
+                        translation.languageId === languageId
+                            ? updated
+                            : translation
+                    )
+                );
+
+                return updated;
+            } catch (err) {
+                setError(err);
+                throw err;
+            } finally {
+                setSaving(false);
+            }
+        },
+        [categoryId]
+    );
+
+    const translateWithAi = useCallback(
+    
+            async (
+                sourceLanguageId: number,
+                data: SupportCategoryAiTranslationRequest
+            ): Promise<SupportCategoryAiTranslationResponse> => {
+    
+                if(!categoryId) {
+                    throw new Error("Support Category ID is required");
+                }
+    
+                setError(null);
+    
+                try {
+                    return await supportCategoryTranslationService.translateWithAi(
+                        categoryId,
+                        sourceLanguageId,
+                        data
+                    )
+                } catch(err) {
+                    setError(err);
+                    throw err;
+                }
+            },
+            [categoryId]
+        );
+    
 
     const deleteTranslation = useCallback(
         async (languageId: number) => {
@@ -177,7 +220,9 @@ export const useSupportCategoryTranslations = (
         saving,
         deleting,
         error,
-        saveTranslation,
+        createTranslation,
+        updateTranslation,
+        translateWithAi,
         deleteTranslation,
         refetch: fetchTranslations,
     };

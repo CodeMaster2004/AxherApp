@@ -42,5 +42,11 @@ public interface ContentShelfTranslationRepository
             Integer languageId,
             Integer shelfId
     );
+
+    boolean existsByContentShelf_ContentShelfIdAndLanguage_LanguageId(
+            Integer shelfId,
+            Integer languageId
+    );
+
     
 }

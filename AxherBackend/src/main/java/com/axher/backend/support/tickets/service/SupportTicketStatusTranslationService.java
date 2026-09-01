@@ -1,13 +1,19 @@
 package com.axher.backend.support.tickets.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.axher.backend.infrastructure.ai.translation.AiTranslationRequest;
+import com.axher.backend.infrastructure.ai.translation.AiTranslationResult;
+import com.axher.backend.infrastructure.ai.translation.AiTranslationService;
 import com.axher.backend.language.entities.Language;
 import com.axher.backend.language.repositories.LanguageRepository;
 import com.axher.backend.shared.exception.ResourceNotFoundException;
+import com.axher.backend.support.tickets.DTOs.SupportTicketStatusAiTranslationRequestDto;
+import com.axher.backend.support.tickets.DTOs.SupportTicketStatusAiTranslationResponseDto;
 import com.axher.backend.support.tickets.DTOs.SupportTicketStatusTranslationRequestDto;
 import com.axher.backend.support.tickets.entities.SupportTicketStatus;
 import com.axher.backend.support.tickets.entities.SupportTicketStatusTranslation;
@@ -21,10 +27,9 @@ import lombok.RequiredArgsConstructor;
 public class SupportTicketStatusTranslationService {
 
     private final SupportTicketStatusTranslationRepository translationRepository;
-
     private final SupportTicketStatusRepository statusRepository;
-
     private final LanguageRepository languageRepository;
+    private final AiTranslationService aiTranslationService;
 
     // ==========================================
     // OBTENER UNA TRADUCCIÓN
@@ -94,14 +99,12 @@ public class SupportTicketStatusTranslationService {
     }
 
     // ==========================================
-    // CREAR O ACTUALIZAR UNA TRADUCCIÓN
+    // CREAR TRADUCCIÓN
     // ==========================================
-
-    public SupportTicketStatusTranslation save(
+    public SupportTicketStatusTranslation create(
             Integer statusId,
             SupportTicketStatusTranslationRequestDto dto
     ) {
-
         SupportTicketStatus status =
                 statusRepository.findById(statusId)
                         .orElseThrow(() ->
@@ -122,19 +125,26 @@ public class SupportTicketStatusTranslationService {
 
         if (!Boolean.TRUE.equals(language.getActive())) {
             throw new IllegalArgumentException(
-                    "Idioma inactivo: " + dto.getLanguageId()
+                    "Idioma inactivo: " + language.getCode()
+            );
+        }
+
+        boolean exists =
+                translationRepository
+                        .existsBySupportTicketStatus_SupportTicketStatusIdAndLanguage_LanguageId(
+                                statusId,
+                                language.getLanguageId()
+                        );
+
+        if (exists) {
+            throw new IllegalStateException(
+                    "Ya existe una traducción para el idioma: "
+                            + language.getCode()
             );
         }
 
         SupportTicketStatusTranslation translation =
-                translationRepository
-                        .findBySupportTicketStatus_SupportTicketStatusIdAndLanguage_LanguageId(
-                                statusId,
-                                language.getLanguageId()
-                        )
-                        .orElseGet(
-                                SupportTicketStatusTranslation::new
-                        );
+                new SupportTicketStatusTranslation();
 
         translation.setSupportTicketStatus(status);
         translation.setLanguage(language);
@@ -142,6 +152,144 @@ public class SupportTicketStatusTranslationService {
         translation.setDescription(dto.getDescription());
 
         return translationRepository.save(translation);
+    }
+
+    // ==========================================
+    // ACTUALIZAR TRADUCCIÓN
+    // ==========================================
+    public SupportTicketStatusTranslation update(
+            Integer statusId,
+            Integer languageId,
+            SupportTicketStatusTranslationRequestDto dto
+    ) {
+        SupportTicketStatusTranslation translation =
+                translationRepository
+                        .findBySupportTicketStatus_SupportTicketStatusIdAndLanguage_LanguageId(
+                                statusId,
+                                languageId
+                        )
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "La traducción no existe"
+                                )
+                        );
+
+        translation.setName(dto.getName());
+        translation.setDescription(dto.getDescription());
+
+        return translationRepository.save(translation);
+    }
+
+    // ==========================================
+    // TRADUCIR CON AI
+    // ==========================================
+    public SupportTicketStatusAiTranslationResponseDto translateWithAi(
+            Integer statusId,
+            Integer sourceLanguageId,
+            SupportTicketStatusAiTranslationRequestDto dto
+    ) {
+
+        statusRepository.findById(statusId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Estado de ticket no encontrado: " + statusId
+                        )
+                );
+
+        Language sourceLanguage =
+                languageRepository.findById(sourceLanguageId)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Idioma origen no encontrado: "
+                                                + sourceLanguageId
+                                )
+                        );
+
+        Language targetLanguage =
+                languageRepository.findById(dto.getTargetLanguageId())
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Idioma de destino no encontrado: "
+                                                + dto.getTargetLanguageId()
+                                )
+                        );
+
+        if (!Boolean.TRUE.equals(sourceLanguage.getActive())) {
+                throw new IllegalArgumentException(
+                        "Idioma origen esta inactivo: "
+                                + sourceLanguage.getCode()
+                );
+        }
+
+        if (!Boolean.TRUE.equals(targetLanguage.getActive())) {
+                throw new IllegalArgumentException(
+                        "Idioma destino esta inactivo: "
+                                + targetLanguage.getCode()
+                );
+        }
+
+        if (sourceLanguage.getLanguageId()
+                .equals(targetLanguage.getLanguageId())) {
+
+                throw new IllegalArgumentException(
+                        "El idioma origen y destino no pueden ser iguales"
+                );
+        }
+
+        SupportTicketStatusTranslation sourceTranslation =
+                translationRepository
+                        .findBySupportTicketStatus_SupportTicketStatusIdAndLanguage_LanguageId(
+                                statusId,
+                                sourceLanguageId
+                        )
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "No existe una traducción en el idioma origen"
+                                )
+                        );
+
+        AiTranslationRequest request =
+                new AiTranslationRequest(
+                        sourceLanguage.getCode(),
+                        targetLanguage.getCode(),
+                        Map.of(
+                                "name",
+                                sourceTranslation.getName(),
+
+                                "description",
+                                sourceTranslation.getDescription()
+                        )
+                );
+
+        AiTranslationResult result =
+                aiTranslationService.translate(request);
+
+        SupportTicketStatusAiTranslationResponseDto response =
+                new SupportTicketStatusAiTranslationResponseDto();
+
+        response.setSourceLanguageId(sourceLanguageId);
+
+        response.setTargetLanguageId(
+                targetLanguage.getLanguageId()
+        );
+
+        response.setSourceName(
+                sourceTranslation.getName()
+        );
+
+        response.setSourceDescription(
+                sourceTranslation.getDescription()
+        );
+
+        response.setTranslatedName(
+                result.fields().get("name")
+        );
+
+        response.setTranslatedDescription(
+                result.fields().get("description")
+        );
+
+        return response;
     }
 
     // ==========================================
