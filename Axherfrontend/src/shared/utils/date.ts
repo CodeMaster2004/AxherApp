@@ -1,58 +1,82 @@
-export const formatDate = (date: string | Date | null | undefined) => {
+import { Locale } from "@/i18n/config";
+
+export const formatDate = (
+    date: string | Date | null | undefined,
+    locale: string
+) => {
     if (!date) return "-";
-    return new Intl.DateTimeFormat("es-PE", {
+
+    return new Intl.DateTimeFormat(locale, {
         day: "2-digit",
         month: "short",
         year: "numeric",
     }).format(new Date(date));
 };
 
-export const formatDateShort = (date: string | Date) => {
-    return new Intl.DateTimeFormat("es-PE", {
+export const formatDateShort = (
+    date: string | Date | null | undefined,
+    locale: string
+) => {
+    if (!date) return "-";
+
+    return new Intl.DateTimeFormat(locale, {
         day: "2-digit",
         month: "short",
     }).format(new Date(date));
 };
 
-export const formatTime = (date: string | Date) => {
-    return new Intl.DateTimeFormat("es-PE", {
+export const formatTime = (
+    date: string | Date | null | undefined,
+    locale: string
+) => {
+    if (!date) return "-";
+
+    return new Intl.DateTimeFormat(locale, {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
     }).format(new Date(date));
 };
 
-export const getDateGroup = (date: string | Date) => {
-    const target = new Date(date);
-    const now = new Date();
+export const formatYear = (
+    date: string | Date | null | undefined,
+    locale: string
+) => {
+    if (!date) return "-";
 
-    const targetDay = new Date(
-        target.getFullYear(),
-        target.getMonth(),
-        target.getDate()
-    );
+    return new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+    }).format(new Date(date));
+};
 
-    const today = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
+export type DateGroup = "today" | "yesterday" | "date";
+
+const getLocalDate = (date: string | Date): Date => {
+    const value = new Date(date);
+
+    return new Date(
+        value.getFullYear(),
+        value.getMonth(),
+        value.getDate()
     );
+};
+
+export const getDateGroup = (
+    date: string | Date
+): DateGroup => {
+    const target = getLocalDate(date);
+    const today = getLocalDate(new Date());
 
     const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+    yesterday.setDate(yesterday.getDate() - 1);
 
-    if (targetDay.getTime() === today.getTime()) {
-        return "HOY";
+    if (target.getTime() === today.getTime()) {
+        return "today";
     }
 
-    if (targetDay.getTime() === yesterday.getTime()) {
-        return "AYER";
+    if (target.getTime() === yesterday.getTime()) {
+        return "yesterday";
     }
 
-    return new Intl.DateTimeFormat("es-PE", {
-        day: "2-digit",
-        month: "short",
-    })
-        .format(new Date(date))
-        .toUpperCase();
-}
+    return "date";
+};

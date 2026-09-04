@@ -1,7 +1,7 @@
 package com.axher.backend.billing.subscription.entities;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.billing.payment.entities.PaymentMethods;
 import com.axher.backend.billing.payment.entities.PaymentStatus;
@@ -36,7 +36,7 @@ public class SubscriptionPayments {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
-    private LocalDateTime paymentDate;
+    private Instant paymentDate;
 
     @ManyToOne
     @JoinColumn(name = "payment_method_id")
@@ -50,6 +50,6 @@ public class SubscriptionPayments {
     private String providerPaymentId;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     
 }

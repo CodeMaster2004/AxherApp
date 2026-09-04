@@ -1,5 +1,6 @@
 package com.axher.backend.auth.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import com.axher.backend.users.entities.Users;
@@ -30,7 +31,7 @@ public class LoginHistory {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    private LocalDateTime loginTime = LocalDateTime.now();
+    private Instant loginTime;
 
     private String ipAddress;
 

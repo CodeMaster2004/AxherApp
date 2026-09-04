@@ -1,11 +1,11 @@
 import { SearchHistoryResponse } from "@/entities/types";
 import SearchHistoryItem from "@/features/search/components/SearchHistoryItem";
 import styles from "./SearchHistoryList.module.css";
-import { getDateGroup } from "@/shared/utils/date";
+import { formatDateShort, getDateGroup } from "@/shared/utils/date";
 import { useState } from "react";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import { Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface Props {
     items: SearchHistoryResponse[];
@@ -29,6 +29,7 @@ export default function SearchHistoryList({
 
     const common = useTranslations("common");
     const t = useTranslations("search");
+    const locale = useLocale();
     
     const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -59,7 +60,6 @@ export default function SearchHistoryList({
 
     const groups = items.reduce<Record<string, SearchHistoryResponse[]>>(
         (acc, item) => {
-
             const group = getDateGroup(item.searchedAt);
 
             if (!acc[group]) {
@@ -69,7 +69,6 @@ export default function SearchHistoryList({
             acc[group].push(item);
 
             return acc;
-
         },
         {}
     );
@@ -131,7 +130,14 @@ export default function SearchHistoryList({
                             >
 
                                 <h3 className={styles.groupTitle}>
-                                    {group}
+                                    {group === "today"
+                                        ? t("history.today")
+                                        : group === "yesterday"
+                                            ? t("history.yesterday")
+                                            : formatDateShort(
+                                                groupItems[0].searchedAt,
+                                                locale
+                                            )}
                                 </h3>
 
                                 <div className={styles.groupItems}>

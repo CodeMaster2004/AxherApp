@@ -42,7 +42,7 @@ interface Props {
     backdropUrl?: string;
     trailerUrl?: string;
 
-    releaseDate: string; // formato "YYYY-MM-DD"
+    releaseDate: string; // formato datetime-local: YYYY-MM-DDTHH:mm
 
     setTitle: (value: string) => void;
     setDescription: (value: string) => void;

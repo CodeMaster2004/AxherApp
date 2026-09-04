@@ -63,7 +63,7 @@ export default function SystemRolesList ({
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
                 title={t("delete.title")}
-                message={t("delete.message", {roleName: confirmDialog.systemRoles})}
+                message={t("delete.message", {name: confirmDialog.systemRoles})}
                 confirmText={common("delete")}
                 cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
@@ -88,9 +88,9 @@ export default function SystemRolesList ({
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
-                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                                <th className={tableStyles.headCell}>Rol del Sistema</th>
-                                <th className={tableStyles.headCell}>Acciones</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>{common("id")}</th>
+                                <th className={tableStyles.headCell}>{t("roleName")}</th>
+                                <th className={tableStyles.headCell}>{common("actions")}</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -1,5 +1,6 @@
 package com.axher.backend.search.service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -59,7 +60,7 @@ public class SearchHistoryService {
 
             SearchHistory history = existing.get();
 
-            history.setSearchedAt(java.time.LocalDateTime.now());
+            history.setSearchedAt(Instant.now());
 
             return repository.save(history);
         }
@@ -68,7 +69,7 @@ public class SearchHistoryService {
 
         history.setUser(user);
         history.setTerm(normalizedTerm);
-        history.setSearchedAt(java.time.LocalDateTime.now());
+        history.setSearchedAt(Instant.now());
 
         return repository.save(history);
     }

@@ -1,6 +1,6 @@
 package com.axher.backend.infrastructure.quartz;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class SeasonPublicationScheduler {
     
     private final QuartzSchedulerService quartz;
 
-    public void schedule(Integer seasonId, LocalDateTime date) throws SchedulerException{
+    public void schedule(Integer seasonId, Instant date) throws SchedulerException{
 
         quartz.schedule(
             "publish-season-" + seasonId,

@@ -1,6 +1,5 @@
 package com.axher.backend.content.core.repositories;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -25,7 +24,7 @@ public interface ContentCategoriesRepository extends JpaRepository<ContentCatego
     Optional<ContentCategories> findBySlug(String slug);
     
     @Query("""
-        SELECT DISTINCT c
+        SELECT c
         FROM Content content
         JOIN content.categories c
         JOIN c.translations t

@@ -46,7 +46,7 @@ export default function CreateContentPage() {
     const{ progress, handleProgress, resetProgress } = useUploadProgress();
 
     const { addContent, saving } = useContentsActions({
-        onSuccess: () => router.push("/admin/series"),
+        onSuccess: () => router.push("/admin/contents"),
     });
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -122,7 +122,10 @@ export default function CreateContentPage() {
         formData.append("posterFile", posterFile);
         formData.append("backdropFile", backdropFile);
         if(trailerFile) formData.append("trailerFile", trailerFile);
-        if (releaseDate) formData.append("releaseDate", releaseDate);
+        if (releaseDate) {
+            const releaseInstant = new Date(releaseDate).toISOString();
+            formData.append("releaseDate", releaseInstant);
+        }
         resetProgress();
         await addContent(formData, handleProgress);
     };

@@ -1,7 +1,7 @@
 package com.axher.backend.shared.util;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class DateValidator {
 
@@ -23,8 +23,8 @@ public class DateValidator {
     }
 
     public static void validateDateTimeRange(
-            LocalDateTime start,
-            LocalDateTime end
+            Instant start,
+            Instant end
     ) {
 
         if (start != null &&

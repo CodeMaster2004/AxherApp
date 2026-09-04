@@ -3,9 +3,7 @@ package com.axher.backend.catalog.shelf.mapper;
 import org.springframework.stereotype.Component;
 
 import com.axher.backend.catalog.shelf.DTOs.ShelfItemDto;
-import com.axher.backend.content.core.DTOs.TopRatedContentDto;
 import com.axher.backend.content.core.DTOs.TopRatedContentResult;
-import com.axher.backend.content.core.DTOs.TrendingContentDto;
 import com.axher.backend.content.core.DTOs.TrendingContentResult;
 import com.axher.backend.content.core.entities.Content;
 import com.axher.backend.content.core.mapper.ContentMapper;

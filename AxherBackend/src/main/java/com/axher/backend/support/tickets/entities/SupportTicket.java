@@ -1,6 +1,6 @@
 package com.axher.backend.support.tickets.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -51,12 +51,12 @@ public class SupportTicket {
     private SubscriptionPayments subscriptionPayment;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
-    private LocalDateTime resolvedAt;
+    private Instant resolvedAt;
 
-    private LocalDateTime closedAt;
+    private Instant closedAt;
     
 }

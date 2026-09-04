@@ -1,7 +1,7 @@
 package com.axher.backend.content.movies.entities;
 
-import com.axher.backend.content.people.entities.CinematicRoles;
-import com.axher.backend.content.people.entities.Persons;
+import com.axher.backend.content.people.entities.CinematicRole;
+import com.axher.backend.content.people.entities.Person;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -33,12 +33,12 @@ public class MoviePersonRoles {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("personId")
 	@JoinColumn(name = "person_id", nullable = false)
-	private Persons personId;
+	private Person personId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("cinematicRoleId")
 	@JoinColumn(name = "cinematic_role_id", nullable = false)
-	private CinematicRoles cinematicRoleId;
+	private CinematicRole cinematicRoleId;
 
 	@Column(name = "character_name", length = 100)
 	private String characterName;

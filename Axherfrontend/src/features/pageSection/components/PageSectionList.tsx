@@ -91,7 +91,7 @@ export default function PageSectionList({
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
                 title={t("delete.title")}
-                message={t("delete.message", { title: confirmDialog.title })}
+                message={t("delete.message", { name: confirmDialog.title })}
                 confirmText={common("delete")}
                 cancelText={common("cancel")}
                 variant="danger"

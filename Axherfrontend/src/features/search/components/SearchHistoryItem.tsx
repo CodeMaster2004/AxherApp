@@ -2,7 +2,7 @@ import { SearchHistoryResponse } from "@/entities/types";
 import { Search, X } from "lucide-react";
 import styles from "./SearchHistoryItem.module.css"
 import { formatTime } from "@/shared/utils/date";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface Props {
     item: SearchHistoryResponse;
@@ -20,6 +20,7 @@ export default function SearchHistoryItem({
 
     const t = useTranslations("search");
     const isDeleting = deleting === item.searchId;
+    const locale = useLocale();
     
     return (
         <article
@@ -35,7 +36,7 @@ export default function SearchHistoryItem({
                     {item.term}
                 </span>
                 <span className={styles.time}>
-                    {formatTime(item.searchedAt)}
+                    {formatTime(item.searchedAt, locale)}
                 </span>
             </div>
             <button

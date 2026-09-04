@@ -1,6 +1,8 @@
 package com.axher.backend.catalog.banner.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -30,7 +32,7 @@ public class HeroMetricsService {
 
     public List<HeroCandidateMetricsDto> getCandidates() {
 
-        LocalDateTime from = LocalDateTime.now().minusDays(7);
+        Instant from = Instant.now().minus(7, ChronoUnit.DAYS);
         List<HeroPlaybackMetricsDto> playbackMetrics = playbackHistoryRepository.findHeroPlaybackMetrics(from);
         List<HeroRatingMetricsDto> ratingMetrics = ratingsRepository.findHeroRatingMetrics();
 
@@ -73,8 +75,10 @@ public class HeroMetricsService {
                             : 0L,
 
                         content.getReleaseDate() != null
-                        ? content.getReleaseDate().toLocalDate()
-                        : null
+                                    ? content.getReleaseDate()
+                                            .atZone(ZoneOffset.UTC)
+                                            .toLocalDate()
+                                    : null
                     );
                 })
                 .toList();

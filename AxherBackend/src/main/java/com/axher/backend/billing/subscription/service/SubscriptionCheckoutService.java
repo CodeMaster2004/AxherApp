@@ -1,7 +1,7 @@
 package com.axher.backend.billing.subscription.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -136,7 +136,7 @@ public class SubscriptionCheckoutService {
         payment.setPaymentDate(null);
         payment.setPaymentMethod(paymentMethod);
         payment.setPaymentStatus(paymentStatus);
-        payment.setCreatedAt(LocalDateTime.now());
+        payment.setCreatedAt(Instant.now());
 
         /*
          * Temporalmente utilizamos un identificador interno.

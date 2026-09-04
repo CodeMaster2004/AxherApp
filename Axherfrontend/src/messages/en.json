@@ -123,6 +123,13 @@
         },
         "validation": {
             "passwordMismatch": "Passwords do not match."
+        },
+        "password": {
+            "minLength": "The password must contain at least 6 characters.",
+            "uppercase": "It must contain at least one uppercase letter.",
+            "lowercase": "It must contain at least one lowercase letter.",
+            "number": "It must contain at least one number.",
+            "symbol": "It must contain at least one symbol."
         }
     },
 
@@ -305,6 +312,7 @@
         "actions": {
             "viewSeries": "View Series",
             "viewSeasons": "View seasons",
+            "managePeople": "Manage People",
             "createSeason": "Create season",
             "translations": "Translations"
         },
@@ -744,6 +752,8 @@
 
         "history": {
             "title": "Recent Searches",
+            "today": "Today",
+            "yesterday": "Yesterday",
             "subtitle": "All your recent searches",
             "loading": "Loading history...",
             "empty": "You have no recent searches",
@@ -1458,6 +1468,123 @@
             "backToHelpCenter": "Back to Help Center",
             "categoryDescription": "Find answers to frequently asked questions in this category."
         }
+    },
+
+    "cinematicRole": {
+        "title": "Cinematic Roles",
+        "loading": "Loading cinematic role...",
+        "createTitle": "Create Cinematic Role",
+        "editTitle": "Edit Cinematic Role",
+
+        "list": {
+            "title": "Cinematic Roles List",
+            "searchPlaceholder": "Search by name or code",
+            "empty": "No cinematic roles found.",
+            "code": "Code"
+        },
+
+        "form": {
+            "createTitle": "Create Cinematic Role",
+            "editTitle": "Edit Cinematic Role",
+            "codeLabel": "Cinematic Role Code",
+            "codePlaceholder": "E.g.: ACTOR",
+            "nameLabel": "Cinematic Role Name",
+            "namePlaceholder": "E.g.: Actor",
+            "descriptionLabel": "Description",
+            "descriptionPlaceholder": "Cinematic role description",
+
+            "validation": {
+                "codeRequired": "Please complete the code field.",
+                "languageRequired": "Please select a language.",
+                "nameRequired": "Please complete the name field."
+            }
+        },
+
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete the cinematic role \"{name}\"? This action cannot be undone."
+        },
+
+        "translations": {
+            "title": "Translations",
+            "registeredTitle": "Registered translations",
+            "languagePlaceholder": "Select language",
+            "namePlaceholder": "E.g.: Actor",
+            "descriptionPlaceholder": "Cinematic role description",
+            "loading": "Loading translations...",
+            "empty": "No translations registered.",
+            "deleteTitle": "Delete translation",
+            "deleteMessage": "Are you sure you want to delete the translation in \"{language}\"? This action cannot be undone.",
+            "invalidRole": "Invalid cinematic role.",
+            "loadingLanguages": "Loading languages..."
+        },
+
+        "errors": {
+            "load": "Error loading cinematic role.",
+            "translation": "An error occurred while processing the translation."
+        }
+    },
+
+    "person": {
+        "title": "People",
+        "loading": "Loading person...",
+        "createTitle": "Create Person",
+        "editTitle": "Edit Person",
+
+        "list": {
+            "searchPlaceholder": "Search by first or last name",
+            "loading": "Loading people...",
+            "empty": "No people found.",
+            "photo": "Photo",
+            "firstName": "First name",
+            "lastName": "Last name"
+        },
+
+        "form": {
+            "firstName": "First name",
+            "firstNamePlaceholder": "Enter first name",
+            "lastName": "Last name",
+            "lastNamePlaceholder": "Enter last name",
+            "photo": "Photo",
+            "currentPhoto": "Current photo",
+
+            "validation": {
+                "firstNameRequired": "First name is required."
+            }
+        },
+
+        "delete": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone."
+        },
+
+        "errors": {
+            "load": "Error loading person."
+        }
+    },
+
+    "contentPersonRole": {
+        "person": "Person",
+        "personPlaceholder": "Select a person",
+        "cinematicRole": "Cinematic role",
+        "cinematicRolePlaceholder": "Select a role",
+        "characterName": "Character",
+        "characterNamePlaceholder": "E.g.: John Wick",
+        "orderIndex": "Position",
+        "registeredTitle": "Registered people and roles",
+        "loading": "Loading people...",
+        "empty": "No people and roles registered.",
+        "error": "An error occurred while processing the relationship.",
+
+        "delete": {
+            "title": "Delete relationship",
+            "message": "Are you sure you want to delete the relationship for \"{name}\"? This action cannot be undone."
+        }
+    },
+
+    "people": {
+        "title": "Cast & Crew",
+        "loading": "Loading people..."
     }
 
 }

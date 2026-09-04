@@ -1,6 +1,6 @@
 package com.axher.backend.content.playback.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +16,5 @@ public class PlaybackHistoryResponseDto {
     private String posterUrl;
     private Integer watchedSeconds;
     private Double progress;
-    private LocalDateTime watchedAt;
+    private Instant watchedAt;
 }

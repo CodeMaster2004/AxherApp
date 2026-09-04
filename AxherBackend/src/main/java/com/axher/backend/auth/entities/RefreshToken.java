@@ -29,12 +29,13 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 64)
     private String token;
 
     @Column(nullable = false)
     private UUID familyId;
 
+    @Column(nullable = false)
     private Instant expiryDate;
 
     private boolean revoked;
@@ -42,7 +43,9 @@ public class RefreshToken {
     @Column(nullable = false)
     private Instant createdAt;
 
+    private Instant revokedAt;
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 }

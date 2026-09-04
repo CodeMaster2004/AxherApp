@@ -1,6 +1,6 @@
 package com.axher.backend.search.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -37,6 +37,6 @@ public class SearchHistory {
 
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime searchedAt;
+    private Instant searchedAt;
     
 }

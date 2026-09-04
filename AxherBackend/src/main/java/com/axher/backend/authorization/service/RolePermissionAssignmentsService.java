@@ -1,6 +1,6 @@
 package com.axher.backend.authorization.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ public class RolePermissionAssignmentsService {
         rpa.setId(id);
         rpa.setRole(role);
         rpa.setPermission(permissions);
-        rpa.setAssignedAt(LocalDateTime.now());
+        rpa.setAssignedAt(Instant.now());
         repository.save(rpa);
         return true;
     }

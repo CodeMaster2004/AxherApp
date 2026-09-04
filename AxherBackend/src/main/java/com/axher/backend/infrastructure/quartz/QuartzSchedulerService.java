@@ -1,6 +1,6 @@
 package com.axher.backend.infrastructure.quartz;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -30,7 +30,7 @@ public class QuartzSchedulerService {
         Class<? extends Job> jobClass,
         String dataKey,
         Integer id,
-        LocalDateTime date
+        Instant date
     ) throws SchedulerException {
 
 

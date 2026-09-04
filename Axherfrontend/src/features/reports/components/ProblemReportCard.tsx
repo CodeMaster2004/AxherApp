@@ -3,7 +3,7 @@
 import { ProblemReportResponse } from "@/entities/types/problemReport.types";
 import styles from "./ProblemReportCard.module.css";
 import { formatDate } from "@/shared/utils/date";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface Props {
     report: ProblemReportResponse;
@@ -12,6 +12,7 @@ interface Props {
 export default function ProblemReportCard({ report }: Props) {
 
     const t = useTranslations("problemReport");
+    const locale = useLocale();
 
     return (
         <article className={styles.card}>
@@ -20,7 +21,7 @@ export default function ProblemReportCard({ report }: Props) {
 
                 <div className={styles.heading}>
                     <span className={styles.category}>
-                        {report.category}
+                        {report.reportCategoryName}
                     </span>
 
                     <span className={styles.reportId}>
@@ -48,7 +49,7 @@ export default function ProblemReportCard({ report }: Props) {
                     </span>
 
                     <span>
-                        {formatDate(report.reportedAt)}
+                        {formatDate(report.reportedAt, locale)}
                     </span>
                 </div>
 
@@ -59,7 +60,7 @@ export default function ProblemReportCard({ report }: Props) {
                         </span>
 
                         <span>
-                            {formatDate(report.resolvedAt)}
+                            {formatDate(report.resolvedAt, locale)}
                         </span>
                     </div>
                 )}

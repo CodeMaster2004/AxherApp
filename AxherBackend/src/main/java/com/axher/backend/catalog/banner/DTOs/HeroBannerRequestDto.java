@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.banner.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,8 +16,8 @@ public class HeroBannerRequestDto {
     private String descriptionOverride;
     private MultipartFile backdropFile;
     private Integer priority;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Instant startDate;
+    private Instant endDate;
     private Boolean active;
     private Integer languageId;
     

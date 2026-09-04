@@ -1,7 +1,7 @@
 package com.axher.backend.billing.subscription.entities;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public class SubscriptionPlans {
     private Integer durationDays;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @OneToMany(
         mappedBy = "subscriptionPlan",

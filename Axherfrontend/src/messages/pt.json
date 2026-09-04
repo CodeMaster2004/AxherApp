@@ -123,6 +123,13 @@
         },
         "validation": {
             "passwordMismatch": "As senhas não coincidem."
+        }, 
+        "password": {
+            "minLength": "A senha deve conter pelo menos 6 caracteres.",
+            "uppercase": "Deve conter pelo menos uma letra maiúscula.",
+            "lowercase": "Deve conter pelo menos uma letra minúscula.",
+            "number": "Deve conter pelo menos um número.",
+            "symbol": "Deve conter pelo menos um símbolo."
         }
     },
 
@@ -305,6 +312,7 @@
         "actions": {
             "viewSeries": "Ver série",
             "viewSeasons": "Ver temporadas",
+            "managePeople": "Gerenciar pessoas",
             "createSeason": "Criar temporada",
             "translations": "Traduções"
         },
@@ -744,6 +752,8 @@
 
         "history": {
             "title": "Buscas recentes",
+            "today": "Hoje",
+            "yesterday": "Ontem",
             "subtitle": "Todas as suas buscas recentes",
             "loading": "Carregando histórico...",
             "empty": "Você não tem buscas recentes",
@@ -1458,6 +1468,123 @@
             "backToHelpCenter": "Voltar à central de ajuda",
             "categoryDescription": "Encontre respostas para as perguntas mais frequentes desta categoria."
         }
+    },
+
+    "cinematicRole": {
+        "title": "Funções cinematográficas",
+        "loading": "Carregando função cinematográfica...",
+        "createTitle": "Criar função cinematográfica",
+        "editTitle": "Editar função cinematográfica",
+
+        "list": {
+            "title": "Lista de funções cinematográficas",
+            "searchPlaceholder": "Buscar por nome ou código",
+            "empty": "Nenhuma função cinematográfica encontrada.",
+            "code": "Código"
+        },
+
+        "form": {
+            "createTitle": "Criar função cinematográfica",
+            "editTitle": "Editar função cinematográfica",
+            "codeLabel": "Código da função cinematográfica",
+            "codePlaceholder": "Ex.: ACTOR",
+            "nameLabel": "Nome da função cinematográfica",
+            "namePlaceholder": "Ex.: Ator",
+            "descriptionLabel": "Descrição",
+            "descriptionPlaceholder": "Descrição da função cinematográfica",
+
+            "validation": {
+                "codeRequired": "Preencha o campo de código.",
+                "languageRequired": "Selecione um idioma.",
+                "nameRequired": "Preencha o campo de nome."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir a função cinematográfica \"{name}\"? Esta ação não pode ser desfeita."
+        },
+
+        "translations": {
+            "title": "Traduções",
+            "registeredTitle": "Traduções registradas",
+            "languagePlaceholder": "Selecionar idioma",
+            "namePlaceholder": "Ex.: Ator",
+            "descriptionPlaceholder": "Descrição da função cinematográfica",
+            "loading": "Carregando traduções...",
+            "empty": "Nenhuma tradução registrada.",
+            "deleteTitle": "Excluir tradução",
+            "deleteMessage": "Tem certeza de que deseja excluir a tradução em \"{language}\"? Esta ação não pode ser desfeita.",
+            "invalidRole": "Função cinematográfica inválida.",
+            "loadingLanguages": "Carregando idiomas..."
+        },
+
+        "errors": {
+            "load": "Erro ao carregar a função cinematográfica.",
+            "translation": "Ocorreu um erro ao processar a tradução."
+        }
+    },
+
+    "person": {
+        "title": "Pessoas",
+        "loading": "Carregando pessoa...",
+        "createTitle": "Criar pessoa",
+        "editTitle": "Editar pessoa",
+
+        "list": {
+            "searchPlaceholder": "Buscar por nome ou sobrenome",
+            "loading": "Carregando pessoas...",
+            "empty": "Nenhuma pessoa encontrada.",
+            "photo": "Foto",
+            "firstName": "Nome",
+            "lastName": "Sobrenome"
+        },
+
+        "form": {
+            "firstName": "Nome",
+            "firstNamePlaceholder": "Digite o nome",
+            "lastName": "Sobrenome",
+            "lastNamePlaceholder": "Digite o sobrenome",
+            "photo": "Foto",
+            "currentPhoto": "Foto atual",
+
+            "validation": {
+                "firstNameRequired": "O nome é obrigatório."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar exclusão",
+            "message": "Tem certeza de que deseja excluir \"{name}\"? Esta ação não pode ser desfeita."
+        },
+
+        "errors": {
+            "load": "Erro ao carregar a pessoa."
+        }
+    },
+
+    "contentPersonRole": {
+        "person": "Pessoa",
+        "personPlaceholder": "Selecionar uma pessoa",
+        "cinematicRole": "Função cinematográfica",
+        "cinematicRolePlaceholder": "Selecionar uma função",
+        "characterName": "Personagem",
+        "characterNamePlaceholder": "Ex.: John Wick",
+        "orderIndex": "Posição",
+        "registeredTitle": "Pessoas e funções registradas",
+        "loading": "Carregando pessoas...",
+        "empty": "Nenhuma pessoa e função registrada.",
+        "error": "Ocorreu um erro ao processar a relação.",
+
+        "delete": {
+            "title": "Excluir relação",
+            "message": "Tem certeza de que deseja excluir a relação de \"{name}\"? Esta ação não pode ser desfeita."
+        }
+    },
+
+    "people": {
+        "title": "Elenco e equipe",
+        "loading": "Carregando pessoas..."
     }
 
 }

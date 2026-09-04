@@ -1,0 +1,12 @@
+.section {
+    margin-top: 2.5rem;
+}
+
+.title {
+    margin: 0 0 1rem;
+
+    font-size: clamp(1.35rem, 2vw, 2rem);
+    font-weight: 800;
+
+    color: #fff;
+}

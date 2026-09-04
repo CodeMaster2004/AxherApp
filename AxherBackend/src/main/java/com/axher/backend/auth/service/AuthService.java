@@ -2,7 +2,8 @@ package com.axher.backend.auth.service;
 
 import static com.axher.backend.infrastructure.specification.UsersSpecifications.*;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -80,7 +81,7 @@ public class AuthService {
         user.setPassword(hashedPassword);
         user.setSalt(salt);
         user.setIsConfirmed(false);
-        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedAt(Instant.now());
         if (request.getPreferredLanguageCode() != null &&
             !request.getPreferredLanguageCode().isBlank()) {
 
@@ -90,7 +91,10 @@ public class AuthService {
                 .ifPresent(user::setPreferredLanguage);
         }
         // Guardar fecha de expiración del OTP
-        user.setOtpExpiresAt(LocalDateTime.now().plusHours(OTP_EXPIRATION_HOURS));
+        // OTP: 72 horas
+        user.setOtpExpiresAt(
+            Instant.now().plus(Duration.ofHours(OTP_EXPIRATION_HOURS))
+        );
         usersRepository.save(user);
 
         String otp = otpService.generateOtp(user.getUserId().longValue(), "email");
@@ -112,7 +116,7 @@ public class AuthService {
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         // Verificar expiración
-        if (user.getOtpExpiresAt() == null || user.getOtpExpiresAt().isBefore(LocalDateTime.now())) {
+        if (user.getOtpExpiresAt() == null || user.getOtpExpiresAt().isBefore(Instant.now())) {
             usersRepository.delete(user);
             throw new RuntimeException("OTP expirado. Debes registrarte nuevamente.");
         }
@@ -168,7 +172,7 @@ public class AuthService {
         Users user = usersRepository.findOne(spec)
                 .orElseThrow(() -> new UnauthorizedException("Credenciales inválidas"));
 
-        if (user.getAccountLockedUntil() != null && user.getAccountLockedUntil().isAfter(LocalDateTime.now()))
+        if (user.getAccountLockedUntil() != null && user.getAccountLockedUntil().isAfter(Instant.now()))
             throw new RuntimeException("Cuenta bloqueada, contacta soporte.");
 
         boolean passwordOk = PasswordProtection.verifyPassword(request.getPassword(), user.getPassword(), user.getSalt());
@@ -178,7 +182,10 @@ public class AuthService {
             int failed = user.getFailedLoginAttempts() + 1;
             user.setFailedLoginAttempts(failed);
             if (failed >= 5)
-                user.setAccountLockedUntil(LocalDateTime.now().plusMinutes(ACCOUNT_BLOCK_MINUTES));
+                // Bloqueo: 15 minutos
+            user.setAccountLockedUntil(
+                Instant.now().plus(Duration.ofMinutes(ACCOUNT_BLOCK_MINUTES))
+            );
             usersRepository.save(user);
             throw new UnauthorizedException("Credenciales inválidas");
         }
@@ -189,7 +196,7 @@ public class AuthService {
         }
 
         user.setFailedLoginAttempts(0);
-        user.setLastLogin(LocalDateTime.now());
+        user.setLastLogin(Instant.now());
         usersRepository.save(user);
 
         String token = jwtService.generateAccessToken(user);

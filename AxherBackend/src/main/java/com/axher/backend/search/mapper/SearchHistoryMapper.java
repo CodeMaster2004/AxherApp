@@ -13,7 +13,7 @@ public class SearchHistoryMapper {
         SearchHistoryResponseDto dto = new SearchHistoryResponseDto();
         dto.setSearchId(entity.getSearchId());
         dto.setTerm(entity.getTerm());
-        dto.setSearchedAt(entity.getSearchedAt().toString());
+        dto.setSearchedAt(entity.getSearchedAt());
         return dto;
     }
     

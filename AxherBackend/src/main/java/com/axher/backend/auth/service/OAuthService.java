@@ -1,5 +1,6 @@
 package com.axher.backend.auth.service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -59,7 +60,7 @@ public class OAuthService {
                 newUser.setProvider(provider);
                 newUser.setProviderUserId(providerUserId);
                 newUser.setIsConfirmed(true);
-                newUser.setCreatedAt(LocalDateTime.now());
+                newUser.setCreatedAt(Instant.now());
                 if (preferredLanguageCode != null &&
                     !preferredLanguageCode.isBlank()) {
 

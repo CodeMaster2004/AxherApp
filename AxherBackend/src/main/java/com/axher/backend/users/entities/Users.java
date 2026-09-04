@@ -12,10 +12,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.axher.backend.language.entities.Language;
 
@@ -54,17 +57,19 @@ public class Users {
 
     private Integer failedLoginAttempts = 0;
 
-    private LocalDateTime accountLockedUntil;
+    private Instant accountLockedUntil;
 
     private Boolean isConfirmed = false;
 
-    private LocalDateTime passwordUpdatedAt = LocalDateTime.now();
+    @CreationTimestamp
+    private Instant passwordUpdatedAt;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private Instant createdAt;
 
-    private LocalDateTime lastLogin;
+    private Instant lastLogin;
 
-    private LocalDateTime otpExpiresAt;
+    private Instant otpExpiresAt;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<UserRoleAssignments> systemRoles = new HashSet<>();

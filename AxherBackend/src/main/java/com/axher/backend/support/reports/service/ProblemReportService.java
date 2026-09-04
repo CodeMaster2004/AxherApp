@@ -1,5 +1,6 @@
 package com.axher.backend.support.reports.service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
@@ -211,7 +212,7 @@ public class ProblemReportService {
         if (ReportStatusCode.RESOLVED.name().equals(status.getCode())) {
 
             if (report.getResolvedAt() == null) {
-                report.setResolvedAt(LocalDateTime.now());
+                report.setResolvedAt(Instant.now());
             }
 
         } else {

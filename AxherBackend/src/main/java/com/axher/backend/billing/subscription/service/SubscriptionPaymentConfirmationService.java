@@ -1,8 +1,8 @@
 package com.axher.backend.billing.subscription.service;
 
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +63,7 @@ public class SubscriptionPaymentConfirmationService {
 
         // 4. Confirmar pago
         payment.setPaymentStatus(succeededStatus);
-        payment.setPaymentDate(LocalDateTime.now());
+        payment.setPaymentDate(Instant.now());
         return paymentRepository.save(payment);
     }
 

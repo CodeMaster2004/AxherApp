@@ -2,8 +2,9 @@
 
 import { UpcomingContent } from "@/entities/types";
 import styles from "@/features/upcoming/components/UpcomingCard.module.css"
+import { formatDate } from "@/shared/utils/date";
 import { CalendarDays } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,13 +14,11 @@ interface UpcomingCardProps {
 }
 
 export default function UpcomingCard({ UpcomingContent }: UpcomingCardProps){
-
-    const date = new Date(UpcomingContent.releaseDate)
-        .toLocaleDateString("es-PE", {
-            day:"numeric",
-            month:"short",
-            year:"numeric"
-        });
+    const locale = useLocale();
+    const date = formatDate(
+        UpcomingContent.releaseDate,
+        locale
+    );
 
     const href =
         UpcomingContent.type === "MOVIE"

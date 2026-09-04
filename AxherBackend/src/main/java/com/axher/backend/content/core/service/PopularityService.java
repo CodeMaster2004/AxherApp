@@ -1,6 +1,8 @@
 package com.axher.backend.content.core.service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class PopularityService {
 
     public Page<TrendingContentResult> trending(ContentTypeEnum type, Pageable pageable){
 
-        LocalDateTime date = LocalDateTime.now().minusDays(7);
+        Instant date = Instant.now().minus(7, ChronoUnit.DAYS);
 
         return repository.findTrending(date, type, pageable);
     }

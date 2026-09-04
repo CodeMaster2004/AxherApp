@@ -39,7 +39,7 @@ export default function UsersList({
 
             </div>
             {users.length === 0 ? (
-                <p>{loading ? common("loading") : t("empty")}</p>
+                <p>{loading ? common("loading") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loading : ""}`}>
                     <table className={tableStyles.table}>

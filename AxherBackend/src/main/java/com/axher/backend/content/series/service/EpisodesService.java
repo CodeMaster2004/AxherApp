@@ -1,7 +1,7 @@
 package com.axher.backend.content.series.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.quartz.SchedulerException;
@@ -49,38 +49,6 @@ public class EpisodesService {
         return episodesRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Episodio no encontrado: " + id));
     }
-
-    /*public Episodes findPublicBySeasonIdAndEpisodeId(Integer seasonId, Integer episodeId){
-
-        Episodes episode = findBySeasonIdAndEpisodeId(seasonId,episodeId);
-
-        if(!"PUBLISHED".equalsIgnoreCase(
-            episode.getSeason()
-                .getSeries()
-                .getContent()
-                .getContentStatus()
-                .getStatus()   
-        ))
-        {
-            throw new ResourceNotFoundException("Serie no disponible");
-        }
-
-        if(!"PUBLISHED".equalsIgnoreCase(
-            episode.getSeason()
-                .getContentStatus()
-                .getStatus()
-        )){
-            throw new ResourceNotFoundException("Temporada no disponible");
-        }
-
-        if(!"PUBLISHED".equalsIgnoreCase(
-            episode.getContentStatus()
-                .getStatus()
-        )){
-            throw new ResourceNotFoundException("Episodio no disponible");
-        }
-        return episode;
-    }*/
 
     public Page<Episodes> findPublicBySeasonId(Integer seasonId, Pageable pageable) {
         return episodesRepository.findPublicBySeasonId(seasonId, pageable);
@@ -322,7 +290,7 @@ public class EpisodesService {
                 throw new IllegalArgumentException("El episode UPCOMING necesita fecha de estreno");
             }
 
-            if(episode.getReleaseDate().isBefore(LocalDateTime.now())){
+            if(episode.getReleaseDate().isBefore(Instant.now())){
                 throw new IllegalArgumentException("La fecha de estreno debe ser futura");
             }
 

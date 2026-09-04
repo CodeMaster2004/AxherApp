@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.shelf.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,9 +33,6 @@ public class ContentShelf {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer contentShelfId;
 
-    //@Column(length = 100, nullable = false)
-    //private String name;
-
     @Column(length = 100, nullable = false, unique = true)
     private String slug;
 
@@ -53,7 +50,7 @@ public class ContentShelf {
 
     private Boolean active;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @OneToMany(
         mappedBy = "contentShelf",

@@ -1,5 +1,7 @@
 package com.axher.backend.search.DTOs;
 
+import java.time.Instant;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,5 +10,5 @@ import lombok.Setter;
 public class SearchHistoryResponseDto {
     private Long searchId;
     private String term;
-    private String searchedAt;
+    private Instant searchedAt;
 }

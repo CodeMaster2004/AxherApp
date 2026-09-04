@@ -1,6 +1,6 @@
 package com.axher.backend.content.series.DTOs.seasonDTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.content.core.DTOs.ContentStatusResponseDto;
 
@@ -12,7 +12,7 @@ public class SeasonResponseDto {
     private Integer seasonNumber;
     private String title;
     private String description;
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
     private ContentStatusResponseDto status;
     private Integer episodeCount;
     //private List<EpisodeResponseDto> episodes;

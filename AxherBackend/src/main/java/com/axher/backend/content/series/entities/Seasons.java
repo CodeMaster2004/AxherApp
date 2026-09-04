@@ -1,5 +1,6 @@
 package com.axher.backend.content.series.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Seasons {
     private String description;*/
 
     @Column(name = "release_date")
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_status_id")

@@ -1,6 +1,6 @@
 package com.axher.backend.content.ratings.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.content.ratings.entities.TargetTypeEnum;
 
@@ -22,5 +22,5 @@ public class RatingResponseDto {
     private Integer targetId;
     private Integer ratingValue;
     private String comment;
-    private LocalDateTime ratedAt;
+    private Instant ratedAt;
 }

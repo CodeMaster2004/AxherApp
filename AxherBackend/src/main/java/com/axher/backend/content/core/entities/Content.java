@@ -1,8 +1,7 @@
 package com.axher.backend.content.core.entities;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -88,10 +87,10 @@ public class Content {
     @JoinColumn(name = "original_language_id", nullable = false)
     private Language originalLanguage;
 
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
 
     @Column(name = "registered_at", insertable = false, updatable = false)
-    private LocalDate registeredAt;
+    private Instant registeredAt;
 
     @OneToOne(mappedBy = "content")
     private Movies movie;

@@ -30,7 +30,7 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
     } = useRolePermissionAssignment();
 
     const common = useTranslations("common");
-    const t = useTranslations("permissions");
+    const t = useTranslations("systemPermissions");
     const [baseAssignedIds, setBaseAssignedIds] = useState<number[]>([]);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [statusMsg, setStatusMsg] = useState<string | null>(null);
@@ -112,7 +112,7 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
                 setAuth(updatedUser);
             }
 
-            router.push("/systemRoles");
+            router.push("/admin/systemRoles");
             setStatusMsg(t("updatedSuccessfully"));
             onDone?.();
         } catch (error) {
@@ -135,7 +135,7 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
         <div className={layoutStyles.pageContainer}>
         <h1>{t("title")}: {role?.roleName ?? roleId}</h1>
 
-        {loading && <div className={layoutStyles.loading}>{t("loading")}</div>}
+        {loading && <div className={layoutStyles.loading}>{t("errors.load")}</div>}
 
         {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
         {/* {assignmentError && <p style={{ color: "red" }}>{String(assignmentError)}</p>} */}
@@ -145,8 +145,8 @@ export default function RolePermissionAssignmentForm({ roleId, onDone }: Props) 
             <table className={tableStyles.table}>
                 <thead>
                 <tr className={tableStyles.rowHover}>
-                    <th className={tableStyles.headCell}>{t("module")}</th>
-                    <th className={tableStyles.headCell}>{t("permissions")}</th>
+                    <th className={tableStyles.headCell}>{t("list.moduleName")}</th>
+                    <th className={tableStyles.headCell}>{t("list.permissionName")}</th>
                 </tr>
                 </thead>
                 <tbody>

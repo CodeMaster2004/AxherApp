@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.shelf.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.catalog.shelf.entities.ShelfLayout;
 import com.axher.backend.catalog.shelf.entities.ShelfSource;
@@ -24,7 +24,7 @@ public class ContentShelfDto {
     private ShelfLayout layout;
     private ShelfSource source;
     private Boolean active;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private Integer languageId;
     
 }

@@ -1,6 +1,6 @@
 package com.axher.backend.support.tickets.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -45,6 +45,6 @@ public class SupportMessage {
     private String message;
 
     @CreationTimestamp
-    private LocalDateTime sentAt;
+    private Instant sentAt;
     
 }

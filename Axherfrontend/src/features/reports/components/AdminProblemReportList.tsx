@@ -7,7 +7,7 @@ import tableStyles from "@/shared/styles/shared/Table.module.css";
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
 import Pagination from "@/shared/components/ui/Pagination";
 import { formatDate } from "@/shared/utils/date";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ReportCategoryResponse } from "@/entities/types";
 
 interface ProblemReportStatus{
@@ -138,6 +138,7 @@ export default function AdminProblemReportList({
 
     const common = useTranslations("common");
     const t = useTranslations("problemReport");
+    const locale = useLocale();
 
     return (
 
@@ -300,10 +301,10 @@ export default function AdminProblemReportList({
                                         </select>
                                     </td>
                                     <td>
-                                        {formatDate(report.reportedAt)}
+                                        {formatDate(report.reportedAt, locale)}
                                     </td>
                                     <td>
-                                        {formatDate(report.resolvedAt)}
+                                        {formatDate(report.resolvedAt, locale)}
                                     </td>
                                 </tr>
                             ))}

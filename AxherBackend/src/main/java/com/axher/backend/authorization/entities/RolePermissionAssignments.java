@@ -1,5 +1,6 @@
 package com.axher.backend.authorization.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.EmbeddedId;
@@ -35,6 +36,6 @@ public class RolePermissionAssignments {
     @JoinColumn(name = "system_permission_id", nullable = false)
     private SystemPermissions permission;
 
-    private LocalDateTime assignedAt = LocalDateTime.now();
+    private Instant assignedAt;
     
 }

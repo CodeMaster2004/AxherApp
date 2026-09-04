@@ -1,6 +1,6 @@
 package com.axher.backend.billing.payment.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +17,6 @@ public class PaymentMethodResponseDto {
     private Short expirationYear;
     private Boolean isDefault;
     private Boolean active;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     
 }

@@ -64,7 +64,7 @@ export default function EpisodesListView({ contentId, seasonId }: Props) {
         <div className={layoutStyles.header}>
             <h1>{t("title")}</h1>
             <Button variant="animated" onClick={handleCreate}>
-                {t("actions.createTitle")}
+                {t("createTitle")}
             </Button>
         </div>
 

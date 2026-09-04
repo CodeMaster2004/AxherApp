@@ -7,7 +7,8 @@ import styles from "./SeasonsSection.module.css";
 import { usePublicSeasons } from "@/features/seasons/hooks/usePublicSeasons";
 import { useUpcomingSeasons } from "@/features/seasons/hooks/useUpcomingSeasons";
 import { Lock } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDate } from "@/shared/utils/date";
 interface Props {
     seriesId: number;
     onSelectEpisode: (episode: EpisodeDetail) => void;
@@ -18,6 +19,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
     const [selectedSeason, setSelectedSeason] = useState<number | null>(null);
     const [open, setOpen] = useState(false);
     const t = useTranslations("seasons");
+    const locale = useLocale();
     const {
         seasons,
         loading
@@ -46,15 +48,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
         season => season.seasonId === selectedSeason
     );
 
-    const formatReleaseDate = (date: string) => {
 
-    return new Intl.DateTimeFormat("es-PE", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-    }).format(new Date(date));
-
-};
     return (
         <>
 
@@ -95,7 +89,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                             </span>
 
                             <span className={styles.upcomingDate}>
-                                · {formatReleaseDate(season.releaseDate)}
+                                · {formatDate(season.releaseDate, locale)}
                             </span>
                         </div>
                     ))}
@@ -157,7 +151,7 @@ export default function SeasonsSection({ seriesId, onSelectEpisode }: Props) {
                                     </span>
 
                                     <span className={styles.upcomingDate}>
-                                        · {formatReleaseDate(season.releaseDate)}
+                                        · {formatDate(season.releaseDate, locale)}
                                     </span>
                                 </div>
                             ))}

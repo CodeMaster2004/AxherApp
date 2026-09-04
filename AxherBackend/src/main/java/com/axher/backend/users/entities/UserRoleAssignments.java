@@ -1,6 +1,6 @@
 package com.axher.backend.users.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.authorization.entities.SystemRoles;
 
@@ -38,7 +38,7 @@ public class UserRoleAssignments {
     @JoinColumn(name = "system_role_id", nullable = false)
     private SystemRoles role;
 
-    private LocalDateTime assignedAt = LocalDateTime.now();
+    private Instant assignedAt;
 
 }
 

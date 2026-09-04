@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.banner.repositories;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public interface HeroBannerRepository extends JpaRepository<HeroBanner, Integer>
         ORDER BY hb.priority DESC, hb.createdAt DESC
         """)
     List<HeroBanner> findActiveValidBanners(
-            @Param("now") LocalDateTime now
+            @Param("now") Instant now
     );
 
 

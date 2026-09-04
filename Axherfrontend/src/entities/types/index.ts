@@ -24,3 +24,6 @@ export * from "./problemReport.types";
 export * from "./supportTicket.types";
 export * from "./language.types";
 export * from "./reportCategory.types";
+export * from "./cinematicRole.Types";
+export * from "./person.types";
+export * from "./contentPersonRole.type";

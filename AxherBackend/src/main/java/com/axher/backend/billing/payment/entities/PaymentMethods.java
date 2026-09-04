@@ -1,7 +1,6 @@
 package com.axher.backend.billing.payment.entities;
 
-import java.time.LocalDateTime;
-
+import java.time.Instant;
 import com.axher.backend.users.entities.Users;
 
 import jakarta.persistence.Column;
@@ -57,10 +56,10 @@ public class PaymentMethods {
     private Boolean active = true;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
 }
 

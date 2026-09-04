@@ -1,6 +1,6 @@
 package com.axher.backend.content.playback.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.content.core.entities.Content;
 import com.axher.backend.content.series.entities.Episodes;
@@ -45,7 +45,7 @@ public class PlaybackHistory {
     private Integer watchedSeconds; 
 
     @Column(columnDefinition = "DATETIME")
-    private LocalDateTime watchedAt;
+    private Instant watchedAt;
 
 }
 

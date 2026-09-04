@@ -6,7 +6,7 @@ import static com.axher.backend.infrastructure.specification.ContentSpecificatio
 import static com.axher.backend.infrastructure.specification.ContentSpecifications.hasType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -500,7 +500,7 @@ public class ContentService {
 
             }
 
-            if(content.getReleaseDate().isBefore(LocalDateTime.now())){
+            if(content.getReleaseDate().isBefore(Instant.now())){
                 throw new IllegalArgumentException(
                     "La fecha de estreno debe ser futura"
                 );

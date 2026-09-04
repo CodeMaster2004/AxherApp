@@ -1,6 +1,6 @@
 package com.axher.backend.users.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
@@ -57,8 +57,8 @@ public class UserProfilesService {
             profile.setProfileBannerUrl("profile_banners/default/banner.png");
             profile.setProfileVisibility("PUBLIC");
 
-            profile.setCreatedAt(LocalDateTime.now());
-            profile.setUpdatedAt(LocalDateTime.now());
+            profile.setCreatedAt(Instant.now());
+            profile.setUpdatedAt(Instant.now());
 
             return userProfilesRepository.save(profile);
         });
@@ -130,7 +130,7 @@ public class UserProfilesService {
             profile.setProfileVisibility(dto.getProfileVisibility());
         }
 
-        profile.setUpdatedAt(LocalDateTime.now());
+        profile.setUpdatedAt(Instant.now());
         return userProfilesRepository.save(profile);
     }
     

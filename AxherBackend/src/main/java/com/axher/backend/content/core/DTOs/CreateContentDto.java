@@ -1,7 +1,7 @@
 package com.axher.backend.content.core.DTOs;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +25,7 @@ public class CreateContentDto {
     private List<Integer> categoryIds;
     private Integer statusId;
     private Integer discountId;
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
     
 
     private CreateMovieDto movie;

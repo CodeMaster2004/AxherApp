@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.watchlist.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.content.core.entities.ContentTypeEnum;
 
@@ -16,6 +16,6 @@ public class WatchlistResponseDto {
     private String title;
     private String posterUrl;
     private ContentTypeEnum type;
-    private LocalDateTime addedAt;
+    private Instant addedAt;
     
 }

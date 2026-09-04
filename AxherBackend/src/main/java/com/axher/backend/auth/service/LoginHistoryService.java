@@ -1,6 +1,6 @@
 package com.axher.backend.auth.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class LoginHistoryService {
 
         LoginHistory history = new LoginHistory();
         history.setUser(user);
-        history.setLoginTime(LocalDateTime.now());
+        history.setLoginTime(Instant.now());
         history.setIpAddress(ip);
         history.setUserAgent(userAgent);
         history.setSuccess(success);

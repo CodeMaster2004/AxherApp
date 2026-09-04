@@ -72,7 +72,10 @@ export default function EditEpisodePage() {
     formData.append("episodeNumber", episodeNumber.toString());
     formData.append("title", title.trim());
     formData.append("description", description || "");
-    if (releaseDate) formData.append("releaseDate", releaseDate);
+    if (releaseDate) {
+        const releaseInstant = new Date(releaseDate).toISOString();
+        formData.append("releaseDate", releaseInstant);
+    }
     if(selectedStatusId){
         formData.append("statusId", selectedStatusId.toString());
     }

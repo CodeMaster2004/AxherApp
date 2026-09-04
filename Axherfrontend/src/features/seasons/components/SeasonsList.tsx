@@ -7,7 +7,8 @@ import tableStyles from "@/shared/styles/shared/Table.module.css";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDate } from "@/shared/utils/date";
 
 interface Props{
     seasons: SeasonDetail[];
@@ -49,6 +50,7 @@ export default function SeasonsList({
 }: Props){
     const common = useTranslations("common");
     const t = useTranslations("seasons");
+    const locale = useLocale();
 
     const [pendingStatus, setPendingStatus] = useState<Record<number,number>>({});
     const [confirmDialog, setConfimDialog] = useState<{
@@ -75,11 +77,6 @@ export default function SeasonsList({
         contentTitle: "",
     });
 
-    const formatDate = (dateStr: string): string => {
-        if(!dateStr) return '-';
-        const [year, month, day] = dateStr.split('-');
-        return `${day}/${month}/${year}`;
-    };
 
     const handleDeleteClick = (id: number, title: string) => {
         setConfimDialog({ isOpen: true, id, title});
@@ -165,7 +162,7 @@ export default function SeasonsList({
             </div>
 
             {seasons.length === 0 ? (
-                <p>{loading ? common("searching") : t("messages.empty")}</p>
+                <p>{loading ? common("searching") : t("list.empty")}</p>
             ) : (
                 <div className={`${tableStyles.tableWrap} ${loading ? tableStyles.loadig : ""}`}>
                     <table className={tableStyles.table}>
@@ -189,7 +186,7 @@ export default function SeasonsList({
                                     <td>{season.seasonNumber}</td>
                                     <td>{season.title}</td>
                                     <td>{season.description || "-"}</td>
-                                    <td>{formatDate(season.releaseDate)}</td>
+                                    <td>{formatDate(season.releaseDate, locale)}</td>
                                     <td>
                                         <select
                                             className={tableStyles.statusSelect}

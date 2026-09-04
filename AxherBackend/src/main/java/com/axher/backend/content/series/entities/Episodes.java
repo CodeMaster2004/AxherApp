@@ -1,5 +1,6 @@
 package com.axher.backend.content.series.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +40,6 @@ public class Episodes {
     @Column(nullable = false)
     private Integer episodeNumber;
 
-    /*@Column(length = 150)
-    private String title;
-
-    @Column(length = 1000)
-    private String description;*/
-
     @Column(name = "duration_seconds")
     private Integer durationSeconds;
 
@@ -55,7 +50,7 @@ public class Episodes {
     private String episodeUrl;
 
     @Column(name = "release_date")
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_status_id")

@@ -1,7 +1,7 @@
 package com.axher.backend.catalog.banner.service;
 
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -115,12 +115,12 @@ public class HeroBannerService {
 
         HeroBanner banner = findById(id);
 
-        LocalDateTime startDate =
+        Instant startDate =
             dto.getStartDate() != null
                 ? dto.getStartDate()
                 : banner.getStartDate();
 
-        LocalDateTime endDate =
+        Instant endDate =
             dto.getEndDate() != null
                 ? dto.getEndDate()
                 : banner.getEndDate();

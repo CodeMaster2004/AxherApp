@@ -54,7 +54,7 @@ export default function ReportCategoryListView() {
 
             <div className={layoutStyles.header}>
 
-                <h1>{t("reportCategories")}</h1>
+                <h1>{t("title")}</h1>
 
                 <Button
                     variant="animated"

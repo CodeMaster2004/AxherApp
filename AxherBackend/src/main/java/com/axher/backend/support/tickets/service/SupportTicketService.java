@@ -1,5 +1,6 @@
 package com.axher.backend.support.tickets.service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
@@ -294,7 +295,7 @@ public class SupportTicketService {
 
         if("RESOLVED". equals(code)){
             if(ticket.getResolvedAt() == null){
-                ticket.setResolvedAt(LocalDateTime.now());
+                ticket.setResolvedAt(Instant.now());
             }
         } else {
             ticket.setResolvedAt(null);
@@ -302,13 +303,13 @@ public class SupportTicketService {
 
         if ("CLOSED".equals(code)) {
             if(ticket.getClosedAt() == null){
-                ticket.setClosedAt(LocalDateTime.now());
+                ticket.setClosedAt(Instant.now());
             }
         } else {
             ticket.setClosedAt(null);
         }
 
-        ticket.setUpdatedAt(LocalDateTime.now());
+        ticket.setUpdatedAt(Instant.now());
         return repository.save(ticket);
     }
 

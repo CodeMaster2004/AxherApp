@@ -1,6 +1,7 @@
 package com.axher.backend.billing.subscription.DTOs;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
@@ -13,7 +14,7 @@ public class SubscriptionPaymentResponseDto {
     private Integer subscriptionPaymentId;
     private Integer subscriptionId;
     private BigDecimal amount;
-    private LocalDateTime paymentDate;
+    private Instant paymentDate;
     private Integer paymentMethodId;
     private Integer paymentStatusId;
     

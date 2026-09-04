@@ -8,7 +8,7 @@ import { useState } from "react";
 import tableStyles from "@/shared/styles/shared/Table.module.css"
 import layoutStyles from "@/shared/styles/layout/Layout.module.css"
 import ConfirmDialog from "@/shared/components/ui/ConfirmDialog";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface SupportTicketStatus {
     supportTicketStatusId: number;
@@ -66,6 +66,7 @@ export default function AdminSupportTicketList({
     const router = useRouter();
     const common = useTranslations("common");
     const t = useTranslations("supportTickets");
+    const locale = useLocale();
     const [pendingStatus, setPendingStatus] = useState<
         Record<number, number | undefined>
     >({});
@@ -171,7 +172,7 @@ export default function AdminSupportTicketList({
             <ConfirmDialog
                 isOpen={statusDialog.isOpen}
                 title={t("status.change")}
-                message={t("status.confirmMessage", {
+                message={t("status.changeMessage", {
                     ticketId: statusDialog.ticketId,
                     statusName: statusDialog.statusName,
                 })}
@@ -259,7 +260,7 @@ export default function AdminSupportTicketList({
 
                 <input
                     type="number"
-                    placeholder={t("list.userPlaceholder")}
+                    placeholder={t("list.userIdPlaceholder")}
                     value={filters.userId ?? ""}
                     onChange={(e) =>
                         handleFilterChange(
@@ -429,13 +430,13 @@ export default function AdminSupportTicketList({
 
                                     <td>
                                         {formatDate(
-                                            ticket.createdAt
+                                            ticket.createdAt, locale
                                         )}
                                     </td>
 
                                     <td>
                                         {formatDate(
-                                            ticket.updatedAt
+                                            ticket.updatedAt, locale
                                         )}
                                     </td>
 

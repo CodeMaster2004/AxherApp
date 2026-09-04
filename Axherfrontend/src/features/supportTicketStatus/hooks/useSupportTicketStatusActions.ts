@@ -1,12 +1,12 @@
 "use client";
 
-import { SupportTicketStatusRequest } from "@/entities/types";
+import { SupportTicketStatusRequest, SupportTicketStatusResponse } from "@/entities/types";
 import { supportTicketStatusService } from "@/features/supportTicketStatus/service/SupportTicketStatusService";
 import { useCrudActions } from "@/shared/hooks/useCrudActions";
 
 
 type Options = {
-    onSuccess?: (result?: SupportTicketStatusRequest) => void;
+    onSuccess?: (result?: SupportTicketStatusResponse) => void;
     onError?: (error: unknown) => void;
 }
 

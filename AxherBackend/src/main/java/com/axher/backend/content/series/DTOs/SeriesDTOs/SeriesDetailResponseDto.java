@@ -1,7 +1,7 @@
 package com.axher.backend.content.series.DTOs.SeriesDTOs;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 
@@ -20,7 +20,7 @@ public class SeriesDetailResponseDto {
     private List<String> categories;
     private String status;
     private BigDecimal discountAmount;
-    private LocalDate registeredAt;
+    private Instant registeredAt;
 
     private Integer seasonCount;
     //private List<SeasonResponseDto> seasons;

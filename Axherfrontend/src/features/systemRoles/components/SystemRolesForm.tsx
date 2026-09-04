@@ -33,7 +33,7 @@ export default function SystemRolesForm({
         <form onSubmit={onSubmit} className={formStyles.form}>
 
             <Input
-                label={t("form.roleNameLabel")}
+                label={t("form.roleName")}
                 value={roleName}
                 onChange={setRoleName}
                 placeholder={t("form.roleNamePlaceholder")}

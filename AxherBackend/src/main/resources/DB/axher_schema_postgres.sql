@@ -29,7 +29,7 @@ CREATE TABLE system_permissions (
 CREATE TABLE role_permission_assignments (
     system_role_id INT NOT NULL,
     system_permission_id INT NOT NULL,
-    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    assigned_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (system_role_id, system_permission_id),
     FOREIGN KEY (system_role_id) REFERENCES system_roles(system_role_id) ON DELETE CASCADE,
     FOREIGN KEY (system_permission_id) REFERENCES system_permissions(system_permission_id) ON DELETE CASCADE
@@ -45,12 +45,12 @@ CREATE TABLE users (
     provider_user_id VARCHAR(100) NULL,
     provider VARCHAR(50) NULL,
     failed_login_attempts INT DEFAULT 0,
-    account_locked_until TIMESTAMP NULL,
+    account_locked_until TIMESTAMPTZ NULL,
     is_confirmed BOOLEAN DEFAULT FALSE,
-    password_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login TIMESTAMP,
-    otp_expires_at TIMESTAMP NULL,
+    password_updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMPTZ,
+    otp_expires_at TIMESTAMPTZ NULL,
     current_family_id UUID NULL,
     preferred_language_id INT NULL,
     CONSTRAINT fk_user_preferred_language
@@ -65,10 +65,10 @@ CREATE TABLE refresh_tokens (
     token CHAR(64) NOT NULL UNIQUE,
     user_id INT NOT NULL,
     family_id UUID NOT NULL,
-    expiry_date TIMESTAMP NOT NULL,
+    expiry_date TIMESTAMPTZ NOT NULL,
     revoked BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    revoked_at TIMESTAMP NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    revoked_at TIMESTAMPTZ NULL,
     CONSTRAINT fk_user_refresh 
         FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
@@ -76,7 +76,7 @@ CREATE TABLE refresh_tokens (
 CREATE TABLE login_history (
     login_history_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
-    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    login_time TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ip_address VARCHAR(50),
     user_agent VARCHAR(255),
     success BOOLEAN,
@@ -87,7 +87,7 @@ CREATE TABLE login_history (
 CREATE TABLE user_role_assignments (
     user_id INT NOT NULL,
     system_role_id INT NOT NULL,
-    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    assigned_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, system_role_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (system_role_id) REFERENCES system_roles(system_role_id) ON DELETE CASCADE
@@ -99,7 +99,7 @@ CREATE TABLE search_history (
     search_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
     term VARCHAR(255) NOT NULL,
-    searched_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    searched_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_search_history_user
         FOREIGN KEY (user_id)
         REFERENCES users(user_id)
@@ -125,8 +125,8 @@ CREATE TABLE user_profiles (
     profile_banner_url VARCHAR(500),
     profile_visibility VARCHAR(20) DEFAULT 'PUBLIC'
         CHECK (profile_visibility IN ('PUBLIC','PRIVATE')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
@@ -144,8 +144,8 @@ CREATE TABLE content_categories_translations (
     language_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_content_category_translation_category
         FOREIGN KEY (content_category_id)
         REFERENCES content_categories(content_category_id)
@@ -175,8 +175,8 @@ CREATE TABLE content_status_translations (
     language_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_content_status_translation_status
         FOREIGN KEY (content_status_id)
         REFERENCES content_status(content_status_id)
@@ -215,8 +215,8 @@ CREATE TABLE content(
     content_status_id INT,
     discount_id INT,
     original_language_id INT NOT NULL,
-    release_date TIMESTAMP,
-    registered_at DATE DEFAULT CURRENT_TIMESTAMP,
+    release_date TIMESTAMPTZ,
+    registered_at DATE NOT NULL DEFAULT CURRENT_DATE,
     CONSTRAINT fk_content_status
         FOREIGN KEY (content_status_id)
         REFERENCES content_status(content_status_id),
@@ -239,8 +239,8 @@ CREATE TABLE content_translations(
 
     title VARCHAR(100) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_content_translation_content
         FOREIGN KEY (content_id)
@@ -278,7 +278,7 @@ CREATE TABLE seasons(
     --title VARCHAR(150),
     --description VARCHAR(500),
     content_status_id INT,
-    release_date TIMESTAMP,
+    release_date TIMESTAMPTZ,
     FOREIGN KEY (series_content_id) REFERENCES series(content_id) ON DELETE CASCADE,
     UNIQUE (series_content_id, season_number),
     FOREIGN KEY (content_status_id) REFERENCES content_status(content_status_id)
@@ -294,8 +294,8 @@ CREATE TABLE season_translations(
     title VARCHAR(150),
     description VARCHAR(500),
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_season_translation_season
         FOREIGN KEY (season_id)
@@ -321,7 +321,7 @@ CREATE TABLE episodes(
     thumbnail_url TEXT,
     episode_url TEXT NOT NULL,
     content_status_id INT,
-    release_date TIMESTAMP,
+    release_date TIMESTAMPTZ,
     FOREIGN KEY (season_id) REFERENCES seasons(season_id) ON DELETE CASCADE,
     UNIQUE (season_id, episode_number),
     FOREIGN KEY (content_status_id) REFERENCES content_status(content_status_id)
@@ -336,8 +336,8 @@ CREATE TABLE episode_translations (
     title VARCHAR(150),
     description VARCHAR(1000),
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_episode_translation_episode
         FOREIGN KEY (episode_id)
@@ -369,10 +369,10 @@ CREATE TABLE hero_banners(
     --description_override TEXT NULL,
     backdrop_url TEXT NULL,
     priority INT DEFAULT 1,
-    start_date TIMESTAMP  NULL,
-    end_date TIMESTAMP  NULL,
+    start_date TIMESTAMPTZ  NULL,
+    end_date TIMESTAMPTZ  NULL,
     active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE
 );
 
@@ -382,8 +382,8 @@ CREATE TABLE hero_banner_translations (
     language_id INT NOT NULL,
     title_override VARCHAR(100) NULL,
     description_override TEXT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_hero_banner_translation_banner
         FOREIGN KEY (hero_banner_id)
@@ -414,7 +414,7 @@ CREATE TABLE content_shelves(
         'SQUARE'
     )),
     active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (slug, target)
 );
 
@@ -423,8 +423,8 @@ CREATE TABLE content_shelf_translations(
     content_shelf_id INT NOT NULL,
     language_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (content_shelf_id)
         REFERENCES content_shelves(content_shelf_id)
@@ -442,7 +442,7 @@ CREATE TABLE shelf_contents(
     content_shelf_id INT NOT NULL,
     content_id INT NOT NULL,
     position INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (content_shelf_id) REFERENCES content_shelves(content_shelf_id) ON DELETE CASCADE,
     FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE,
     UNIQUE (content_shelf_id, content_id)
@@ -456,7 +456,7 @@ CREATE TABLE page_sections(
     display_order INT NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     content_shelf_id INT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_page_section_order
         UNIQUE (page, display_order)
             DEFERRABLE INITIALLY DEFERRED,
@@ -476,7 +476,7 @@ CREATE TABLE ratings (
     target_id INT NOT NULL,
     rating_value INT NOT NULL CHECK (rating_value >= 1 AND rating_value <= 5),
     comment TEXT,
-    rated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    rated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT uq_user_target UNIQUE (user_id, target_type, target_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
@@ -490,7 +490,7 @@ CREATE TABLE playback_history (
     content_id INT NOT NULL,
     episode_id INT NULL,
     watched_seconds INT NOT NULL,
-    watched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    watched_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (content_id) REFERENCES content(content_id) ,
     FOREIGN KEY (episode_id) REFERENCES episodes(episode_id) 
@@ -503,7 +503,7 @@ CREATE TABLE watchlist (
     watchlist_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
     content_id INT NOT NULL,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    added_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE,
     UNIQUE (user_id, content_id)
@@ -517,7 +517,7 @@ CREATE TABLE subscription_plans (
     price DECIMAL(10,2) NOT NULL,
     --description VARCHAR(500),
     duration_days INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE subscription_plan_translations (
@@ -527,8 +527,8 @@ CREATE TABLE subscription_plan_translations (
     language_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(500),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_subscription_plan_translation_plan
         FOREIGN KEY (subscription_plan_id)
         REFERENCES subscription_plans(subscription_plan_id)
@@ -555,8 +555,8 @@ CREATE TABLE subscription_status_translations (
     language_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT uq_subscription_status_translation_language
         UNIQUE (subscription_status_id, language_id),
     CONSTRAINT fk_subscription_status_translation_status
@@ -603,8 +603,8 @@ CREATE TABLE ad_type_translations (
     name VARCHAR(50) NOT NULL,
     description VARCHAR(200),
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT uq_ad_type_translation_language
         UNIQUE (ad_type_id, language_id),
@@ -641,8 +641,8 @@ CREATE TABLE ad_translations (
     language_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
     description VARCHAR(500) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_ad_translation_language
         UNIQUE (ad_id, language_id),
     FOREIGN KEY (ad_id)
@@ -666,8 +666,8 @@ CREATE TABLE payment_methods (
     expiration_year SMALLINT,
     is_default BOOLEAN NOT NULL DEFAULT FALSE,
     active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_payment_method_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     CONSTRAINT uq_user_provider_payment UNIQUE (user_id, provider, provider_payment_method_id)
 );
@@ -690,8 +690,8 @@ CREATE TABLE payment_status_translations (
     language_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_payment_status_translation_language
         UNIQUE (payment_status_id, language_id),
     FOREIGN KEY (payment_status_id)
@@ -707,11 +707,11 @@ CREATE TABLE subscription_payments (
     subscription_payment_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     subscription_id INT,
     amount DECIMAL(10,2) NOT NULL,
-    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    payment_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     payment_method_id INT,
     payment_status_id INT,
     provider_payment_id VARCHAR(150) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_subscription_payment_subscription
         FOREIGN KEY (subscription_id)
         REFERENCES subscriptions(subscription_id),
@@ -815,30 +815,27 @@ CREATE TABLE persons (
     person_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NULL,
-    birth_date DATE NULL,
-    nationality VARCHAR(100) NULL,
-    --bio TEXT NULL,
     photo TEXT NULL
 );
 
-CREATE TABLE person_translations (
+--CREATE TABLE person_translations (
 
-    person_translation_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    person_id INT NOT NULL,
-    language_id INT NOT NULL,
-    bio TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_person_translation_language
-        UNIQUE (person_id, language_id),
-    CONSTRAINT fk_person_translation_person
-        FOREIGN KEY (person_id)
-        REFERENCES persons(person_id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_person_translation_language
-        FOREIGN KEY (language_id)
-        REFERENCES languages(language_id)
-);
+    --person_translation_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+   -- person_id INT NOT NULL,
+   -- language_id INT NOT NULL,
+   -- bio TEXT,
+   -- created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    --updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   -- CONSTRAINT uq_person_translation_language
+    --    UNIQUE (person_id, language_id),
+   -- CONSTRAINT fk_person_translation_person
+   --     FOREIGN KEY (person_id)
+    --    REFERENCES persons(person_id)
+    --    ON DELETE CASCADE,
+   -- CONSTRAINT fk_person_translation_language
+   --     FOREIGN KEY (language_id)
+    --    REFERENCES languages(language_id)
+--);
 
 -- Tabla de roles cinematográficos
 CREATE TABLE cinematic_roles (
@@ -847,36 +844,62 @@ CREATE TABLE cinematic_roles (
 );
 
 CREATE TABLE cinematic_role_translations (
-
     cinematic_role_translation_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     cinematic_role_id INT NOT NULL,
     language_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_cinematic_role_translation_language
         UNIQUE (cinematic_role_id, language_id),
-    FOREIGN KEY (cinematic_role_id)
+    CONSTRAINT fk_cinematic_role_translation_role
+        FOREIGN KEY (cinematic_role_id)
         REFERENCES cinematic_roles(cinematic_role_id)
         ON DELETE CASCADE,
-    FOREIGN KEY (language_id)
-        REFERENCES languages(language_id)
 
+    CONSTRAINT fk_cinematic_role_translation_language
+        FOREIGN KEY (language_id)
+        REFERENCES languages(language_id)
 );
 
 
+CREATE TABLE content_person_roles (
+    content_person_role_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
-CREATE TABLE content_person_roles(
     content_id INT NOT NULL,
     person_id INT NOT NULL,
     cinematic_role_id INT NOT NULL,
-    character_name VARCHAR(100) NULL,
-    order_index INT DEFAULT 0,
-    PRIMARY KEY (content_id, person_id, cinematic_role_id),
-    FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE,
-    FOREIGN KEY (person_id) REFERENCES persons(person_id) ON DELETE CASCADE,
-    FOREIGN KEY (cinematic_role_id) REFERENCES cinematic_roles(cinematic_role_id) ON DELETE CASCADE
+
+    character_name VARCHAR(100),
+
+    order_index INT NOT NULL DEFAULT 0,
+
+    CONSTRAINT chk_content_person_role_order
+        CHECK (order_index >= 0),
+
+    CONSTRAINT uq_content_person_role
+        UNIQUE (
+            content_id,
+            person_id,
+            cinematic_role_id,
+            character_name
+        ),
+
+    CONSTRAINT fk_content_person_role_content
+        FOREIGN KEY (content_id)
+        REFERENCES content(content_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_content_person_role_person
+        FOREIGN KEY (person_id)
+        REFERENCES persons(person_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_content_person_role_cinematic_role
+        FOREIGN KEY (cinematic_role_id)
+        REFERENCES cinematic_roles(cinematic_role_id)
+        ON DELETE RESTRICT
 );
 
 -- Tabla de estados de reporte
@@ -894,8 +917,8 @@ CREATE TABLE report_status_translations (
     language_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_report_status_translation_language
         UNIQUE (report_status_id, language_id),
     CONSTRAINT fk_report_status_translation_status
@@ -919,8 +942,8 @@ CREATE TABLE report_category_translations (
     language_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_report_category_translation_language
         UNIQUE (report_category_id, language_id),
     FOREIGN KEY (report_category_id)
@@ -939,8 +962,8 @@ CREATE TABLE problem_reports (
     content_id INT NULL,
     episode_id INT NULL,
     report_status_id INT NOT NULL,
-    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    resolved_at TIMESTAMP NULL,
+    reported_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMPTZ NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE SET NULL,
     FOREIGN KEY (episode_id) REFERENCES episodes(episode_id) ON DELETE SET NULL,
@@ -961,8 +984,8 @@ CREATE TABLE support_category_translations (
     language_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_support_category_translation_language
         UNIQUE (support_category_id, language_id),
     FOREIGN KEY (support_category_id)
@@ -985,8 +1008,8 @@ CREATE TABLE support_ticket_status_translations (
     language_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(200),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_support_ticket_status_translation_language
         UNIQUE (
             support_ticket_status_id,
@@ -1009,11 +1032,11 @@ CREATE TABLE support_tickets (
     subscription_id INT NULL,
     subscription_payment_id INT NULL,
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 
-    resolved_at TIMESTAMP NULL,
-    closed_at TIMESTAMP NULL,
+    resolved_at TIMESTAMPTZ NULL,
+    closed_at TIMESTAMPTZ NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (support_category_id) REFERENCES support_categories(support_category_id),
     FOREIGN KEY (support_ticket_status_id) REFERENCES support_tickets_status(support_ticket_status_id),
@@ -1028,7 +1051,7 @@ CREATE TABLE support_messages(
     sender_type VARCHAR(20) NOT NULL
         CHECK (sender_type IN ('USER', 'AGENT', 'SYSTEM', 'BOT')),
     message TEXT NOT NULL,
-    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sent_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ticket_id) REFERENCES support_tickets(support_ticket_id) ON DELETE CASCADE,
     FOREIGN KEY (sender_user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
@@ -1040,8 +1063,8 @@ CREATE TABLE support_faqs (
     --answer TEXT NOT NULL,
     display_order INT NOT NULL DEFAULT 0,
     active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_support_faq_category
         FOREIGN KEY (support_category_id)
         REFERENCES support_categories(support_category_id)
@@ -1055,8 +1078,8 @@ CREATE TABLE support_faq_translations (
     language_id INT NOT NULL,
     question VARCHAR(300) NOT NULL,
     answer TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_support_faq_translation_language
         UNIQUE (support_faq_id, language_id),
     CONSTRAINT fk_support_faq_translation_faq

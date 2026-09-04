@@ -1,6 +1,6 @@
 package com.axher.backend.support.tickets.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.support.tickets.entities.SenderType;
 
@@ -15,6 +15,6 @@ public class SupportMessageResponseDto {
     private String message;
     private SenderType senderType;
     private Integer senderUserId;
-    private LocalDateTime sentAt;
+    private Instant sentAt;
     
 }

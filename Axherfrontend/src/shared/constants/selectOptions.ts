@@ -62,7 +62,7 @@ export const pageSectionTypeOptions = [
 export const shelfSourceOptions = [
     { value: "MANUAL", labelKey: "options.source.manual" },
     { value: "TRENDING", labelKey: "options.source.trending" },
-    { value: "TOP_RATED", labelKey: "options.source.top_rated" },
-    { value: "NEW_RELEASES", labelKey: "options.source.new_releases" },
-    { value: "MOST_WATCHED", labelKey: "options.source.most_watched" }
+    { value: "TOP_RATED", labelKey: "options.source.topRated" },
+    { value: "NEW_RELEASES", labelKey: "options.source.newReleases" },
+    { value: "MOST_WATCHED", labelKey: "options.source.mostWatched" }
 ];

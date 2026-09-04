@@ -1,5 +1,6 @@
 "use client";
 
+import { useReportCategory } from "@/features/ReportCategory/hooks/useReportCategory";
 import AdminProblemReportList from "@/features/reports/components/AdminProblemReportList";
 import { useAdminProblemReportActions } from "@/features/reports/hooks/useAdminProblemReportActions";
 import { useAdminProblemReports } from "@/features/reports/hooks/useAdminProblemReports";
@@ -34,6 +35,11 @@ export default function AdminProblemReportsView() {
         onSuccess: refetch,
     });
 
+    const {
+        reportCategory,
+        loading: categoriesLoading,
+    } = useReportCategory();
+
     const t = useTranslations("problemReport");
 
     return (
@@ -46,7 +52,7 @@ export default function AdminProblemReportsView() {
             <AdminProblemReportList
                 reports={reports}
                 statuses={reportStatus}
-
+                categories={reportCategory}
                 filters={filters}
                 onFiltersChange={setFilters}
 

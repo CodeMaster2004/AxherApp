@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .requestMatchers("/trailers/**").permitAll()
                 .requestMatchers("/hero-banners/**").permitAll()
                 .requestMatchers("/api/pages/**").permitAll()
+                .requestMatchers("/people/**").permitAll()
 
 
                 // Catalogo publico

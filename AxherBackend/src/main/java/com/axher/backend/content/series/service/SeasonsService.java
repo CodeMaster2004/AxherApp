@@ -1,7 +1,7 @@
 package com.axher.backend.content.series.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.quartz.SchedulerException;
@@ -256,7 +256,7 @@ public class SeasonsService {
                 throw new IllegalArgumentException("La temporada UPCOMING necesita fecha de estreno");
             }
 
-            if(season.getReleaseDate().isBefore(LocalDateTime.now())){
+            if(season.getReleaseDate().isBefore(Instant.now())){
                 throw new IllegalArgumentException("La fecha de estreno debe ser futura");
             }
 

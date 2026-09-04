@@ -1,6 +1,6 @@
 package com.axher.backend.content.series.DTOs.seasonDTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import com.axher.backend.content.series.DTOs.EpisodesDTOs.CreateEpisodeRequestDto;
@@ -12,7 +12,7 @@ public class CreateSeasonRequestDto {
     private Integer seasonNumber;
     private String title;
     private String description;
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
     private Integer statusId;
     private List<CreateEpisodeRequestDto> episodes;
 }

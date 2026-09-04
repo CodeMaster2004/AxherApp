@@ -1,6 +1,6 @@
 package com.axher.backend.users.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -62,7 +62,7 @@ public class UserRoleAssignmentsService {
         assignments.setId(new UserRoleId(userId, role.getSystemRoleId()));
         assignments.setRole(role);
         assignments.setUser(user);
-        assignments.setAssignedAt(LocalDateTime.now());
+        assignments.setAssignedAt(Instant.now());
         repository.save(assignments);
 
         return true;

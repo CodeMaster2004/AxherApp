@@ -1,10 +1,14 @@
 "use client";
 
 import { ContentDetail, ContentType } from "@/entities/types";
+import { useCinematicRole } from "@/features/cinematicRole/hooks/useCinematicRole";
 import ContentsList from "@/features/contents/components/ContentsList";
 import { useContents, useContentsActions } from "@/features/contents/hooks";
 import { useContentStatus } from "@/features/contentStatus/hooks";
+import ContentPersonRolesPanel from "@/features/people/components/ContentPersonRolesPanel";
+import { usePerson } from "@/features/people/hooks/usePerson";
 import Button from "@/shared/components/ui/Button";
+import Modal from "@/shared/components/ui/Modal";
 import layoutStyles from "@/shared/styles/shared/Layout.module.css";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -14,7 +18,7 @@ export default function ContentsListView() {
     const router = useRouter();
 
     const [type, setType] = useState<"ALL" | ContentType>("ALL");
-
+    const [managingPeopleContent, setManagingPeopleContent] = useState<ContentDetail | null>(null);
     const {
         contents,
         loading,
@@ -37,6 +41,10 @@ export default function ContentsListView() {
     });
 
     const { contentStatus } = useContentStatus();
+
+    const { people } = usePerson();
+
+    const { cinematicRoles } = useCinematicRole();
 
     const handleTypeChange = (value: "ALL" | ContentType) => {
         setType(value);
@@ -74,6 +82,16 @@ export default function ContentsListView() {
         router.push(
             `/admin/series/${content.contentId}/seasons/create`
         );
+    };
+
+    const handleManagePeople = (
+        content: ContentDetail
+    ) => {
+        setManagingPeopleContent(content);
+    };
+
+    const handleClosePeople = () => {
+        setManagingPeopleContent(null);
     };
 
     const t = useTranslations("contents");
@@ -149,7 +167,23 @@ export default function ContentsListView() {
                 onSearchChange={setSearchTerm}
 
                 onTranslations={handleTranslations}
+                onManagePeople={handleManagePeople}
             />
+
+            {managingPeopleContent && (
+                <Modal
+                    open={true}
+                    title={t("actions.managePeople")}
+                    onClose={handleClosePeople}
+                >
+                    <ContentPersonRolesPanel
+                        contentId={managingPeopleContent.contentId}
+                        persons={people}
+                        cinematicRoles={cinematicRoles}
+                    />
+
+                </Modal>
+            )}
         </div>
     );
 }

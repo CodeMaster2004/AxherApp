@@ -8,7 +8,8 @@ import Image from "next/image";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDate } from "@/shared/utils/date";
 interface Props{
     contents: ContentDetail[];
     statuses: ContentStatusResponse[];
@@ -30,6 +31,7 @@ interface Props{
     searchTerm: string;
     onSearchChange: (term: string) => void;
     onTranslations?: (content: ContentDetail) => void;
+    onManagePeople?: (content: ContentDetail) => void;
 }
 
 export default function ContentsList({
@@ -50,8 +52,10 @@ export default function ContentsList({
     searchTerm,
     onSearchChange,
     onTranslations,
+    onManagePeople,
 }: Props){
     const [pendingStatus, setPendingStatus] = useState<Record<number,number>>({});
+    const locale = useLocale();
     const [confirmDialog, setConfirmDialog] = useState<{
         isOpen: boolean;
         id: number;
@@ -76,12 +80,6 @@ export default function ContentsList({
         contentTitle: "",
     });
 
-    
-    const formatDate = (dateStr: string): string => {
-        if(!dateStr) return '-';
-        const [year, month, day] = dateStr.split('-');
-        return `${day}/${month}/${year}`;
-    };
 
     const handleDeleteClick = (id: number, title: string) => {
         setConfirmDialog({ isOpen: true, id, title});
@@ -259,7 +257,7 @@ export default function ContentsList({
                                     </td>
                                     <td>{content.discountAmount ? `${content.discountAmount}%` : t("list.noDiscount")}</td>
 
-                                    <td>{formatDate(content.registeredAt)}</td>
+                                    <td>{formatDate(content.registeredAt, locale)}</td>
 
                                     <td>
                                         <MoreMenu
@@ -275,6 +273,13 @@ export default function ContentsList({
                                                     ? [{
                                                         label: t("actions.createSeason"),
                                                         onClick: () => onCreateSeason(content),
+                                                    }]
+                                                    : []),
+
+                                                ...(onManagePeople
+                                                    ? [{
+                                                        label: t("actions.managePeople"),
+                                                        onClick: () => onManagePeople(content),
                                                     }]
                                                     : []),
 

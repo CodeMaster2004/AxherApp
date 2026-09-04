@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.watchlist.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -38,7 +38,7 @@ public class Watchlist {
     private Content content; // ID del contenido según el tipo (Película, Serie, Temporada o Episodio)
 
     @CreationTimestamp
-    private LocalDateTime addedAt;
+    private Instant addedAt;
 
 }
 

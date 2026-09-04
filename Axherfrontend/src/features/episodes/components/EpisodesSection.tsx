@@ -5,6 +5,8 @@ import styles from "./EpisodesSection.module.css";
 import { usePublicEpisodes } from "@/features/episodes/hooks/usePublicEpisodes";
 import { useUpcomingEpisodes } from "@/features/episodes/hooks/useUpcomingEpisodes";
 import { Lock } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDate } from "@/shared/utils/date";
 
 interface Props {
     seasonId: number;
@@ -27,12 +29,8 @@ export default function EpisodesSection({
         loading: upcomingLoading
     } = useUpcomingEpisodes(seasonId);
 
-    const formatReleaseDate = (date: string) => {
-        return new Intl.DateTimeFormat("es-PE", {
-            day: "2-digit",
-            month: "short"
-        }).format(new Date(date));
-    };
+    const locale = useLocale();
+    const t = useTranslations("episodes");
 
     return (
         <section className={styles.container}>
@@ -55,12 +53,12 @@ export default function EpisodesSection({
                                 />
                             ) : (
                                 <div className={styles.placeholder}>
-                                    Episodio {episode.episodeNumber}
+                                    {t("episode")} {episode.episodeNumber}
                                 </div>
                             )}
 
                             <div className={styles.placeholder}>
-                                Episodio {episode.episodeNumber}
+                                {t("episode")} {episode.episodeNumber}
                             </div>
 
                         </div>
@@ -68,7 +66,7 @@ export default function EpisodesSection({
                         <div className={styles.info}>
 
                             <span className={styles.number}>
-                                Episodio {episode.episodeNumber}
+                                {t("episode")} {episode.episodeNumber}
                             </span>
 
                             <h3>{episode.title}</h3>
@@ -102,7 +100,7 @@ export default function EpisodesSection({
                                 />
                             ) : (
                                 <div className={styles.placeholder}>
-                                    Episodio {episode.episodeNumber}
+                                    {t("episode")} {episode.episodeNumber}
                                 </div>
                             )}
 
@@ -115,7 +113,7 @@ export default function EpisodesSection({
                         <div className={styles.info}>
 
                             <span className={styles.number}>
-                                Episodio {episode.episodeNumber}
+                                {t("episode")} {episode.episodeNumber}
                             </span>
 
                             <h3>
@@ -123,8 +121,9 @@ export default function EpisodesSection({
                             </h3>
 
                             <p className={styles.releaseDate}>
-                                {formatReleaseDate(
-                                    episode.releaseDate
+                                {formatDate(
+                                    episode.releaseDate,
+                                    locale
                                 )}
                             </p>
 

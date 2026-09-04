@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.banner.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +32,7 @@ public class HeroService {
 
         List<HeroBanner> result = new ArrayList<>();
 
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
 
 
         // Manuales

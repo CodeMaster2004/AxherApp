@@ -1,6 +1,6 @@
 package com.axher.backend.content.series.DTOs.EpisodesDTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +14,6 @@ public class UpdateEpisodeRequestDto {
     private String description;
     private MultipartFile thumbnailFile;
     private MultipartFile episodeFile; 
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
     private Integer statusId;
 }

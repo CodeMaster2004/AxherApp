@@ -16,6 +16,7 @@ import { useState } from "react";
 import styles from "./MovieDetail.module.css";
 import WatchlistButton from "@/features/watchlist/components/WatchlistButton";
 import { useTranslations } from "next-intl";
+import ContentPeopleCarousel from "@/features/people/components/ContentPeopleCarousel";
 
 interface MovieDetailProps {
   movie: ContentDetail;
@@ -142,6 +143,10 @@ export default function MovieDetail({ movie }: MovieDetailProps) {
                 </div>
                 </div>
             </section>
+
+            <ContentPeopleCarousel
+                contentId={movie.contentId}
+            />
             
             <VideoPlayerModal
                 isOpen={!!playerSource}

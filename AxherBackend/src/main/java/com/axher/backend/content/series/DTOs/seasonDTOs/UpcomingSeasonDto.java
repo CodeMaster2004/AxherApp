@@ -1,6 +1,6 @@
 package com.axher.backend.content.series.DTOs.seasonDTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 
 import lombok.Data;
@@ -12,6 +12,6 @@ public class UpcomingSeasonDto {
     private Integer seasonNumber;
     private String title;
     private String description;
-    private LocalDateTime releaseDate;
+    private Instant releaseDate;
     
 }

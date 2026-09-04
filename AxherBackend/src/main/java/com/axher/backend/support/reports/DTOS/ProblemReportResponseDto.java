@@ -1,6 +1,6 @@
 package com.axher.backend.support.reports.DTOS;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class ProblemReportResponseDto {
     private Integer reportStatusId;
     private String reportStatusCode;
     private String reportStatusName;
-    private LocalDateTime reportedAt;
-    private LocalDateTime resolvedAt;
+    private Instant reportedAt;
+    private Instant resolvedAt;
     
 }

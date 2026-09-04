@@ -97,7 +97,7 @@ export default function ShelfForm({
                         languageId: Number(languageId),
                     }))
                 }
-                placeholder={common("selectLanguage")}
+                placeholder={common("languagePlaceholder")}
                 disabled={saving || isEditing}
             />
 

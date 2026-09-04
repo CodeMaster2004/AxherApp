@@ -8,7 +8,8 @@ import { formatDuration } from "@/shared/utils/formatDuration";
 import { useState } from "react";
 import ConfirmDialog from "../../../shared/components/ui/ConfirmDialog";
 import MoreMenu from "../../../shared/components/ui/MoreMenu";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDate } from "@/shared/utils/date";
 
 interface Props{
     episodes: EpisodeDetail[];
@@ -70,11 +71,7 @@ export default function EpisodesList({
         contentTitle: "",
     });
 
-    const formatDate = (dateStr?: string): string => {
-        if(!dateStr) return '-';
-        const [year, month, day] = dateStr.split('-');
-        return `${day}/${month}/${year}`;
-    };
+    const locale = useLocale();
 
     const handleDeleteClick = (id: number, title: string) => {
         setConfirmDialog({ isOpen: true, id, title});
@@ -143,7 +140,7 @@ export default function EpisodesList({
                 isOpen={statusDialog.isOpen}
                 title={t("status.changeTitle")}
                 message={t("status.changeMessage", { title: statusDialog.contentTitle, status: statusDialog.statusName })}
-                confirmText={t("change")}
+                confirmText={common("confirm")}
                 cancelText={common("cancel")}
                 onConfirm={handleConfirmStatus}
                 onCancel={handleCancelStatus}
@@ -183,7 +180,7 @@ export default function EpisodesList({
                                     <td>{episode.episodeNumber}</td>
                                     <td>{episode.title}</td>
                                     <td>{episode.durationSeconds ? formatDuration(episode.durationSeconds) : "-"}</td>
-                                    <td>{formatDate(episode.releaseDate)}</td>
+                                    <td>{formatDate(episode.releaseDate, locale)}</td>
 
                                     <td>
                                         <select

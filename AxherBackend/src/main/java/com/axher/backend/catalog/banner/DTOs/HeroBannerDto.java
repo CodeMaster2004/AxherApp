@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.banner.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.Data;
 
@@ -14,9 +14,9 @@ public class HeroBannerDto {
     private String descriptionOverride;
     private String backdropUrl;
     private Integer priority;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Instant startDate;
+    private Instant endDate;
     private Boolean active;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private Integer languageId;    
 }

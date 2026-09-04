@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.page.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -62,6 +62,6 @@ public class PageSection {
 
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     
 }

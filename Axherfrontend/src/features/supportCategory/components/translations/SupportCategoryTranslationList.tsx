@@ -91,7 +91,7 @@ export default function SupportCategoryTranslationList({
 
         return (
             <p>
-                No hay traducciones registradas.
+                {t("translations.empty")}
             </p>
         );
 

@@ -10,6 +10,8 @@ import { formatDuration } from "@/shared/utils/formatDuration";
 import Image from "next/image";
 import { useState } from "react";
 import styles from "./EpisodeDetail.module.css";
+import { useLocale, useTranslations } from "next-intl";
+import { formatYear } from "@/shared/utils/date";
 
 
 interface Props {
@@ -27,6 +29,8 @@ export default function EpisodeDetail({ episode, contentId }: Props) {
     );
     const [playerSource, setPlayerSource] = useState<string | null>(null);
     const { requireAuth } = useProtectedMedia();
+    const t = useTranslations("episodes");
+    const locale = useLocale();
 
     return (
 
@@ -81,9 +85,7 @@ export default function EpisodeDetail({ episode, contentId }: Props) {
                                     <span className={styles.separator}>|</span>
 
                                     <span className={styles.year}>
-                                        {new Date(
-                                            episode.releaseDate
-                                        ).getFullYear()}
+                                        {formatYear(episode.releaseDate, locale)}
                                     </span>
                                 </>
                             )}
@@ -105,7 +107,7 @@ export default function EpisodeDetail({ episode, contentId }: Props) {
                         {/* TEMPORADA | EPISODIO: TITULO */}
                         <h2 className={styles.episodeTitle}>
 
-                            Temporada {episode.seasonNumber} | Episodio {episode.episodeNumber}: {episode.title}
+                            {t("season")} {episode.seasonNumber} | {t("episode")} {episode.episodeNumber}: {episode.title}
 
                         </h2>
 
@@ -118,7 +120,7 @@ export default function EpisodeDetail({ episode, contentId }: Props) {
                         {/* DESCRIPCIÓN */}
                         <p className={styles.description}>
                             {episode.description ||
-                                "No hay descripción disponible."}
+                                t("noDescription")}
                         </p>
 
 
@@ -129,7 +131,7 @@ export default function EpisodeDetail({ episode, contentId }: Props) {
                                 className={styles.primaryButton}
                                 onClick={() => requireAuth(() => setPlayerSource(episodeUrl))}
                             >
-                                ▶ Ver 
+                                ▶ {t("watch")}
                             </button>
 
                         </div>

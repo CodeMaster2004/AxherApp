@@ -49,6 +49,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/avatars/**")
                 .addResourceLocations("file:" + uploadDir + "/avatars/");
 
+        registry.addResourceHandler("/people/**")
+        .addResourceLocations("file:" + uploadDir + "/people/");
+
         // ✅ Perfiles por defecto
         registry.addResourceHandler("/profile_pictures/**")
                 .addResourceLocations("file:" + uploadDir + "/profile_pictures/");
@@ -63,6 +66,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/hero-banners/**")
                 .addResourceLocations("file:" + uploadDir + "/hero-banners/");
         }
+        
 
 
              

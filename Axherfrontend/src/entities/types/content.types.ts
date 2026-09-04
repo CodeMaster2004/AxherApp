@@ -21,7 +21,7 @@ export interface ContentDetail{
     status: ContentStatusResponse;
     discountAmount?: number;
     registeredAt: string; // formato "YYYY-MM-DD"
-    releaseDate: string;
+    releaseDate: string;  // ISO-8601, ej. 2025-12-31T20:09:00Z
 
     //solo si es movie
     durationSeconds?: number;
@@ -41,7 +41,7 @@ export interface CreateContent{
     categoryIds: number[];
     statusId?: number;
     discountId?: number;
-    releaseDate: string; // formato "YYYY-MM-DD"
+    releaseDate: string;  // ISO-8601, ej. 2025-12-31T20:09:00Z
 
     //Datos especificos degun el tipo
     movie?: CreateMovie;

@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.shelf.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.content.core.entities.Content;
 
@@ -57,6 +57,6 @@ public class ShelfContent {
     @Column(nullable = false)
     private Integer position;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     
 }

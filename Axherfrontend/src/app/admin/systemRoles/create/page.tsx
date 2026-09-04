@@ -37,7 +37,7 @@ export default function CreateSystemRolesPage(){
 
     return (
         <div className={layoutStyles.pageContainer}>
-            <h1>{t("create.title")}</h1>
+            <h1>{t("createTitle")}</h1>
 
             <SystemRolesForm
                 roleName={roleName}

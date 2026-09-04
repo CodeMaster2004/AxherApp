@@ -65,7 +65,7 @@ export default function SystemPermissionsList ({
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
                 title={t("delete.title")}
-                message={t("delete.message", { permissionName: confirmDialog.systemPermissions })}
+                message={t("delete.message", { name: confirmDialog.systemPermissions })}
                 confirmText={common("delete")}
                 cancelText={common("cancel")}
                 onConfirm={handleConfirmDelete}
@@ -89,8 +89,8 @@ export default function SystemPermissionsList ({
                     <table className={tableStyles.table}>
                         <thead>
                             <tr className={tableStyles.rowHover}>
-                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>ID</th>
-                                <th className={tableStyles.headCell}>{t("list.moduleHeader")}</th>
+                                <th className={`${tableStyles.headCell} ${tableStyles.idColumn}`}>{common("id")}</th>
+                                <th className={tableStyles.headCell}>{t("list.moduleName")}</th>
                                 <th className={tableStyles.headCell}>{t("list.action")}</th>
                                 <th className={tableStyles.headCell}>{t("list.permissionName")}</th>
                                 <th className={tableStyles.headCell}>{common("actions")}</th>

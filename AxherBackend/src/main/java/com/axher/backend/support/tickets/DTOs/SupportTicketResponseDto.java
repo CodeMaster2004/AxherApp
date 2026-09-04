@@ -1,6 +1,6 @@
 package com.axher.backend.support.tickets.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,9 +27,9 @@ public class SupportTicketResponseDto {
 
     private Integer subscriptionPaymentId;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime resolvedAt;
-    private LocalDateTime closedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private Instant resolvedAt;
+    private Instant closedAt;
     
 }

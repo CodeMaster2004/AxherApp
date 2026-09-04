@@ -1,6 +1,6 @@
 package com.axher.backend.content.ratings.mapper;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class RatingsMapper {
         r.setTargetId(dto.getTargetId());
         r.setRatingValue(dto.getRatingValue());
         r.setComment(dto.getComment());
-        r.setRatedAt(LocalDateTime.now());
+        r.setRatedAt(Instant.now());
         return r;
     }
 

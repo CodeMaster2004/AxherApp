@@ -3,7 +3,7 @@
 import { SupportMessageResponse } from "@/entities/types";
 import {  formatTime } from "@/shared/utils/date";
 import styles from "./SupportMessageItem.module.css";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface Props {
     message: SupportMessageResponse;
@@ -18,6 +18,7 @@ export default function SupportMessageItem({
 }: Props) {
     const t = useTranslations("supportTickets");
     const isUser = message.senderType === "USER";
+    const locale = useLocale();
 
     const senderLabel =
         viewer === "ADMIN"
@@ -50,7 +51,7 @@ export default function SupportMessageItem({
                     </strong>
 
                     <small className={styles.date}>
-                        {formatTime(message.sentAt)}
+                        {formatTime(message.sentAt, locale)}
                     </small>
                 </div>
 

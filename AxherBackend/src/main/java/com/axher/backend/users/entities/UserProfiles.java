@@ -1,7 +1,7 @@
 package com.axher.backend.users.entities;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -71,8 +71,8 @@ public class UserProfiles {
     @Column(length = 20)
     private String profileVisibility = "PUBLIC";
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Instant createdAt;
 
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private Instant updatedAt;
 }
 

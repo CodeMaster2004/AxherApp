@@ -10,6 +10,7 @@ import {
 import EpisodeDetail from "@/features/episodes/components/EpisodeDetail";
 import SeasonsSection from "@/features/seasons/components/SeasonsSection";
 import SerieDetail from "./SerieDetail";
+import ContentPeopleCarousel from "@/features/people/components/ContentPeopleCarousel";
 
 
 interface Props {
@@ -48,6 +49,10 @@ export default function SeriesDetailContainer({
             <SeasonsSection
                 seriesId={series.contentId}
                 onSelectEpisode={setSelectedEpisode}
+            />
+
+            <ContentPeopleCarousel
+                contentId={series.contentId}
             />
 
 

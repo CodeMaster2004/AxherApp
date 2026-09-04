@@ -1,6 +1,6 @@
 package com.axher.backend.content.ratings.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.axher.backend.users.entities.Users;
 
@@ -46,7 +46,7 @@ public class Ratings {
 
     private String comment;
 
-    private LocalDateTime ratedAt;
+    private Instant ratedAt;
 
     
 }

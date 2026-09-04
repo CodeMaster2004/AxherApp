@@ -1,6 +1,6 @@
 package com.axher.backend.catalog.banner.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,16 +52,16 @@ public class HeroBanner {
     @Column(nullable = false)
     private Integer priority = 0;
 
-    private LocalDateTime startDate;
+    private Instant startDate;
 
-    private LocalDateTime endDate;
+    private Instant endDate;
 
     @Column(nullable = false)
     private Boolean active = true;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @OneToMany(
         mappedBy = "heroBanner",

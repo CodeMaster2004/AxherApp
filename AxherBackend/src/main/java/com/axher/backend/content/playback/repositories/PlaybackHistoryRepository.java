@@ -1,5 +1,6 @@
 package com.axher.backend.content.playback.repositories;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.axher.backend.catalog.banner.DTOs.HeroPlaybackMetricsDto;
-import com.axher.backend.content.core.DTOs.ContentFeaturedDto;
 import com.axher.backend.content.core.DTOs.TrendingContentResult;
 import com.axher.backend.content.core.entities.ContentTypeEnum;
 import com.axher.backend.content.playback.entities.PlaybackHistory;
@@ -60,7 +60,7 @@ public interface PlaybackHistoryRepository extends JpaRepository<PlaybackHistory
             ) DESC
     """)
     Page<TrendingContentResult> findTrending(
-            @Param("date") LocalDateTime date,
+            @Param("date") Instant date,
             @Param("type") ContentTypeEnum type,
             Pageable pageable
     );
@@ -105,6 +105,6 @@ public interface PlaybackHistoryRepository extends JpaRepository<PlaybackHistory
         GROUP BY ph.content.contentId
         """)
     List<HeroPlaybackMetricsDto> findHeroPlaybackMetrics(
-            @Param("from") LocalDateTime from
+            @Param("from") Instant from
     );
 }

@@ -1,6 +1,6 @@
 package com.axher.backend.support.reports.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -59,10 +59,10 @@ public class ProblemReport {
     private ReportStatus reportStatus;
 
     @CreationTimestamp
-    private LocalDateTime reportedAt;
+    private Instant reportedAt;
 
     @Column(nullable = true)
-    private LocalDateTime resolvedAt;
+    private Instant resolvedAt;
 
    
 

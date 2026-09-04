@@ -167,7 +167,8 @@ export default function EditContentPage() {
         if(backdropFile) formData.append("backdropFile", backdropFile);
         if(trailerFile) formData.append("trailerFile", trailerFile);
         if (releaseDate) {
-            formData.append("releaseDate", releaseDate);
+            const releaseInstant = new Date(releaseDate).toISOString();
+            formData.append("releaseDate", releaseInstant);
         }
         resetProgress();
         await editContent(id, formData, handleProgress);

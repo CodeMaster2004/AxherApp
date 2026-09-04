@@ -75,7 +75,7 @@ public class RatingsService {
         rating.setTargetId(dto.getTargetId());
         rating.setRatingValue(dto.getRatingValue());
         rating.setComment(dto.getComment());
-        rating.setRatedAt(java.time.LocalDateTime.now());
+        rating.setRatedAt(java.time.Instant.now());
 
         return repository.save(rating);
     }

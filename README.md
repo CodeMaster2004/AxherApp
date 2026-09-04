@@ -44,6 +44,7 @@ El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta u
 - 🔑 **Inicio de sesión con Google** (OAuth 2.0)
 - 📧 **Confirmación de correo** mediante OTP
 - 🎥 **Exploración de películas y series** con filtros, búsqueda y categorías
+- 🎭 **Reparto y créditos en el detalle** — películas y series muestran su elenco (personas, roles cinematográficos y personajes) con fotos
 - 🎠 **Estantes de contenido** (shelves) personalizados y ordenables con **fuentes dinámicas** (trending, top rated, nuevos estrenos, más vistos)
 - 🆕 **Sección de próximos estrenos** (upcoming) con temporadas y episodios
 - ⭐ **Sistema de calificaciones** y reseñas
@@ -52,15 +53,18 @@ El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta u
 - 🔍 **Historial de búsquedas** — registro de términos buscados por el usuario
 - 🐛 **Reporte de problemas** — los usuarios pueden reportar fallos de video, audio, subtítulos, reproducción o contenido desde el reproductor o la sección de reportes
 - 👤 **Perfil de usuario** con foto y datos personales
-- 🌐 **Soporte multilingüe (i18n)** — interfaz y contenido en español, inglés, portugués, francés y alemán, con **selector de idioma** y preferencia de idioma guardada por usuario
+- 🌐 **Soporte multilingüe (i18n)** — interfaz y contenido en español, inglés y portugués (es, en, pt), con **selector de idioma** y preferencia de idioma guardada por usuario
 - 🎫 **Tickets de soporte** — los usuarios pueden abrir tickets con categorías y estados
 - 📖 **Preguntas frecuentes (FAQ)** — sección pública de soporte con FAQs organizadas por categoría
 - 🤖 **Asistente de soporte inteligente** — resuelve consultas con respuestas contextuales generadas por IA
-- 💳 **Sistema de pagos y suscripciones** (en desarrollo)
+- 💳 **Sistema de pagos y suscripciones** (en desarrollo — módulo de facturación en refactorización)
 
 ### 🛠️ Para administradores
 - 📊 **Dashboard administrativo** completo
 - 🎬 **CRUD de contenido** (películas, series, episodios, temporadas)
+- 👥 **Gestión de personas (reparto)** — CRUD completo de actores, directores, etc., con foto
+- 🎭 **Roles cinematográficos** — CRUD completo con traducciones y **traducción automática con IA**
+- 🎬 **Créditos de contenido** — asignación de personas, roles y nombres de personaje a películas y series (persona + rol + personaje por contenido)
 - 🏷️ **Gestión de categorías** y estados de contenido
 - 🖼️ **Banners hero** personalizables con **ranking automático** basado en métricas (vistas, usuarios, rating y recencia)
 - 🎠 **Gestión de estantes** (shelves) con contenido seleccionable y **fuentes dinámicas** (trending, top rated, nuevos estrenos, más vistos)
@@ -75,7 +79,7 @@ El proyecto también incluye un **microservicio de IA (AxherAI)** que alimenta u
 - 🎫 **Tickets de soporte** — sistema de tickets con categorías, estados y mensajes (usuario + panel admin)
 - 🏷️ **Categorías de reportes** — clasificación de reportes de problemas (CRUD completo)
 - 🌐 **Gestión de idiomas** — CRUD completo de los idiomas disponibles en la plataforma
-- 🈶 **Sistema de traducciones** — contenido, categorías, estados, temporadas, episodios, banners hero, estantes, reportes, tickets de soporte, planes y estados de suscripción, y estados de pago
+- 🈶 **Sistema de traducciones** — contenido, categorías, estados, temporadas, episodios, banners hero, estantes, reportes, tickets de soporte, roles cinematográficos, planes y estados de suscripción, y estados de pago
 - 🧠 **Traducción automática con IA** — genera traducciones del contenido y sus entidades con Google Gemini directamente desde el panel admin
 - 📖 **Gestión de preguntas frecuentes (FAQs)** — CRUD completo con categorías y traducciones
 
@@ -104,7 +108,7 @@ AxherApp/
 │   │   │   ├── series/                  # Series (temporadas y episodios + traducciones)
 │   │   │   ├── playback/                # Reproducción e historial
 │   │   │   ├── ratings/                 # Calificaciones
-│   │   │   └── people/                  # Personas (actores, directores)
+│   │   │   └── people/                  # Reparto: personas + roles cinematográficos + créditos (traducciones + IA)
 │   │   ├── infrastructure/              # Infraestructura
 │   │   │   ├── security/                # Configuración de seguridad (incl. resolución de idioma)
 │   │   │   ├── specification/           # Especificaciones JPA (filtros dinámicos)
@@ -129,7 +133,7 @@ AxherApp/
 │   │   ├── app/                         # Páginas y rutas (App Router)
 │   │   │   ├── (auth)/                  # Login, registro, confirmación
 │   │   │   ├── (dashboard)/             # Panel de usuario (mi-lista, reportes, historial)
-│   │   │   ├── admin/                   # Panel administrativo (CRUDs, reportes, roles)
+│   │   │   ├── admin/                   # Panel administrativo (CRUDs, reportes, roles, reparto)
 │   │   │   ├── peliculas/               # Catálogo de películas
 │   │   │   ├── serie/                   # Catálogo de series
 │   │   │   ├── support/                 # Soporte al usuario (FAQs, tickets, asistente IA)
@@ -158,6 +162,8 @@ AxherApp/
 │   │   │   ├── reportStatus/            # Estados de reportes
 │   │   │   ├── users/                   # Usuarios
 │   │   │   ├── profile/                 # Perfil de usuario
+│   │   │   ├── people/                  # Reparto: personas, créditos y carrusel de reparto
+│   │   │   ├── cinematicRole/           # Roles cinematográficos (CRUD + traducciones + IA)
 │   │   │   ├── ...                      # Más módulos
 │   │   ├── shared/                      # Componentes y utilidades
 │   │   │   └── i18n/                    # Utilidades de localización (idioma, eventos)
@@ -340,6 +346,9 @@ El microservicio iniciará en `http://localhost:8000` (documentación en `http:/
 - [x] CRUD de contenido (películas, series, episodios, temporadas)
 - [x] Panel administrativo
 - [x] Roles y permisos
+- [x] 👥 Gestión de personas (reparto) — CRUD de personas (actores, directores, etc.) con foto
+- [x] 🎭 Roles cinematográficos — CRUD con traducciones y traducción automática con IA
+- [x] 🎬 Créditos de contenido — persona + rol + personaje asignados a películas y series
 - [x] Carga de archivos multimedia
 - [x] Estantes de contenido (shelves) con drag & drop
 - [x] Banners hero personalizables
@@ -351,7 +360,7 @@ El microservicio iniciará en `http://localhost:8000` (documentación en `http:/
 - [x] Programación de publicaciones con Quartz
 - [x] Reproductor de video con controles personalizados y guardado de progreso
 - [x] Reportes de problemas (usuario + panel admin con estados y categorías configurables)
-- [x] Sistema multilingüe (i18n) — interfaz y contenido en es, en, pt, fr, de
+- [x] Sistema multilingüe (i18n) — interfaz y contenido en es, en, pt
 - [x] Gestión de idiomas y traducciones desde el panel admin
 - [x] 🧠 Traducción automática con IA (Spring AI + Google Gemini)
 - [x] 📖 Preguntas frecuentes (FAQs) — sección pública + CRUD desde el panel admin
@@ -363,6 +372,19 @@ El microservicio iniciará en `http://localhost:8000` (documentación en `http:/
 - [ ] 🧪 Pruebas unitarias y de integración
 - [ ] 🚀 Despliegue en producción
 - [ ] 📱 App móvil (React Native)
+
+---
+
+## 🕓 Novedades recientes
+
+- 🎭 **Módulo de personas y reparto** — CRUD completo de personas (actores, directores, etc.) con foto y créditos asignables a películas y series.
+- 🏷️ **Roles cinematográficos** — CRUD completo con traducciones multilenguaje y **traducción automática con IA (Google Gemini)**.
+- 🎬 **Créditos de contenido** — asignación de persona + rol + personaje por contenido; el detalle público muestra el reparto con carrusel.
+- 🔄 **Refactor de tipos de fecha en el backend** — migración de `LocalDateTime`/`LocalDate` a `Instant` en contenido, usuarios, banners, suscripciones, tokens y más.
+- 🔐 **Mejoras en autenticación** — tokens de refresco con familia (`familyId`), registro de `revokedAt`, token de 64 caracteres y bloqueo de cuenta documentado (15 min).
+- 🌐 **Refactor i18n del frontend** — utilidades de fecha/fecha-hora con soporte de `locale`, validación de contraseña con mensajes traducidos (claves i18n) y traducciones completas en es/en/pt.
+- 🧹 **Simplificación del módulo de pagos** — eliminadas las entidades de pago por contenido (`MoviePayments`, `SeriesContentPayments` y `PaymentHistory`).
+- 🗄️ **Esquema de BD actualizado** — `axher_schema_postgres.sql` con las nuevas tablas `persons`, `cinematic_roles` y `content_person_roles`.
 
 ---
 

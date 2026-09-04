@@ -143,6 +143,13 @@
 
         "validation": {
             "passwordMismatch": "Las contraseñas no coinciden."
+        },
+        "password": {
+            "minLength": "La contraseña debe tener al menos 6 caracteres.",
+            "uppercase": "Debe contener al menos una mayúscula.",
+            "lowercase": "Debe contener al menos una minúscula.",
+            "number": "Debe contener al menos un número.",
+            "symbol": "Debe contener al menos un símbolo."
         }
     },
 
@@ -333,6 +340,7 @@
         "actions": {
             "viewSeries": "Ver Serie",
             "viewSeasons": "Ver temporadas",
+            "managePeople": "Gestionar personas",
             "createSeason": "Crear temporada",
             "translations": "Traducciones"
         },
@@ -421,6 +429,11 @@
         "loading": "Cargando episodios...",
         "createTitle": "Crear Episodio",
         "editTitle": "Editar Episodio",
+
+        "season": "Temporada",
+        "episode": "Episodio",
+        "watch": "Ver",
+        "noDescription": "No hay descripción disponible.",
         
         "list": {
             "title": "Listado de Episodios",
@@ -607,7 +620,7 @@
         }
     },
 
-    "reportCategories": {
+    "reportCategory": {
         "title": "Categorías de Reporte",
         "loading": "Cargando categoría de reporte...",
         "createTitle": "Crear categoría de reporte",
@@ -768,6 +781,8 @@
 
         "history": {
             "title": "Búsquedas recientes",
+            "today": "Hoy",
+            "yesterday": "Ayer",
             "subtitle": "Todas tus búsquedas recientes",
             "loading": "Cargando historial...",
             "empty": "No tienes búsquedas recientes",
@@ -1263,6 +1278,7 @@
 
     "systemPermissions": {
         "title": "Permisos del Sistema",
+
         "createTitle": "Crear Permiso del Sistema",
         "editTitle": "Editar Permiso del Sistema",
 
@@ -1294,8 +1310,15 @@
         },
 
         "errors": {
-            "load": "Error al cargar el permiso del sistema."
-        }
+            "load": "Error al cargar el permiso del sistema.",
+            "loadPermissions": "Error al cargar los permisos del sistema.",
+            "save": "Error al guardar los permisos del rol."
+        },
+
+        "loading": "Cargando permisos del sistema...",
+        "noPermissions": "No hay permisos disponibles.",
+        "invalidRole": "El rol especificado no es válido.",
+        "updatedSuccessfully": "Los permisos se actualizaron correctamente."
     },
 
     "userRoleAssignment": {
@@ -1531,8 +1554,125 @@
             "backToHelpCenter": "Volver al centro de ayuda",
             "categoryDescription": "Encuentra respuestas a las preguntas más frecuentes de esta categoría."
         }
+    },
+
+    "cinematicRole": {
+        "title": "Roles cinematográficos",
+        "loading": "Cargando rol cinematográfico...",
+        "createTitle": "Crear Rol Cinematográfico",
+        "editTitle": "Editar Rol Cinematográfico",
+        "list": {
+            "title": "Lista de Roles Cinematográficos",
+            "searchPlaceholder": "Buscar por nombre o código",
+            "empty": "No se encontraron roles cinematográficos.",
+            "code": "Código"
+        },
+        "form": {
+            "createTitle": "Crear Rol Cinematográfico",
+            "editTitle": "Editar Rol Cinematográfico",
+            "codeLabel": "Código del Rol Cinematográfico",
+            "codePlaceholder": "Ej: ACTOR",
+            "nameLabel": "Nombre del Rol Cinematográfico",
+            "namePlaceholder": "Ej: Actor",
+            "descriptionLabel": "Descripción",
+            "descriptionPlaceholder": "Descripción del rol cinematográfico",
+            "validation": {
+                "codeRequired": "Por favor completa el campo de código.",
+                "languageRequired": "Por favor selecciona un idioma.",
+                "nameRequired": "Por favor completa el campo de nombre."
+            }
+        },
+        "delete": {
+            "title": "Confirmar Eliminación",
+            "message": "¿Estás seguro de que deseas eliminar el rol cinematográfico \"{name}\"? Esta acción no se puede deshacer."
+        },
+        "translations": {
+            "title": "Traducciones",
+            "registeredTitle": "Traducciones registradas",
+            "languagePlaceholder": "Seleccionar idioma",
+            "namePlaceholder": "Ej: Actor",
+            "descriptionPlaceholder": "Descripción del rol cinematográfico",
+            "loading": "Cargando traducciones...",
+            "empty": "No hay traducciones registradas.",
+            "deleteTitle": "Eliminar traducción",
+            "deleteMessage": "¿Estás seguro de que deseas eliminar la traducción en \"{language}\"? Esta acción no se puede deshacer.",
+            "invalidRole": "Rol cinematográfico inválido.",
+            "loadingLanguages": "Cargando idiomas..."
+        },
+        "errors": {
+            "load": "Error al cargar el rol cinematográfico.",
+            "translation": "Ocurrió un error al procesar la traducción."
+        }
+    },
+
+    "person": {
+        "title": "Personas",
+        "loading": "Cargando persona...",
+        "createTitle": "Crear Persona",
+        "editTitle": "Editar Persona",
+
+        "list": {
+            "searchPlaceholder": "Buscar por nombre o apellido",
+            "loading": "Cargando personas...",
+            "empty": "No se encontraron personas.",
+            "photo": "Foto",
+            "firstName": "Nombre",
+            "lastName": "Apellido"
+        },
+
+        "form": {
+            "firstName": "Nombre",
+            "firstNamePlaceholder": "Ingrese el nombre",
+            "lastName": "Apellido",
+            "lastNamePlaceholder": "Ingrese el apellido",
+            "photo": "Foto",
+            "currentPhoto": "Foto actual",
+
+            "validation": {
+                "firstNameRequired": "El nombre es obligatorio."
+            }
+        },
+
+        "delete": {
+            "title": "Confirmar eliminación",
+            "message": "¿Estás seguro de que deseas eliminar a \"{name}\"? Esta acción no se puede deshacer."
+        },
+
+        "errors": {
+            "load": "Error al cargar la persona."
+        }
+    },
+
+    "contentPersonRole": {
+        "person": "Persona",
+        "personPlaceholder": "Selecciona una persona",
+
+        "cinematicRole": "Rol cinematográfico",
+        "cinematicRolePlaceholder": "Selecciona un rol",
+
+        "characterName": "Personaje",
+        "characterNamePlaceholder": "Ej: John Wick",
+
+        "orderIndex": "Posición",
+
+        "registeredTitle": "Personas y roles registrados",
+
+        "loading": "Cargando personas...",
+        "empty": "No hay personas y roles registrados.",
+        "error": "Ocurrió un error al procesar la relación.",
+
+        "delete": {
+        "title": "Eliminar relación",
+        "message": "¿Estás seguro de que deseas eliminar la relación de \"{name}\"? Esta acción no se puede deshacer."
+        }
+    },
+
+    "people": {
+        "title": "Reparto y equipo",
+        "loading": "Cargando personas..."
     }
     
+
 
 }
         
